@@ -79,7 +79,7 @@ class MoneyAddScreen extends Component {
                         <DialogContent style={{ paddingTop: 30, alignItems: 'center', flex: 1, width: 200 }}>
                             <Text style={{ color: '#fff', fontSize: 23, fontWeight: 'bold' }}>
                                 Adding...
-            </Text>
+                            </Text>
                             <Spinner size={30} color='#008ee0' />
                         </DialogContent>
                     </Dialog>

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Text, View, StyleSheet, TouchableOpacity, Image } from 'react-native'
-import { ListItem, Thumbnail, Left, Body, Right, Icon } from 'native-base'
+import { Icon } from 'native-base'
 import { navigate } from '../navigationRef'
 
 export default class EmployeeCard extends Component {
@@ -34,7 +34,10 @@ const styles = StyleSheet.create({
         height: 80,
         backgroundColor: '#121212',
         flexDirection: 'row',
-        alignItems: 'center'
+        alignItems: 'center',
+        marginBottom: 12,
+        paddingHorizontal: 5,
+        borderRadius: 10
     },
     imageContainer: {
         height: 56,

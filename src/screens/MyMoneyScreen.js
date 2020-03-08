@@ -95,7 +95,7 @@ class MyMoneyScreen extends Component {
                                 </View>
                             </View>
                             <FlatList
-                                contentContainerStyle={{ marginVertical: 5, borderRadius: 10, borderWidth: 5, borderColor: '#121212' }}
+                                contentContainerStyle={{ marginVertical: 5, borderRadius: 10 }}
                                 data={pAccounts}
                                 keyExtractor={account => account[0]}
                                 renderItem={account => <MoneyCard data={account.item} />}
@@ -119,7 +119,7 @@ class MyMoneyScreen extends Component {
                                 </View>
                             </View>
                             <FlatList
-                                contentContainerStyle={{ marginVertical: 5, borderRadius: 10, borderWidth: 5, borderColor: '#121212' }}
+                                contentContainerStyle={{ marginVertical: 5, borderRadius: 10 }}
                                 data={nAccounts}
                                 keyExtractor={account => account[0]}
                                 renderItem={account => <MoneyCard data={account.item} />}
@@ -190,7 +190,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        backgroundColor: '#121212',
         height: 46
     },
     input: {

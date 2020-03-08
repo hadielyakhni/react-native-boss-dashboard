@@ -11,8 +11,6 @@ const INITIAL_STATE = {
 }
 
 export default (state = INITIAL_STATE, action) => {
-    if (action.type === 'employees_fetch_success')
-        console.log('employees reducer fetch success')
     switch (action.type) {
         case 'employee_updated':
             return { ...state, [action.payload.prop]: action.payload.value }

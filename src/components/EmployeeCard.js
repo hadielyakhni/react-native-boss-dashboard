@@ -34,7 +34,11 @@ const styles = StyleSheet.create({
         height: 80,
         backgroundColor: '#121212',
         flexDirection: 'row',
-        alignItems: 'center'
+        alignItems: 'center',
+        marginHorizontal: 4,
+        marginBottom: 12,
+        paddingHorizontal: 5,
+        borderRadius: 10
     },
     imageContainer: {
         height: 56,

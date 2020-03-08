@@ -171,8 +171,6 @@ const mapStateToProps = ({ todo }) => {
         doneTasks = []
         unDoneTasks = []
     }
-    console.log('will print tasks')
-    console.log('task', tasks)
     return {
         task: todo.task,
         doneTasks,

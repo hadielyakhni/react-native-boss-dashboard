@@ -12,8 +12,6 @@ const INITIAL_STATE = {
 }
 
 export default (state = INITIAL_STATE, action) => {
-    if (action.type === 'accounts_fetch_success')
-        console.log('moneyss reducer fetch success')
     switch (action.type) {
         case 'fetching_accounts':
             return { ...state, fetchingAccounts: true }

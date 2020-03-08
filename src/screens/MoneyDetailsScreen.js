@@ -3,9 +3,7 @@ import {
     Text,
     StyleSheet,
     View,
-    TouchableOpacity,
-    // UIManager,
-    // LayoutAnimation
+    TouchableOpacity
 } from 'react-native'
 import { connect } from 'react-redux'
 import { updateAccountInfo, deleteAccount } from '../actions'
