@@ -1,8 +1,10 @@
-import React, { Component, useState, useEffect } from 'react'
-import { StatusBar, View, Button, Text } from 'react-native'
-import { createAppContainer, createSwitchNavigator } from 'react-navigation'
-import { createMaterialTopTabNavigator } from 'react-navigation-tabs'
-import { createStackNavigator } from 'react-navigation-stack'
+import React, { Component } from 'react'
+import { StatusBar, View } from 'react-native'
+import 'react-native-gesture-handler'
+import { NavigationContainer } from '@react-navigation/native';
+import { navigationRef } from './src/RootNavigation';
+import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack'
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs'
 import { createStore, applyMiddleware } from 'redux'
 import { Provider } from 'react-redux'
 import firebase from 'firebase'
@@ -10,8 +12,6 @@ import ReduxThunk from 'redux-thunk'
 import { Icon } from 'native-base'
 import reducers from './src/reducers'
 import firebaseConfig from './src/firebaseConfig'
-import { setNavigator } from './src/navigationRef'
-import { transitionConfig } from './src/animations/stackNavAnimation'
 import {
   FirstScreen,
   LoginScreen,
@@ -29,8 +29,13 @@ import {
   ChangePasswordScreen
 } from './src/screens'
 
-import 'react-native-gesture-handler';
-import { InteractionManager } from 'react-native'
+
+const Stack = createStackNavigator()
+const MainTab = createMaterialTopTabNavigator()
+const AuthStack = createStackNavigator()
+const ToDoStack = createStackNavigator()
+const EmployeesStack = createStackNavigator()
+const AccountsStack = createStackNavigator()
 
 export default class App extends Component {
   UNSAFE_componentWillMount() {
@@ -42,179 +47,93 @@ export default class App extends Component {
       <Provider store={createStore(reducers, {}, applyMiddleware(ReduxThunk))}>
         <View style={{ flex: 1 }}>
           <StatusBar backgroundColor='#000' />
-          <AppContainer ref={navigator => setNavigator(navigator)} />
+          <NavigationContainer ref={navigationRef}>
+            <Stack.Navigator headerMode="none" initialRouteName="First">
+              <Stack.Screen name="First" component={FirstScreen} />
+              <Stack.Screen name="Auth" component={AuthScreens} />
+              <Stack.Screen name="Main" component={MainScreens} />
+            </Stack.Navigator>
+          </NavigationContainer>
         </View>
       </Provider>
     )
   }
 }
 
-const AppContainer = createAppContainer(
-  createSwitchNavigator({
-    First: FirstScreen,
-    Auth: createStackNavigator({
-      Login: LoginScreen,
-      Signup: SignupScreen
-    }, {
-      headerMode: 'none'
-    }),
-    Main: createMaterialTopTabNavigator({
-      ToDo: {
-        screen: createStackNavigator({
-          ToDoList: ToDoListScreen
-        }, {
-          defaultNavigationOptions: {
-            headerStyle: {
-              backgroundColor: '#000',
-              height: 70
-            },
-            headerTitle: 'MY TASKS',
-            headerTitleStyle: {
-              color: '#f5f5f5',
-              fontWeight: 'bold',
-              fontSize: 22
-            }
-          }
-        }),
-        navigationOptions: {
-          tabBarIcon: ({ tintColor, focused }) => (
-            <Icon
-              name={focused ? 'ios-list-box' : 'md-list-box'}
-              style={{
-                fontSize: 30,
-                color: tintColor
-              }}
-            />
-          )
+function AuthScreens() {
+  return (
+    <AuthStack.Navigator headerMode="none" initialRouteName="Login">
+      <AuthStack.Screen name="Login" component={LoginScreen} />
+      <AuthStack.Screen name="Signup" component={SignupScreen} />
+    </AuthStack.Navigator>
+  )
+}
+
+function MainScreens() {
+  return (
+    <MainTab.Navigator tabBarPosition="bottom" initialRouteName="ToDo" >
+      <MainTab.Screen name="ToDo" component={ToDoScreen} />
+      <MainTab.Screen name="Employees" component={EmployeesScreens} />
+      <MainTab.Screen name="Money" component={AccountsScreens} />
+      <MainTab.Screen name="Profile" component={MyProfileScreen} />
+    </MainTab.Navigator >
+  );
+}
+
+function ToDoScreen() {
+  return (
+    <ToDoStack.Navigator
+      screenOptions={{
+        headerTitle: "My Tasks",
+        headerStyle: { backgroundColor: '#000' },
+        headerTitleStyle: { color: '#fff', fontWeight: 'bold' }
+      }}
+    >
+      <AuthStack.Screen name="ToDo" component={ToDoListScreen} />
+    </ToDoStack.Navigator>
+  )
+}
+
+function EmployeesScreens() {
+  return (
+    <EmployeesStack.Navigator
+      screenOptions={{
+        headerStyle: { backgroundColor: '#000' },
+        headerTitleStyle: { color: '#fff', fontWeight: 'bold' },
+        cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+        transitionSpec: {
+          open: { animation: 'timing', config: { duration: 200 } },
+          close: { animation: 'timing', config: { duration: 200 } }
         }
-      },
-      Employees: {
-        screen: createStackNavigator({
-          EmployeesList: EmployeesListScreen,
-          EmployeeDetails: EmployeeDetailsScreen,
-          EmployeeAdd: EmployeeAddScreen
-        }, {
-          transitionConfig,
-          defaultNavigationOptions: {
-            headerStyle: {
-              backgroundColor: '#000'
-            },
-            headerTitleStyle: {
-              color: '#f5f5f5',
-              fontWeight: 'bold',
-              fontSize: 22
-            },
-            headerLeftContainerStyle: {
-              width: 50,
-              paddingHorizontal: 0,
-              paddingLeft: 15,
-              justifyContent: 'center'
-            }
-          }
-        }),
-        navigationOptions: {
-          tabBarIcon: ({ tintColor, focused }) => (
-            <Icon
-              name={focused ? 'ios-briefcase' : 'md-briefcase'}
-              style={{
-                fontSize: 30,
-                color: tintColor
-              }}
-            />
-          )
-        },
-      },
-      Money: {
-        screen: createStackNavigator({
-          MyMoney: MyMoneyScreen,
-          MoneyDetails: MoneyDetailsScreen,
-          MoneyAdd: MoneyAddScreen
-        }, {
-          transitionConfig,
-          defaultNavigationOptions: {
-            headerStyle: {
-              backgroundColor: '#000'
-            },
-            headerTitleStyle: {
-              color: '#f5f5f5',
-              fontWeight: 'bold',
-              fontSize: 22
-            },
-            headerLeftContainerStyle: {
-              width: 50,
-              paddingHorizontal: 0,
-              paddingLeft: 15,
-              justifyContent: 'center'
-            }
-          }
-        }),
-        navigationOptions: {
-          tabBarIcon: ({ tintColor, focused }) => (
-            <Icon
-              name={focused ? 'ios-cash' : 'md-cash'}
-              style={{
-                fontSize: 30,
-                color: tintColor
-              }}
-            />
-          )
+      }}
+      headerMode="float"
+      initialRouteName="EmployeesList"
+    >
+      <EmployeesStack.Screen options={{ headerTitle: 'My Employees' }} name="EmployeesList" component={EmployeesListScreen} />
+      <EmployeesStack.Screen name="EmployeeAdd" component={EmployeeAddScreen} />
+      <EmployeesStack.Screen name="EmployeeDetails" component={EmployeeDetailsScreen} />
+    </EmployeesStack.Navigator>
+  )
+}
+
+function AccountsScreens() {
+  return (
+    <AccountsStack.Navigator
+      screenOptions={{
+        headerStyle: { backgroundColor: '#000' },
+        headerTitleStyle: { color: '#fff', fontWeight: 'bold' },
+        cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+        transitionSpec: {
+          open: { animation: 'timing', config: { duration: 200 } },
+          close: { animation: 'timing', config: { duration: 200 } }
         }
-      },
-      Profile: {
-        screen: createStackNavigator({
-          MyProfile: MyProfileScreen,
-          MyInfo: MyInfoScreen,
-          EditName: EditNameScreen,
-          ChangePassword: ChangePasswordScreen
-        }, {
-          defaultNavigationOptions: {
-            headerStyle: {
-              backgroundColor: '#000'
-            },
-            headerTitleStyle: {
-              color: '#f5f5f5',
-              fontWeight: 'bold',
-              fontSize: 22
-            },
-            headerLeftContainerStyle: {
-              width: 50,
-              paddingHorizontal: 0,
-              paddingLeft: 15,
-              justifyContent: 'center'
-            }
-          }
-        }),
-        navigationOptions: {
-          tabBarIcon: ({ tintColor, focused }) => (
-            <Icon
-              name={focused ? 'ios-person' : 'md-person'}
-              style={{
-                fontSize: 30,
-                color: tintColor
-              }}
-            />
-          )
-        }
-      }
-    },
-      {
-        tabBarPosition: 'bottom',
-        initialRouteName: 'ToDo',
-        tabBarOptions: {
-          style: {
-            backgroundColor: '#000',
-            height: 56
-          },
-          activeTintColor: '#008ee0',
-          inactiveTintColor: '#464953',
-          showLabel: false,
-          showIcon: true,
-          indicatorStyle: {
-            backgroundColor: '#008ee0'
-          }
-        }
-      })
-  }, {
-    initialRouteName: 'First'
-  })
-)
+      }}
+      headerMode="float"
+      initialRouteName="MoneyList"
+    >
+      <AccountsStack.Screen options={{ headerTitle: 'My Money' }} name="MoneyList" component={MyMoneyScreen} />
+      <AccountsStack.Screen name="MoneyAdd" component={MoneyAddScreen} />
+      <AccountsStack.Screen name="MoneyDetails" component={MoneyDetailsScreen} />
+    </AccountsStack.Navigator>
+  )
+}

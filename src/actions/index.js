@@ -1,5 +1,5 @@
 import firebase from 'firebase'
-import { navigate, navigateBack } from '../navigationRef'
+import { navigate, navigateBack } from '../RootNavigation'
 import { AsyncStorage, Keyboard } from 'react-native'
 
 let UID
@@ -230,7 +230,7 @@ export const updateAccountInfo = ({ name, status, amount, amount1, amount2, amou
         dispatch({
           type: 'account_updating_finished'
         })
-        navigate('MyMoney')
+        navigate('MoneyList')
       })
   }
 }
@@ -245,7 +245,7 @@ export const deleteAccount = ({ uid }) => {
         dispatch({
           type: 'account_deleting_finished'
         })
-        navigate('MyMoney')
+        navigate('MoneyList')
       })
   }
 }
