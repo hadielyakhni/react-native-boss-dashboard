@@ -1,10 +1,16 @@
-import React, { Component } from 'react'
-import { Text, View, StyleSheet, TouchableOpacity, Image, ActivityIndicator } from 'react-native'
+import React, { PureComponent } from 'react'
+import { Text, View, StyleSheet, TouchableOpacity, Image, InteractionManager } from 'react-native'
 import { Icon } from 'native-base'
 import { navigate } from '../RootNavigation'
 
-export default class EmployeeCard extends Component {
-  state = { isDetailsPressed: false }
+export default class EmployeeCard extends PureComponent {
+  constructor(props) {
+    super(props)
+    this.state = { canRender: false }
+    InteractionManager.runAfterInteractions(() => {
+      this.setState({ canRender: true })
+    })
+  }
   render() {
     const { name, status, amount1, amount2, amount3 } = this.props.data[1]
     return (
@@ -15,25 +21,15 @@ export default class EmployeeCard extends Component {
         <TouchableOpacity
           activeOpacity={1}
           style={styles.infoContainer}
-          onPress={() => {
-            this.setState({ isDetailsPressed: true })
-            setTimeout(() => {
-              navigate('MoneyDetails', { data: this.props.data })
-              setTimeout(() => {
-                this.setState({ isDetailsPressed: false })
-              }, 10)
-            }, 1)
-          }}>
+          onPress={() => { navigate('MoneyDetails', { data: this.props.data }) }}
+        >
           <View style={{ flex: 1, height: 56, justifyContent: 'space-between' }}>
             <Text style={styles.name}>{name}</Text>
             <Text style={{ color: status === 'ME' ? '#008ee0' : '#ff006a', fontSize: 16 }}>
               {amount1 + amount2 + amount3} $$
-                        </Text>
+            </Text>
           </View>
-          {!this.state.isDetailsPressed ?
-            <Icon name='ios-arrow-forward' style={{ fontSize: 28, color: '#c5c5c5' }} />
-            :
-            <ActivityIndicator size={26} color="#c5c5c5" />}
+          <Icon name='ios-arrow-forward' style={{ fontSize: 28, color: '#c5c5c5' }} />
         </TouchableOpacity>
       </View>
     )

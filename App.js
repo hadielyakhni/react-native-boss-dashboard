@@ -7,11 +7,8 @@ import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs'
 import { createStore, applyMiddleware } from 'redux'
 import { Provider } from 'react-redux'
-import firebase from 'firebase'
 import ReduxThunk from 'redux-thunk'
-import { Icon } from 'native-base'
 import reducers from './src/reducers'
-import firebaseConfig from './src/firebaseConfig'
 import {
   FirstScreen,
   LoginScreen,
@@ -38,10 +35,6 @@ const EmployeesStack = createStackNavigator()
 const AccountsStack = createStackNavigator()
 
 export default class App extends Component {
-  UNSAFE_componentWillMount() {
-    if (!firebase.apps.length)
-      firebase.initializeApp(firebaseConfig);
-  }
   render() {
     return (
       <Provider store={createStore(reducers, {}, applyMiddleware(ReduxThunk))}>

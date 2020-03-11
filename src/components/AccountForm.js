@@ -1,9 +1,9 @@
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import { Text, StyleSheet, View, TextInput } from 'react-native'
 import { CheckBox } from 'native-base'
 import Slider from 'react-native-slider'
 
-export default class AccountForm extends Component {
+export default class AccountForm extends PureComponent {
   render() {
     const { name, status, amount1, amount2, amount3 } = this.props.data
     return (
@@ -21,7 +21,7 @@ export default class AccountForm extends Component {
         <View style={styles.slidersView}>
           <Text style={styles.inputLabel}>
             0 ==> 100
-                    </Text>
+          </Text>
           <Slider
             onValueChange={value => this.props.updateInputs('amount1', value)}
             value={amount1}
@@ -37,7 +37,7 @@ export default class AccountForm extends Component {
           />
           <Text style={styles.inputLabel}>
             0 ==> 10000
-                    </Text>
+          </Text>
           <Slider
             onValueChange={value => this.props.updateInputs('amount2', value)}
             value={amount2}
@@ -53,7 +53,7 @@ export default class AccountForm extends Component {
           />
           <Text style={styles.inputLabel}>
             0 ==> 1000000
-                    </Text>
+          </Text>
           <Slider
             onValueChange={value => this.props.updateInputs('amount3', value)}
             value={amount3}
@@ -105,7 +105,7 @@ export default class AccountForm extends Component {
             <View style={{ alignItems: 'center' }}>
               <Text style={styles.amountLegend}>
                 Total Amount
-                            </Text>
+              </Text>
               <Text style={styles.amountText}>
                 {amount1 + amount2 + amount3}
                 <Text style={[styles.amountLegend, { fontSize: 36 }]}> $</Text>

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, StyleSheet, View } from 'react-native'
+import { Text, StyleSheet, View, ActivityIndicator, InteractionManager } from 'react-native'
 import { connect } from 'react-redux'
 import { addEmployee, updateOnScreenEmployeeInfo, resetEmployee } from '../actions'
 import { Spinner, Icon } from 'native-base'
@@ -13,6 +13,10 @@ import MyButton from '../components/MyButton'
 class EmployeeAddScreen extends Component {
   constructor(props) {
     super(props)
+    this.state = { canRender: false }
+    InteractionManager.runAfterInteractions(() => {
+      this.setState({ canRender: true })
+    })
     this.separator = () => <View style={{ marginVertical: 2 }}></View>
   }
   componentDidMount() {
@@ -21,82 +25,87 @@ class EmployeeAddScreen extends Component {
   render() {
     const { name, role, salary, phone, email } = this.props
     return (
-      <View style={styles.container}>
-        <Dialog
-          useNativeDriver={true}
-          rounded={true}
-          dialogStyle={[styles.dialogStyle, { height: 145 }]}
-          visible={this.props.addingEmployee}
-          dialogAnimation={new FadeAnimation({
-            initialValue: 0,
-            animationDuration: 150,
-            useNativeDriver: true,
-          })}
-        >
-          <DialogContent style={{ paddingTop: 30, alignItems: 'center', flex: 1, width: 200 }}>
-            <Text style={{ color: '#fff', fontSize: 23, fontWeight: 'bold' }}>
-              Adding...
+      this.state.canRender ?
+        <View style={styles.container}>
+          <Dialog
+            useNativeDriver={true}
+            rounded={true}
+            dialogStyle={[styles.dialogStyle, { height: 145 }]}
+            visible={this.props.addingEmployee}
+            dialogAnimation={new FadeAnimation({
+              initialValue: 0,
+              animationDuration: 150,
+              useNativeDriver: true,
+            })}
+          >
+            <DialogContent style={{ paddingTop: 30, alignItems: 'center', flex: 1, width: 200 }}>
+              <Text style={{ color: '#fff', fontSize: 23, fontWeight: 'bold' }}>
+                Adding...
                             </Text>
-            <Spinner size={30} color='#008ee0' />
-          </DialogContent>
-        </Dialog>
-        <MyInput
-          value={name}
-          leftIcon='ios-person'
-          style={{ fontSize: 16 }}
-          isSecure={false}
-          placeHolder='Name'
-          isAutoCorrect={false}
-          onChangeText={value => this.props.updateOnScreenEmployeeInfo({ prop: 'name', value })}
-        />
-        <this.separator />
-        <MyInput
-          value={role}
-          leftIcon='ios-briefcase'
-          style={{ fontSize: 16 }}
-          isSecure={false}
-          placeHolder='Role'
-          isAutoCorrect={false}
-          onChangeText={value => this.props.updateOnScreenEmployeeInfo({ prop: 'role', value })}
-        />
-        <this.separator />
-        <MyInput
-          value={salary}
-          leftIcon='ios-cash'
-          style={{ fontSize: 16 }}
-          isSecure={false}
-          placeHolder='Salary'
-          isAutoCorrect={false}
-          onChangeText={value => this.props.updateOnScreenEmployeeInfo({ prop: 'salary', value })}
-        />
-        <this.separator />
-        <MyInput
-          value={phone}
-          leftIcon='ios-call'
-          style={{ fontSize: 16 }}
-          isSecure={false}
-          placeHolder='Phone'
-          isAutoCorrect={false}
-          onChangeText={value => this.props.updateOnScreenEmployeeInfo({ prop: 'phone', value })}
-        />
-        <this.separator />
-        <MyInput
-          value={email}
-          leftIcon='ios-mail'
-          style={{ fontSize: 16 }}
-          isSecure={false}
-          placeHolder='Email'
-          isAutoCorrect={false}
-          onChangeText={value => this.props.updateOnScreenEmployeeInfo({ prop: 'email', value })}
-        />
-        <View style={{ flex: 1, justifyContent: 'flex-end' }}>
-          <MyButton
-            style={{ marginBottom: 15, height: 50 }}
-            textStyle={{ fontSize: 20 }}
-            onPress={() => this.props.addEmployee({ name, role, salary, phone, email })}
-          >Add</MyButton>
+              <Spinner size={30} color='#008ee0' />
+            </DialogContent>
+          </Dialog>
+          <MyInput
+            value={name}
+            leftIcon='ios-person'
+            style={{ fontSize: 16 }}
+            isSecure={false}
+            placeHolder='Name'
+            isAutoCorrect={false}
+            onChangeText={value => this.props.updateOnScreenEmployeeInfo({ prop: 'name', value })}
+          />
+          <this.separator />
+          <MyInput
+            value={role}
+            leftIcon='ios-briefcase'
+            style={{ fontSize: 16 }}
+            isSecure={false}
+            placeHolder='Role'
+            isAutoCorrect={false}
+            onChangeText={value => this.props.updateOnScreenEmployeeInfo({ prop: 'role', value })}
+          />
+          <this.separator />
+          <MyInput
+            value={salary}
+            leftIcon='ios-cash'
+            style={{ fontSize: 16 }}
+            isSecure={false}
+            placeHolder='Salary'
+            isAutoCorrect={false}
+            onChangeText={value => this.props.updateOnScreenEmployeeInfo({ prop: 'salary', value })}
+          />
+          <this.separator />
+          <MyInput
+            value={phone}
+            leftIcon='ios-call'
+            style={{ fontSize: 16 }}
+            isSecure={false}
+            placeHolder='Phone'
+            isAutoCorrect={false}
+            onChangeText={value => this.props.updateOnScreenEmployeeInfo({ prop: 'phone', value })}
+          />
+          <this.separator />
+          <MyInput
+            value={email}
+            leftIcon='ios-mail'
+            style={{ fontSize: 16 }}
+            isSecure={false}
+            placeHolder='Email'
+            isAutoCorrect={false}
+            onChangeText={value => this.props.updateOnScreenEmployeeInfo({ prop: 'email', value })}
+          />
+          <View style={{ flex: 1, justifyContent: 'flex-end' }}>
+            <MyButton
+              style={{ marginBottom: 15, height: 50 }}
+              textStyle={{ fontSize: 20 }}
+              onPress={() => this.props.addEmployee({ name, role, salary, phone, email })}
+            >Add</MyButton>
+          </View>
         </View>
-      </View>
+        :
+        <View style={{ flex: 1, backgroundColor: '#000', alignItems: 'center', justifyContent: 'center' }}>
+          <ActivityIndicator color="#008ee0" size={38} />
+        </View>
     )
   }
 }

@@ -1,4 +1,6 @@
-import firebase from 'firebase'
+import firebase from '@react-native-firebase/app'
+import '@react-native-firebase/auth'
+import '@react-native-firebase/database'
 import { navigate, navigateBack } from '../RootNavigation'
 import { AsyncStorage, Keyboard } from 'react-native'
 
@@ -63,6 +65,7 @@ export const fetchTasks = () => {
     })
     var d = new Date()
     UID = await AsyncStorage.getItem('uid')
+    console.log('uid', UID)
     firebase.database().ref(`users/${UID}/tasks`)
       .on('value', snapshot => {
         dispatch({

@@ -19,10 +19,7 @@ class MyMoneyScreen extends Component {
   constructor(props) {
     super(props)
     this.props.fetchAccounts()
-    this.state = {
-      searchWord: '',
-      isAddPressed: false
-    }
+    this.state = { searchWord: '' }
   }
   changeSearchWord = (text) => {
     this.setState({ searchWord: text })
@@ -140,21 +137,9 @@ class MyMoneyScreen extends Component {
         <TouchableOpacity
           activeOpacity={1}
           style={styles.addButton}
-          onPress={() => {
-            this.setState({ isAddPressed: true })
-            setTimeout(() => {
-              this.props.navigation.navigate('MoneyAdd')
-              setTimeout(() => {
-                this.setState({ isAddPressed: false })
-              }, 10)
-            }, 1)
-          }}
+          onPress={() => { this.props.navigation.navigate('MoneyAdd') }}
         >
-          {!this.state.isAddPressed ?
-            <Icon name='ios-add' style={{ color: '#fff', fontSize: 38 }} />
-            :
-            <ActivityIndicator size={32} color='#fff' />
-          }
+          <Icon name='ios-add' style={{ color: '#fff', fontSize: 38 }} />
         </TouchableOpacity>
       </View>
     )

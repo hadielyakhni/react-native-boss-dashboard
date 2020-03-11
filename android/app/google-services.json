@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "563000383293",
+    "firebase_url": "https://hadi-stop.firebaseio.com",
+    "project_id": "hadi-stop",
+    "storage_bucket": "hadi-stop.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:563000383293:android:a30f35cd5c2099fb8a9754",
+        "android_client_info": {
+          "package_name": "com.hadistop"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "563000383293-sshfn6i3mkcj180mk0cv49m7m3t1392u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCWK5adyoFDMo9aXNcLXo7f8u42Jtz5Fqc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "563000383293-sshfn6i3mkcj180mk0cv49m7m3t1392u.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -93,24 +93,6 @@ class MyProfileScreen extends Component {
             <Spinner size={30} color='#008ee0' />
           </DialogContent>
         </Dialog>
-        <Dialog
-          useNativeDriver={true}
-          rounded={true}
-          dialogStyle={[styles.dialogStyle, { height: 145 }]}
-          visible={this.props.updatingAccount}
-          dialogAnimation={new FadeAnimation({
-            initialValue: 0,
-            animationDuration: 150,
-            useNativeDriver: true,
-          })}
-        >
-          <DialogContent style={{ paddingTop: 30, alignItems: 'center', flex: 1, width: 200 }}>
-            <Text style={{ color: '#fff', fontSize: 23, fontWeight: 'bold' }}>
-              Updating...
-                      </Text>
-            <Spinner size={30} color='#008ee0' />
-          </DialogContent>
-        </Dialog>
         <TouchableOpacity
           style={styles.logoutButton}
           onPress={() => {

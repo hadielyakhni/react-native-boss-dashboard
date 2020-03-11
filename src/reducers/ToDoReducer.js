@@ -5,8 +5,6 @@ const INITIAL_STATE = {
 }
 
 export default (state = INITIAL_STATE, action) => {
-  if (action.type === 'tasks_fetch_success')
-    console.log('todo reducer fetch success')
   switch (action.type) {
     case 'add_pressed':
       return { ...state, task: '' }

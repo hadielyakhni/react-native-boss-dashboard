@@ -1,9 +1,9 @@
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import { TextInput, View, StyleSheet } from 'react-native'
 import { Icon } from 'native-base'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 
-export default class MyInput extends Component {
+export default class MyInput extends PureComponent {
   renderButton() {
     if (this.props.rightIcon)
       return (

@@ -179,4 +179,4 @@ const mapStateToProps = ({ todo }) => {
   }
 }
 
-export default connect(mapStateToProps, mapActionsToProps)(ToDoListScreen)
+export default connect(mapStateToProps, mapActionsToProps)(ToDoListScreen) 

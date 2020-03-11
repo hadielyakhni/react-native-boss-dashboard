@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import {
   Text,
   TextInput,
@@ -23,7 +23,7 @@ import { CheckBox } from 'react-native-elements'
 UIManager.setLayoutAnimationEnabledExperimental &&
   UIManager.setLayoutAnimationEnabledExperimental(true)
 
-class ToDoItem extends Component {
+class ToDoItem extends PureComponent {
   state = {
     task: this.props.task,
     isChecked: this.props.isDone,
@@ -35,7 +35,6 @@ class ToDoItem extends Component {
       update: {
         type: LayoutAnimation.Types.easeIn,
         property: LayoutAnimation.Properties.opacity
-
       }
     })
     const { taskId, task, isDone } = this.props
@@ -200,15 +199,9 @@ const styles = StyleSheet.create({
   }
 })
 
-const mapStateToProps = state => {
-  return {
-
-  }
-}
-
 const mapDispatchToProps = dispatch => ({
   deleteTask: taskId => dispatch(deleteTask(taskId)),
   updateTask: (taskId, task, isDone) => dispatch(updateTask(taskId, task, isDone))
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(ToDoItem)
+export default connect(null, mapDispatchToProps)(ToDoItem) 
