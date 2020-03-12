@@ -1,11 +1,7 @@
 import React, { Component } from 'react'
 import { Text, StyleSheet, View, Linking, InteractionManager, ActivityIndicator } from 'react-native'
 import { connect } from 'react-redux'
-import {
-  updateOnScreenEmployeeInfo,
-  updateEmployeeInfo,
-  deleteEmployee
-} from '../actions'
+import { updateEmployeeInfo, deleteEmployee } from '../actions'
 import Dialog, {
   SlideAnimation,
   FadeAnimation,
@@ -20,27 +16,21 @@ import MyButton from '../components/MyButton'
 class EmployeeDetailsScreen extends Component {
   constructor(props) {
     super(props)
+    this.props.navigation.setOptions({
+      headerTitle: this.props.route.params.data.name
+    })
     this.state = { canRender: false, dialogVisible: false }
     InteractionManager.runAfterInteractions(() => {
-      this.setState({ canRender: true })
-    })
-    this.separator = () => <View style={{ marginVertical: 2 }}></View>
-  }
-  componentDidMount() {
-    this.uid = this.props.route.params.uid
-    const { data } = this.props.route.params
-    this.props.navigation.setOptions({
-      headerTitle: data.name
-    })
-    Object.keys(data).map(prop => {
-      this.props.updateOnScreenEmployeeInfo({ prop, value: data[prop] })
+      this.separator = () => <View style={{ marginVertical: 2 }}></View>
+      this.uid = this.props.route.params.uid
+      const { data: { name, role, salary, phone, email } } = this.props.route.params
+      this.setState({ canRender: true, name, role, salary, phone, email })
     })
   }
   deletePressed = () => {
     this.setState({ dialogVisible: true })
   }
   render() {
-    const { name, role, salary, phone, email } = this.props
     return (
       this.state.canRender ?
         <View style={styles.container}>
@@ -90,7 +80,7 @@ class EmployeeDetailsScreen extends Component {
                           </Text>
                 <Text style={{ color: '#fff', fontSize: 18, fontWeight: 'bold' }}>
                   Are You Sure?
-                          </Text>
+                </Text>
               </View>
             </DialogContent>
           </Dialog>
@@ -108,7 +98,7 @@ class EmployeeDetailsScreen extends Component {
             <DialogContent style={{ paddingTop: 30, alignItems: 'center', flex: 1, width: 200 }}>
               <Text style={{ color: '#fff', fontSize: 23, fontWeight: 'bold' }}>
                 Deleting...
-                      </Text>
+              </Text>
               <Spinner size={30} color='#008ee0' />
             </DialogContent>
           </Dialog>
@@ -126,39 +116,39 @@ class EmployeeDetailsScreen extends Component {
             <DialogContent style={{ paddingTop: 30, alignItems: 'center', flex: 1, width: 200 }}>
               <Text style={{ color: '#fff', fontSize: 23, fontWeight: 'bold' }}>
                 Updating...
-                      </Text>
+              </Text>
               <Spinner size={30} color='#008ee0' />
             </DialogContent>
           </Dialog>
           <MyInput
             leftIcon='ios-person'
-            value={name}
+            value={this.state.name}
             style={{ fontSize: 16 }}
             isSecure={false}
             placeHolder='Name'
             isAutoCorrect={false}
-            onChangeText={value => this.props.updateOnScreenEmployeeInfo({ prop: 'name', value })}
+            onChangeText={value => this.setState({ name: value })}
           />
           <MyInput
-            value={role}
+            value={this.state.role}
             leftIcon='ios-briefcase'
             style={{ fontSize: 16 }}
             isSecure={false}
             placeHolder='Role'
             isAutoCorrect={false}
-            onChangeText={value => this.props.updateOnScreenEmployeeInfo({ prop: 'role', value })}
+            onChangeText={value => this.setState({ role: value })}
           />
           <MyInput
-            value={salary}
+            value={this.state.salary}
             leftIcon='ios-cash'
             style={{ fontSize: 16 }}
             isSecure={false}
             placeHolder='Salary'
             isAutoCorrect={false}
-            onChangeText={value => this.props.updateOnScreenEmployeeInfo({ prop: 'salary', value })}
+            onChangeText={value => this.setState({ salary: value })}
           />
           <MyInput
-            value={phone}
+            value={this.state.phone}
             leftIcon='ios-call'
             rightIcon='ios-arrow-forward'
             rightIconStyle={{ color: '#c5c5c5' }}
@@ -167,10 +157,10 @@ class EmployeeDetailsScreen extends Component {
             isSecure={false}
             placeHolder='Phone'
             isAutoCorrect={false}
-            onChangeText={value => this.props.updateOnScreenEmployeeInfo({ prop: 'phone', value })}
+            onChangeText={value => this.setState({ phone: value })}
           />
           <MyInput
-            value={email}
+            value={this.state.email}
             leftIcon='ios-mail'
             rightIcon='ios-arrow-forward'
             rightIconStyle={{ color: '#c5c5c5' }}
@@ -179,7 +169,7 @@ class EmployeeDetailsScreen extends Component {
             isSecure={false}
             placeHolder='Email'
             isAutoCorrect={false}
-            onChangeText={value => this.props.updateOnScreenEmployeeInfo({ prop: 'email', value })}
+            onChangeText={value => this.setState({ email: value })}
           />
           <View style={{ flex: 1, justifyContent: 'flex-end' }}>
             <MyButton
@@ -228,22 +218,13 @@ const styles = StyleSheet.create({
 })
 
 const mapDispatchToProps = dispatch => ({
-  updateOnScreenEmployeeInfo: ({ prop, value }) => dispatch(updateOnScreenEmployeeInfo({ prop, value })),
   updateEmployeeInfo: ({ name, role, salary, phone, email, uid }) => dispatch(updateEmployeeInfo({ name, role, salary, phone, email, uid })),
   deleteEmployee: ({ uid }) => dispatch(deleteEmployee({ uid }))
 })
 
-const mapStateToProps = state => {
-  const { name, role, salary, phone, email, deletingEmployee, updatingEmployee } = state.employees
-  return {
-    name,
-    role,
-    salary,
-    phone,
-    email,
-    updatingEmployee,
-    deletingEmployee
-  }
-}
+const mapStateToProps = state => ({
+  updatingEmployee: state.employees.updatingEmployee,
+  deletingEmployee: state.employees.deletingEmployee
+})
 
 export default connect(mapStateToProps, mapDispatchToProps)(EmployeeDetailsScreen)

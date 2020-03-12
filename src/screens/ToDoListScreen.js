@@ -23,6 +23,7 @@ UIManager.setLayoutAnimationEnabledExperimental &&
 class ToDoListScreen extends Component {
   constructor(props) {
     super(props)
+    this.state = { task: '' }
     this.props.fetchTasks()
   }
   onAdd() {
@@ -34,9 +35,8 @@ class ToDoListScreen extends Component {
         springDamping: 0.75
       }
     })
-    const { task, addTask } = this.props
-    if (task !== '')
-      addTask(task)
+    if (this.state.task !== '')
+      this.props.addTask(task)
   }
   rendertask(task) {
     return (
@@ -86,23 +86,23 @@ class ToDoListScreen extends Component {
         <View style={styles.addView}>
           <TextInput
             editable={this.props.fetchingTasks ? false : true}
-            value={this.props.task}
+            value={this.state.task}
             style={styles.input}
             placeholderTextColor='rgba(255, 255, 255, 0.6)'
             placeholder='Add Task'
             selectionColor={'red'}
-            onChangeText={text => this.props.changeTask(text)}
+            onChangeText={task => this.setState({ task })}
             onSubmitEditing={this.onAdd.bind(this)}
           />
           <TouchableOpacity
-            disabled={!this.props.task.trim()}
+            disabled={!this.state.task.trim()}
             activeOpacity={0.85}
-            style={this.props.task.trim() ? styles.iconView : { ...styles.iconView, borderColor: 'grey' }}
+            style={this.state.task.trim() ? styles.iconView : { ...styles.iconView, borderColor: 'grey' }}
             onPress={this.onAdd.bind(this)}
           >
             <Icon
               name='md-add-circle'
-              style={this.props.task.trim() ? styles.addIcon : { ...styles.addIcon, color: 'grey' }}
+              style={this.state.task.trim() ? styles.addIcon : { ...styles.addIcon, color: 'grey' }}
             />
           </TouchableOpacity>
         </View>
@@ -172,7 +172,6 @@ const mapStateToProps = ({ todo }) => {
     unDoneTasks = []
   }
   return {
-    task: todo.task,
     doneTasks,
     unDoneTasks,
     fetchingTasks: todo.fetchingTasks

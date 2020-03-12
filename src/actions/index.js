@@ -107,10 +107,6 @@ export const updateTask = (taskId, task, isDone) => {
 }
 
 // Employees Actions
-export const updateOnScreenEmployeeInfo = ({ prop, value }) => ({
-  type: 'employee_updated',
-  payload: { prop, value }
-})
 export const addEmployee = ({ name, role, salary, phone, email }) => {
   return dispatch => {
     dispatch({

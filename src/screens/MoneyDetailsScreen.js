@@ -22,51 +22,23 @@ import MyButton from '../components/MyButton'
 class MoneyDetailsScreen extends Component {
   constructor(props) {
     super(props)
-    const { data } = this.props.route.params
-    this.uid = data[0]
-    this.params = data[1]
-    const { name, status, amount1, amount2, amount3 } = this.params
     this.props.navigation.setOptions({
-      headerTitle: name
+      headerTitle: this.props.route.params.data[1].name
     })
-    this.state = {
-      canRender: false,
-      name,
-      status,
-      amount1,
-      amount2,
-      amount3,
-      dialogVisible: false
-    }
+    const { name, status, amount1, amount2, amount3 } = this.props.route.params.data[1]
+    this.state = { canRender: false, name, status, amount1, amount2, amount3, dialogVisible: false }
     InteractionManager.runAfterInteractions(() => {
+      this.uid = this.props.route.params.data[0]
       this.setState({ canRender: true })
     })
   }
   updateState = (prop, value) => {
-    switch (prop) {
-      case 'name':
-        this.setState({ 'name': value })
-        break
-      case 'status':
-        this.setState({ 'status': value })
-        break
-      case 'amount1':
-        this.setState({ 'amount1': value })
-        break
-      case 'amount2':
-        this.setState({ 'amount2': value })
-        break
-      case 'amount3':
-        this.setState({ 'amount3': value })
-        break
-    }
+    this.setState({ [prop]: value })
   }
   deletePressed = () => {
     this.setState({ dialogVisible: true })
   }
   render() {
-    const { name, status, amount1, amount2, amount3 } = this.state
-    const amount = amount1 + amount2 + amount3
     return (
       this.state.canRender ?
         <View style={styles.container}>
@@ -157,7 +129,13 @@ class MoneyDetailsScreen extends Component {
             </DialogContent>
           </Dialog>
           <AccountForm
-            data={this.state}
+            data={{
+              name: this.state.name,
+              status: this.state.status,
+              amount1: this.state.amount1,
+              amount2: this.state.amount2,
+              amount3: this.state.amount3
+            }}
             updateInputs={this.updateState}
             nameViewStyle={{ paddingTop: 0, paddingBottom: 22 }}
             sliderStyle={{ marginTop: 5, marginBottom: 28 }}

@@ -15,15 +15,19 @@ class EmployeeAddScreen extends Component {
     super(props)
     this.state = { canRender: false }
     InteractionManager.runAfterInteractions(() => {
-      this.setState({ canRender: true })
+      this.separator = () => <View style={{ marginVertical: 2 }}></View>
+      this.props.resetEmployee()
+      this.setState({
+        canRender: true,
+        name: '',
+        role: '',
+        salary: '',
+        phone: '',
+        email: ''
+      })
     })
-    this.separator = () => <View style={{ marginVertical: 2 }}></View>
-  }
-  componentDidMount() {
-    this.props.resetEmployee()
   }
   render() {
-    const { name, role, salary, phone, email } = this.props
     return (
       this.state.canRender ?
         <View style={styles.container}>
@@ -41,64 +45,67 @@ class EmployeeAddScreen extends Component {
             <DialogContent style={{ paddingTop: 30, alignItems: 'center', flex: 1, width: 200 }}>
               <Text style={{ color: '#fff', fontSize: 23, fontWeight: 'bold' }}>
                 Adding...
-                            </Text>
+              </Text>
               <Spinner size={30} color='#008ee0' />
             </DialogContent>
           </Dialog>
           <MyInput
-            value={name}
+            value={this.state.name}
             leftIcon='ios-person'
             style={{ fontSize: 16 }}
             isSecure={false}
             placeHolder='Name'
             isAutoCorrect={false}
-            onChangeText={value => this.props.updateOnScreenEmployeeInfo({ prop: 'name', value })}
+            onChangeText={value => this.setState({ name: value })}
           />
           <this.separator />
           <MyInput
-            value={role}
+            value={this.state.role}
             leftIcon='ios-briefcase'
             style={{ fontSize: 16 }}
             isSecure={false}
             placeHolder='Role'
             isAutoCorrect={false}
-            onChangeText={value => this.props.updateOnScreenEmployeeInfo({ prop: 'role', value })}
+            onChangeText={value => this.setState({ role: value })}
           />
           <this.separator />
           <MyInput
-            value={salary}
+            value={this.state.salary}
             leftIcon='ios-cash'
             style={{ fontSize: 16 }}
             isSecure={false}
             placeHolder='Salary'
             isAutoCorrect={false}
-            onChangeText={value => this.props.updateOnScreenEmployeeInfo({ prop: 'salary', value })}
+            onChangeText={value => this.setState({ salary: value })}
           />
           <this.separator />
           <MyInput
-            value={phone}
+            value={this.state.phone}
             leftIcon='ios-call'
             style={{ fontSize: 16 }}
             isSecure={false}
             placeHolder='Phone'
             isAutoCorrect={false}
-            onChangeText={value => this.props.updateOnScreenEmployeeInfo({ prop: 'phone', value })}
+            onChangeText={value => this.setState({ phone: value })}
           />
           <this.separator />
           <MyInput
-            value={email}
+            value={this.state.email}
             leftIcon='ios-mail'
             style={{ fontSize: 16 }}
             isSecure={false}
             placeHolder='Email'
             isAutoCorrect={false}
-            onChangeText={value => this.props.updateOnScreenEmployeeInfo({ prop: 'email', value })}
+            onChangeText={value => this.setState({ email: value })}
           />
           <View style={{ flex: 1, justifyContent: 'flex-end' }}>
             <MyButton
               style={{ marginBottom: 15, height: 50 }}
               textStyle={{ fontSize: 20 }}
-              onPress={() => this.props.addEmployee({ name, role, salary, phone, email })}
+              onPress={() => {
+                const { name, role, salary, phone, email } = this.state
+                this.props.addEmployee({ name, role, salary, phone, email })
+              }}
             >Add</MyButton>
           </View>
         </View>
@@ -135,22 +142,13 @@ const styles = StyleSheet.create({
   }
 })
 
+const mapStateToProps = state => ({
+  addingEmployee: state.employees.addingEmployee
+})
+
 const mapActionsToProps = dispatch => ({
-  updateOnScreenEmployeeInfo: ({ prop, value }) => dispatch(updateOnScreenEmployeeInfo({ prop, value })),
   addEmployee: ({ name, role, salary, phone, email }) => dispatch(addEmployee({ name, role, salary, phone, email })),
   resetEmployee: () => dispatch(resetEmployee())
 })
-
-const mapStateToProps = state => {
-  const { name, role, salary, phone, email, addingEmployee } = state.employees
-  return {
-    name,
-    role,
-    salary,
-    phone,
-    email,
-    addingEmployee
-  }
-}
 
 export default connect(mapStateToProps, mapActionsToProps)(EmployeeAddScreen)

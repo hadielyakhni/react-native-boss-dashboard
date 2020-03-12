@@ -11,39 +11,22 @@ class MoneyAddScreen extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      canRender: false,
-      name: '',
-      status: 'ME',
-      amount1: 0,
-      amount2: 0,
-      amount3: 0,
-      amount4: 0
+      canRender: false
     }
     InteractionManager.runAfterInteractions(() => {
-      this.setState({ canRender: true })
+      this.setState({
+        canRender: true,
+        name: '',
+        status: 'ME',
+        amount1: 0,
+        amount2: 0,
+        amount3: 0,
+        amount4: 0
+      })
     })
   }
   updateState = (prop, value) => {
-    switch (prop) {
-      case 'name':
-        this.setState({ 'name': value })
-        break
-      case 'status':
-        this.setState({ 'status': value })
-        break
-      case 'amount1':
-        this.setState({ 'amount1': value })
-        break
-      case 'amount2':
-        this.setState({ 'amount2': value })
-        break
-      case 'amount3':
-        this.setState({ 'amount3': value })
-        break
-      case 'amount4':
-        this.setState({ 'amount4': value })
-        break
-    }
+    this.setState({ [prop]: value })
   }
   render() {
     const { name, status, amount1, amount2, amount3, amount4 } = this.state
