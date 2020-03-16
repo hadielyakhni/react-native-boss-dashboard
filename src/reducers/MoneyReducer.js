@@ -17,8 +17,6 @@ export default (state = INITIAL_STATE, action) => {
       return { ...state, fetchingAccounts: true }
     case 'accounts_fetch_success':
       return { ...state, allAccounts: action.payload, fetchingAccounts: false }
-    case 'account_updated':
-      return { ...state, [action.payload.prop]: action.payload.value }
     case 'account_deleting_started':
       return { ...state, deletingAccount: true }
     case 'account_deleting_finished':

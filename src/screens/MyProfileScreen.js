@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Text, StyleSheet, View, TouchableOpacity, AsyncStorage } from 'react-native'
+import { goToAuth } from '../navigation/navigation'
 import { connect } from 'react-redux'
 import Dialog, {
   SlideAnimation,
@@ -46,7 +47,7 @@ class MyProfileScreen extends Component {
                     this.props.resetEmployees()
                     this.props.resetAccounts()
                     this.setState({ loggingout: false })
-                    this.props.navigation.navigate('Auth')
+                    goToAuth('fromMain')
                   }, 100);
                 }}
               />

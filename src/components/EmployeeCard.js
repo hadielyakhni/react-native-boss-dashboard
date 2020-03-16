@@ -1,11 +1,11 @@
 import React, { PureComponent } from 'react'
 import { Image, View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import { Icon } from 'native-base'
-import { navigate } from '../RootNavigation'
+import { Navigation } from 'react-native-navigation'
 
 export default class EmployeeCard extends PureComponent {
   render() {
-    const { uid, data } = this.props
+    const { componentId, uid, data } = this.props
     return (
       <View style={styles.container} >
         <View style={styles.imageContainer}>
@@ -14,7 +14,17 @@ export default class EmployeeCard extends PureComponent {
         <TouchableOpacity
           activeOpacity={1}
           style={styles.infoContainer}
-          onPress={() => { navigate('EmployeeDetails', { uid, data }) }}
+          onPress={() => {
+            Navigation.push(componentId, {
+              component: {
+                name: 'employeeDetails',
+                passProps: { data, uid },
+                options: {
+                  topBar: { title: { text: data.name } }
+                }
+              }
+            })
+          }}
         >
           <View style={{ flex: 1, height: 56, justifyContent: 'space-between' }}>
             <Text style={styles.name}>{data.name}</Text>

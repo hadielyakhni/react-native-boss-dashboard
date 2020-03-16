@@ -14,18 +14,12 @@ class EmployeeAddScreen extends Component {
   constructor(props) {
     super(props)
     this.state = { canRender: false }
-    InteractionManager.runAfterInteractions(() => {
-      this.separator = () => <View style={{ marginVertical: 2 }}></View>
-      this.props.resetEmployee()
-      this.setState({
-        canRender: true,
-        name: '',
-        role: '',
-        salary: '',
-        phone: '',
-        email: ''
+    setTimeout(() => {
+      InteractionManager.runAfterInteractions(() => {
+        this.separator = () => <View style={{ marginVertical: 2 }}></View>
+        this.setState({ canRender: true, name: '', role: '', salary: '', phone: '', email: '' })
       })
-    })
+    }, 400);
   }
   render() {
     return (
@@ -104,7 +98,7 @@ class EmployeeAddScreen extends Component {
               textStyle={{ fontSize: 20 }}
               onPress={() => {
                 const { name, role, salary, phone, email } = this.state
-                this.props.addEmployee({ name, role, salary, phone, email })
+                this.props.addEmployee(this.props.componentId, { name, role, salary, phone, email })
               }}
             >Add</MyButton>
           </View>
@@ -147,7 +141,7 @@ const mapStateToProps = state => ({
 })
 
 const mapActionsToProps = dispatch => ({
-  addEmployee: ({ name, role, salary, phone, email }) => dispatch(addEmployee({ name, role, salary, phone, email })),
+  addEmployee: (componentId, { name, role, salary, phone, email }) => dispatch(addEmployee(componentId, { name, role, salary, phone, email })),
   resetEmployee: () => dispatch(resetEmployee())
 })
 

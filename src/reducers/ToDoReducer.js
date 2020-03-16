@@ -8,8 +8,6 @@ export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case 'add_pressed':
       return { ...state, task: '' }
-    case 'task_changed':
-      return { ...state, task: action.payload }
     case 'fetching_tasks':
       return { ...state, fetchingTasks: true }
     case 'tasks_fetch_success':

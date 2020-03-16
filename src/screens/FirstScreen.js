@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
-import { StyleSheet, View, AsyncStorage } from 'react-native'
+import { StyleSheet, View } from 'react-native'
+import AsyncStorage from '@react-native-community/async-storage'
+import { goToAuth, goToMain } from '../navigation/navigation'
 import { Spinner } from 'native-base'
 
 export class FirstScreen extends Component {
@@ -9,9 +11,9 @@ export class FirstScreen extends Component {
   tryAutomaticSignIn = async () => {
     const uid = await AsyncStorage.getItem('uid')
     if (uid)
-      this.props.navigation.navigate('Main')
+      goToMain()
     else
-      this.props.navigation.navigate('Auth')
+      goToAuth()
   }
   render() {
     return (

@@ -1,23 +1,14 @@
 import firebase from '@react-native-firebase/app'
 import '@react-native-firebase/auth'
 import '@react-native-firebase/database'
-import { navigate, navigateBack } from '../RootNavigation'
-import { AsyncStorage, Keyboard } from 'react-native'
+import { Navigation } from 'react-native-navigation'
+import { goToMain } from '../navigation/navigation'
+import { Keyboard } from 'react-native'
+import AsyncStorage from '@react-native-community/async-storage'
 
 let UID
 
 // Auth Actions
-export const resetAuth = () => ({
-  type: 'auth_reset'
-})
-export const emailChanged = email => ({
-  type: 'email_changed',
-  payload: email
-})
-export const passwordChanged = password => ({
-  type: 'password_changed',
-  payload: password
-})
 export const userSignin = (email, password) =>
   dispatch => {
     dispatch({
@@ -26,11 +17,13 @@ export const userSignin = (email, password) =>
     firebase.auth().signInWithEmailAndPassword(email.trim(), password)
       .then(async user => {
         await AsyncStorage.setItem('uid', user.user.uid)
-        dispatch({
-          type: 'user_signedin',
-          payload: user
-        })
-        navigate('Main')
+        goToMain()
+        setTimeout(() => {
+          dispatch({
+            type: 'user_signedin',
+            payload: user
+          })
+        }, 100);
       })
       .catch(err => dispatch({
         type: 'auth_error',
@@ -45,11 +38,13 @@ export const userSignup = (email, password) =>
     firebase.auth().createUserWithEmailAndPassword(email.trim(), password)
       .then(async user => {
         await AsyncStorage.setItem('uid', user.user.uid)
-        dispatch({
-          type: 'user_signedup',
-          payload: user
-        })
-        navigate('Main')
+        goToMain()
+        setTimeout(() => {
+          dispatch({
+            type: 'user_signedup',
+            payload: user
+          })
+        }, 100);
       })
       .catch(err => dispatch({
         type: 'auth_error',
@@ -65,7 +60,6 @@ export const fetchTasks = () => {
     })
     var d = new Date()
     UID = await AsyncStorage.getItem('uid')
-    console.log('uid', UID)
     firebase.database().ref(`users/${UID}/tasks`)
       .on('value', snapshot => {
         dispatch({
@@ -75,10 +69,6 @@ export const fetchTasks = () => {
       })
   }
 }
-export const changeTask = task => ({
-  type: 'task_changed',
-  payload: task
-})
 export const addTask = task => {
   Keyboard.dismiss()
   return dispatch => {
@@ -107,21 +97,22 @@ export const updateTask = (taskId, task, isDone) => {
 }
 
 // Employees Actions
-export const addEmployee = ({ name, role, salary, phone, email }) => {
+export const addEmployee = (componentId, { name, role, salary, phone, email }) => {
   return dispatch => {
     dispatch({
       type: 'employee_adding_started'
     })
     firebase.database().ref(`/users/${UID}/employees`)
       .push({ name, role, salary, phone, email })
-      .then(() => {
-        dispatch({
-          type: 'employee_adding_finished'
-        })
-        navigateBack()
+    setTimeout(() => {
+      dispatch({
+        type: 'employee_adding_finished'
       })
+      Navigation.pop(componentId)
+    }, 400)
   }
 }
+
 export const fetchEmployees = () => {
   return async dispatch => {
     dispatch({
@@ -137,40 +128,35 @@ export const fetchEmployees = () => {
       })
   }
 }
-export const resetEmployee = () => ({
-  type: 'employee_reset'
-})
-export const updateEmployeeInfo = ({ name, role, salary, phone, email, uid }) => {
+export const updateEmployeeInfo = (componentId, { name, role, salary, phone, email, uid }) => {
   return dispatch => {
     dispatch({
       type: 'employee_updating_started'
     })
     firebase.database().ref(`users/${UID}/employees/${uid}`)
       .set({ name, role, salary, phone, email })
-      .then(() => {
-        dispatch({
-          type: 'employee_reset'
-        })
-        dispatch({
-          type: 'employee_updating_finished'
-        })
-        navigate('EmployeesList')
+    setTimeout(() => {
+      dispatch({
+        type: 'employee_updating_finished'
       })
+      Navigation.pop(componentId)
+    }, 400);
+
   }
 }
-export const deleteEmployee = ({ uid }) => {
+
+export const deleteEmployee = (componentId, { uid }) => {
   return dispatch => {
     dispatch({
       type: 'employee_deleting_started'
     })
-    firebase.database().ref(`users/${UID}/employees/${uid}`)
-      .remove()
-      .then(() => {
-        dispatch({
-          type: 'employee_deleting_finished'
-        })
-        navigate('EmployeesList')
+    firebase.database().ref(`users/${UID}/employees/${uid}`).remove()
+    setTimeout(() => {
+      dispatch({
+        type: 'employee_deleting_finished'
       })
+      Navigation.pop(componentId)
+    }, 400);
   }
 }
 
@@ -190,61 +176,53 @@ export const fetchAccounts = () => {
       })
   }
 }
-export const resetAccount = () => ({
-  type: 'account_reset'
-})
-export const updateOnScreenAccountInfo = ({ prop, value }) => ({
-  type: 'account_updated',
-  payload: { prop, value }
-})
-export const addMoneyAccount = ({ name, status, amount, amount1, amount2, amount3 }) => {
+export const addMoneyAccount = (componentId, { name, status, amount, amount1, amount2, amount3 }) => {
   return dispatch => {
     dispatch({
       type: 'account_adding_started'
     })
     firebase.database().ref(`/users/${UID}/money`)
       .push({ name, status, amount, amount1, amount2, amount3 })
-      .then(() => {
-        dispatch({
-          type: 'account_reset'
-        })
-        dispatch({
-          type: 'account_adding_finished'
-        })
-        navigateBack()
+    setTimeout(() => {
+      dispatch({
+        type: 'account_reset'
       })
+      dispatch({
+        type: 'account_adding_finished'
+      })
+      Navigation.pop(componentId)
+    }, 400);
   }
 }
-export const updateAccountInfo = ({ name, status, amount, amount1, amount2, amount3, uid }) => {
+export const updateAccountInfo = (componentId, { name, status, amount, amount1, amount2, amount3, uid }) => {
   return dispatch => {
     dispatch({
       type: 'account_updating_started'
     })
     firebase.database().ref(`users/${UID}/money/${uid}`)
       .set({ name, status, amount, amount1, amount2, amount3 })
-      .then(() => {
-        dispatch({
-          type: 'account_reset'
-        })
-        dispatch({
-          type: 'account_updating_finished'
-        })
-        navigate('MoneyList')
+    setTimeout(() => {
+      dispatch({
+        type: 'account_reset'
       })
+      dispatch({
+        type: 'account_updating_finished'
+      })
+      Navigation.pop(componentId)
+    }, 400);
   }
 }
-export const deleteAccount = ({ uid }) => {
+export const deleteAccount = (componentId, { uid }) => {
   return dispatch => {
     dispatch({
       type: 'account_deleting_started'
     })
-    firebase.database().ref(`users/${UID}/money/${uid}`)
-      .remove()
-      .then(() => {
-        dispatch({
-          type: 'account_deleting_finished'
-        })
-        navigate('MoneyList')
+    firebase.database().ref(`users/${UID}/money/${uid}`).remove()
+    setTimeout(() => {
+      dispatch({
+        type: 'account_deleting_finished'
       })
+      Navigation.pop(componentId)
+    }, 400);
   }
 }

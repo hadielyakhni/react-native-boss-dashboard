@@ -5,9 +5,9 @@ import {
   Text,
   TouchableOpacity,
   FlatList,
-  TextInput,
-  ActivityIndicator
+  TextInput
 } from 'react-native'
+import { Navigation } from 'react-native-navigation'
 import { connect } from 'react-redux'
 import { fetchEmployees } from '../actions'
 import { Icon } from 'native-base'
@@ -33,7 +33,9 @@ class EmployeesListScreen extends Component {
           contentContainerStyle={{ paddingVertical: 15 }}
           data={matchedEmployees}
           keyExtractor={employee => employee[0]}
-          renderItem={employee => <EmployeeCard uid={employee.item[0]} data={employee.item[1]} />}
+          renderItem={employee => (
+            <EmployeeCard componentId={this.props.componentId} uid={employee.item[0]} data={employee.item[1]} />
+          )}
         />
       )
     }
@@ -72,11 +74,20 @@ class EmployeesListScreen extends Component {
         <TouchableOpacity
           activeOpacity={1}
           style={styles.addButton}
-          onPress={() => { this.props.navigation.navigate('EmployeeAdd') }}
+          onPress={() => {
+            Navigation.push(this.props.componentId, {
+              component: {
+                name: 'employeeAdd',
+                options: {
+                  topBar: { title: { text: 'Add Employee' } }
+                }
+              }
+            })
+          }}
         >
           <Icon name='ios-add' style={{ color: '#fff', fontSize: 38 }} />
         </TouchableOpacity>
-      </View>
+      </View >
     )
   }
 }

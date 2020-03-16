@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react'
 import { Text, View, StyleSheet, TouchableOpacity, Image, InteractionManager } from 'react-native'
 import { Icon } from 'native-base'
-import { navigate } from '../RootNavigation'
+import { Navigation } from 'react-native-navigation'
 
 export default class EmployeeCard extends PureComponent {
   constructor(props) {
@@ -21,7 +21,17 @@ export default class EmployeeCard extends PureComponent {
         <TouchableOpacity
           activeOpacity={1}
           style={styles.infoContainer}
-          onPress={() => { navigate('MoneyDetails', { data: this.props.data }) }}
+          onPress={() => {
+            Navigation.push(this.props.componentId, {
+              component: {
+                name: 'moneyDetails',
+                passProps: { data: this.props.data },
+                options: {
+                  topBar: { title: { text: this.props.data[1].name } }
+                }
+              }
+            })
+          }}
         >
           <View style={{ flex: 1, height: 56, justifyContent: 'space-between' }}>
             <Text style={styles.name}>{name}</Text>

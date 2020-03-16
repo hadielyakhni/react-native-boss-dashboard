@@ -16,8 +16,6 @@ export default (state = INITIAL_STATE, action) => {
       return { ...state, fetchingEmployees: true }
     case 'employees_fetch_success':
       return { ...state, allEmployees: action.payload, fetchingEmployees: false }
-    case 'employee_reset':
-      return { ...state, ...INITIAL_STATE, fetchingEmployees: false }
     case 'employee_deleting_started':
       return { ...state, deletingEmployee: true }
     case 'employee_deleting_finished':

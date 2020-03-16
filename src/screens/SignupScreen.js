@@ -5,12 +5,15 @@ import {
   StyleSheet,
   View,
   Keyboard,
-  TouchableWithoutFeedback
+  KeyboardAvoidingView,
+  TouchableWithoutFeedback,
+  Dimensions
 } from 'react-native'
+import { Navigation } from 'react-native-navigation'
 import { Spinner } from 'native-base'
 import MyInput from '../components/MyInput'
 import MyButton from '../components/MyButton'
-import { emailChanged, passwordChanged, userSignup, resetAuth } from '../actions'
+import { userSignup } from '../actions'
 
 class SignupScreen extends Component {
   constructor() {
@@ -18,6 +21,8 @@ class SignupScreen extends Component {
     this.keyboardDidShowListner = Keyboard.addListener('keyboardDidShow', this._keyboardDidShow)
     this.keyboardDidHideListner = Keyboard.addListener('keyboardDidHide', this._keyboardDidHide)
     this.state = {
+      email: '',
+      password: '',
       isKeyboardOpened: false
     }
   }
@@ -28,18 +33,17 @@ class SignupScreen extends Component {
     this.setState({ isKeyboardOpened: false })
   }
   onSignup = () => {
-    const { email, password, userSignup } = this.props
-    userSignup(email, password)
+    const { email, password } = this.state
+    this.props.userSignup(email, password)
   }
   renderSignupButton() {
     if (!this.props.loading)
       return (
         <MyButton
-          style={{ marginTop: 15, marginBottom: 10 }}
+          style={{ marginTop: 15, marginBottom: 10, }}
+          disabled={!this.state.email || !this.state.password}
           onPress={this.onSignup.bind(this)}
-        >
-          Sign Up
-      </MyButton>
+        >Sign Up</MyButton>
       )
     return (
       <View style={styles.loadingContainer}>
@@ -59,48 +63,52 @@ class SignupScreen extends Component {
     return <View style={{ height: 20 }} />
   }
   render() {
-    const { email, password, emailChanged, passwordChanged } = this.props
     return (
-      <View style={styles.container}>
-        <View style={{ paddingBottom: this.state.isKeyboardOpened ? 320 : 100 }}>
-          <Text style={[styles.title, { marginBottom: 0 }]}>
-            Organize
-          </Text>
-          <Text style={[styles.title, { fontSize: 52 }]}>
-            Your Life!
-          </Text>
-          <MyInput
-            keyboardType='email-address'
-            value={email}
-            isSecure={false}
-            placeHolder='Email'
-            isAutoCorrect={true}
-            onChangeText={text => emailChanged(text)}
-          />
-          <MyInput
-            value={password}
-            isSecure={true}
-            placeHolder='Password'
-            isAutoCorrect={false}
-            onChangeText={text => passwordChanged(text)}
-          />
-          {this.renderSignupButton()}
-          <MyButton
-            style={{ marginTop: 15, marginBottom: 10 }}
-          >
-            Sign Up with facebook
-          </MyButton>
-          <View style={styles.signupOption}>
-            <Text style={styles.signupText}>
-              Already have an account?
+      <KeyboardAvoidingView behavior='padding' style={styles.container}>
+        <View
+          style={{ flex: 1, justifyContent: 'center' }}
+        >
+          <Text style={styles.title}>Hadi's Top</Text>
+          <View style={{ paddingHorizontal: 33 }}>
+            <MyInput
+              keyboardType='email-address'
+              value={this.state.email}
+              style={{ paddingHorizontal: 15 }}
+              isSecure={false}
+              placeHolder='Email'
+              isAutoCorrect={true}
+              onChangeText={email => this.setState({ email })}
+            />
+            <MyInput
+              value={this.state.password}
+              style={{ paddingHorizontal: 15 }}
+              isSecure={true}
+              placeHolder='Password'
+              isAutoCorrect={false}
+              onChangeText={password => this.setState({ password })}
+            />
+            {this.renderSignupButton()}
+            <MyButton>
+              Sign Up With Facebbok
+            </MyButton>
+          </View>
+          <View style={[styles.loginOption, { bottom: this.state.isKeyboardOpened ? 30 : 0 }]}>
+            <Text style={styles.loginText}>
+              Already a member?
             </Text>
             <TouchableWithoutFeedback
               onPress={() => {
-                this.props.resetAuth()
-                this.props.navigation.navigate('Login')
+                setTimeout(() => { this.setState({ email: '', password: '' }) }, 100)
+                Navigation.pop(this.props.componentId, {
+                  animations: {
+                    pop: {
+                      enabled: false
+                    }
+                  }
+                })
               }}
             >
-              <Text style={styles.signupLink}>
+              <Text style={styles.loginLink}>
                 Log in.
               </Text>
             </TouchableWithoutFeedback>
@@ -109,7 +117,7 @@ class SignupScreen extends Component {
             {this.renderError()}
           </View>
         </View>
-      </View>
+      </KeyboardAvoidingView>
     )
   }
 }
@@ -118,28 +126,32 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#000',
-    paddingHorizontal: 33,
-    justifyContent: 'center'
+    justifyContent: 'center',
+    paddingBottom: 15
   },
   title: {
-    marginBottom: 35,
+    marginBottom: 25,
     color: '#fff',
-    fontSize: 40,
-    fontWeight: 'bold',
-    alignSelf: 'center'
+    fontSize: 44,
+    alignSelf: 'center',
+    fontFamily: 'PermanentMarker-Regular'
   },
-  signupOption: {
-    marginTop: 20,
+  loginOption: {
+    position: 'absolute',
+    height: 50,
+    width: Dimensions.get('window').width,
+    borderTopColor: 'rgba(255, 255, 255, 0.2)',
+    borderTopWidth: 1,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center'
   },
-  signupText: {
+  loginText: {
     fontSize: 12.5,
     color: 'rgba(255, 255, 255, 0.6)',
     marginRight: 4
   },
-  signupLink: {
+  loginLink: {
     color: '#fff',
     fontSize: 12.5,
     fontWeight: 'bold'
@@ -163,10 +175,7 @@ const styles = StyleSheet.create({
 })
 
 const mapActionsToProps = dispatch => ({
-  emailChanged: (email) => dispatch(emailChanged(email)),
-  passwordChanged: (password) => dispatch(passwordChanged(password)),
-  userSignup: (email, password) => dispatch(userSignup(email, password)),
-  resetAuth: () => dispatch(resetAuth())
+  userSignup: (email, password) => dispatch(userSignup(email, password))
 })
 
 const mapStateToProps = state => {

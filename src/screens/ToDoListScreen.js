@@ -35,8 +35,10 @@ class ToDoListScreen extends Component {
         springDamping: 0.75
       }
     })
-    if (this.state.task !== '')
-      this.props.addTask(task)
+    if (this.state.task !== '') {
+      this.props.addTask(this.state.task)
+      this.setState({ task: '' })
+    }
   }
   rendertask(task) {
     return (
@@ -154,7 +156,6 @@ const styles = StyleSheet.create({
 })
 
 const mapActionsToProps = dispatch => ({
-  changeTask: task => dispatch(changeTask(task)),
   addTask: newTask => dispatch(addTask(newTask)),
   fetchTasks: () => dispatch(fetchTasks())
 })

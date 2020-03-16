@@ -22,15 +22,14 @@ import MyButton from '../components/MyButton'
 class MoneyDetailsScreen extends Component {
   constructor(props) {
     super(props)
-    this.props.navigation.setOptions({
-      headerTitle: this.props.route.params.data[1].name
-    })
-    const { name, status, amount1, amount2, amount3 } = this.props.route.params.data[1]
+    const { name, status, amount1, amount2, amount3 } = this.props.data[1]
     this.state = { canRender: false, name, status, amount1, amount2, amount3, dialogVisible: false }
-    InteractionManager.runAfterInteractions(() => {
-      this.uid = this.props.route.params.data[0]
-      this.setState({ canRender: true })
-    })
+    setTimeout(() => {
+      InteractionManager.runAfterInteractions(() => {
+        this.uid = this.props.data[0]
+        this.setState({ canRender: true })
+      })
+    }, 300);
   }
   updateState = (prop, value) => {
     this.setState({ [prop]: value })
@@ -64,7 +63,7 @@ class MoneyDetailsScreen extends Component {
                   text="YES"
                   onPress={() => {
                     this.setState({ dialogVisible: false });
-                    this.props.deleteAccount({ uid: this.uid })
+                    this.props.deleteAccount(this.props.componentId, { uid: this.uid })
                   }}
                 />
               </DialogFooter>
@@ -144,7 +143,10 @@ class MoneyDetailsScreen extends Component {
             <MyButton
               style={{ height: 55 }}
               textStyle={{ fontSize: 20 }}
-              onPress={() => this.props.updateAccountInfo({ name, status, amount, amount1, amount2, amount3, uid: this.uid })}
+              onPress={() => {
+                const { name, status, amount, amount1, amount2, amount3 } = this.state
+                this.props.updateAccountInfo(this.props.componentId, { name, status, amount, amount1, amount2, amount3, uid: this.uid })
+              }}
             >Save</MyButton>
             <MyButton
               style={{ marginBottom: 20, height: 50, backgroundColor: '#E65100' }}
@@ -165,7 +167,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#000',
-    paddingTop: 25
+    paddingTop: 18
   },
   backButton: {
     marginRight: 15,
@@ -190,10 +192,10 @@ const styles = StyleSheet.create({
 })
 
 const mapDispatchToProps = dispatch => ({
-  updateAccountInfo: ({ name, status, amount, amount1, amount2, amount3, uid }) => {
-    return dispatch(updateAccountInfo({ name, status, amount, amount1, amount2, amount3, uid }))
-  },
-  deleteAccount: ({ uid }) => dispatch(deleteAccount({ uid }))
+  updateAccountInfo: (componentId, { name, status, amount, amount1, amount2, amount3, uid }) => (
+    dispatch(updateAccountInfo(componentId, { name, status, amount, amount1, amount2, amount3, uid }))
+  ),
+  deleteAccount: (componentId, { uid }) => dispatch(deleteAccount(componentId, { uid }))
 })
 
 const mapStateToProps = state => ({

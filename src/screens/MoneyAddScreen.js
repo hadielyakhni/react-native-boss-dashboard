@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
 import { Text, StyleSheet, View, InteractionManager, ActivityIndicator } from 'react-native'
+import { Navigation } from 'react-native-navigation'
 import { connect } from 'react-redux'
-import { addMoneyAccount, updateOnScreenAccountInfo, resetAccount } from '../actions'
-import { Icon, Spinner } from 'native-base'
+import { addMoneyAccount, resetAccount } from '../actions'
+import { Spinner } from 'native-base'
 import Dialog, { DialogContent, FadeAnimation } from 'react-native-popup-dialog'
 import MyButton from '../components/MyButton'
 import AccountForm from '../components/AccountForm'
@@ -10,26 +11,18 @@ import AccountForm from '../components/AccountForm'
 class MoneyAddScreen extends Component {
   constructor(props) {
     super(props)
-    this.state = {
-      canRender: false
-    }
-    InteractionManager.runAfterInteractions(() => {
-      this.setState({
-        canRender: true,
-        name: '',
-        status: 'ME',
-        amount1: 0,
-        amount2: 0,
-        amount3: 0,
-        amount4: 0
+    this.state = { canRender: false }
+    setTimeout(() => {
+      InteractionManager.runAfterInteractions(() => {
+        this.setState({ canRender: true, name: '', status: 'ME', amount1: 0, amount2: 0, amount3: 0 })
       })
-    })
+    }, 400);
   }
   updateState = (prop, value) => {
     this.setState({ [prop]: value })
   }
   render() {
-    const { name, status, amount1, amount2, amount3, amount4 } = this.state
+    const { name, status, amount1, amount2, amount3 } = this.state
     return (
       this.state.canRender ?
         <View style={styles.container}>
@@ -59,8 +52,8 @@ class MoneyAddScreen extends Component {
             <MyButton
               style={styles.addButton}
               onPress={() => {
-                const total = amount1 + amount2 + amount3 + amount4
-                return this.props.addMoneyAccount({ name, status, amount: total, amount1, amount2, amount3, amount4 })
+                const total = amount1 + amount2 + amount3
+                return this.props.addMoneyAccount(this.props.componentId, { name, status, amount: total, amount1, amount2, amount3 })
               }}
             >Add</MyButton>
           </View>
@@ -109,10 +102,9 @@ const styles = StyleSheet.create({
 const mapDispatchToProps = dispatch => {
   return {
     resetAccount: () => dispatch(resetAccount()),
-    addMoneyAccount: ({ name, status, amount, amount1, amount2, amount3, amount4 }) => {
-      return dispatch(addMoneyAccount({ name, status, amount, amount1, amount2, amount3, amount4 }))
-    },
-    updateOnScreenAccountInfo: ({ prop, value }) => dispatch(updateOnScreenAccountInfo({ prop, value }))
+    addMoneyAccount: (componentId, { name, status, amount, amount1, amount2, amount3 }) => (
+      dispatch(addMoneyAccount(componentId, { name, status, amount, amount1, amount2, amount3 }))
+    )
   }
 }
 

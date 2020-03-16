@@ -16,16 +16,15 @@ import MyButton from '../components/MyButton'
 class EmployeeDetailsScreen extends Component {
   constructor(props) {
     super(props)
-    this.props.navigation.setOptions({
-      headerTitle: this.props.route.params.data.name
-    })
     this.state = { canRender: false, dialogVisible: false }
-    InteractionManager.runAfterInteractions(() => {
-      this.separator = () => <View style={{ marginVertical: 2 }}></View>
-      this.uid = this.props.route.params.uid
-      const { data: { name, role, salary, phone, email } } = this.props.route.params
-      this.setState({ canRender: true, name, role, salary, phone, email })
-    })
+    setTimeout(() => {
+      InteractionManager.runAfterInteractions(() => {
+        this.separator = () => <View style={{ marginVertical: 2 }}></View>
+        this.uid = this.props.uid
+        const { data: { name, role, salary, phone, email } } = this.props
+        this.setState({ canRender: true, name, role, salary, phone, email })
+      })
+    }, 400);
   }
   deletePressed = () => {
     this.setState({ dialogVisible: true })
@@ -56,7 +55,7 @@ class EmployeeDetailsScreen extends Component {
                   text="YES"
                   onPress={() => {
                     this.setState({ dialogVisible: false });
-                    this.props.deleteEmployee({ uid: this.uid })
+                    this.props.deleteEmployee(this.props.componentId, { uid: this.uid })
                   }}
                 />
               </DialogFooter>
@@ -152,7 +151,7 @@ class EmployeeDetailsScreen extends Component {
             leftIcon='ios-call'
             rightIcon='ios-arrow-forward'
             rightIconStyle={{ color: '#c5c5c5' }}
-            onRightIconPress={() => Linking.openURL(`tel:${phone}`)}
+            onRightIconPress={() => Linking.openURL(`tel:${this.state.phone}`)}
             style={{ fontSize: 16 }}
             isSecure={false}
             placeHolder='Phone'
@@ -164,7 +163,7 @@ class EmployeeDetailsScreen extends Component {
             leftIcon='ios-mail'
             rightIcon='ios-arrow-forward'
             rightIconStyle={{ color: '#c5c5c5' }}
-            onRightIconPress={() => Linking.openURL(`mailto:${email}`)}
+            onRightIconPress={() => { Linking.openURL(`mailto:${this.state.email}`) }}
             style={{ fontSize: 16 }}
             isSecure={false}
             placeHolder='Email'
@@ -175,7 +174,10 @@ class EmployeeDetailsScreen extends Component {
             <MyButton
               style={{ marginBottom: 10, height: 50 }}
               textStyle={{ fontSize: 20 }}
-              onPress={() => this.props.updateEmployeeInfo({ name, role, salary, phone, email, uid: this.uid })}
+              onPress={() => {
+                const { name, role, salary, phone, email } = this.state
+                this.props.updateEmployeeInfo(this.props.componentId, { name, role, salary, phone, email, uid: this.uid })
+              }}
             >Save</MyButton>
             <MyButton
               style={{ marginBottom: 20, height: 50, backgroundColor: '#E65100' }}
@@ -218,8 +220,8 @@ const styles = StyleSheet.create({
 })
 
 const mapDispatchToProps = dispatch => ({
-  updateEmployeeInfo: ({ name, role, salary, phone, email, uid }) => dispatch(updateEmployeeInfo({ name, role, salary, phone, email, uid })),
-  deleteEmployee: ({ uid }) => dispatch(deleteEmployee({ uid }))
+  updateEmployeeInfo: (componentId, { name, role, salary, phone, email, uid }) => dispatch(updateEmployeeInfo(componentId, { name, role, salary, phone, email, uid })),
+  deleteEmployee: (componentId, { uid }) => dispatch(deleteEmployee(componentId, { uid }))
 })
 
 const mapStateToProps = state => ({

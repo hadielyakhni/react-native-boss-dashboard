@@ -6,9 +6,10 @@ import {
   TouchableOpacity,
   FlatList,
   TextInput,
-  ActivityIndicator,
-  ScrollView
+  ScrollView,
+  Dimensions
 } from 'react-native'
+import { Navigation } from 'react-native-navigation'
 import { connect } from 'react-redux'
 import { fetchAccounts } from '../actions'
 import { Icon } from 'native-base'
@@ -55,7 +56,7 @@ class MyMoneyScreen extends Component {
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                   <Text style={{ color: '#fff', fontSize: 26, fontWeight: 'bold' }}>
                     YOU ARE OWED
-                                    </Text>
+                  </Text>
                   <Text style={{ color: '#008ee0', fontSize: 24, fontWeight: 'bold' }}>
                     ${pTotal}
                   </Text>
@@ -64,14 +65,14 @@ class MyMoneyScreen extends Component {
                   <Icon name='md-person' style={{ color: '#0088e0', fontSize: 26, marginRight: 15 }} />
                   <Text style={{ color: 'rgba(255, 255, 255, 0.5)', fontSize: 18 }}>
                     by {pAccounts.length} people
-                                    </Text>
+                  </Text>
                 </View>
               </View>
               <FlatList
                 contentContainerStyle={{ marginVertical: 5, borderRadius: 10 }}
                 data={pAccounts}
                 keyExtractor={account => account[0]}
-                renderItem={account => <MoneyCard data={account.item} />}
+                renderItem={account => <MoneyCard componentId={this.props.componentId} data={account.item} />}
               />
             </View>
             <View style={{ marginBottom: 15 }}>
@@ -79,7 +80,7 @@ class MyMoneyScreen extends Component {
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                   <Text style={{ color: '#fff', fontSize: 26, fontWeight: 'bold' }}>
                     YOU OWE
-                                    </Text>
+                  </Text>
                   <Text style={{ color: '#ff006a', fontSize: 24, fontWeight: 'bold' }}>
                     $ -{nTotal}
                   </Text>
@@ -88,14 +89,14 @@ class MyMoneyScreen extends Component {
                   <Icon name='md-person' style={{ color: '#ff006a', fontSize: 26, marginRight: 15 }} />
                   <Text style={{ color: 'rgba(255, 255, 255, 0.5)', fontSize: 18 }}>
                     to {nAccounts.length} people
-                                    </Text>
+                  </Text>
                 </View>
               </View>
               <FlatList
                 contentContainerStyle={{ marginVertical: 5, borderRadius: 10 }}
                 data={nAccounts}
                 keyExtractor={account => account[0]}
-                renderItem={account => <MoneyCard data={account.item} />}
+                renderItem={account => <MoneyCard componentId={this.props.componentId} data={account.item} />}
               />
             </View>
           </View>
@@ -137,7 +138,17 @@ class MyMoneyScreen extends Component {
         <TouchableOpacity
           activeOpacity={1}
           style={styles.addButton}
-          onPress={() => { this.props.navigation.navigate('MoneyAdd') }}
+          onPress={() => {
+            Navigation.push(this.props.componentId, {
+              component: {
+                name: 'moneyAdd',
+                options: {
+                  topBar: { title: { text: 'Add Account' } },
+                  animations: { push: { waitForRender: true } }
+                }
+              }
+            })
+          }}
         >
           <Icon name='ios-add' style={{ color: '#fff', fontSize: 38 }} />
         </TouchableOpacity>
@@ -176,6 +187,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    backgroundColor: '#121212',
     height: 46
   },
   input: {

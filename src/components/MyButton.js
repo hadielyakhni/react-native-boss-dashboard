@@ -6,8 +6,9 @@ export default class MyButton extends PureComponent {
     return (
       <TouchableOpacity
         onPress={this.props.onPress}
-        style={[styles.button, this.props.style]}
+        style={[styles.button, this.props.style, { backgroundColor: this.props.disabled ? '#355973' : '#008ee0' }]}
         activeOpacity={0.75}
+        disabled={this.props.disabled}
       >
         <Text style={[styles.text, this.props.textStyle]}>
           {this.props.children}
@@ -21,7 +22,6 @@ const styles = StyleSheet.create({
   button: {
     flexDirection: 'row',
     marginVertical: 10,
-    backgroundColor: '#008ee0',
     alignItems: 'center',
     height: 45,
     borderRadius: 5,

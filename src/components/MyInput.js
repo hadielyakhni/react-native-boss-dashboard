@@ -1,7 +1,6 @@
 import React, { PureComponent } from 'react'
-import { TextInput, View, StyleSheet } from 'react-native'
+import { TextInput, View, StyleSheet, TouchableOpacity } from 'react-native'
 import { Icon } from 'native-base'
-import { TouchableOpacity } from 'react-native-gesture-handler'
 
 export default class MyInput extends PureComponent {
   renderButton() {
@@ -15,7 +14,7 @@ export default class MyInput extends PureComponent {
   render() {
     return (
       <View style={styles.inputContainer}>
-        <Icon name={this.props.leftIcon} style={[styles.iconLeft, this.props.leftIconStyle]} />
+        {this.props.leftIcon && <Icon name={this.props.leftIcon} style={[styles.iconLeft, this.props.leftIconStyle]} />}
         <TextInput
           editable={this.props.editable}
           value={this.props.value}
@@ -55,7 +54,8 @@ const styles = StyleSheet.create({
     color: '#008ee0'
   },
   rightIconContainer: {
-    flex: 1,
+    // flex: 1,
+    height: 45,
     alignItems: 'center',
     justifyContent: 'center'
   },
