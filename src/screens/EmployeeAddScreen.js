@@ -1,12 +1,8 @@
 import React, { Component } from 'react'
-import { Text, StyleSheet, View, ActivityIndicator, InteractionManager } from 'react-native'
+import { Text, StyleSheet, View, ActivityIndicator, InteractionManager, Modal } from 'react-native'
 import { connect } from 'react-redux'
-import { addEmployee, updateOnScreenEmployeeInfo, resetEmployee } from '../actions'
+import { addEmployee, resetEmployee } from '../actions'
 import { Spinner, Icon } from 'native-base'
-import Dialog, {
-  FadeAnimation,
-  DialogContent
-} from 'react-native-popup-dialog'
 import MyInput from '../components/MyInput'
 import MyButton from '../components/MyButton'
 
@@ -25,24 +21,17 @@ class EmployeeAddScreen extends Component {
     return (
       this.state.canRender ?
         <View style={styles.container}>
-          <Dialog
-            useNativeDriver={true}
-            rounded={true}
-            dialogStyle={[styles.dialogStyle, { height: 145 }]}
-            visible={this.props.addingEmployee}
-            dialogAnimation={new FadeAnimation({
-              initialValue: 0,
-              animationDuration: 150,
-              useNativeDriver: true,
-            })}
-          >
-            <DialogContent style={{ paddingTop: 30, alignItems: 'center', flex: 1, width: 200 }}>
-              <Text style={{ color: '#fff', fontSize: 23, fontWeight: 'bold' }}>
-                Adding...
-              </Text>
-              <Spinner size={30} color='#008ee0' />
-            </DialogContent>
-          </Dialog>
+          <Modal
+            animationType="fade"
+            transparent={true}
+            visible={this.props.addingEmployee}>
+            <View style={[styles.loadingModalContainer]} >
+              <View style={styles.loadingModal}>
+                <Spinner color='#eeeeee' size={27} style={{ marginRight: 0 }} />
+                <Text style={{ color: '#eeeeee', fontSize: 15 }}>Adding...</Text>
+              </View>
+            </View>
+          </Modal>
           <MyInput
             value={this.state.name}
             leftIcon='ios-person'
@@ -95,6 +84,7 @@ class EmployeeAddScreen extends Component {
           <View style={{ flex: 1, justifyContent: 'flex-end' }}>
             <MyButton
               style={{ marginBottom: 15, height: 50 }}
+              color='#008ee0'
               textStyle={{ fontSize: 20 }}
               onPress={() => {
                 const { name, role, salary, phone, email } = this.state
@@ -127,12 +117,21 @@ const styles = StyleSheet.create({
     fontSize: 29,
     color: '#fff',
   },
-  dialogStyle: {
-    height: 175,
-    width: 265,
-    backgroundColor: '#121212',
-    justifyContent: 'space-between',
+  loadingModalContainer: {
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    flex: 1,
+    justifyContent: 'center',
     alignItems: 'center'
+  },
+  loadingModal: {
+    borderRadius: 6,
+    backgroundColor: '#171717',
+    width: 140,
+    height: 50,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 15
   }
 })
 

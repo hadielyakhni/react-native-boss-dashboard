@@ -11,12 +11,6 @@ import {
 } from 'react-native'
 import { Icon } from 'native-base'
 import { connect } from 'react-redux'
-import Dialog, {
-  SlideAnimation,
-  DialogContent,
-  DialogFooter,
-  DialogButton
-} from 'react-native-popup-dialog'
 import { deleteTask, updateTask } from '../actions'
 import { CheckBox } from 'react-native-elements'
 
@@ -53,7 +47,6 @@ class ToDoItem extends PureComponent {
   render() {
     return (
       <TouchableOpacity
-        onPress={() => this.setState({ dialogVisible: true })}
         style={styles.container}
         activeOpacity={0.8}
       >
@@ -78,75 +71,6 @@ class ToDoItem extends PureComponent {
             style={styles.trashStyle}
           />
         </TouchableOpacity>
-        <Dialog
-          useNativeDriver={true}
-          rounded={true}
-          dialogStyle={styles.dialogStyle}
-          visible={this.state.dialogVisible}
-          dialogAnimation={new SlideAnimation({
-            initialValue: 0,
-            slideFrom: 'bottom',
-            useNativeDriver: true,
-          })}
-          footer={
-            <DialogFooter bordered={false}>
-              <DialogButton
-                activeOpacity={0.95}
-
-                style={{ height: 25 }}
-                textStyle={{ color: '#008ee0', fontSize: 18, fontWeight: 'bold' }}
-                text="CANCEL"
-                onPress={() => {
-                  Keyboard.dismiss()
-                  this.setState({ dialogVisible: false })
-                }}
-              />
-              <DialogButton
-                style={{ marginTop: 0, marginBottom: 0 }}
-                textStyle={{ color: '#008ee0', fontSize: 18, fontWeight: 'bold' }}
-                text="SAVE"
-                onPress={() => {
-                  Keyboard.dismiss()
-                  this.props.updateTask(this.props.taskId, this.state.task, !this.props.isDone)
-                  this.setState({ dialogVisible: false });
-                }}
-              />
-            </DialogFooter>
-          }
-          onTouchOutside={() => {
-            Keyboard.dismiss()
-            this.setState({ dialogVisible: false });
-          }}
-        >
-          <DialogContent
-            style={{
-              flex: 1,
-              paddingTop: 10,
-              paddingBottom: 10,
-              paddingRight: 10,
-              paddingLeft: 10
-            }}
-          >
-            <View style={{ flex: 1 }}>
-              <TextInput
-                multiline
-                autoFocus
-                value={this.state.task}
-                onChangeText={task => this.setState({ task })}
-                style={{
-                  paddingLeft: 8,
-                  alignSelf: 'stretch',
-                  flex: 1,
-                  textAlignVertical: 'top',
-                  fontSize: 16.6,
-                  color: '#f5f5f5',
-                  backgroundColor: '#111111',
-                  borderRadius: 7
-                }}
-              />
-            </View>
-          </DialogContent>
-        </Dialog>
       </TouchableOpacity>
     )
   }

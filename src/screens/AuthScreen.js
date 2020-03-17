@@ -4,23 +4,24 @@ import {
   Text,
   StyleSheet,
   View,
-  Keyboard,
-  KeyboardAvoidingView,
   TouchableWithoutFeedback,
-  Dimensions
+  Keyboard,
+  Dimensions,
+  KeyboardAvoidingView
 } from 'react-native'
 import { Navigation } from 'react-native-navigation'
 import { Spinner } from 'native-base'
 import MyInput from '../components/MyInput'
 import MyButton from '../components/MyButton'
-import { userSignup } from '../actions'
+import { userSignin, userSignup } from '../actions'
 
-class SignupScreen extends Component {
+class AuthScreen extends Component {
   constructor() {
     super()
     this.keyboardDidShowListner = Keyboard.addListener('keyboardDidShow', this._keyboardDidShow)
     this.keyboardDidHideListner = Keyboard.addListener('keyboardDidHide', this._keyboardDidHide)
     this.state = {
+      screen: 'login',
       email: '',
       password: '',
       isKeyboardOpened: false
@@ -32,18 +33,22 @@ class SignupScreen extends Component {
   _keyboardDidHide = () => {
     this.setState({ isKeyboardOpened: false })
   }
-  onSignup = () => {
-    const { email, password } = this.state
+  onSign = () => {
+    const { screen, email, password } = this.state
+    if (screen === 'login')
+      return this.props.userSignin(email, password)
     this.props.userSignup(email, password)
   }
-  renderSignupButton() {
+  renderSignButton() {
     if (!this.props.loading)
       return (
         <MyButton
-          style={{ marginTop: 15, marginBottom: 10, }}
+          style={{ marginTop: 15, marginBottom: 10 }}
+          color='#008ee0'
+          disabledColor='#355973'
           disabled={!this.state.email || !this.state.password}
-          onPress={this.onSignup.bind(this)}
-        >Sign Up</MyButton>
+          onPress={this.onSign.bind(this)}
+        >{this.state.screen === 'login' ? 'Log In' : 'Sign Up'}</MyButton>
       )
     return (
       <View style={styles.loadingContainer}>
@@ -87,29 +92,27 @@ class SignupScreen extends Component {
               isAutoCorrect={false}
               onChangeText={password => this.setState({ password })}
             />
-            {this.renderSignupButton()}
-            <MyButton>
-              Sign Up With Facebbok
+            {this.renderSignButton()}
+            <MyButton color='#008ee0'>
+              Continue With Facebbok
             </MyButton>
           </View>
-          <View style={[styles.loginOption, { bottom: this.state.isKeyboardOpened ? 30 : 0 }]}>
-            <Text style={styles.loginText}>
-              Already a member?
+          <View style={[styles.switchMethodeOption, { bottom: this.state.isKeyboardOpened ? 30 : 0 }]}>
+            <Text style={styles.switchMethodeText}>
+              {this.state.screen === 'login' ? "Don't have an account?" : "Already a member?"}
             </Text>
             <TouchableWithoutFeedback
               onPress={() => {
                 setTimeout(() => { this.setState({ email: '', password: '' }) }, 100)
-                Navigation.pop(this.props.componentId, {
-                  animations: {
-                    pop: {
-                      enabled: false
-                    }
-                  }
+                this.setState(({ screen }) => {
+                  if (screen === 'login')
+                    return { screen: 'signup' }
+                  return { screen: 'login' }
                 })
               }}
             >
-              <Text style={styles.loginLink}>
-                Log in.
+              <Text style={styles.switchMethodeLink}>
+                {this.state.screen === 'login' ? 'Sign up.' : 'Log in.'}
               </Text>
             </TouchableWithoutFeedback>
           </View>
@@ -136,7 +139,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     fontFamily: 'PermanentMarker-Regular'
   },
-  loginOption: {
+  switchMethodeOption: {
     position: 'absolute',
     height: 50,
     width: Dimensions.get('window').width,
@@ -146,12 +149,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center'
   },
-  loginText: {
+  switchMethodeText: {
     fontSize: 12.5,
     color: 'rgba(255, 255, 255, 0.6)',
     marginRight: 4
   },
-  loginLink: {
+  switchMethodeLink: {
     color: '#fff',
     fontSize: 12.5,
     fontWeight: 'bold'
@@ -175,6 +178,7 @@ const styles = StyleSheet.create({
 })
 
 const mapActionsToProps = dispatch => ({
+  userSignin: (email, password) => dispatch(userSignin(email, password)),
   userSignup: (email, password) => dispatch(userSignup(email, password))
 })
 
@@ -182,9 +186,9 @@ const mapStateToProps = state => {
   return {
     email: state.auth.email,
     password: state.auth.password,
-    loading: state.auth.loading,
-    error: state.auth.error
+    error: state.auth.error,
+    loading: state.auth.loading
   }
 }
 
-export default connect(mapStateToProps, mapActionsToProps)(SignupScreen)
+export default connect(mapStateToProps, mapActionsToProps)(AuthScreen)

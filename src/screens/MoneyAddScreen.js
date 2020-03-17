@@ -1,10 +1,8 @@
 import React, { Component } from 'react'
-import { Text, StyleSheet, View, InteractionManager, ActivityIndicator } from 'react-native'
-import { Navigation } from 'react-native-navigation'
+import { Text, StyleSheet, View, InteractionManager, ActivityIndicator, Modal } from 'react-native'
 import { connect } from 'react-redux'
 import { addMoneyAccount, resetAccount } from '../actions'
 import { Spinner } from 'native-base'
-import Dialog, { DialogContent, FadeAnimation } from 'react-native-popup-dialog'
 import MyButton from '../components/MyButton'
 import AccountForm from '../components/AccountForm'
 
@@ -26,24 +24,17 @@ class MoneyAddScreen extends Component {
     return (
       this.state.canRender ?
         <View style={styles.container}>
-          <Dialog
-            useNativeDriver={true}
-            rounded={true}
-            dialogStyle={[styles.dialogStyle, { height: 145 }]}
-            visible={this.props.addingAccount}
-            dialogAnimation={new FadeAnimation({
-              initialValue: 0,
-              animationDuration: 150,
-              useNativeDriver: true,
-            })}
-          >
-            <DialogContent style={{ paddingTop: 30, alignItems: 'center', flex: 1, width: 200 }}>
-              <Text style={{ color: '#fff', fontSize: 23, fontWeight: 'bold' }}>
-                Adding...
-            </Text>
-              <Spinner size={30} color='#008ee0' />
-            </DialogContent>
-          </Dialog>
+          <Modal
+            animationType="fade"
+            transparent={true}
+            visible={this.props.addingAccount}>
+            <View style={[styles.loadingModalContainer]} >
+              <View style={styles.loadingModal}>
+                <Spinner color='#eeeeee' size={27} style={{ marginRight: 0 }} />
+                <Text style={{ color: '#eeeeee', fontSize: 15 }}>Adding...</Text>
+              </View>
+            </View>
+          </Modal>
           <AccountForm
             data={this.state}
             updateInputs={this.updateState}
@@ -51,6 +42,7 @@ class MoneyAddScreen extends Component {
           <View style={styles.addButtonView}>
             <MyButton
               style={styles.addButton}
+              color='#008ee0'
               onPress={() => {
                 const total = amount1 + amount2 + amount3
                 return this.props.addMoneyAccount(this.props.componentId, { name, status, amount: total, amount1, amount2, amount3 })
@@ -90,12 +82,21 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     height: 56
   },
-  dialogStyle: {
-    height: 175,
-    width: 265,
-    backgroundColor: '#121212',
-    justifyContent: 'space-between',
+  loadingModalContainer: {
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    flex: 1,
+    justifyContent: 'center',
     alignItems: 'center'
+  },
+  loadingModal: {
+    borderRadius: 6,
+    backgroundColor: '#171717',
+    width: 140,
+    height: 50,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 15
   }
 })
 

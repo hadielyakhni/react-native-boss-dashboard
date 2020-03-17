@@ -1,14 +1,7 @@
 import React, { Component } from 'react'
-import { Text, StyleSheet, View, Linking, InteractionManager, ActivityIndicator } from 'react-native'
+import { Text, StyleSheet, View, Linking, InteractionManager, ActivityIndicator, Modal, TouchableOpacity } from 'react-native'
 import { connect } from 'react-redux'
 import { updateEmployeeInfo, deleteEmployee } from '../actions'
-import Dialog, {
-  SlideAnimation,
-  FadeAnimation,
-  DialogContent,
-  DialogFooter,
-  DialogButton
-} from 'react-native-popup-dialog'
 import { Spinner } from 'native-base'
 import MyInput from '../components/MyInput'
 import MyButton from '../components/MyButton'
@@ -16,7 +9,7 @@ import MyButton from '../components/MyButton'
 class EmployeeDetailsScreen extends Component {
   constructor(props) {
     super(props)
-    this.state = { canRender: false, dialogVisible: false }
+    this.state = { canRender: false, modalVisible: false }
     setTimeout(() => {
       InteractionManager.runAfterInteractions(() => {
         this.separator = () => <View style={{ marginVertical: 2 }}></View>
@@ -26,99 +19,73 @@ class EmployeeDetailsScreen extends Component {
       })
     }, 400);
   }
-  deletePressed = () => {
-    this.setState({ dialogVisible: true })
-  }
   render() {
     return (
       this.state.canRender ?
         <View style={styles.container}>
-          <Dialog
-            useNativeDriver={true}
-            rounded={true}
-            dialogStyle={styles.dialogStyle}
-            visible={this.state.dialogVisible}
-            dialogAnimation={new SlideAnimation({
-              initialValue: 0,
-              slideFrom: 'bottom',
-              useNativeDriver: true,
-            })}
-            footer={
-              <DialogFooter bordered={false}>
-                <DialogButton
-                  textStyle={{ color: '#008ee0', fontSize: 18, fontWeight: 'bold' }}
-                  text="CANCEL"
-                  onPress={() => this.setState({ dialogVisible: false })}
-                />
-                <DialogButton
-                  textStyle={{ color: '#008ee0', fontSize: 18, fontWeight: 'bold' }}
-                  text="YES"
-                  onPress={() => {
-                    this.setState({ dialogVisible: false });
-                    this.props.deleteEmployee(this.props.componentId, { uid: this.uid })
-                  }}
-                />
-              </DialogFooter>
-            }
-            onTouchOutside={() => {
-              this.setState({ dialogVisible: false });
-            }}
-            onHardwareBackPress={() => {
-              this.setState({ dialogVisible: false })
-            }}
-          >
-            <DialogContent>
-              <View style={{
-                height: 75,
-                marginTop: 15,
-                alignItems: 'center',
-                justifyContent: 'space-between'
-              }}>
-                <Text style={{ color: '#fff', fontSize: 20, fontWeight: 'bold', textAlign: 'center' }}>
-                  This action can't be undo!
-                          </Text>
-                <Text style={{ color: '#fff', fontSize: 18, fontWeight: 'bold' }}>
-                  Are You Sure?
-                </Text>
+          <Modal
+            animationType="fade"
+            transparent={true}
+            visible={this.state.modalVisible}
+            onRequestClose={() => {
+              this.setState({ modalVisible: false })
+            }}>
+            <View
+              style={{ backgroundColor: 'rgba(0,0,0,0.5)', flex: 1, justifyContent: 'center' }}
+            >
+              <View style={styles.modal}>
+                <View style={styles.upperModal}>
+                  <Text style={{ fontWeight: 'bold', marginBottom: 7, textAlign: 'center', color: '#eeeeee', fontSize: 17 }}>
+                    Delete this employee?
+                  </Text>
+                  <Text style={{ fontWeight: 'bold', textAlign: 'center', color: '#eeeeee', fontSize: 15 }}>
+                    This action cannot be undo.
+                  </Text>
+                </View>
+                <View style={{ flexDirection: 'row' }}>
+                  <TouchableOpacity
+                    activeOpacity={0.8}
+                    onPress={() => {
+                      this.setState({ modalVisible: false });
+                    }}
+                    style={[styles.modalButton, { borderBottomLeftRadius: 4 }]}>
+                    <Text style={{ color: '#eeeeee', fontSize: 18, fontWeight: 'bold' }}>Cancel</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    activeOpacity={0.8}
+                    onPress={() => {
+                      this.setState({ modalVisible: false });
+                      this.props.deleteEmployee(this.props.componentId, { uid: this.uid })
+                    }}
+                    style={[styles.modalButton, { borderBottomRightRadius: 4 }]}>
+                    <Text style={{ color: '#e65100', fontSize: 18, fontWeight: 'bold' }}>Delete</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
-            </DialogContent>
-          </Dialog>
-          <Dialog
-            useNativeDriver={true}
-            rounded={true}
-            dialogStyle={[styles.dialogStyle, { height: 145 }]}
-            visible={this.props.deletingEmployee}
-            dialogAnimation={new FadeAnimation({
-              initialValue: 0,
-              animationDuration: 150,
-              useNativeDriver: true,
-            })}
-          >
-            <DialogContent style={{ paddingTop: 30, alignItems: 'center', flex: 1, width: 200 }}>
-              <Text style={{ color: '#fff', fontSize: 23, fontWeight: 'bold' }}>
-                Deleting...
-              </Text>
-              <Spinner size={30} color='#008ee0' />
-            </DialogContent>
-          </Dialog>
-          <Dialog
-            useNativeDriver={true}
-            rounded={true}
-            dialogStyle={[styles.dialogStyle, { height: 145 }]}
-            visible={this.props.updatingEmployee}
-            dialogAnimation={new FadeAnimation({
-              initialValue: 0,
-              animationDuration: 150,
-              useNativeDriver: true,
-            })}
-          >
-            <DialogContent style={{ paddingTop: 30, alignItems: 'center', flex: 1, width: 200 }}>
-              <Text style={{ color: '#fff', fontSize: 23, fontWeight: 'bold' }}>
-                Updating...
-              </Text>
-              <Spinner size={30} color='#008ee0' />
-            </DialogContent>
-          </Dialog>
+            </View>
+          </Modal>
+          <Modal
+            animationType="fade"
+            transparent={true}
+            visible={this.props.updatingEmployee}>
+            <View style={styles.loadingModalContainer} >
+              <View style={styles.loadingModal}>
+                <Spinner color='#eeeeee' size={27} style={{ marginRight: 0 }} />
+                <Text style={{ color: '#eeeeee', fontSize: 15 }}>Updating...</Text>
+              </View>
+            </View>
+          </Modal>
+          <Modal
+            animationType="fade"
+            transparent={true}
+            visible={this.props.deletingEmployee}>
+            <View style={[styles.loadingModalContainer]} >
+              <View style={styles.loadingModal}>
+                <Spinner color='#eeeeee' size={27} style={{ marginRight: 0 }} />
+                <Text style={{ color: '#eeeeee', fontSize: 15 }}>Deleting...</Text>
+              </View>
+            </View>
+          </Modal>
           <MyInput
             leftIcon='ios-person'
             value={this.state.name}
@@ -173,6 +140,7 @@ class EmployeeDetailsScreen extends Component {
           <View style={{ flex: 1, justifyContent: 'flex-end' }}>
             <MyButton
               style={{ marginBottom: 10, height: 50 }}
+              color='#008ee0'
               textStyle={{ fontSize: 20 }}
               onPress={() => {
                 const { name, role, salary, phone, email } = this.state
@@ -180,9 +148,10 @@ class EmployeeDetailsScreen extends Component {
               }}
             >Save</MyButton>
             <MyButton
-              style={{ marginBottom: 20, height: 50, backgroundColor: '#E65100' }}
+              style={{ marginBottom: 20, height: 50 }}
+              color='#e65100'
               textStyle={{ fontSize: 20 }}
-              onPress={this.deletePressed}
+              onPress={() => this.setState({ modalVisible: true })}
             >Delete</MyButton>
           </View>
         </View>
@@ -210,12 +179,44 @@ const styles = StyleSheet.create({
     fontSize: 29,
     color: '#fff',
   },
-  dialogStyle: {
-    height: 165,
-    width: 265,
-    backgroundColor: '#121212',
-    justifyContent: 'space-between',
+  modal: {
+    backgroundColor: '#171717',
+    width: 250,
+    height: 135,
+    alignSelf: 'center',
+    borderRadius: 4
+  },
+  upperModal: {
+    height: 90,
+    backgroundColor: '#171717',
+    borderTopLeftRadius: 4,
+    borderTopRightRadius: 4,
+    justifyContent: 'center'
+  },
+  modalButton: {
+    height: 45,
+    width: 125,
+    backgroundColor: '#171717',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderTopWidth: 0.6,
+    borderTopColor: '#282828'
+  },
+  loadingModalContainer: {
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    flex: 1,
+    justifyContent: 'center',
     alignItems: 'center'
+  },
+  loadingModal: {
+    borderRadius: 6,
+    backgroundColor: '#171717',
+    width: 140,
+    height: 50,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 15
   }
 })
 

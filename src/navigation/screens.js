@@ -6,8 +6,7 @@ import ReduxThunk from 'redux-thunk'
 import reducers from '../reducers'
 import {
   FirstScreen,
-  LoginScreen,
-  SignupScreen,
+  AuthScreen,
   ToDoListScreen,
   EmployeesListScreen,
   EmployeeDetailsScreen,
@@ -34,8 +33,7 @@ function ReduxProvider(Component) {
 
 export default registerScreens = () => {
   Navigation.registerComponent('first', () => FirstScreen)
-  Navigation.registerComponent('login', () => ReduxProvider(LoginScreen), () => LoginScreen)
-  Navigation.registerComponent('signup', () => ReduxProvider(SignupScreen), () => SignupScreen)
+  Navigation.registerComponent('auth', () => ReduxProvider(AuthScreen), () => AuthScreen)
   Navigation.registerComponent('todo', () => ReduxProvider(ToDoListScreen), () => ToDoListScreen)
   Navigation.registerComponent('employees', () => ReduxProvider(EmployeesListScreen), () => EmployeesListScreen)
   Navigation.registerComponent('employeeAdd', () => ReduxProvider(EmployeeAddScreen), () => EmployeeAddScreen)

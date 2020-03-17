@@ -1,7 +1,5 @@
-import LoginScreen from './LoginScreen'
-export { LoginScreen }
-import SignupScreen from './SignupScreen'
-export { SignupScreen }
+import AuthScreen from './AuthScreen'
+export { AuthScreen }
 export { FirstScreen } from './FirstScreen'
 import ToDoListScreen from './ToDoListScreen'
 export { ToDoListScreen }

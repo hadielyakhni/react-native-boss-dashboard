@@ -1,110 +1,80 @@
 import React, { Component } from 'react'
-import { Text, StyleSheet, View, TouchableOpacity, AsyncStorage } from 'react-native'
+import { Text, StyleSheet, View, TouchableOpacity, Modal } from 'react-native'
+import AsyncStorage from '@react-native-community/async-storage'
 import { goToAuth } from '../navigation/navigation'
 import { connect } from 'react-redux'
-import Dialog, {
-  SlideAnimation,
-  FadeAnimation,
-  DialogContent,
-  DialogFooter,
-  DialogButton
-} from 'react-native-popup-dialog'
 import { Spinner } from 'native-base'
 
 class MyProfileScreen extends Component {
   state = {
-    dialogVisible: false,
+    modalVisible: false,
     loggingout: false
   }
   render() {
     return (
       <View style={styles.container}>
-        <Dialog
-          useNativeDriver={true}
-          rounded={true}
-          dialogStyle={styles.dialogStyle}
-          visible={this.state.dialogVisible}
-          dialogAnimation={new SlideAnimation({
-            initialValue: 0,
-            slideFrom: 'bottom',
-            useNativeDriver: true,
-          })}
-          footer={
-            <DialogFooter bordered={false}>
-              <DialogButton
-                textStyle={{ color: '#008ee0', fontSize: 18, fontWeight: 'bold' }}
-                text="CANCEL"
-                onPress={() => this.setState({ dialogVisible: false })}
-              />
-              <DialogButton
-                textStyle={{ color: '#008ee0', fontSize: 18, fontWeight: 'bold' }}
-                text="YES"
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={this.state.modalVisible}
+          onRequestClose={() => {
+            this.setState({ modalVisible: false })
+          }}>
+          <View
+            style={{ backgroundColor: 'rgba(0,0,0,0.5)', flex: 1, justifyContent: 'center' }}
+          >
+            <View style={styles.modal}>
+              <View style={styles.upperModal}>
+                <Text style={{ color: '#fff', fontSize: 15 }}>Log out of The Boss?</Text>
+              </View>
+              <TouchableOpacity
                 onPress={() => {
-                  this.setState({ dialogVisible: false, loggingout: true })
+                  this.setState({ modalVisible: false, loggingout: true })
+                  AsyncStorage.clear()
+                  this.props.resetTasks()
+                  this.props.resetEmployees()
+                  this.props.resetAccounts()
                   setTimeout(() => {
-                    AsyncStorage.clear()
-                    this.props.resetTasks()
-                    this.props.resetEmployees()
-                    this.props.resetAccounts()
-                    this.setState({ loggingout: false })
-                    goToAuth('fromMain')
-                  }, 100);
+                    goToAuth()
+                  }, 600);
                 }}
-              />
-            </DialogFooter>
-          }
-          onTouchOutside={() => {
-            this.setState({ dialogVisible: false })
-          }}
-          onHardwareBackPress={() => {
-            this.setState({ dialogVisible: false })
-          }}
-        >
-          <DialogContent>
-            <View style={{
-              height: 75,
-              marginTop: 15,
-              alignItems: 'center',
-              justifyContent: 'space-between'
-            }}>
-              <Text style={{ color: '#fff', fontSize: 20, fontWeight: 'bold', textAlign: 'center' }}>
-                Are you sure you want to logout?
-              </Text>
-              <Text style={{ color: '#fff', fontSize: 20, fontWeight: 'bold', textAlign: 'center' }}>
-                Please confirm
-              </Text>
+                activeOpacity={0.6}
+                style={styles.centerModal}
+              >
+                <Text style={{ color: '#008ee0', fontSize: 18, fontWeight: 'bold' }}>Logout</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => this.setState({ modalVisible: false })}
+                activeOpacity={0.6}
+                style={styles.lowerModal}
+              >
+                <Text style={{ color: '#fff' }}>Cancel</Text>
+              </TouchableOpacity>
             </View>
-          </DialogContent>
-        </Dialog>
-        <Dialog
-          useNativeDriver={true}
-          rounded={true}
-          dialogStyle={[styles.dialogStyle, { height: 145 }]}
-          visible={this.state.loggingout}
-          dialogAnimation={new FadeAnimation({
-            initialValue: 0,
-            animationDuration: 150,
-            useNativeDriver: true,
-          })}
-        >
-          <DialogContent style={{ paddingTop: 30, alignItems: 'center', flex: 1, width: 200 }}>
-            <Text style={{ color: '#fff', fontSize: 23, fontWeight: 'bold' }}>
-              Logging Out...
-            </Text>
-            <Spinner size={30} color='#008ee0' />
-          </DialogContent>
-        </Dialog>
+          </View>
+        </Modal>
+        <Modal
+          animationType="none"
+          transparent={true}
+          visible={this.state.loggingout}>
+          <View style={styles.loadingModalContainer} >
+            <View style={styles.loadingModal}>
+              <Spinner color='#cccccc' size={26} style={{ marginRight: 15 }} />
+              <Text style={{ color: '#cccccc', fontSize: 16 }}>logging out...</Text>
+            </View>
+          </View>
+        </Modal>
         <TouchableOpacity
           style={styles.logoutButton}
           onPress={() => {
-            this.setState({ dialogVisible: true })
+            this.setState({ modalVisible: true })
           }}
         >
           <Text style={styles.logoutText}>
             LOGOUT
           </Text>
         </TouchableOpacity>
-      </View>
+      </View >
     )
   }
 }
@@ -129,12 +99,53 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold'
   },
-  dialogStyle: {
-    height: 165,
-    width: 265,
-    backgroundColor: '#121212',
-    justifyContent: 'space-between',
+  modal: {
+    backgroundColor: '#171717',
+    width: 250,
+    height: 175,
+    alignSelf: 'center',
+    borderRadius: 4
+  },
+  upperModal: {
+    height: 75,
+    backgroundColor: '#171717',
+    borderTopLeftRadius: 4,
+    borderTopRightRadius: 4,
+    justifyContent: 'center',
     alignItems: 'center'
+  },
+  centerModal: {
+    height: 50,
+    backgroundColor: '#171717',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderBottomWidth: 0.6,
+    borderBottomColor: '#282828',
+    borderTopWidth: 0.6,
+    borderTopColor: '#282828'
+  },
+  lowerModal: {
+    height: 50,
+    backgroundColor: '#171717',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderBottomRightRadius: 4,
+    borderBottomLeftRadius: 4
+  },
+  loadingModalContainer: {
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  loadingModal: {
+    borderRadius: 6,
+    backgroundColor: '#171717',
+    width: 170,
+    height: 55,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 15
   }
 })
 
@@ -145,3 +156,6 @@ const mapDiaptchToProps = dispatch => ({
 })
 
 export default connect(null, mapDiaptchToProps)(MyProfileScreen)
+
+
+

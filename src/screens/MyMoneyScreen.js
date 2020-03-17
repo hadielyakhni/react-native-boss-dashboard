@@ -143,8 +143,7 @@ class MyMoneyScreen extends Component {
               component: {
                 name: 'moneyAdd',
                 options: {
-                  topBar: { title: { text: 'Add Account' } },
-                  animations: { push: { waitForRender: true } }
+                  topBar: { title: { text: 'Add Account' } }
                 }
               }
             })

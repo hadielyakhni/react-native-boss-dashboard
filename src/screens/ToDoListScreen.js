@@ -11,7 +11,7 @@ import {
   UIManager
 } from 'react-native'
 import { connect } from 'react-redux'
-import { changeTask, addTask, fetchTasks } from '../actions'
+import { addTask, fetchTasks } from '../actions'
 import { Icon } from 'native-base'
 import Spinner from 'react-native-spinkit'
 import ToDoItem from '../components/ToDoItem'
@@ -91,8 +91,8 @@ class ToDoListScreen extends Component {
             value={this.state.task}
             style={styles.input}
             placeholderTextColor='rgba(255, 255, 255, 0.6)'
-            placeholder='Add Task'
-            selectionColor={'red'}
+            placeholder='Quick Task'
+            selectionColor='#008ee0'
             onChangeText={task => this.setState({ task })}
             onSubmitEditing={this.onAdd.bind(this)}
           />

@@ -2,16 +2,10 @@ import { Navigation } from 'react-native-navigation'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import { Dimensions } from 'react-native'
 
-export const goToAuth = (isFromMain) => Navigation.setRoot({
+export const goToAuth = () => Navigation.setRoot({
   root: {
-    stack: {
-      children: [
-        {
-          component: {
-            name: 'login'
-          }
-        }
-      ],
+    component: {
+      name: 'auth',
       options: {
         animations: {
           setRoot: {
@@ -22,9 +16,6 @@ export const goToAuth = (isFromMain) => Navigation.setRoot({
               duration: 0
             }
           }
-        },
-        topBar: {
-          visible: false
         }
       }
     }
