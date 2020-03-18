@@ -89,7 +89,7 @@ class MoneyDetailsScreen extends Component {
             animationType="fade"
             transparent={true}
             visible={this.props.deletingAccount}>
-            <View style={[styles.loadingModalContainer]} >
+            <View style={styles.loadingModalContainer} >
               <View style={styles.loadingModal}>
                 <Spinner color='#eeeeee' size={27} style={{ marginRight: 0 }} />
                 <Text style={{ color: '#eeeeee', fontSize: 15 }}>Deleting...</Text>

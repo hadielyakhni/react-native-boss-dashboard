@@ -3,7 +3,7 @@ import '@react-native-firebase/auth'
 import '@react-native-firebase/database'
 import { Navigation } from 'react-native-navigation'
 import { goToMain } from '../navigation/navigation'
-import { Keyboard } from 'react-native'
+import { Keyboard, Dimensions } from 'react-native'
 import AsyncStorage from '@react-native-community/async-storage'
 
 let UID
@@ -63,28 +63,66 @@ export const fetchTasks = () => {
       })
   }
 }
-export const addTask = task => {
+export const addTask = (task, description, fromWichScreen, componentId) => {
   Keyboard.dismiss()
+  if (!description)
+    description = ''
   return dispatch => {
     dispatch({ type: 'add_pressed' })
     firebase.database().ref(`users/${UID}/tasks`)
-      .push({ task, isDone: false })
+      .push({ task, description, isDone: false })
+    if (fromWichScreen === 'todoAdd')
+      Navigation.pop(componentId)
   }
 }
-export const deleteTask = taskId => {
-  return () => {
-    firebase.database().ref(`users/${UID}/tasks/${taskId}`).remove()
-  }
-}
-export const updateTask = (taskId, task, isDone) => {
+
+export const updateTask = (taskId, task, description, isDone, componentId) => {
   if (isDone)
     firebase.database().ref(`users/${UID}/tasks/${taskId}`)
-      .set({ task, isDone: false })
+      .set({ task, description, isDone: true && !!componentId })
   else
     firebase.database().ref(`users/${UID}/tasks/${taskId}`)
-      .set({ task, isDone: true })
+      .set({ task, description, isDone: false || !componentId })
+  if (componentId)
+    Navigation.pop(componentId, {
+      animations: {
+        pop: {
+          content: {
+            translationX: {
+              from: 0,
+              to: Dimensions.get('window').width,
+              duration: 100
+            }
+          }
+        }
+      }
+    })
   return () => {
     null
+  }
+}
+
+export const deleteTask = (taskId, fromWichScreen, componentId) => {
+  return dispatch => {
+    dispatch({ type: 'deleting_task_started' })
+    firebase.database().ref(`users/${UID}/tasks/${taskId}`).remove()
+    setTimeout(() => {
+      dispatch({ type: 'deleting_task_finished' })
+      if (fromWichScreen === 'todoDetails')
+        Navigation.pop(componentId, {
+          animations: {
+            pop: {
+              content: {
+                translationX: {
+                  from: 0,
+                  to: Dimensions.get('window').width,
+                  duration: 100
+                }
+              }
+            }
+          }
+        })
+    }, 500);
   }
 }
 
@@ -97,7 +135,7 @@ export const addEmployee = (componentId, { name, role, salary, phone, email }) =
     setTimeout(() => {
       dispatch({ type: 'employee_adding_finished' })
       Navigation.pop(componentId)
-    }, 1500)
+    }, 500)
   }
 }
 
@@ -123,7 +161,7 @@ export const updateEmployeeInfo = (componentId, { name, role, salary, phone, ema
     setTimeout(() => {
       dispatch({ type: 'employee_updating_finished' })
       Navigation.pop(componentId)
-    }, 1500);
+    }, 500);
 
   }
 }
@@ -135,7 +173,7 @@ export const deleteEmployee = (componentId, { uid }) => {
     setTimeout(() => {
       dispatch({ type: 'employee_deleting_finished' })
       Navigation.pop(componentId)
-    }, 1500);
+    }, 500);
   }
 }
 
@@ -162,7 +200,7 @@ export const addMoneyAccount = (componentId, { name, status, amount, amount1, am
     setTimeout(() => {
       dispatch({ type: 'account_adding_finished' })
       Navigation.pop(componentId)
-    }, 1500);
+    }, 500);
   }
 }
 
@@ -174,7 +212,7 @@ export const updateAccountInfo = (componentId, { name, status, amount, amount1, 
     setTimeout(() => {
       dispatch({ type: 'account_updating_finished' })
       Navigation.pop(componentId)
-    }, 1500);
+    }, 500);
   }
 }
 
@@ -185,6 +223,6 @@ export const deleteAccount = (componentId, { uid }) => {
     setTimeout(() => {
       dispatch({ type: 'account_deleting_finished' })
       Navigation.pop(componentId)
-    }, 1500);
+    }, 500);
   }
 }

@@ -8,8 +8,10 @@ import {
   FlatList,
   ScrollView,
   LayoutAnimation,
-  UIManager
+  UIManager,
+  Dimensions
 } from 'react-native'
+import { Navigation } from 'react-native-navigation'
 import { connect } from 'react-redux'
 import { addTask, fetchTasks } from '../actions'
 import { Icon } from 'native-base'
@@ -23,6 +25,7 @@ UIManager.setLayoutAnimationEnabledExperimental &&
 class ToDoListScreen extends Component {
   constructor(props) {
     super(props)
+    console.log(this.props.componentId)
     this.state = { task: '' }
     this.props.fetchTasks()
   }
@@ -43,9 +46,9 @@ class ToDoListScreen extends Component {
   rendertask(task) {
     return (
       <ToDoItem
+        componentId={this.props.componentId}
         taskId={task.item[0]}
-        task={task.item[1].task}
-        isDone={task.item[1].isDone}
+        data={task.item[1]}
       />
     )
   }
@@ -58,13 +61,13 @@ class ToDoListScreen extends Component {
             style={{ marginBottom: 10 }}
             data={this.props.unDoneTasks}
             keyExtractor={task => task[0]}
-            renderItem={this.rendertask}
+            renderItem={this.rendertask.bind(this)}
           />
           <Separator text='COMPLETED' />
           <FlatList
             data={this.props.doneTasks}
             keyExtractor={task => task[0]}
-            renderItem={this.rendertask}
+            renderItem={this.rendertask.bind(this)}
           />
         </ScrollView>
       )
@@ -109,6 +112,36 @@ class ToDoListScreen extends Component {
           </TouchableOpacity>
         </View>
         {this.renderScreen()}
+        <TouchableOpacity
+          activeOpacity={1}
+          style={styles.addButton}
+          onPress={() => (
+            Navigation.push(this.props.componentId, {
+              component: {
+                name: 'todoAdd',
+                options: {
+                  topBar: {
+                    title: { text: 'Add Task' },
+                    backButton: { color: '#fff' }
+                  },
+                  animations: {
+                    push: {
+                      content: {
+                        translationY: {
+                          from: Dimensions.get('window').height,
+                          to: 0,
+                          duration: 150
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            })
+          )}
+        >
+          <Icon name='ios-add' style={{ color: '#fff', fontSize: 38 }} />
+        </TouchableOpacity>
       </View>
     )
   }
@@ -152,6 +185,17 @@ const styles = StyleSheet.create({
     height: 29,
     width: 29,
     borderRadius: 14.5
+  },
+  addButton: {
+    position: 'absolute',
+    right: 10,
+    bottom: 20,
+    backgroundColor: '#008ee0',
+    height: 55,
+    width: 55,
+    borderRadius: 27.5,
+    alignItems: 'center',
+    justifyContent: 'center'
   }
 })
 

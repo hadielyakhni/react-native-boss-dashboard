@@ -3,6 +3,10 @@ export { AuthScreen }
 export { FirstScreen } from './FirstScreen'
 import ToDoListScreen from './ToDoListScreen'
 export { ToDoListScreen }
+import ToDoAddScreen from './ToDoAddScreen'
+export { ToDoAddScreen }
+import ToDoDetailsScreen from './ToDoDetailsScreen'
+export { ToDoDetailsScreen }
 import EmployeesListScreen from './EmployeesListScreen'
 export { EmployeesListScreen }
 import EmployeeDetailsScreen from './EmployeeDetailsScreen'

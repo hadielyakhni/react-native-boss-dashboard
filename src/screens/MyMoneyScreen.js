@@ -173,10 +173,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center'
   },
-  addIcon: {
-    fontSize: 29,
-    color: '#fff',
-  },
   searchView: {
     marginBottom: 15,
     marginTop: 10,
