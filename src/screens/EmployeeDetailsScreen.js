@@ -105,6 +105,7 @@ class EmployeeDetailsScreen extends Component {
             onChangeText={value => this.setState({ role: value })}
           />
           <MyInput
+            keyboardType="decimal-pad"
             value={this.state.salary}
             leftIcon='ios-cash'
             style={{ fontSize: 16 }}
@@ -114,6 +115,7 @@ class EmployeeDetailsScreen extends Component {
             onChangeText={value => this.setState({ salary: value })}
           />
           <MyInput
+            keyboardType="number-pad"
             value={this.state.phone}
             leftIcon='ios-call'
             rightIcon='ios-arrow-forward'
@@ -126,6 +128,7 @@ class EmployeeDetailsScreen extends Component {
             onChangeText={value => this.setState({ phone: value })}
           />
           <MyInput
+            keyboardType="email-address"
             value={this.state.email}
             leftIcon='ios-mail'
             rightIcon='ios-arrow-forward'

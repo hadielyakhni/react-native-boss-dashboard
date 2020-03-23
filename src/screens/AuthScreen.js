@@ -94,7 +94,7 @@ class AuthScreen extends Component {
             />
             {this.renderSignButton()}
             <MyButton color='#008ee0'>
-              Continue With Facebbok
+              Continue With Facebook
             </MyButton>
           </View>
           <View style={[styles.switchMethodeOption, { bottom: this.state.isKeyboardOpened ? 30 : 0 }]}>

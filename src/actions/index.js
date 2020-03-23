@@ -84,19 +84,7 @@ export const updateTask = (taskId, task, description, isDone, componentId) => {
     firebase.database().ref(`users/${UID}/tasks/${taskId}`)
       .set({ task, description, isDone: false || !componentId })
   if (componentId)
-    Navigation.pop(componentId, {
-      animations: {
-        pop: {
-          content: {
-            translationX: {
-              from: 0,
-              to: Dimensions.get('window').width,
-              duration: 100
-            }
-          }
-        }
-      }
-    })
+    Navigation.pop(componentId)
   return () => {
     null
   }
@@ -109,20 +97,8 @@ export const deleteTask = (taskId, fromWichScreen, componentId) => {
     setTimeout(() => {
       dispatch({ type: 'deleting_task_finished' })
       if (fromWichScreen === 'todoDetails')
-        Navigation.pop(componentId, {
-          animations: {
-            pop: {
-              content: {
-                translationX: {
-                  from: 0,
-                  to: Dimensions.get('window').width,
-                  duration: 100
-                }
-              }
-            }
-          }
-        })
-    }, 500);
+        Navigation.pop(componentId)
+    }, 250);
   }
 }
 
@@ -135,7 +111,7 @@ export const addEmployee = (componentId, { name, role, salary, phone, email }) =
     setTimeout(() => {
       dispatch({ type: 'employee_adding_finished' })
       Navigation.pop(componentId)
-    }, 500)
+    }, 350)
   }
 }
 
@@ -161,7 +137,7 @@ export const updateEmployeeInfo = (componentId, { name, role, salary, phone, ema
     setTimeout(() => {
       dispatch({ type: 'employee_updating_finished' })
       Navigation.pop(componentId)
-    }, 500);
+    }, 350);
 
   }
 }
@@ -173,7 +149,7 @@ export const deleteEmployee = (componentId, { uid }) => {
     setTimeout(() => {
       dispatch({ type: 'employee_deleting_finished' })
       Navigation.pop(componentId)
-    }, 500);
+    }, 350);
   }
 }
 
@@ -192,37 +168,87 @@ export const fetchAccounts = () => {
   }
 }
 
-export const addMoneyAccount = (componentId, { name, status, amount, amount1, amount2, amount3 }) => {
+export const addMoneyAccount = (initialStackId, componentId, { name, status, amount }) => {
+  if (status === 'HIM')
+    amount *= -1
   return dispatch => {
     dispatch({ type: 'account_adding_started' })
-    firebase.database().ref(`/users/${UID}/money`)
-      .push({ name, status, amount, amount1, amount2, amount3 })
+    const addedAccountId = firebase.database().ref(`/users/${UID}/money`)
+      .push({ name, amount }).key
+    firebase.database().ref(`/users/${UID}/money/${addedAccountId}/transactions`)
+      .push({
+        transAmount: Math.abs(amount),
+        status: amount < 0 ? 'Received' : 'Sent',
+        date: Date.now()
+      })
     setTimeout(() => {
       dispatch({ type: 'account_adding_finished' })
-      Navigation.pop(componentId)
-    }, 500);
+      Navigation.pop(componentId, {
+        animations: {
+          pop: {
+            content: {
+              translationX: {
+                from: 0,
+                to: -Dimensions.get('window').width,
+                duration: 250
+              }
+            }
+          }
+        }
+      })
+      Navigation.push(initialStackId, {
+        component: {
+          name: 'moneyDetails',
+          passProps: { name, accountId: addedAccountId },
+          options: {
+            topBar: { title: { text: name } },
+            animations: {
+              push: {
+                content: {
+                  translationX: {
+                    from: Dimensions.get('window').width,
+                    to: 0,
+                    duration: 250
+                  }
+                }
+              }
+            }
+          }
+        }
+      })
+    }, 350);
   }
 }
 
-export const updateAccountInfo = (componentId, { name, status, amount, amount1, amount2, amount3, uid }) => {
+export const addTransaction = (oldAmount, transAmount, status, accountId) => {
+  let amount
+  if (status === 'Sent')
+    amount = oldAmount + transAmount
+  else if (status === 'Received')
+    amount = oldAmount - transAmount
   return dispatch => {
     dispatch({ type: 'account_updating_started' })
-    firebase.database().ref(`users/${UID}/money/${uid}`)
-      .set({ name, status, amount, amount1, amount2, amount3 })
+    firebase.database().ref(`users/${UID}/money/${accountId}`)
+      .update({ amount })
+    firebase.database().ref(`users/${UID}/money/${accountId}/transactions`)
+      .push({
+        transAmount,
+        status: status === 'Sent' ? 'Sent' : 'Received',
+        date: Date.now()
+      })
     setTimeout(() => {
       dispatch({ type: 'account_updating_finished' })
-      Navigation.pop(componentId)
-    }, 500);
+    }, 10);
   }
 }
 
-export const deleteAccount = (componentId, { uid }) => {
+export const deleteAccount = (componentId, accountId) => {
   return dispatch => {
     dispatch({ type: 'account_deleting_started' })
-    firebase.database().ref(`users/${UID}/money/${uid}`).remove()
+    firebase.database().ref(`users/${UID}/money/${accountId}`).remove()
     setTimeout(() => {
       dispatch({ type: 'account_deleting_finished' })
       Navigation.pop(componentId)
-    }, 500);
+    }, 350);
   }
 }

@@ -12,7 +12,7 @@ export default class EmployeeCard extends PureComponent {
     })
   }
   render() {
-    const { name, status, amount1, amount2, amount3 } = this.props.data[1]
+    const { name, amount } = this.props.data[1]
     return (
       <View style={styles.container} >
         <View style={styles.imageContainer}>
@@ -25,18 +25,18 @@ export default class EmployeeCard extends PureComponent {
             Navigation.push(this.props.componentId, {
               component: {
                 name: 'moneyDetails',
-                passProps: { data: this.props.data },
+                passProps: { name, accountId: this.props.data[0] },
                 options: {
-                  topBar: { title: { text: this.props.data[1].name } }
+                  topBar: { title: { text: name } }
                 }
               }
             })
           }}
         >
-          <View style={{ flex: 1, height: 56, justifyContent: 'space-between' }}>
+          <View style={{ flex: 1, height: 56, justifyContent: 'space-between', alignItems: 'flex-start' }}>
             <Text style={styles.name}>{name}</Text>
-            <Text style={{ color: status === 'ME' ? '#008ee0' : '#ff006a', fontSize: 16 }}>
-              {amount1 + amount2 + amount3} $$
+            <Text style={{ fontWeight: 'bold', color: amount >= 0 ? '#008ee0' : '#ff006a', fontSize: 16 }}>
+              {Math.abs(amount)} $
             </Text>
           </View>
           <Icon name='ios-arrow-forward' style={{ fontSize: 28, color: '#c5c5c5' }} />

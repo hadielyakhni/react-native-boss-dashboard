@@ -26,7 +26,7 @@ export default class EmployeeCard extends PureComponent {
             })
           }}
         >
-          <View style={{ flex: 1, height: 56, justifyContent: 'space-between' }}>
+          <View style={{ flex: 1, height: 56, justifyContent: 'space-between', alignItems: 'flex-start' }}>
             <Text style={styles.name}>{data.name}</Text>
             <Text style={{ color: '#c5c5c5', fontSize: 16 }}>{data.role}</Text>
           </View>

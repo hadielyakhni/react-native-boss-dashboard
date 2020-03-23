@@ -37,16 +37,14 @@ class MyMoneyScreen extends Component {
       }
       let pTotal = 0, nTotal = 0
       let pAccounts = matchedAccounts.filter(account => {
-        const { status, amount1, amount2, amount3 } = account[1]
-        if (status === 'ME')
-          pTotal += (amount1 + amount2 + amount3)
-        return status === 'ME'
+        if (account[1].amount >= 0)
+          pTotal += parseFloat(account[1].amount)
+        return account[1].amount >= 0
       })
       let nAccounts = matchedAccounts.filter(account => {
-        const { status, amount1, amount2, amount3 } = account[1]
-        if (status === "HIM")
-          nTotal += (amount1 + amount2 + amount3)
-        return status === 'HIM'
+        if (account[1].amount < 0)
+          nTotal += parseFloat(-account[1].amount)
+        return account[1].amount < 0
       })
       return (
         <ScrollView>
@@ -58,7 +56,7 @@ class MyMoneyScreen extends Component {
                     YOU ARE OWED
                   </Text>
                   <Text style={{ color: '#008ee0', fontSize: 24, fontWeight: 'bold' }}>
-                    ${pTotal}
+                    {pTotal} $
                   </Text>
                 </View>
                 <View style={{ flexDirection: 'row', marginVertical: 10 }}>
@@ -81,12 +79,12 @@ class MyMoneyScreen extends Component {
                   <Text style={{ color: '#fff', fontSize: 26, fontWeight: 'bold' }}>
                     YOU OWE
                   </Text>
-                  <Text style={{ color: '#ff006a', fontSize: 24, fontWeight: 'bold' }}>
-                    $ -{nTotal}
+                  <Text style={{ color: '#de3b5b', fontSize: 24, fontWeight: 'bold' }}>
+                    {nTotal} $
                   </Text>
                 </View>
                 <View style={{ flexDirection: 'row', marginVertical: 10 }}>
-                  <Icon name='md-person' style={{ color: '#ff006a', fontSize: 26, marginRight: 15 }} />
+                  <Icon name='md-person' style={{ color: '#de3b5b', fontSize: 26, marginRight: 15 }} />
                   <Text style={{ color: 'rgba(255, 255, 255, 0.5)', fontSize: 18 }}>
                     to {nAccounts.length} people
                   </Text>
@@ -142,6 +140,9 @@ class MyMoneyScreen extends Component {
             Navigation.push(this.props.componentId, {
               component: {
                 name: 'moneyAdd',
+                passProps: {
+                  initialStackId: this.props.componentId
+                },
                 options: {
                   topBar: { title: { text: 'Add Account' } }
                 }

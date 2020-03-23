@@ -53,6 +53,7 @@ class EmployeeAddScreen extends Component {
           />
           <this.separator />
           <MyInput
+            keyboardType="decimal-pad"
             value={this.state.salary}
             leftIcon='ios-cash'
             style={{ fontSize: 16 }}
@@ -63,6 +64,7 @@ class EmployeeAddScreen extends Component {
           />
           <this.separator />
           <MyInput
+            keyboardType="number-pad"
             value={this.state.phone}
             leftIcon='ios-call'
             style={{ fontSize: 16 }}
@@ -73,6 +75,7 @@ class EmployeeAddScreen extends Component {
           />
           <this.separator />
           <MyInput
+            keyboardType="email-address"
             value={this.state.email}
             leftIcon='ios-mail'
             style={{ fontSize: 16 }}

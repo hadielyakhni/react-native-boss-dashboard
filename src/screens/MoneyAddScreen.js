@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
-import { Text, StyleSheet, View, InteractionManager, ActivityIndicator, Modal } from 'react-native'
+import { Text, StyleSheet, View, InteractionManager, ActivityIndicator, Modal, TouchableOpacity } from 'react-native'
 import { connect } from 'react-redux'
 import { addMoneyAccount, resetAccount } from '../actions'
 import { Spinner } from 'native-base'
 import MyButton from '../components/MyButton'
-import AccountForm from '../components/AccountForm'
+import MyInput from '../components/MyInput'
+import { CheckBox } from 'react-native-elements'
 
 class MoneyAddScreen extends Component {
   constructor(props) {
@@ -12,15 +13,12 @@ class MoneyAddScreen extends Component {
     this.state = { canRender: false }
     setTimeout(() => {
       InteractionManager.runAfterInteractions(() => {
-        this.setState({ canRender: true, name: '', status: 'ME', amount1: 0, amount2: 0, amount3: 0 })
+        this.setState({ canRender: true, name: '', amount: '', status: 'ME', radioIndex: 0 })
       })
-    }, 400);
-  }
-  updateState = (prop, value) => {
-    this.setState({ [prop]: value })
+    }, 50);
   }
   render() {
-    const { name, status, amount1, amount2, amount3 } = this.state
+    const { name, amount, status } = this.state
     return (
       this.state.canRender ?
         <View style={styles.container}>
@@ -35,17 +33,58 @@ class MoneyAddScreen extends Component {
               </View>
             </View>
           </Modal>
-          <AccountForm
-            data={this.state}
-            updateInputs={this.updateState}
-          />
+          <View style={styles.formContainer}>
+            <MyInput
+              placeHolder="Name"
+              leftIcon='ios-person'
+              style={{ fontSize: 16 }}
+              inputContainerStyle={{ marginTop: 20, marginBottom: 20 }}
+              value={name}
+              autoCapitalize="words"
+              onChangeText={name => this.setState({ name })}
+            />
+            <MyInput
+              placeHolder="How much money?"
+              leftIcon='ios-cash'
+              style={{ fontSize: 16 }}
+              value={amount}
+              keyboardType="decimal-pad"
+              onChangeText={amount => this.setState({ amount })}
+            />
+            <TouchableOpacity
+              activeOpacity={1}
+              onPress={() => this.setState({ status: 'ME' })}
+              style={{ flexDirection: 'row', alignItems: 'center', marginTop: 15, alignSelf: 'flex-start' }}>
+              <CheckBox
+                containerStyle={styles.checkBoxContainer}
+                checkedColor="#008ee0"
+                uncheckedColor="#008ee0"
+                checked={status === 'ME'}
+                onPress={() => { this.setState({ status: 'ME' }) }}
+              />
+              <Text style={{ fontSize: 15, fontWeight: 'bold', color: '#fff' }}>FOR ME</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              activeOpacity={1}
+              onPress={() => this.setState({ status: 'HIM' })}
+              style={{ flexDirection: 'row', alignItems: 'center', alignSelf: 'flex-start' }}
+            >
+              <CheckBox
+                containerStyle={styles.checkBoxContainer}
+                checkedColor='#ff006a'
+                uncheckedColor='#ff006a'
+                checked={status === 'HIM'}
+                onPress={() => { this.setState({ status: 'HIM' }) }}
+              />
+              <Text style={{ fontSize: 15, fontWeight: 'bold', color: '#fff' }}>FOR HIM</Text>
+            </TouchableOpacity>
+          </View>
           <View style={styles.addButtonView}>
             <MyButton
               style={styles.addButton}
               color='#008ee0'
               onPress={() => {
-                const total = amount1 + amount2 + amount3
-                return this.props.addMoneyAccount(this.props.componentId, { name, status, amount: total, amount1, amount2, amount3 })
+                return this.props.addMoneyAccount(this.props.initialStackId, this.props.componentId, { name, status, amount })
               }}
             >Add</MyButton>
           </View>
@@ -64,6 +103,17 @@ const styles = StyleSheet.create({
     backgroundColor: '#000',
     paddingTop: 15,
     paddingHorizontal: 10
+  },
+  formContainer: {
+    flex: 1
+  },
+  checkBoxContainer: {
+    marginRight: 0,
+    marginLeft: 0,
+    marginBottom: 0,
+    marginTop: 0,
+    padding: 8,
+    paddingLeft: 0
   },
   backButton: {
     marginRight: 15,
@@ -102,15 +152,14 @@ const styles = StyleSheet.create({
 
 const mapDispatchToProps = dispatch => {
   return {
-    resetAccount: () => dispatch(resetAccount()),
-    addMoneyAccount: (componentId, { name, status, amount, amount1, amount2, amount3 }) => (
-      dispatch(addMoneyAccount(componentId, { name, status, amount, amount1, amount2, amount3 }))
+    addMoneyAccount: (initialStackId, componentId, { name, status, amount }) => (
+      dispatch(addMoneyAccount(initialStackId, componentId, { name, status, amount }))
     )
   }
 }
 
-const mapStateToProps = state => ({
-  addingAccount: state.money.addingAccount
+const mapStateToProps = ({ money }) => ({
+  addingAccount: money.addingAccount
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(MoneyAddScreen)

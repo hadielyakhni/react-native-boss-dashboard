@@ -13,7 +13,7 @@ export default class MyInput extends PureComponent {
   }
   render() {
     return (
-      <View style={styles.inputContainer}>
+      <View style={[styles.inputContainer, this.props.inputContainerStyle]}>
         {this.props.leftIcon && <Icon name={this.props.leftIcon} style={[styles.iconLeft, this.props.leftIconStyle]} />}
         <TextInput
           editable={this.props.editable}
@@ -23,7 +23,7 @@ export default class MyInput extends PureComponent {
           style={[styles.InputStyle, this.props.style]}
           placeholder={this.props.placeHolder}
           placeholderTextColor='rgba(255, 255, 255, 0.6)'
-          autoCapitalize='none'
+          autoCapitalize={this.props.autoCapitalize || 'none'}
           autoCorrect={this.props.isAutoCorrect}
           onChangeText={this.props.onChangeText}
         />
@@ -46,21 +46,21 @@ const styles = StyleSheet.create({
     height: 45,
     borderRadius: 5,
     fontSize: 14,
-    color: '#fff'
+    color: '#fff',
+    paddingRight: 10
   },
   iconLeft: {
-    paddingHorizontal: 15,
-    fontSize: 23,
+    paddingHorizontal: 14,
+    fontSize: 24,
     color: '#008ee0'
   },
   rightIconContainer: {
-    // flex: 1,
     height: 45,
     alignItems: 'center',
     justifyContent: 'center'
   },
   iconRight: {
-    paddingHorizontal: 15,
+    paddingHorizontal: 10,
     color: '#fff'
   }
 })

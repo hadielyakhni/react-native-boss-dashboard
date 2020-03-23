@@ -25,11 +25,14 @@ class ToDoAddScreen extends Component {
             placeholder="What would you like to do?"
             placeholderTextColor="#575755"
             onChangeText={task => this.setState({ task })}
+            onSubmitEditing={() => this.secondTextInput.focus()}
+            blurOnSubmit={false}
           />
         </View>
         <View style={styles.descriptionContainer}>
           <TextInput
             multiline
+            ref={input => this.secondTextInput = input}
             value={this.state.description}
             style={[styles.input, { textAlignVertical: "top", flex: 1 }]}
             selectionColor='#008ee0'

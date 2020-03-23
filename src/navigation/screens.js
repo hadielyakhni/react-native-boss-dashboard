@@ -22,7 +22,6 @@ import {
   ChangePasswordScreen
 } from '../screens'
 
-
 const store = createStore(reducers, {}, applyMiddleware(ReduxThunk))
 
 function ReduxProvider(Component) {
@@ -37,8 +36,8 @@ export default registerScreens = () => {
   Navigation.registerComponent('first', () => FirstScreen)
   Navigation.registerComponent('auth', () => ReduxProvider(AuthScreen), () => AuthScreen)
   Navigation.registerComponent('todo', () => ReduxProvider(ToDoListScreen), () => ToDoListScreen)
-  Navigation.registerComponent('todoAdd', () => ReduxProvider(ToDoAddScreen), () => ToDoAddScreen),
-    Navigation.registerComponent('todoDetails', () => ReduxProvider(ToDoDetailsScreen), () => ToDoDetailsScreen)
+  Navigation.registerComponent('todoAdd', () => ReduxProvider(ToDoAddScreen), () => ToDoAddScreen)
+  Navigation.registerComponent('todoDetails', () => ReduxProvider(ToDoDetailsScreen), () => ToDoDetailsScreen)
   Navigation.registerComponent('employees', () => ReduxProvider(EmployeesListScreen), () => EmployeesListScreen)
   Navigation.registerComponent('employeeAdd', () => ReduxProvider(EmployeeAddScreen), () => EmployeeAddScreen)
   Navigation.registerComponent('employeeDetails', () => ReduxProvider(EmployeeDetailsScreen), () => EmployeeDetailsScreen)

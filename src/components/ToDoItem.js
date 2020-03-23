@@ -35,8 +35,6 @@ class ToDoItem extends PureComponent {
   }
   render() {
     const { task, description, isDone } = this.props.data
-    console.log('data: ', task, description, isDone)
-    console.log('taskId: ', this.props.taskId)
     return (
       <TouchableOpacity
         style={styles.container}
@@ -62,7 +60,7 @@ class ToDoItem extends PureComponent {
                       translationX: {
                         from: Dimensions.get('window').width,
                         to: 0,
-                        duration: 100
+                        duration: 200
                       }
                     }
                   }
@@ -78,9 +76,9 @@ class ToDoItem extends PureComponent {
             checked={this.props.data.isDone}
             onPress={this.onBoxPress.bind(this)}
             size={22}
-            uncheckedColor='#ff006a'
+            uncheckedColor='#de3b5b'
           />
-          <Text style={styles.taskTitle}>
+          <Text numberOfLines={1} style={styles.taskTitle}>
             {this.props.data.task}
           </Text>
         </View>
@@ -129,7 +127,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     alignSelf: 'center',
     fontSize: 16.6,
-    color: '#f5f5f5'
+    color: '#f5f5f5',
+    width: Dimensions.get('window').width - 115
   },
   trashStyle: {
     fontSize: 26,

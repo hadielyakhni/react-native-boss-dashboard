@@ -5,34 +5,102 @@ import {
   View,
   InteractionManager,
   Modal,
-  ActivityIndicator,
-  TouchableOpacity
+  TouchableOpacity,
+  TextInput,
+  Dimensions,
+  Keyboard,
+  FlatList,
+  ActivityIndicator
 } from 'react-native'
 import { connect } from 'react-redux'
-import { updateAccountInfo, deleteAccount } from '../actions'
+import { addTransaction, deleteAccount } from '../actions'
 import { Spinner } from 'native-base'
-import AccountForm from '../components/AccountForm'
-import MyButton from '../components/MyButton'
+import FontAwesome from 'react-native-vector-icons/FontAwesome'
+import { Navigation } from 'react-native-navigation'
+import TransactionCard from '../components/TransactionCard'
+
+const { height, width } = Dimensions.get("window")
 
 class MoneyDetailsScreen extends Component {
   constructor(props) {
     super(props)
-    const { name, status, amount1, amount2, amount3 } = this.props.data[1]
-    this.state = { canRender: false, name, status, amount1, amount2, amount3, modalVisible: false }
+    const { name, accountId } = this.props
+    this.accountId = accountId
+    this.state = { canRender: false, name, modalVisible: false, transConfirmationModalVisible: false, transType: '', transAmount: '' }
     setTimeout(() => {
       InteractionManager.runAfterInteractions(() => {
-        this.uid = this.props.data[0]
         this.setState({ canRender: true })
       })
     }, 300);
-  }
-  updateState = (prop, value) => {
-    this.setState({ [prop]: value })
   }
   render() {
     return (
       this.state.canRender ?
         <View style={styles.container}>
+          <View style={styles.summaryContainer}>
+            <View style={styles.amountLabel}>
+              <Text style={{ fontSize: 9, fontWeight: 'bold', color: '#9cafba' }}>
+                Y O U R  B A L A N C E
+            </Text>
+            </View>
+            <View style={styles.amountContainer}>
+              <Text style={{ color: '#ffffff', fontSize: 46, fontWeight: 'bold' }}>
+                {this.props.amount}
+              </Text>
+            </View>
+            <View style={styles.transNumberContainer}>
+              <Text style={{ fontSize: 9, fontWeight: 'bold', color: '#9cafba' }}>
+                T O T A L  T R A N S A C T I O N S :  {this.props.transactions.length}
+              </Text>
+            </View>
+            <View style={styles.currencyContainer}>
+              <Text style={{ color: '#fff', fontWeight: 'bold', fontSize: 36, transform: [{ rotate: '-10deg' }] }}>
+                $
+            </Text>
+            </View>
+            <TouchableOpacity
+              activeOpacity={0.8}
+              style={styles.trashButtonContainer}
+              onPress={() => this.setState({ modalVisible: true })}
+            >
+              <FontAwesome name="trash" color="rgba(156, 175, 186, 0.5)" size={25} />
+            </TouchableOpacity>
+          </View>
+          <View style={styles.transButtonsContainer}>
+            <TouchableOpacity
+              activeOpacity={0.85}
+              style={[styles.transButtons, { backgroundColor: '#121212' }]}
+              onPress={() => {
+                this.setState({ transConfirmationModalVisible: true, transType: 'send' })
+              }}
+            >
+              <View style={[styles.arrowIconContainer, { backgroundColor: '#34282d' }]}>
+                <FontAwesome name="arrow-up" color="#de3b5b" size={24} />
+              </View>
+              <Text style={{ marginLeft: 8, fontWeight: 'bold', color: '#fff', fontSize: 20 }}>Send</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              activeOpacity={0.85}
+              style={[styles.transButtons, { backgroundColor: '#121212' }]}
+              onPress={() => this.setState({ transConfirmationModalVisible: true, transType: 'receive' })}
+            >
+              <View style={[styles.arrowIconContainer, { backgroundColor: '#2e3b47' }]}>
+                <FontAwesome name="arrow-down" color="#008ee0" size={24} />
+              </View>
+              <Text style={{ marginLeft: 8, fontWeight: 'bold', color: '#fff', fontSize: 20 }}>Receive</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.transTextContainer}>
+            <Text style={styles.transText}>T R A N S A C T I O N S</Text>
+          </View>
+          <View style={styles.transListContainer}>
+            <FlatList
+              contentContainerStyle={{ paddingBottom: 6 }}
+              data={this.props.transactions}
+              keyExtractor={transaction => transaction[0]}
+              renderItem={({ item }) => <TransactionCard data={item} />}
+            />
+          </View>
           <Modal
             animationType="fade"
             transparent={true}
@@ -65,7 +133,7 @@ class MoneyDetailsScreen extends Component {
                     activeOpacity={0.8}
                     onPress={() => {
                       this.setState({ modalVisible: false });
-                      this.props.deleteAccount(this.props.componentId, { uid: this.uid })
+                      this.props.deleteAccount(this.props.componentId, this.accountId)
                     }}
                     style={[styles.modalButton, { borderBottomRightRadius: 4 }]}>
                     <Text style={{ color: '#e65100', fontSize: 18, fontWeight: 'bold' }}>Delete</Text>
@@ -96,37 +164,82 @@ class MoneyDetailsScreen extends Component {
               </View>
             </View>
           </Modal>
-          <AccountForm
-            data={{
-              name: this.state.name,
-              status: this.state.status,
-              amount1: this.state.amount1,
-              amount2: this.state.amount2,
-              amount3: this.state.amount3
-            }}
-            updateInputs={this.updateState}
-            nameViewStyle={{ paddingTop: 0, paddingBottom: 22 }}
-            sliderStyle={{ marginTop: 5, marginBottom: 28 }}
-          />
-          <View style={styles.buttonView}>
-            <MyButton
-              activeOpacity={0.9}
-              style={{ height: 55 }}
-              textStyle={{ fontSize: 20 }}
-              color='#008ee0'
-              onPress={() => {
-                const { name, status, amount, amount1, amount2, amount3 } = this.state
-                this.props.updateAccountInfo(this.props.componentId, { name, status, amount, amount1, amount2, amount3, uid: this.uid })
-              }}
-            >Save</MyButton>
-            <MyButton
-              activeOpacity={0.9}
-              style={{ marginBottom: 20, height: 50 }}
-              color='#e65100'
-              textStyle={{ fontSize: 20 }}
-              onPress={() => this.setState({ modalVisible: true })}
-            >Delete</MyButton>
-          </View>
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={this.state.transConfirmationModalVisible}
+            onRequestClose={() => this.setState({ transConfirmationModalVisible: false })}
+          >
+            <View style={styles.transConfirmationModal}>
+              <View style={styles.innerTransConfirmationModal}>
+                <View style={styles.transInputContainer}>
+                  <Text style={{ color: '#fff', fontWeight: 'bold', fontSize: 20 }}>
+                    {
+                      this.state.transType === 'send' ?
+                        "Sending to " + this.props.name + "..." :
+                        "Receiving from " + this.props.name + "... "
+                    }
+                  </Text>
+                  <View>
+                    <TextInput
+                      value={this.state.transAmount}
+                      style={styles.amountInput}
+                      placeholder="Specify the amount $"
+                      placeholderTextColor="#888"
+                      keyboardType="decimal-pad"
+                      onChangeText={transAmount => this.setState({ transAmount })}
+                    />
+                  </View>
+                </View>
+                <View style={styles.transConfirmationButtonsContainer}>
+                  <TouchableOpacity
+                    activeOpacity={0.85}
+                    style={[styles.transButtons, { backgroundColor: '#171717' }]}
+                    onPress={() => {
+                      this.setState({ transConfirmationModalVisible: false, transType: '' })
+                    }}
+                  >
+                    <Text style={{ marginLeft: 8, fontWeight: 'bold', color: '#fff', fontSize: 20 }}>
+                      Cancel
+                  </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    activeOpacity={0.85}
+                    style={[styles.transButtons, { backgroundColor: '#171717' }]}
+                    onPress={() => {
+                      this.props.addTransaction(
+                        parseFloat(this.props.amount),
+                        parseFloat(this.state.transAmount),
+                        this.state.transType === 'send' ? 'Sent' : 'Received',
+                        this.props.accountId
+                      )
+                      this.setState({ transConfirmationModalVisible: false, transAmount: '', transType: '' })
+                    }}
+                  >
+                    <View style={[styles.arrowIconContainer, {
+                      height: height / 24,
+                      width: height / 24,
+                      backgroundColor: this.state.transType === 'send' ? '#34282d' : '#2e3b47'
+                    }]}>
+                      <FontAwesome
+                        name={this.state.transType === 'send' ? "arrow-up" : "arrow-down"}
+                        color={this.state.transType === 'send' ? "#de3b5b" : "#008ee0"}
+                        size={22}
+                      />
+                    </View>
+                    <Text style={{
+                      marginLeft: 8,
+                      fontWeight: 'bold',
+                      color: this.state.transType === 'send' ? '#de3b5b' : "#008ee0",
+                      fontSize: 20
+                    }}>
+                      {this.state.transType === 'send' ? "Send" : "Receive"}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+          </Modal>
         </View>
         :
         <View style={{ flex: 1, backgroundColor: '#000', alignItems: 'center', justifyContent: 'center' }}>
@@ -140,7 +253,84 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#000',
-    paddingTop: 18
+    paddingHorizontal: width / 22
+  },
+  summaryContainer: {
+    height: height / 4.8,
+    marginTop: height / 36,
+    paddingTop: height / 28,
+    marginBottom: height / 36,
+    backgroundColor: '#121212',
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  amountLabel: {
+    backgroundColor: 'rgba(255,255,255,0.1)',
+    width: 110,
+    height: 22,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 5
+  },
+  amountContainer: {
+    marginTop: height / 100,
+    marginBottom: height / 60
+  },
+  trashButtonContainer: {
+    position: 'absolute',
+    top: 13,
+    right: 13,
+    height: 30,
+    width: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 4
+  },
+  transButtonsContainer: {
+    height: height / 14,
+    flexDirection: 'row',
+    justifyContent: 'space-between'
+  },
+  transButtons: {
+    width: ((width - width / 11) / 2) - width / 26,
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'row'
+  },
+  currencyContainer: {
+    position: 'absolute',
+    top: -21,
+    height: 42,
+    width: 42,
+    backgroundColor: '#fd9517',
+    borderRadius: 14,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  arrowIconContainer: {
+    height: height / 22,
+    width: height / 22,
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'red',
+    marginRight: 8
+  },
+  transTextContainer: {
+    height: height / 24,
+    marginTop: height / 42,
+    marginBottom: height / 80,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  transText: {
+    color: '#9cafba',
+    fontSize: 10.5
+  },
+  transListContainer: {
+    flex: 1
   },
   backButton: {
     marginRight: 15,
@@ -154,6 +344,36 @@ const styles = StyleSheet.create({
   buttonView: {
     height: 150,
     justifyContent: 'space-evenly'
+  },
+  transConfirmationModal: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.2)',
+    justifyContent: 'flex-end'
+  },
+  innerTransConfirmationModal: {
+    height: height / 4,
+    backgroundColor: '#232323',
+    borderTopLeftRadius: height / 48,
+    borderTopRightRadius: height / 48,
+    paddingHorizontal: width / 28
+  },
+  transInputContainer: {
+    justifyContent: 'space-evenly',
+    height: height / 8
+  },
+  transConfirmationButtonsContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingVertical: height / 40
+  },
+  amountInput: {
+    backgroundColor: 'transparent',
+    fontSize: 16,
+    color: '#fff',
+    borderBottomWidth: 0.5,
+    paddingBottom: 3,
+    borderBottomColor: '#888'
   },
   modal: {
     backgroundColor: '#171717',
@@ -197,15 +417,29 @@ const styles = StyleSheet.create({
 })
 
 const mapDispatchToProps = dispatch => ({
-  updateAccountInfo: (componentId, { name, status, amount, amount1, amount2, amount3, uid }) => (
-    dispatch(updateAccountInfo(componentId, { name, status, amount, amount1, amount2, amount3, uid }))
+  addTransaction: (oldAmount, transAmount, status, accountId) => (
+    dispatch(addTransaction(oldAmount, transAmount, status, accountId))
   ),
-  deleteAccount: (componentId, { uid }) => dispatch(deleteAccount(componentId, { uid }))
+  deleteAccount: (componentId, accountId) => dispatch(deleteAccount(componentId, accountId))
 })
 
-const mapStateToProps = state => ({
-  deletingAccount: state.money.deletingAccount,
-  updatingAccount: state.money.updatingAccount
-})
+const mapStateToProps = ({ money }, ownProps) => {
+  let transactions, amount
+  if (money.allAccounts && money.allAccounts[ownProps.accountId]) {
+    amount = money.allAccounts[ownProps.accountId].amount
+    transactions = money.allAccounts[ownProps.accountId].transactions
+    transactions = Object.keys(transactions).map(key => [key, transactions[key]])
+  }
+  else {
+    amount = 0
+    transactions = []
+  }
+  return {
+    amount,
+    transactions,
+    deletingAccount: money.deletingAccount,
+    updatingAccount: money.updatingAccount
+  }
+}
 
 export default connect(mapStateToProps, mapDispatchToProps)(MoneyDetailsScreen)
