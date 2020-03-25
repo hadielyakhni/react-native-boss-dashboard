@@ -8,7 +8,8 @@ import {
   TouchableOpacity,
   TextInput,
   Dimensions,
-  Keyboard,
+  UIManager,
+  LayoutAnimation,
   FlatList,
   ActivityIndicator
 } from 'react-native'
@@ -16,8 +17,10 @@ import { connect } from 'react-redux'
 import { addTransaction, deleteAccount } from '../actions'
 import { Spinner } from 'native-base'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
-import { Navigation } from 'react-native-navigation'
 import TransactionCard from '../components/TransactionCard'
+
+UIManager.setLayoutAnimationEnabledExperimental &&
+  UIManager.setLayoutAnimationEnabledExperimental(true)
 
 const { height, width } = Dimensions.get("window")
 
@@ -26,17 +29,37 @@ class MoneyDetailsScreen extends Component {
     super(props)
     const { name, accountId } = this.props
     this.accountId = accountId
-    this.state = { canRender: false, name, modalVisible: false, transConfirmationModalVisible: false, transType: '', transAmount: '' }
+    this.state = {
+      canRender: false,
+      name,
+      modalVisible: false,
+      transConfirmationModalVisible: false,
+      transType: '',
+      transAmount: ''
+    }
     setTimeout(() => {
       InteractionManager.runAfterInteractions(() => {
         this.setState({ canRender: true })
       })
-    }, 300);
+    }, 225);
+  }
+  componentDidUpdate() {
+    LayoutAnimation.configureNext({
+      duration: 200,
+      update: {
+        type: LayoutAnimation.Types.easeInEaseOut,
+        property: LayoutAnimation.Properties.scaleXY
+      }
+    })
   }
   render() {
     return (
       this.state.canRender ?
         <View style={styles.container}>
+          <View style={[StyleSheet.absoluteFill, {
+            backgroundColor: this.state.transConfirmationModalVisible || this.state.modalVisible ? 'rgba(0,0,0,0.2)' : 'rgba(0,0,0,0)',
+            zIndex: this.state.transConfirmationModalVisible || this.state.modalVisible ? 1 : 0
+          }]}></View>
           <View style={styles.summaryContainer}>
             <View style={styles.amountLabel}>
               <Text style={{ fontSize: 9, fontWeight: 'bold', color: '#9cafba' }}>
@@ -44,7 +67,7 @@ class MoneyDetailsScreen extends Component {
             </Text>
             </View>
             <View style={styles.amountContainer}>
-              <Text style={{ color: '#ffffff', fontSize: 46, fontWeight: 'bold' }}>
+              <Text numberOfLines={1} ellipsizeMode="middle" style={styles.amountText}>
                 {this.props.amount}
               </Text>
             </View>
@@ -71,6 +94,7 @@ class MoneyDetailsScreen extends Component {
               activeOpacity={0.85}
               style={[styles.transButtons, { backgroundColor: '#121212' }]}
               onPress={() => {
+                this.flatListRef.scrollToOffset({ animated: true, offset: 0 });
                 this.setState({ transConfirmationModalVisible: true, transType: 'send' })
               }}
             >
@@ -82,7 +106,10 @@ class MoneyDetailsScreen extends Component {
             <TouchableOpacity
               activeOpacity={0.85}
               style={[styles.transButtons, { backgroundColor: '#121212' }]}
-              onPress={() => this.setState({ transConfirmationModalVisible: true, transType: 'receive' })}
+              onPress={() => {
+                this.flatListRef.scrollToOffset({ animated: true, offset: 0 });
+                this.setState({ transConfirmationModalVisible: true, transType: 'receive' })
+              }}
             >
               <View style={[styles.arrowIconContainer, { backgroundColor: '#2e3b47' }]}>
                 <FontAwesome name="arrow-down" color="#008ee0" size={24} />
@@ -95,6 +122,7 @@ class MoneyDetailsScreen extends Component {
           </View>
           <View style={styles.transListContainer}>
             <FlatList
+              ref={ref => this.flatListRef = ref}
               contentContainerStyle={{ paddingBottom: 6 }}
               data={this.props.transactions}
               keyExtractor={transaction => transaction[0]}
@@ -102,14 +130,14 @@ class MoneyDetailsScreen extends Component {
             />
           </View>
           <Modal
-            animationType="fade"
+            animationType="slide"
             transparent={true}
             visible={this.state.modalVisible}
             onRequestClose={() => {
               this.setState({ modalVisible: false })
             }}>
             <View
-              style={{ backgroundColor: 'rgba(0,0,0,0.5)', flex: 1, justifyContent: 'center' }}
+              style={{ flex: 1, justifyContent: 'center' }}
             >
               <View style={styles.modal}>
                 <View style={styles.upperModal}>
@@ -277,6 +305,12 @@ const styles = StyleSheet.create({
     marginTop: height / 100,
     marginBottom: height / 60
   },
+  amountText: {
+    paddingHorizontal: width / 10,
+    color: '#ffffff',
+    fontSize: 42,
+    fontWeight: 'bold'
+  },
   trashButtonContainer: {
     position: 'absolute',
     top: 13,
@@ -347,7 +381,6 @@ const styles = StyleSheet.create({
   },
   transConfirmationModal: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.2)',
     justifyContent: 'flex-end'
   },
   innerTransConfirmationModal: {
@@ -428,7 +461,9 @@ const mapStateToProps = ({ money }, ownProps) => {
   if (money.allAccounts && money.allAccounts[ownProps.accountId]) {
     amount = money.allAccounts[ownProps.accountId].amount
     transactions = money.allAccounts[ownProps.accountId].transactions
-    transactions = Object.keys(transactions).map(key => [key, transactions[key]])
+    transactions = Object.keys(transactions)
+      .map(key => [key, transactions[key]])
+      .sort((trans1, trans2) => trans2[1].date - trans1[1].date)
   }
   else {
     amount = 0

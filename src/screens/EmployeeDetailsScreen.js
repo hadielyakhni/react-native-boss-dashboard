@@ -10,14 +10,12 @@ class EmployeeDetailsScreen extends Component {
   constructor(props) {
     super(props)
     this.state = { canRender: false, modalVisible: false }
-    setTimeout(() => {
-      InteractionManager.runAfterInteractions(() => {
-        this.separator = () => <View style={{ marginVertical: 2 }}></View>
-        this.uid = this.props.uid
-        const { data: { name, role, salary, phone, email } } = this.props
-        this.setState({ canRender: true, name, role, salary, phone, email })
-      })
-    }, 400);
+    InteractionManager.runAfterInteractions(() => {
+      this.separator = () => <View style={{ marginVertical: 2 }}></View>
+      this.uid = this.props.uid
+      const { data: { name, role, salary, phone, email } } = this.props
+      this.setState({ canRender: true, name, role, salary, phone, email })
+    })
   }
   render() {
     return (

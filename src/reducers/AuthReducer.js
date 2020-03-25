@@ -7,7 +7,6 @@ const INITIAL_STATE = {
 }
 
 export default (state = INITIAL_STATE, action) => {
-  console.log('auth reducer', action.type)
   switch (action.type) {
     case 'auth_attempt_started':
       return { ...state, error: '', loading: true }

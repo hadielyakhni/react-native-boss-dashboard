@@ -2,8 +2,6 @@ import React from 'react'
 import { StyleSheet, Text, View, Dimensions } from 'react-native'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 
-const { width } = Dimensions.get('window')
-
 const TransactionCard = ({ data }) => {
   const { transAmount, status, date } = data[1]
   const getDateFormatted = date => {
@@ -27,7 +25,10 @@ const TransactionCard = ({ data }) => {
           <Text style={{ fontSize: 18, color: '#fff', fontWeight: 'bold' }}>
             {status}
           </Text>
-          <Text style={{
+          <Text ellipsizeMode="middle" numberOfLines={1} style={{
+            flex: 1,
+            textAlign: 'right',
+            marginLeft: 24,
             fontSize: 18,
             fontWeight: 'bold',
             color: status === 'Sent' ? "#de3b5b" : "#008ee0"
@@ -58,7 +59,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: width / 28
+    paddingHorizontal: Dimensions.get('window').width / 28
   },
   arrowIconContainer: {
     height: 38,

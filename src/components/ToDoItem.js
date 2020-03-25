@@ -19,19 +19,21 @@ UIManager.setLayoutAnimationEnabledExperimental &&
   UIManager.setLayoutAnimationEnabledExperimental(true)
 
 class ToDoItem extends PureComponent {
+  componentDidMount() {
+    LayoutAnimation.configureNext({
+      duration: 120,
+      update: {
+        type: LayoutAnimation.Types.easeOut,
+        property: LayoutAnimation.Properties.opacity
+      }
+    })
+  }
   onBoxPress() {
     const { task, description, isDone } = this.props.data
     this.props.updateTask(this.props.taskId, task, description, isDone)
   }
   onDelete() {
     this.props.deleteTask(this.props.taskId)
-    LayoutAnimation.configureNext({
-      duration: 100,
-      update: {
-        type: LayoutAnimation.Types.easeOut,
-        property: LayoutAnimation.Properties.opacity
-      }
-    })
   }
   render() {
     const { task, description, isDone } = this.props.data

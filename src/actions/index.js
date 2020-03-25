@@ -7,7 +7,6 @@ import { Keyboard, Dimensions } from 'react-native'
 import AsyncStorage from '@react-native-community/async-storage'
 
 let UID
-
 // Auth Actions
 export const userSignin = (email, password) =>
   dispatch => {
@@ -23,11 +22,14 @@ export const userSignin = (email, password) =>
           })
         }, 100);
       })
-      .catch(err => dispatch({
-        type: 'auth_error',
-        payload: err.toString()
-      }))
+      .catch(err => {
+        return dispatch({
+          type: 'auth_error',
+          payload: err.toString()
+        })
+      })
   }
+
 export const userSignup = (email, password) =>
   dispatch => {
     dispatch({ type: 'auth_attempt_started' })
@@ -70,7 +72,7 @@ export const addTask = (task, description, fromWichScreen, componentId) => {
   return dispatch => {
     dispatch({ type: 'add_pressed' })
     firebase.database().ref(`users/${UID}/tasks`)
-      .push({ task, description, isDone: false })
+      .push({ task, description, isDone: false, date: Date.now() })
     if (fromWichScreen === 'todoAdd')
       Navigation.pop(componentId)
   }
@@ -227,7 +229,7 @@ export const addTransaction = (oldAmount, transAmount, status, accountId) => {
   else if (status === 'Received')
     amount = oldAmount - transAmount
   return dispatch => {
-    dispatch({ type: 'account_updating_started' })
+    // dispatch({ type: 'account_updating_started' })
     firebase.database().ref(`users/${UID}/money/${accountId}`)
       .update({ amount })
     firebase.database().ref(`users/${UID}/money/${accountId}/transactions`)
@@ -236,9 +238,9 @@ export const addTransaction = (oldAmount, transAmount, status, accountId) => {
         status: status === 'Sent' ? 'Sent' : 'Received',
         date: Date.now()
       })
-    setTimeout(() => {
-      dispatch({ type: 'account_updating_finished' })
-    }, 10);
+    // setTimeout(() => {
+    // dispatch({ type: 'account_updating_finished' })
+    // }, 1);
   }
 }
 

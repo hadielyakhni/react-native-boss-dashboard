@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, StyleSheet, View, InteractionManager, ActivityIndicator, Modal, TouchableOpacity } from 'react-native'
+import { Text, StyleSheet, View, InteractionManager, ActivityIndicator, Modal, TouchableOpacity, Keyboard } from 'react-native'
 import { connect } from 'react-redux'
 import { addMoneyAccount, resetAccount } from '../actions'
 import { Spinner } from 'native-base'
@@ -11,14 +11,26 @@ class MoneyAddScreen extends Component {
   constructor(props) {
     super(props)
     this.state = { canRender: false }
-    setTimeout(() => {
-      InteractionManager.runAfterInteractions(() => {
-        this.setState({ canRender: true, name: '', amount: '', status: 'ME', radioIndex: 0 })
-      })
-    }, 50);
+    this.keyboardDidShowListner = Keyboard.addListener('keyboardDidShow', this._keyboardDidShow)
+    this.keyboardDidHideListner = Keyboard.addListener('keyboardDidHide', this._keyboardDidHide)
+    InteractionManager.runAfterInteractions(() => {
+      this.setState({ canRender: true, name: '', name2: '', amount: '', status: 'ME', radioIndex: 0, isKeyboardOpened: false })
+    })
+  }
+  _keyboardDidShow = () => {
+    this.setState({ isKeyboardOpened: true })
+  }
+  _keyboardDidHide = () => {
+    this.setState({ isKeyboardOpened: false })
+  }
+  isAddDisabled() {
+    const { name, name2, amount } = this.state
+    if (!name || name !== name2 || !amount)
+      return true
+    return false
   }
   render() {
-    const { name, amount, status } = this.state
+    const { name, name2, amount, status } = this.state
     return (
       this.state.canRender ?
         <View style={styles.container}>
@@ -38,14 +50,24 @@ class MoneyAddScreen extends Component {
               placeHolder="Name"
               leftIcon='ios-person'
               style={{ fontSize: 16 }}
-              inputContainerStyle={{ marginTop: 20, marginBottom: 20 }}
+              inputContainerStyle={{ marginTop: 15 }}
               value={name}
               autoCapitalize="words"
               onChangeText={name => this.setState({ name })}
             />
             <MyInput
+              placeHolder="Confirm name"
+              inputContainerStyle={{ marginTop: 10 }}
+              leftIcon='ios-person'
+              style={{ fontSize: 16 }}
+              value={name2}
+              autoCapitalize="words"
+              onChangeText={name2 => this.setState({ name2 })}
+            />
+            <MyInput
               placeHolder="How much money?"
               leftIcon='ios-cash'
+              inputContainerStyle={{ marginBottom: 20, marginTop: 10 }}
               style={{ fontSize: 16 }}
               value={amount}
               keyboardType="decimal-pad"
@@ -81,10 +103,13 @@ class MoneyAddScreen extends Component {
           </View>
           <View style={styles.addButtonView}>
             <MyButton
-              style={styles.addButton}
+              disabled={this.isAddDisabled()}
+              disabledColor='#355973'
               color='#008ee0'
+              textStyle={{ fontSize: 18 }}
+              style={[styles.addButton, { marginBottom: this.state.isKeyboardOpened ? 600 : 0 }]}
               onPress={() => {
-                return this.props.addMoneyAccount(this.props.initialStackId, this.props.componentId, { name, status, amount })
+                return this.props.addMoneyAccount(this.props.initialStackId, this.props.componentId, { name, status, amount: amount || 0 })
               }}
             >Add</MyButton>
           </View>

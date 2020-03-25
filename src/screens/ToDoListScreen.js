@@ -29,15 +29,10 @@ class ToDoListScreen extends Component {
     this.state = { task: '' }
     this.props.fetchTasks()
   }
+  componentDidMount() {
+    // LayoutAnimation.configureNext(LayoutAnimation.linear)
+  }
   onAdd() {
-    LayoutAnimation.configureNext({
-      duration: 400,
-      update: {
-        type: LayoutAnimation.Types.spring,
-        property: LayoutAnimation.Properties.scaleXY,
-        springDamping: 0.75
-      }
-    })
     if (this.state.task !== '') {
       this.props.addTask(this.state.task)
       this.setState({ task: '' })
@@ -58,6 +53,7 @@ class ToDoListScreen extends Component {
         <ScrollView >
           <Separator text='INCOMPLETED' />
           <FlatList
+            initialNumToRender={25}
             style={{ marginBottom: 10 }}
             data={this.props.unDoneTasks}
             keyExtractor={task => task[0]}
@@ -209,8 +205,8 @@ const mapStateToProps = ({ todo }) => {
   let result, doneTasks, unDoneTasks
   if (tasks && tasks !== []) {
     result = Object.keys(tasks).map(key => [key, tasks[key]])
-    doneTasks = result.filter(task => task[1].isDone)
-    unDoneTasks = result.filter(task => !task[1].isDone)
+    doneTasks = result.filter(task => task[1].isDone).sort((task1, task2) => task2[1].date - task1[1].date)
+    unDoneTasks = result.filter(task => !task[1].isDone).sort((task1, task2) => task2[1].date - task1[1].date)
   }
   else {
     doneTasks = []

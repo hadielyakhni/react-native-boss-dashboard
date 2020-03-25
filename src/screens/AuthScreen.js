@@ -9,7 +9,6 @@ import {
   Dimensions,
   KeyboardAvoidingView
 } from 'react-native'
-import { Navigation } from 'react-native-navigation'
 import { Spinner } from 'native-base'
 import MyInput from '../components/MyInput'
 import MyButton from '../components/MyButton'

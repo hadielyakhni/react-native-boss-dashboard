@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react'
-import { Text, View, StyleSheet, TouchableOpacity, Image, InteractionManager } from 'react-native'
+import { Text, View, StyleSheet, TouchableOpacity, Image, InteractionManager, Dimensions } from 'react-native'
 import { Icon } from 'native-base'
 import { Navigation } from 'react-native-navigation'
 
@@ -27,6 +27,18 @@ export default class EmployeeCard extends PureComponent {
                 name: 'moneyDetails',
                 passProps: { name, accountId: this.props.data[0] },
                 options: {
+                  animations: {
+                    push: {
+                      content: {
+                        waitForRender: true,
+                        translationY: {
+                          from: Dimensions.get('window').height,
+                          to: 0,
+                          duration: 225
+                        }
+                      }
+                    }
+                  },
                   topBar: { title: { text: name } }
                 }
               }
@@ -34,8 +46,10 @@ export default class EmployeeCard extends PureComponent {
           }}
         >
           <View style={{ flex: 1, height: 56, justifyContent: 'space-between', alignItems: 'flex-start' }}>
-            <Text style={styles.name}>{name}</Text>
-            <Text style={{ fontWeight: 'bold', color: amount >= 0 ? '#008ee0' : '#ff006a', fontSize: 16 }}>
+            <Text numberOfLines={1} style={styles.name}>
+              {name}
+            </Text>
+            <Text style={{ fontWeight: 'bold', color: amount >= 0 ? '#008ee0' : '#de3b5b', fontSize: 16 }}>
               {Math.abs(amount)} $
             </Text>
           </View>
@@ -77,7 +91,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: '#fff',
     fontWeight: 'bold',
-    marginRight: 5
+    marginRight: Dimensions.get('window').width / 12
   },
   amount: {
     fontSize: 16

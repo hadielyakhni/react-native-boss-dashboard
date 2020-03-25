@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
-import { Text, StyleSheet, View, ActivityIndicator, InteractionManager, Modal } from 'react-native'
+import { Text, StyleSheet, View, ActivityIndicator, InteractionManager, Modal, Keyboard } from 'react-native'
 import { connect } from 'react-redux'
 import { addEmployee, resetEmployee } from '../actions'
-import { Spinner, Icon } from 'native-base'
+import { Spinner } from 'native-base'
 import MyInput from '../components/MyInput'
 import MyButton from '../components/MyButton'
 
@@ -10,12 +10,16 @@ class EmployeeAddScreen extends Component {
   constructor(props) {
     super(props)
     this.state = { canRender: false }
-    setTimeout(() => {
-      InteractionManager.runAfterInteractions(() => {
-        this.separator = () => <View style={{ marginVertical: 2 }}></View>
-        this.setState({ canRender: true, name: '', role: '', salary: '', phone: '', email: '' })
-      })
-    }, 400);
+    InteractionManager.runAfterInteractions(() => {
+      this.separator = () => <View style={{ marginVertical: 2 }}></View>
+      this.setState({ canRender: true, name: '', role: '', salary: '', phone: '', email: '' })
+    })
+  }
+  isAddDisabled() {
+    const { name, role, salary, phone } = this.state
+    if (!name || !role || !salary || !phone)
+      return true
+    return false
   }
   render() {
     return (
@@ -32,63 +36,70 @@ class EmployeeAddScreen extends Component {
               </View>
             </View>
           </Modal>
-          <MyInput
-            value={this.state.name}
-            leftIcon='ios-person'
-            style={{ fontSize: 16 }}
-            isSecure={false}
-            placeHolder='Name'
-            isAutoCorrect={false}
-            onChangeText={value => this.setState({ name: value })}
-          />
-          <this.separator />
-          <MyInput
-            value={this.state.role}
-            leftIcon='ios-briefcase'
-            style={{ fontSize: 16 }}
-            isSecure={false}
-            placeHolder='Role'
-            isAutoCorrect={false}
-            onChangeText={value => this.setState({ role: value })}
-          />
-          <this.separator />
-          <MyInput
-            keyboardType="decimal-pad"
-            value={this.state.salary}
-            leftIcon='ios-cash'
-            style={{ fontSize: 16 }}
-            isSecure={false}
-            placeHolder='Salary'
-            isAutoCorrect={false}
-            onChangeText={value => this.setState({ salary: value })}
-          />
-          <this.separator />
-          <MyInput
-            keyboardType="number-pad"
-            value={this.state.phone}
-            leftIcon='ios-call'
-            style={{ fontSize: 16 }}
-            isSecure={false}
-            placeHolder='Phone'
-            isAutoCorrect={false}
-            onChangeText={value => this.setState({ phone: value })}
-          />
-          <this.separator />
-          <MyInput
-            keyboardType="email-address"
-            value={this.state.email}
-            leftIcon='ios-mail'
-            style={{ fontSize: 16 }}
-            isSecure={false}
-            placeHolder='Email'
-            isAutoCorrect={false}
-            onChangeText={value => this.setState({ email: value })}
-          />
-          <View style={{ flex: 1, justifyContent: 'flex-end' }}>
+          <View style={{ flex: 1 }}>
+            <MyInput
+              value={this.state.name}
+              leftIcon='ios-person'
+              style={{ fontSize: 16 }}
+              isSecure={false}
+              placeHolder='Name'
+              isAutoCorrect={false}
+              onChangeText={value => this.setState({ name: value })}
+            />
+            <this.separator />
+            <MyInput
+              value={this.state.role}
+              leftIcon='ios-briefcase'
+              style={{ fontSize: 16 }}
+              isSecure={false}
+              placeHolder='Role'
+              isAutoCorrect={false}
+              onChangeText={value => this.setState({ role: value })}
+            />
+            <this.separator />
+            <MyInput
+              keyboardType="decimal-pad"
+              value={this.state.salary}
+              leftIcon='ios-cash'
+              style={{ fontSize: 16 }}
+              isSecure={false}
+              placeHolder='Salary'
+              isAutoCorrect={false}
+              onChangeText={value => this.setState({ salary: value })}
+            />
+            <this.separator />
+            <MyInput
+              keyboardType="number-pad"
+              value={this.state.phone}
+              leftIcon='ios-call'
+              style={{ fontSize: 16 }}
+              isSecure={false}
+              placeHolder='Phone'
+              isAutoCorrect={false}
+              onChangeText={value => this.setState({ phone: value })}
+            />
+            <this.separator />
+            <MyInput
+              keyboardType="email-address"
+              value={this.state.email}
+              leftIcon='ios-mail'
+              style={{ fontSize: 16 }}
+              isSecure={false}
+              placeHolder='Email'
+              isAutoCorrect={false}
+              onChangeText={value => this.setState({ email: value })}
+            />
+            <Text style={{ marginTop: 10, fontSize: 12, fontWeight: 'bold', fontStyle: 'italic', color: '#bbb' }}>
+              Email is not required! **
+            </Text>
+          </View>
+          <View style={{ height: 125, justifyContent: 'center' }}>
             <MyButton
-              style={{ marginBottom: 15, height: 50 }}
+              style={{ marginBottom: 15, height: 50, borderRadius: 10, height: 56 }}
+              disabled={this.isAddDisabled()}
+              disabledColor='#355973'
               color='#008ee0'
-              textStyle={{ fontSize: 20 }}
+              textStyle={{ fontSize: 18 }}
               onPress={() => {
                 const { name, role, salary, phone, email } = this.state
                 this.props.addEmployee(this.props.componentId, { name, role, salary, phone, email })

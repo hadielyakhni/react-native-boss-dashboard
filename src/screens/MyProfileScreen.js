@@ -13,6 +13,11 @@ class MyProfileScreen extends Component {
   render() {
     return (
       <View style={styles.container}>
+        <View style={[StyleSheet.absoluteFill, {
+          backgroundColor: this.state.modalVisible ? 'rgba(0,0,0,0.2)' : 'rgba(0,0,0,1)',
+          zIndex: this.state.modalVisible ? 1 : 0
+        }]}>
+        </View>
         <Modal
           animationType="slide"
           transparent={true}
@@ -21,7 +26,7 @@ class MyProfileScreen extends Component {
             this.setState({ modalVisible: false })
           }}>
           <View
-            style={{ backgroundColor: 'rgba(0,0,0,0.5)', flex: 1, justifyContent: 'center' }}
+            style={{ flex: 1, justifyContent: 'center' }}
           >
             <View style={styles.modal}>
               <View style={styles.upperModal}>

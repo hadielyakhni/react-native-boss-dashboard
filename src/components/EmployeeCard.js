@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react'
-import { Image, View, Text, StyleSheet, TouchableOpacity } from 'react-native'
+import { Image, View, Text, StyleSheet, TouchableOpacity, Dimensions } from 'react-native'
 import { Icon } from 'native-base'
 import { Navigation } from 'react-native-navigation'
 
@@ -27,8 +27,16 @@ export default class EmployeeCard extends PureComponent {
           }}
         >
           <View style={{ flex: 1, height: 56, justifyContent: 'space-between', alignItems: 'flex-start' }}>
-            <Text style={styles.name}>{data.name}</Text>
-            <Text style={{ color: '#c5c5c5', fontSize: 16 }}>{data.role}</Text>
+            <Text numberOfLines={1} style={styles.name}>
+              {data.name}
+            </Text>
+            <Text numberOfLines={1} style={{
+              color: '#c5c5c5',
+              fontSize: 16,
+              marginRight: Dimensions.get('window').width / 8
+            }}>
+              {data.role}
+            </Text>
           </View>
           <Icon name='ios-arrow-forward' style={{ fontSize: 28, color: '#c5c5c5' }} />
         </TouchableOpacity>
@@ -71,7 +79,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: '#fff',
     fontWeight: 'bold',
-    marginRight: 5
+    marginRight: Dimensions.get('window').width / 12
   },
   amount: {
     fontSize: 16

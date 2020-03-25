@@ -55,7 +55,11 @@ class MyMoneyScreen extends Component {
                   <Text style={{ color: '#fff', fontSize: 26, fontWeight: 'bold' }}>
                     YOU ARE OWED
                   </Text>
-                  <Text style={{ color: '#008ee0', fontSize: 24, fontWeight: 'bold' }}>
+                  <Text
+                    numberOfLines={1}
+                    ellipsizeMode="middle"
+                    style={{ textAlign: 'right', marginLeft: 15, flex: 1, color: '#008ee0', fontSize: 24, fontWeight: 'bold' }}
+                  >
                     {pTotal} $
                   </Text>
                 </View>
@@ -79,7 +83,11 @@ class MyMoneyScreen extends Component {
                   <Text style={{ color: '#fff', fontSize: 26, fontWeight: 'bold' }}>
                     YOU OWE
                   </Text>
-                  <Text style={{ color: '#de3b5b', fontSize: 24, fontWeight: 'bold' }}>
+                  <Text
+                    numberOfLines={1}
+                    ellipsizeMode="middle"
+                    style={{ textAlign: 'right', marginLeft: 15, flex: 1, color: '#de3b5b', fontSize: 24, fontWeight: 'bold' }}
+                  >
                     {nTotal} $
                   </Text>
                 </View>
