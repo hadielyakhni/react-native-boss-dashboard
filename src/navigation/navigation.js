@@ -4,9 +4,18 @@ import { Dimensions } from 'react-native'
 
 export const goToAuth = () => Navigation.setRoot({
   root: {
-    component: {
-      name: 'auth',
+    stack: {
+      children: [
+        {
+          component: {
+            name: 'auth'
+          }
+        }
+      ],
       options: {
+        topBar: {
+          visible: false
+        },
         animations: {
           setRoot: {
             waitForRender: true,
@@ -14,6 +23,16 @@ export const goToAuth = () => Navigation.setRoot({
               from: -Dimensions.get('window').height,
               to: 0,
               duration: 0
+            }
+          },
+          push: {
+            waitForRender: true,
+            content: {
+              translationY: {
+                from: Dimensions.get('window').height,
+                to: 0,
+                duration: 200
+              }
             }
           }
         }

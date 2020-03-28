@@ -17,6 +17,7 @@ import { connect } from 'react-redux'
 import { addTransaction, deleteAccount } from '../actions'
 import { Spinner } from 'native-base'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import TransactionCard from '../components/TransactionCard'
 
 UIManager.setLayoutAnimationEnabledExperimental &&
@@ -37,11 +38,16 @@ class MoneyDetailsScreen extends Component {
       transType: '',
       transAmount: ''
     }
-    setTimeout(() => {
-      InteractionManager.runAfterInteractions(() => {
-        this.setState({ canRender: true })
-      })
-    }, 225);
+    InteractionManager.runAfterInteractions(() => {
+      this.setState({ canRender: true })
+    })
+  }
+  getName() {
+    let name = this.props.name.split(' ')[0]
+    let newName = ''
+    for (let i = 0; i < name.length; i++)
+      newName += this.props.name[i] + ' '
+    return newName.toUpperCase().trim()
   }
   componentDidUpdate() {
     LayoutAnimation.configureNext({
@@ -61,14 +67,24 @@ class MoneyDetailsScreen extends Component {
             zIndex: this.state.transConfirmationModalVisible || this.state.modalVisible ? 1 : 0
           }]}></View>
           <View style={styles.summaryContainer}>
-            <View style={styles.amountLabel}>
-              <Text style={{ fontSize: 9, fontWeight: 'bold', color: '#9cafba' }}>
-                Y O U R  B A L A N C E
-            </Text>
+            <View style={styles.firstInnerContainer}>
+              <View style={styles.amountLabel}>
+                <Text
+                  ellipsizeMode={this.props.amount < 0 ? "tail" : "head"}
+                  numberOfLines={1}
+                  style={{ fontSize: 9, fontWeight: 'bold', color: '#9cafba' }}>
+                  {
+                    this.props.amount < 0 ?
+                      `Y O U  S H O U L D  P A Y  T O  ${this.getName()}`
+                      :
+                      `${this.getName()}  S H O U L D  P A Y  F O R  Y O U`
+                  }
+                </Text>
+              </View>
             </View>
             <View style={styles.amountContainer}>
               <Text numberOfLines={1} ellipsizeMode="middle" style={styles.amountText}>
-                {this.props.amount}
+                {Math.abs(this.props.amount)}
               </Text>
             </View>
             <View style={styles.transNumberContainer}>
@@ -77,9 +93,7 @@ class MoneyDetailsScreen extends Component {
               </Text>
             </View>
             <View style={styles.currencyContainer}>
-              <Text style={{ color: '#fff', fontWeight: 'bold', fontSize: 36, transform: [{ rotate: '-10deg' }] }}>
-                $
-            </Text>
+              <FontAwesome5 name="coins" color="#ffb13d" size={20} />
             </View>
             <TouchableOpacity
               activeOpacity={0.8}
@@ -122,6 +136,7 @@ class MoneyDetailsScreen extends Component {
           </View>
           <View style={styles.transListContainer}>
             <FlatList
+              maxToRenderPerBatch={10}
               ref={ref => this.flatListRef = ref}
               contentContainerStyle={{ paddingBottom: 6 }}
               data={this.props.transactions}
@@ -199,9 +214,14 @@ class MoneyDetailsScreen extends Component {
             onRequestClose={() => this.setState({ transConfirmationModalVisible: false })}
           >
             <View style={styles.transConfirmationModal}>
+              <TouchableOpacity
+                activeOpacity={1}
+                onPress={() => this.setState({ transConfirmationModalVisible: false, transAmount: '', transType: '' })}
+                style={{ flex: 1 }}
+              ></TouchableOpacity>
               <View style={styles.innerTransConfirmationModal}>
                 <View style={styles.transInputContainer}>
-                  <Text style={{ color: '#fff', fontWeight: 'bold', fontSize: 20 }}>
+                  <Text numberOfLines={1} style={{ color: '#fff', fontWeight: 'bold', fontSize: 20, paddingRight: 7 }}>
                     {
                       this.state.transType === 'send' ?
                         "Sending to " + this.props.name + "..." :
@@ -211,8 +231,9 @@ class MoneyDetailsScreen extends Component {
                   <View>
                     <TextInput
                       value={this.state.transAmount}
+                      ref={ref => this.transInputRef = ref}
                       style={styles.amountInput}
-                      placeholder="Specify the amount $"
+                      placeholder="Specify the amount"
                       placeholderTextColor="#888"
                       keyboardType="decimal-pad"
                       onChangeText={transAmount => this.setState({ transAmount })}
@@ -224,7 +245,7 @@ class MoneyDetailsScreen extends Component {
                     activeOpacity={0.85}
                     style={[styles.transButtons, { backgroundColor: '#171717' }]}
                     onPress={() => {
-                      this.setState({ transConfirmationModalVisible: false, transType: '' })
+                      this.setState({ transConfirmationModalVisible: false, transAmount: '', transType: '' })
                     }}
                   >
                     <Text style={{ marginLeft: 8, fontWeight: 'bold', color: '#fff', fontSize: 20 }}>
@@ -235,13 +256,17 @@ class MoneyDetailsScreen extends Component {
                     activeOpacity={0.85}
                     style={[styles.transButtons, { backgroundColor: '#171717' }]}
                     onPress={() => {
-                      this.props.addTransaction(
-                        parseFloat(this.props.amount),
-                        parseFloat(this.state.transAmount),
-                        this.state.transType === 'send' ? 'Sent' : 'Received',
-                        this.props.accountId
-                      )
-                      this.setState({ transConfirmationModalVisible: false, transAmount: '', transType: '' })
+                      if (!this.state.transAmount)
+                        this.transInputRef.focus()
+                      else {
+                        this.props.addTransaction(
+                          parseFloat(this.props.amount),
+                          parseFloat(this.state.transAmount),
+                          this.state.transType === 'send' ? 'Sent' : 'Received',
+                          this.props.accountId
+                        )
+                        this.setState({ transConfirmationModalVisible: false, transAmount: '', transType: '' })
+                      }
                     }}
                   >
                     <View style={[styles.arrowIconContainer, {
@@ -268,7 +293,7 @@ class MoneyDetailsScreen extends Component {
               </View>
             </View>
           </Modal>
-        </View>
+        </View >
         :
         <View style={{ flex: 1, backgroundColor: '#000', alignItems: 'center', justifyContent: 'center' }}>
           <ActivityIndicator color="#008ee0" size={38} />
@@ -285,36 +310,43 @@ const styles = StyleSheet.create({
   },
   summaryContainer: {
     height: height / 4.8,
-    marginTop: height / 36,
-    paddingTop: height / 28,
+    marginTop: height / 40,
     marginBottom: height / 36,
     backgroundColor: '#121212',
     borderRadius: 8,
-    justifyContent: 'center',
     alignItems: 'center'
   },
+  firstInnerContainer: {
+    justifyContent: 'flex-end',
+    height: height / 14
+  },
   amountLabel: {
+    paddingHorizontal: 10,
     backgroundColor: 'rgba(255,255,255,0.1)',
-    width: 110,
+    maxWidth: width / 1.68,
     height: 22,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 5
   },
   amountContainer: {
-    marginTop: height / 100,
-    marginBottom: height / 60
+    justifyContent: 'center',
+    height: height / 10
   },
   amountText: {
-    paddingHorizontal: width / 10,
+    paddingHorizontal: width / 20,
     color: '#ffffff',
-    fontSize: 42,
+    fontSize: 44,
     fontWeight: 'bold'
+  },
+  transNumberContainer: {
+    flex: 1,
+    justifyContent: 'center'
   },
   trashButtonContainer: {
     position: 'absolute',
-    top: 13,
-    right: 13,
+    top: 11,
+    right: 11,
     height: 30,
     width: 30,
     justifyContent: 'center',
@@ -338,8 +370,10 @@ const styles = StyleSheet.create({
     top: -21,
     height: 42,
     width: 42,
-    backgroundColor: '#fd9517',
-    borderRadius: 14,
+    backgroundColor: '#121212',
+    borderColor: '#000',
+    borderWidth: 0.5,
+    borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center'
   },
@@ -380,8 +414,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly'
   },
   transConfirmationModal: {
-    flex: 1,
-    justifyContent: 'flex-end'
+    flex: 1
   },
   innerTransConfirmationModal: {
     height: height / 4,

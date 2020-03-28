@@ -19,7 +19,7 @@ import {
   MyProfileScreen,
   MyInfoScreen,
   EditNameScreen,
-  ChangePasswordScreen
+  ForgetPasswordScreen
 } from '../screens'
 
 const store = createStore(reducers, {}, applyMiddleware(ReduxThunk))
@@ -35,6 +35,7 @@ function ReduxProvider(Component) {
 export default registerScreens = () => {
   Navigation.registerComponent('first', () => FirstScreen)
   Navigation.registerComponent('auth', () => ReduxProvider(AuthScreen), () => AuthScreen)
+  Navigation.registerComponent('forgetPassword', () => ReduxProvider(ForgetPasswordScreen), () => ForgetPasswordScreen)
   Navigation.registerComponent('todo', () => ReduxProvider(ToDoListScreen), () => ToDoListScreen)
   Navigation.registerComponent('todoAdd', () => ReduxProvider(ToDoAddScreen), () => ToDoAddScreen)
   Navigation.registerComponent('todoDetails', () => ReduxProvider(ToDoDetailsScreen), () => ToDoDetailsScreen)

@@ -21,9 +21,19 @@ UIManager.setLayoutAnimationEnabledExperimental &&
 class ToDoItem extends PureComponent {
   componentDidMount() {
     LayoutAnimation.configureNext({
-      duration: 120,
       update: {
-        type: LayoutAnimation.Types.easeOut,
+        duration: 300,
+        type: LayoutAnimation.Types.spring,
+        springDamping: 0.8
+      }
+    })
+  }
+  componentWillUnmount() {
+    LayoutAnimation.configureNext({
+      update: {
+        duration: 80,
+        delay: 120,
+        type: LayoutAnimation.Types.linear,
         property: LayoutAnimation.Properties.opacity
       }
     })

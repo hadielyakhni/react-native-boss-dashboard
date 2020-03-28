@@ -25,10 +25,6 @@ export default (state = INITIAL_STATE, action) => {
       return { ...state, addingAccount: true }
     case 'account_adding_finished':
       return { ...state, addingAccount: false }
-    case 'account_updating_started':
-      return { ...state, updatingAccount: true }
-    case 'account_updating_finished':
-      return { ...state, updatingAccount: false }
     case 'logout_accounts_reset':
       return { ...state, ...INITIAL_STATE }
     default:

@@ -1,6 +1,7 @@
 import React from 'react'
 import { StyleSheet, Text, View, Dimensions } from 'react-native'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 
 const TransactionCard = ({ data }) => {
   const { transAmount, status, date } = data[1]
@@ -33,8 +34,11 @@ const TransactionCard = ({ data }) => {
             fontWeight: 'bold',
             color: status === 'Sent' ? "#de3b5b" : "#008ee0"
           }}>
-            {transAmount} $
+            {transAmount + " "}
           </Text>
+          <View style={{ justifyContent: 'flex-end' }}>
+            <FontAwesome5 name="coins" color={status === 'Sent' ? "#de3b5b" : "#008ee0"} size={13} />
+          </View>
         </View>
         <View style={styles.lowerDataContainer}>
           <Text style={styles.lowerDataContainerText}>

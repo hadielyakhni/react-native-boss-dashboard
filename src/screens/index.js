@@ -23,4 +23,5 @@ import MyProfileScreen from './MyProfileScreen'
 export { MyProfileScreen }
 export { MyInfoScreen } from './MyInfoScreen'
 export { EditNameScreen } from './EditNameScreen'
-export { ChangePasswordScreen } from './ChangePasswordScreen'
+import ForgetPasswordScreen from './forgetPasswordScreen'
+export { ForgetPasswordScreen }

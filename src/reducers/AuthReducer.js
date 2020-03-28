@@ -3,7 +3,9 @@ const INITIAL_STATE = {
   password: '',
   error: '',
   loading: false,
-  user: null
+  user: null,
+  facebookButtonDisabled: false,
+  showPasswordResetSuccess: false
 }
 
 export default (state = INITIAL_STATE, action) => {
@@ -11,11 +13,21 @@ export default (state = INITIAL_STATE, action) => {
     case 'auth_attempt_started':
       return { ...state, error: '', loading: true }
     case 'user_signedin':
-      return { ...INITIAL_STATE }
+      return { ...INITIAL_STATE, user: action.payload }
     case 'user_signedup':
       return { ...INITIAL_STATE }
     case 'auth_error':
       return { ...INITIAL_STATE, error: action.payload }
+    case 'reset_error':
+      return { ...state, error: '' }
+    case 'hide_password_reset_success_modal':
+      return { ...state, showPasswordResetSuccess: false }
+    case 'disable_facebook_button':
+      return { ...state, facebookButtonDisabled: true }
+    case 'facebook_auth_error':
+      return { ...state, facebookButtonDisabled: false, error: action.payload }
+    case 'password_reset_done':
+      return { ...state, showPasswordResetSuccess: true }
     default:
       return state
   }

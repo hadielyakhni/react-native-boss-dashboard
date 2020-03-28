@@ -1,9 +1,32 @@
 import React, { PureComponent } from 'react'
-import { Image, View, Text, StyleSheet, TouchableOpacity, Dimensions } from 'react-native'
+import { Image, View, Text, StyleSheet, TouchableOpacity, Dimensions, UIManager, LayoutAnimation } from 'react-native'
 import { Icon } from 'native-base'
 import { Navigation } from 'react-native-navigation'
 
+UIManager.setLayoutAnimationEnabledExperimental &&
+  UIManager.setLayoutAnimationEnabledExperimental(true)
+
 export default class EmployeeCard extends PureComponent {
+  componentDidMount() {
+    LayoutAnimation.configureNext({
+      update: {
+        duration: 80,
+        delay: 80,
+        type: LayoutAnimation.Types.linear,
+        property: LayoutAnimation.Properties.opacity
+      }
+    })
+  }
+  componentWillUnmount() {
+    LayoutAnimation.configureNext({
+      update: {
+        duration: 80,
+        delay: 200,
+        type: LayoutAnimation.Types.linear,
+        property: LayoutAnimation.Properties.opacity
+      }
+    })
+  }
   render() {
     const { componentId, uid, data } = this.props
     return (

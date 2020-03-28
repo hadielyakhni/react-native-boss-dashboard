@@ -1,6 +1,7 @@
 import firebase from '@react-native-firebase/app'
 import '@react-native-firebase/auth'
 import '@react-native-firebase/database'
+import { LoginManager, AccessToken } from 'react-native-fbsdk'
 import { Navigation } from 'react-native-navigation'
 import { goToMain } from '../navigation/navigation'
 import { Keyboard, Dimensions } from 'react-native'
@@ -23,7 +24,7 @@ export const userSignin = (email, password) =>
         }, 100);
       })
       .catch(err => {
-        return dispatch({
+        dispatch({
           type: 'auth_error',
           payload: err.toString()
         })
@@ -44,11 +45,64 @@ export const userSignup = (email, password) =>
           })
         }, 100);
       })
-      .catch(err => dispatch({
-        type: 'auth_error',
-        payload: err.toString()
-      }))
+      .catch(err => {
+        dispatch({
+          type: 'auth_error',
+          payload: err.toString()
+        })
+      })
   }
+
+export const userAuthenticateWithFacebook = () =>
+  async dispatch => {
+    try {
+      dispatch({ type: 'disable_facebook_button' })
+      const result = await LoginManager.logInWithPermissions(['public_profile', 'email']);
+      if (result.isCancelled)
+        throw new Error('User cancelled the login process');
+      const data = await AccessToken.getCurrentAccessToken();
+      if (!data)
+        throw new Error('Something went wrong obtaining access token');
+      const credential = firebase.auth.FacebookAuthProvider.credential(data.accessToken);
+      const user = await firebase.auth().signInWithCredential(credential);
+      await AsyncStorage.setItem('uid', user.user.uid)
+      goToMain()
+      setTimeout(() => {
+        dispatch({
+          type: 'user_signedin',
+          payload: user
+        })
+      }, 100);
+    }
+    catch (err) {
+      dispatch({ type: 'facebook_auth_error', payload: err.toString() })
+    }
+  }
+
+export const sendPasswordResetEmail = email =>
+  async dispatch => {
+    console.log(email)
+    try {
+      await firebase.auth().sendPasswordResetEmail(email)
+      dispatch({
+        type: 'password_reset_done'
+      })
+    } catch (error) {
+      console.log(error)
+      dispatch({
+        type: 'auth_error',
+        payload: error.toString()
+      })
+    }
+  }
+
+export const dsimissAuthError = () => ({
+  type: 'reset_error'
+})
+
+export const hidePasswordResetSuccessModal = () => ({
+  type: 'hide_password_reset_success_modal'
+})
 
 // ToDo Actions
 export const fetchTasks = () => {
@@ -79,14 +133,14 @@ export const addTask = (task, description, fromWichScreen, componentId) => {
 }
 
 export const updateTask = (taskId, task, description, isDone, componentId) => {
-  if (isDone)
+  if (componentId) {
     firebase.database().ref(`users/${UID}/tasks/${taskId}`)
-      .set({ task, description, isDone: true && !!componentId })
+      .update({ task, description, isDone })
+    Navigation.pop(componentId)
+  }
   else
     firebase.database().ref(`users/${UID}/tasks/${taskId}`)
-      .set({ task, description, isDone: false || !componentId })
-  if (componentId)
-    Navigation.pop(componentId)
+      .set({ task, description, isDone: !isDone, date: Date.now() })
   return () => {
     null
   }
@@ -96,24 +150,18 @@ export const deleteTask = (taskId, fromWichScreen, componentId) => {
   return dispatch => {
     dispatch({ type: 'deleting_task_started' })
     firebase.database().ref(`users/${UID}/tasks/${taskId}`).remove()
-    setTimeout(() => {
-      dispatch({ type: 'deleting_task_finished' })
-      if (fromWichScreen === 'todoDetails')
-        Navigation.pop(componentId)
-    }, 250);
+    dispatch({ type: 'deleting_task_finished' })
+    if (fromWichScreen === 'todoDetails')
+      Navigation.pop(componentId)
   }
 }
 
 // Employees Actions
 export const addEmployee = (componentId, { name, role, salary, phone, email }) => {
   return dispatch => {
-    dispatch({ type: 'employee_adding_started' })
     firebase.database().ref(`/users/${UID}/employees`)
       .push({ name, role, salary, phone, email })
-    setTimeout(() => {
-      dispatch({ type: 'employee_adding_finished' })
-      Navigation.pop(componentId)
-    }, 350)
+    Navigation.pop(componentId)
   }
 }
 
@@ -133,25 +181,16 @@ export const fetchEmployees = () => {
 
 export const updateEmployeeInfo = (componentId, { name, role, salary, phone, email, uid }) => {
   return dispatch => {
-    dispatch({ type: 'employee_updating_started' })
     firebase.database().ref(`users/${UID}/employees/${uid}`)
       .set({ name, role, salary, phone, email })
-    setTimeout(() => {
-      dispatch({ type: 'employee_updating_finished' })
-      Navigation.pop(componentId)
-    }, 350);
-
+    Navigation.pop(componentId)
   }
 }
 
 export const deleteEmployee = (componentId, { uid }) => {
   return dispatch => {
-    dispatch({ type: 'employee_deleting_started' })
     firebase.database().ref(`users/${UID}/employees/${uid}`).remove()
-    setTimeout(() => {
-      dispatch({ type: 'employee_deleting_finished' })
-      Navigation.pop(componentId)
-    }, 350);
+    Navigation.pop(componentId)
   }
 }
 
@@ -174,7 +213,6 @@ export const addMoneyAccount = (initialStackId, componentId, { name, status, amo
   if (status === 'HIM')
     amount *= -1
   return dispatch => {
-    dispatch({ type: 'account_adding_started' })
     const addedAccountId = firebase.database().ref(`/users/${UID}/money`)
       .push({ name, amount }).key
     firebase.database().ref(`/users/${UID}/money/${addedAccountId}/transactions`)
@@ -183,42 +221,7 @@ export const addMoneyAccount = (initialStackId, componentId, { name, status, amo
         status: amount < 0 ? 'Received' : 'Sent',
         date: Date.now()
       })
-    setTimeout(() => {
-      dispatch({ type: 'account_adding_finished' })
-      Navigation.pop(componentId, {
-        animations: {
-          pop: {
-            content: {
-              translationX: {
-                from: 0,
-                to: -Dimensions.get('window').width,
-                duration: 250
-              }
-            }
-          }
-        }
-      })
-      Navigation.push(initialStackId, {
-        component: {
-          name: 'moneyDetails',
-          passProps: { name, accountId: addedAccountId },
-          options: {
-            topBar: { title: { text: name } },
-            animations: {
-              push: {
-                content: {
-                  translationX: {
-                    from: Dimensions.get('window').width,
-                    to: 0,
-                    duration: 250
-                  }
-                }
-              }
-            }
-          }
-        }
-      })
-    }, 350);
+    Navigation.pop(componentId)
   }
 }
 
@@ -229,7 +232,6 @@ export const addTransaction = (oldAmount, transAmount, status, accountId) => {
   else if (status === 'Received')
     amount = oldAmount - transAmount
   return dispatch => {
-    // dispatch({ type: 'account_updating_started' })
     firebase.database().ref(`users/${UID}/money/${accountId}`)
       .update({ amount })
     firebase.database().ref(`users/${UID}/money/${accountId}/transactions`)
@@ -238,19 +240,12 @@ export const addTransaction = (oldAmount, transAmount, status, accountId) => {
         status: status === 'Sent' ? 'Sent' : 'Received',
         date: Date.now()
       })
-    // setTimeout(() => {
-    // dispatch({ type: 'account_updating_finished' })
-    // }, 1);
   }
 }
 
 export const deleteAccount = (componentId, accountId) => {
-  return dispatch => {
-    dispatch({ type: 'account_deleting_started' })
+  return () => {
     firebase.database().ref(`users/${UID}/money/${accountId}`).remove()
-    setTimeout(() => {
-      dispatch({ type: 'account_deleting_finished' })
-      Navigation.pop(componentId)
-    }, 350);
+    Navigation.pop(componentId)
   }
 }

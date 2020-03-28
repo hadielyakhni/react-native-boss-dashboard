@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Text, StyleSheet, View, TouchableOpacity, Modal } from 'react-native'
+import { LoginManager } from 'react-native-fbsdk'
 import AsyncStorage from '@react-native-community/async-storage'
 import { goToAuth } from '../navigation/navigation'
 import { connect } from 'react-redux'
@@ -35,6 +36,7 @@ class MyProfileScreen extends Component {
               <TouchableOpacity
                 onPress={() => {
                   this.setState({ modalVisible: false, loggingout: true })
+                  LoginManager.logOut()
                   AsyncStorage.clear()
                   this.props.resetTasks()
                   this.props.resetEmployees()
@@ -46,7 +48,7 @@ class MyProfileScreen extends Component {
                 activeOpacity={0.6}
                 style={styles.centerModal}
               >
-                <Text style={{ color: '#008ee0', fontSize: 18, fontWeight: 'bold' }}>Logout</Text>
+                <Text style={{ color: '#de3b5b', fontSize: 18, fontWeight: 'bold' }}>Logout</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => this.setState({ modalVisible: false })}
@@ -69,6 +71,13 @@ class MyProfileScreen extends Component {
             </View>
           </View>
         </Modal>
+        <Text style={{ color: '#fff', fontWeight: 'bold', fontSize: 24 }}>
+          {
+            this.props.user && this.props.user.additionalUserInfo.profile ?
+              'Welcome ' + this.props.user.additionalUserInfo.profile.name :
+              null
+          }
+        </Text>
         <TouchableOpacity
           style={styles.logoutButton}
           onPress={() => {
@@ -88,14 +97,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#000',
-    justifyContent: 'center',
-    alignItems: 'center'
+    justifyContent: 'space-between',
+    padding: 15
   },
   logoutButton: {
-    backgroundColor: '#008ee0',
+    backgroundColor: '#de3b5b',
     height: 50,
-    width: 100,
-    borderRadius: 15,
+    borderRadius: 8,
     alignItems: 'center',
     justifyContent: 'center'
   },
@@ -154,13 +162,17 @@ const styles = StyleSheet.create({
   }
 })
 
+const mapStateToProps = ({ auth }) => ({
+  user: auth.user
+})
+
 const mapDiaptchToProps = dispatch => ({
   resetTasks: () => dispatch({ type: 'logout_tasks_reset' }),
   resetEmployees: () => dispatch({ type: 'logout_employees_reset' }),
   resetAccounts: () => dispatch({ type: 'logout_accounts_reset' }),
 })
 
-export default connect(null, mapDiaptchToProps)(MyProfileScreen)
+export default connect(mapStateToProps, mapDiaptchToProps)(MyProfileScreen)
 
 
 

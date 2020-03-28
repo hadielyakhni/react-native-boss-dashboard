@@ -95,7 +95,7 @@ class EmployeeAddScreen extends Component {
           </View>
           <View style={{ height: 125, justifyContent: 'center' }}>
             <MyButton
-              style={{ marginBottom: 15, height: 50, borderRadius: 10, height: 56 }}
+              style={{ marginBottom: 0, height: 50, borderRadius: 10, height: 56 }}
               disabled={this.isAddDisabled()}
               disabledColor='#355973'
               color='#008ee0'

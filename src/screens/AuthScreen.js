@@ -7,12 +7,23 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   Dimensions,
-  KeyboardAvoidingView
+  Modal,
+  KeyboardAvoidingView,
+  TouchableOpacity,
+  LayoutAnimation,
+  UIManager,
+  TextInput
 } from 'react-native'
 import { Spinner } from 'native-base'
 import MyInput from '../components/MyInput'
 import MyButton from '../components/MyButton'
-import { userSignin, userSignup } from '../actions'
+import { userSignin, userSignup, userAuthenticateWithFacebook, dsimissAuthError } from '../actions'
+import FontAwesome from 'react-native-vector-icons/FontAwesome'
+import { Navigation } from 'react-native-navigation'
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
+
+UIManager.setLayoutAnimationEnabledExperimental &&
+  UIManager.setLayoutAnimationEnabledExperimental(true)
 
 class AuthScreen extends Component {
   constructor() {
@@ -23,6 +34,7 @@ class AuthScreen extends Component {
       screen: 'login',
       email: '',
       password: '',
+      isPasswordSecure: true,
       isKeyboardOpened: false
     }
   }
@@ -47,7 +59,9 @@ class AuthScreen extends Component {
           disabledColor='#355973'
           disabled={!this.state.email || !this.state.password}
           onPress={this.onSign.bind(this)}
-        >{this.state.screen === 'login' ? 'Log In' : 'Sign Up'}</MyButton>
+        >
+          {this.state.screen === 'login' ? 'Log In' : 'Sign Up'}
+        </MyButton>
       )
     return (
       <View style={styles.loadingContainer}>
@@ -55,22 +69,11 @@ class AuthScreen extends Component {
       </View>
     )
   }
-  renderError() {
-    if (this.props.error != '')
-      return (
-        <View>
-          <Text style={styles.errorStyle}>
-            {this.props.error}
-          </Text>
-        </View>
-      )
-    return <View style={{ height: 20 }} />
-  }
   render() {
     return (
       <KeyboardAvoidingView behavior='padding' style={styles.container}>
         <View
-          style={{ flex: 1, justifyContent: 'center' }}
+          style={{ flex: 1, justifyContent: 'center', paddingBottom: Dimensions.get('window').height / 10 }}
         >
           <Text style={styles.title}>Hadi's Top</Text>
           <View style={{ paddingHorizontal: 33 }}>
@@ -83,43 +86,116 @@ class AuthScreen extends Component {
               isAutoCorrect={true}
               onChangeText={email => this.setState({ email })}
             />
-            <MyInput
-              value={this.state.password}
-              style={{ paddingHorizontal: 15 }}
-              isSecure={true}
-              placeHolder='Password'
-              isAutoCorrect={false}
-              onChangeText={password => this.setState({ password })}
-            />
+            <View style={[styles.inputContainer, this.props.inputContainerStyle]}>
+              {this.props.leftIcon && <Icon name={this.props.leftIcon} style={[styles.iconLeft, this.props.leftIconStyle]} />}
+              <TextInput
+                value={this.state.password}
+                secureTextEntry={this.state.isPasswordSecure}
+                style={styles.InputStyle}
+                placeholder="Password"
+                placeholderTextColor='rgba(255, 255, 255, 0.6)'
+                autoCapitalize='none'
+                onChangeText={password => this.setState({ password })}
+              />
+              {
+                this.state.password ?
+                  <TouchableOpacity
+                    activeOpacity={1}
+                    style={styles.rightIconContainer}
+                    onPress={() => {
+                      this.setState(state => ({ isPasswordSecure: !state.isPasswordSecure }))
+                    }}
+                  >
+                    <MaterialIcons
+                      name={this.state.isPasswordSecure ? "visibility-off" : "visibility"}
+                      style={{ paddingRight: 10 }}
+                      size={21.5}
+                      color={this.state.isPasswordSecure ? "#bbb" : "#008ee0"}
+                    />
+                  </TouchableOpacity>
+                  :
+                  null
+              }
+            </View>
             {this.renderSignButton()}
-            <MyButton color='#008ee0'>
-              Continue With Facebook
+            {this.state.screen === 'login' ?
+              <View style={{ flexDirection: 'row', marginBottom: 16, marginTop: 6, alignItems: 'center' }}>
+                <View style={{ height: 0, flex: 1, borderColor: '#fff', borderWidth: 0.3 }}></View>
+                <Text
+                  onPress={() => Navigation.push(this.props.componentId, { component: { name: 'forgetPassword' } })}
+                  style={{ color: '#fff', fontSize: 12, fontWeight: 'bold', marginHorizontal: 12 }}
+                >
+                  Forgot Password?
+                  </Text>
+                <View style={{ height: 0, flex: 1, borderColor: '#fff', borderWidth: 0.3 }}></View>
+              </View>
+              :
+              null}
+            <MyButton
+              disabledColor='#355973'
+              disabled={this.props.facebookButtonDisabled}
+              onPress={this.props.userAuthenticateWithFacebook}
+              color='#008ee0'
+            >
+              <FontAwesome size={22} name="facebook-square" color="#fff" />
+              {""}   Continue With Facebook
             </MyButton>
           </View>
           <View style={[styles.switchMethodeOption, { bottom: this.state.isKeyboardOpened ? 30 : 0 }]}>
-            <Text style={styles.switchMethodeText}>
-              {this.state.screen === 'login' ? "Don't have an account?" : "Already a member?"}
-            </Text>
-            <TouchableWithoutFeedback
-              onPress={() => {
-                setTimeout(() => { this.setState({ email: '', password: '' }) }, 100)
-                this.setState(({ screen }) => {
-                  if (screen === 'login')
-                    return { screen: 'signup' }
-                  return { screen: 'login' }
-                })
-              }}
-            >
-              <Text style={styles.switchMethodeLink}>
-                {this.state.screen === 'login' ? 'Sign up.' : 'Log in.'}
+            <View style={{ flexDirection: 'row' }}>
+              <Text style={styles.switchMethodeText}>
+                {this.state.screen === 'login' ? "Don't have an account?" : "Already a member?"}
               </Text>
-            </TouchableWithoutFeedback>
-          </View>
-          <View style={{ height: 72, justifyContent: 'center' }}>
-            {this.renderError()}
+              <TouchableWithoutFeedback
+                onPress={() => {
+                  LayoutAnimation.configureNext({
+                    update: {
+                      duration: 100,
+                      type: LayoutAnimation.Types.linear,
+                      property: LayoutAnimation.Properties.opacity
+                    }
+                  })
+                  // this.setState({ email: '', password: '', isPasswordSecure: true })
+                  this.setState(({ screen }) => {
+                    if (screen === 'login')
+                      return { screen: 'signup' }
+                    return { screen: 'login' }
+                  })
+                }}
+              >
+                <Text style={styles.switchMethodeLink}>
+                  {this.state.screen === 'login' ? 'Sign up.' : 'Log in.'}
+                </Text>
+              </TouchableWithoutFeedback>
+            </View>
           </View>
         </View>
-      </KeyboardAvoidingView>
+        <Modal
+          animationType="fade"
+          transparent={true}
+          visible={!!this.props.error}>
+          <View style={styles.errorModalContainer} >
+            <View style={styles.errorModal}>
+              <View style={styles.upperModalPart}>
+                <Text style={{ color: '#eef', fontSize: 20, fontWeight: 'bold' }}>Error</Text>
+                <Text style={{
+                  textAlign: 'center',
+                  color: '#bbb',
+                  fontSize: 12,
+                  marginTop: 12
+                }}>{this.props.error}</Text>
+              </View>
+              <TouchableOpacity
+                activeOpacity={0.78}
+                style={styles.lowerModalPart}
+                onPress={() => this.props.dsimissAuthError()}
+              >
+                <Text style={{ color: '#008ee0', fontSize: 16 }}>Dismiss</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
+      </KeyboardAvoidingView >
     )
   }
 }
@@ -128,8 +204,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#000',
-    justifyContent: 'center',
-    paddingBottom: 15
+    justifyContent: 'center'
   },
   title: {
     marginBottom: 25,
@@ -168,17 +243,60 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     justifyContent: 'center'
   },
-  errorStyle: {
-    fontSize: 13,
-    fontWeight: '500',
-    color: '#e64749',
-    paddingLeft: 7
+  errorModalContainer: {
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  errorModal: {
+    borderRadius: 6,
+    backgroundColor: '#272727',
+    width: 250,
+    paddingTop: 7,
+    justifyContent: 'center'
+  },
+  upperModalPart: {
+    paddingBottom: 20,
+    paddingTop: 10,
+    paddingHorizontal: 8,
+    alignItems: 'center',
+    borderBottomWidth: 1,
+    borderBottomColor: '#363636'
+  },
+  lowerModalPart: {
+    height: 42,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingBottom: 2
+  },
+  inputContainer: {
+    borderRadius: 5,
+    marginVertical: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.22)',
+  },
+  InputStyle: {
+    flex: 1,
+    height: 45,
+    borderRadius: 5,
+    fontSize: 14,
+    color: '#fff',
+    paddingHorizontal: 15
+  },
+  rightIconContainer: {
+    height: 45,
+    alignItems: 'center',
+    justifyContent: 'center'
   }
 })
 
 const mapActionsToProps = dispatch => ({
   userSignin: (email, password) => dispatch(userSignin(email, password)),
-  userSignup: (email, password) => dispatch(userSignup(email, password))
+  userSignup: (email, password) => dispatch(userSignup(email, password)),
+  userAuthenticateWithFacebook: () => dispatch(userAuthenticateWithFacebook()),
+  dsimissAuthError: () => dispatch(dsimissAuthError())
 })
 
 const mapStateToProps = state => {
@@ -186,7 +304,8 @@ const mapStateToProps = state => {
     email: state.auth.email,
     password: state.auth.password,
     error: state.auth.error,
-    loading: state.auth.loading
+    loading: state.auth.loading,
+    facebookButtonDisabled: state.auth.facebookButtonDisabled
   }
 }
 

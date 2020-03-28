@@ -7,8 +7,6 @@ import {
   TextInput,
   FlatList,
   ScrollView,
-  LayoutAnimation,
-  UIManager,
   Dimensions
 } from 'react-native'
 import { Navigation } from 'react-native-navigation'
@@ -19,8 +17,6 @@ import Spinner from 'react-native-spinkit'
 import ToDoItem from '../components/ToDoItem'
 import Separator from '../components/Separator'
 
-UIManager.setLayoutAnimationEnabledExperimental &&
-  UIManager.setLayoutAnimationEnabledExperimental(true)
 
 class ToDoListScreen extends Component {
   constructor(props) {
@@ -28,9 +24,6 @@ class ToDoListScreen extends Component {
     console.log(this.props.componentId)
     this.state = { task: '' }
     this.props.fetchTasks()
-  }
-  componentDidMount() {
-    // LayoutAnimation.configureNext(LayoutAnimation.linear)
   }
   onAdd() {
     if (this.state.task !== '') {
@@ -53,7 +46,7 @@ class ToDoListScreen extends Component {
         <ScrollView >
           <Separator text='INCOMPLETED' />
           <FlatList
-            initialNumToRender={25}
+            initialNumToRender={200}
             style={{ marginBottom: 10 }}
             data={this.props.unDoneTasks}
             keyExtractor={task => task[0]}

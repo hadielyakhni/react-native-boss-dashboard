@@ -1,7 +1,11 @@
 import React, { PureComponent } from 'react'
-import { Text, View, StyleSheet, TouchableOpacity, Image, InteractionManager, Dimensions } from 'react-native'
+import { Text, View, StyleSheet, TouchableOpacity, Image, InteractionManager, Dimensions, LayoutAnimation, UIManager } from 'react-native'
 import { Icon } from 'native-base'
 import { Navigation } from 'react-native-navigation'
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
+
+UIManager.setLayoutAnimationEnabledExperimental &&
+  UIManager.setLayoutAnimationEnabledExperimental(true)
 
 export default class EmployeeCard extends PureComponent {
   constructor(props) {
@@ -9,6 +13,26 @@ export default class EmployeeCard extends PureComponent {
     this.state = { canRender: false }
     InteractionManager.runAfterInteractions(() => {
       this.setState({ canRender: true })
+    })
+  }
+  componentDidMount() {
+    LayoutAnimation.configureNext({
+      update: {
+        duration: 80,
+        delay: 40,
+        type: LayoutAnimation.Types.linear,
+        property: LayoutAnimation.Properties.opacity
+      }
+    })
+  }
+  componentWillUnmount() {
+    LayoutAnimation.configureNext({
+      update: {
+        duration: 80,
+        delay: 200,
+        type: LayoutAnimation.Types.linear,
+        property: LayoutAnimation.Properties.opacity
+      }
     })
   }
   render() {
@@ -34,7 +58,7 @@ export default class EmployeeCard extends PureComponent {
                         translationY: {
                           from: Dimensions.get('window').height,
                           to: 0,
-                          duration: 225
+                          duration: 260
                         }
                       }
                     }
@@ -50,7 +74,8 @@ export default class EmployeeCard extends PureComponent {
               {name}
             </Text>
             <Text style={{ fontWeight: 'bold', color: amount >= 0 ? '#008ee0' : '#de3b5b', fontSize: 16 }}>
-              {Math.abs(amount)} $
+              {Math.abs(amount) + ' '}
+              <FontAwesome5 name="coins" color={amount >= 0 ? '#008ee0' : '#de3b5b'} size={11} />
             </Text>
           </View>
           <Icon name='ios-arrow-forward' style={{ fontSize: 28, color: '#c5c5c5' }} />

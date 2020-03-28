@@ -18,6 +18,7 @@
     "react": "16.13.0",
     "react-native": "0.61.5",
     "react-native-elements": "^1.2.7",
+    "react-native-fbsdk": "^1.1.2",
     "react-native-gesture-handler": "^1.6.0",
     "react-native-navigation": "^6.2.0",
     "react-native-reanimated": "^1.7.0",
