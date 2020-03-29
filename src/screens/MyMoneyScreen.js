@@ -133,6 +133,13 @@ class MyMoneyScreen extends Component {
   render() {
     return (
       <View style={styles.container}>
+        <View style={styles.header}>
+          <View style={styles.titleContainer}>
+            <Text numberOfLines={1} style={{ color: '#fff', fontSize: 24, fontWeight: 'bold' }}>
+              My Wallet
+            </Text>
+          </View>
+        </View>
         <View style={styles.searchView}>
           <TextInput
             editable={this.props.fetchingAccounts ? false : true}
@@ -157,9 +164,6 @@ class MyMoneyScreen extends Component {
                 name: 'moneyAdd',
                 passProps: {
                   initialStackId: this.props.componentId
-                },
-                options: {
-                  topBar: { title: { text: 'Add Account' } }
                 }
               }
             })
@@ -178,6 +182,17 @@ const styles = StyleSheet.create({
     backgroundColor: '#000',
     paddingHorizontal: 5
   },
+  header: {
+    height: 56,
+    flexDirection: 'row',
+    backgroundColor: '#000'
+  },
+  titleContainer: {
+    flex: 1,
+    paddingLeft: 12,
+    justifyContent: 'center',
+    backgroundColor: '#000'
+  },
   addButton: {
     position: 'absolute',
     right: 10,
@@ -190,7 +205,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   searchView: {
-    marginBottom: 15,
+    marginBottom: 2,
     marginTop: 10,
     paddingRight: 15,
     paddingLeft: 5,

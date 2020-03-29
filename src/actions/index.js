@@ -180,7 +180,7 @@ export const fetchEmployees = () => {
 }
 
 export const updateEmployeeInfo = (componentId, { name, role, salary, phone, email, uid }) => {
-  return dispatch => {
+  return () => {
     firebase.database().ref(`users/${UID}/employees/${uid}`)
       .set({ name, role, salary, phone, email })
     Navigation.pop(componentId)
@@ -188,7 +188,7 @@ export const updateEmployeeInfo = (componentId, { name, role, salary, phone, ema
 }
 
 export const deleteEmployee = (componentId, { uid }) => {
-  return dispatch => {
+  return () => {
     firebase.database().ref(`users/${UID}/employees/${uid}`).remove()
     Navigation.pop(componentId)
   }
@@ -209,12 +209,12 @@ export const fetchAccounts = () => {
   }
 }
 
-export const addMoneyAccount = (initialStackId, componentId, { name, status, amount }) => {
+export const addMoneyAccount = (initialStackId, componentId, { name, phone = '', status, amount }) => {
   if (status === 'HIM')
     amount *= -1
-  return dispatch => {
+  return () => {
     const addedAccountId = firebase.database().ref(`/users/${UID}/money`)
-      .push({ name, amount }).key
+      .push({ name: name.trim(), phone, amount }).key
     firebase.database().ref(`/users/${UID}/money/${addedAccountId}/transactions`)
       .push({
         transAmount: Math.abs(amount),
@@ -231,7 +231,7 @@ export const addTransaction = (oldAmount, transAmount, status, accountId) => {
     amount = oldAmount + transAmount
   else if (status === 'Received')
     amount = oldAmount - transAmount
-  return dispatch => {
+  return () => {
     firebase.database().ref(`users/${UID}/money/${accountId}`)
       .update({ amount })
     firebase.database().ref(`users/${UID}/money/${accountId}/transactions`)
@@ -242,6 +242,12 @@ export const addTransaction = (oldAmount, transAmount, status, accountId) => {
       })
   }
 }
+
+export const editAccountInfo = (accountId, name, phone, componentId) =>
+  () => {
+    firebase.database().ref(`users/${UID}/money/${accountId}`).update({ name, phone })
+    Navigation.pop(componentId)
+  }
 
 export const deleteAccount = (componentId, accountId) => {
   return () => {

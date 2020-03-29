@@ -69,14 +69,7 @@ export const goToMain = () => Promise.all([
                 selectedTextColor: '#008ee0'
               },
               topBar: {
-                background: {
-                  color: '#000'
-                },
-                title: {
-                  fontSize: 21,
-                  text: 'My Tasks',
-                  color: '#fff'
-                }
+                visible: false
               }
             }
           }
@@ -100,17 +93,7 @@ export const goToMain = () => Promise.all([
                 selectedTextColor: '#008ee0'
               },
               topBar: {
-                background: {
-                  color: '#000'
-                },
-                title: {
-                  fontSize: 21,
-                  text: 'My Employees',
-                  color: '#fff'
-                },
-                backButton: {
-                  color: '#fff'
-                }
+                visible: false
               }
             }
           }
@@ -134,17 +117,7 @@ export const goToMain = () => Promise.all([
                 selectedTextColor: '#008ee0'
               },
               topBar: {
-                background: {
-                  color: '#000'
-                },
-                title: {
-                  fontSize: 21,
-                  text: 'My Wallet',
-                  color: '#fff'
-                },
-                backButton: {
-                  color: '#fff'
-                }
+                visible: false
               }
             }
           }

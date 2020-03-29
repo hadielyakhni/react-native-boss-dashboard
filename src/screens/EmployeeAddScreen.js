@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
-import { Text, StyleSheet, View, ActivityIndicator, InteractionManager, Modal, Keyboard } from 'react-native'
+import { Text, StyleSheet, View, ActivityIndicator, InteractionManager, Modal, TouchableOpacity } from 'react-native'
 import { connect } from 'react-redux'
 import { addEmployee, resetEmployee } from '../actions'
 import { Spinner } from 'native-base'
+import Ionicons from 'react-native-vector-icons/Ionicons'
 import MyInput from '../components/MyInput'
 import MyButton from '../components/MyButton'
 
@@ -37,74 +38,90 @@ class EmployeeAddScreen extends Component {
             </View>
           </Modal>
           <View style={{ flex: 1 }}>
-            <MyInput
-              value={this.state.name}
-              leftIcon='ios-person'
-              style={{ fontSize: 16 }}
-              isSecure={false}
-              placeHolder='Name'
-              isAutoCorrect={false}
-              onChangeText={value => this.setState({ name: value })}
-            />
-            <this.separator />
-            <MyInput
-              value={this.state.role}
-              leftIcon='ios-briefcase'
-              style={{ fontSize: 16 }}
-              isSecure={false}
-              placeHolder='Role'
-              isAutoCorrect={false}
-              onChangeText={value => this.setState({ role: value })}
-            />
-            <this.separator />
-            <MyInput
-              keyboardType="decimal-pad"
-              value={this.state.salary}
-              leftIcon='ios-cash'
-              style={{ fontSize: 16 }}
-              isSecure={false}
-              placeHolder='Salary'
-              isAutoCorrect={false}
-              onChangeText={value => this.setState({ salary: value })}
-            />
-            <this.separator />
-            <MyInput
-              keyboardType="number-pad"
-              value={this.state.phone}
-              leftIcon='ios-call'
-              style={{ fontSize: 16 }}
-              isSecure={false}
-              placeHolder='Phone'
-              isAutoCorrect={false}
-              onChangeText={value => this.setState({ phone: value })}
-            />
-            <this.separator />
-            <MyInput
-              keyboardType="email-address"
-              value={this.state.email}
-              leftIcon='ios-mail'
-              style={{ fontSize: 16 }}
-              isSecure={false}
-              placeHolder='Email'
-              isAutoCorrect={false}
-              onChangeText={value => this.setState({ email: value })}
-            />
-            <Text style={{ marginTop: 10, fontSize: 12, fontWeight: 'bold', fontStyle: 'italic', color: '#bbb' }}>
-              Email is not required! **
-            </Text>
-          </View>
-          <View style={{ height: 125, justifyContent: 'center' }}>
-            <MyButton
-              style={{ marginBottom: 0, height: 50, borderRadius: 10, height: 56 }}
-              disabled={this.isAddDisabled()}
-              disabledColor='#355973'
-              color='#008ee0'
-              textStyle={{ fontSize: 18 }}
-              onPress={() => {
-                const { name, role, salary, phone, email } = this.state
-                this.props.addEmployee(this.props.componentId, { name, role, salary, phone, email })
-              }}
-            >Add</MyButton>
+            <View style={styles.header}>
+              <TouchableOpacity
+                activeOpacity={0.85}
+                onPress={() => Navigation.pop(this.props.componentId)}
+                style={styles.backIconContainer}
+              >
+                <Ionicons name="md-arrow-back" size={26} color="#fff" />
+              </TouchableOpacity>
+              <View style={styles.titleContainer}>
+                <Text numberOfLines={1} style={{ color: '#fff', fontSize: 22.5, fontWeight: 'bold' }}>
+                  Add Empployee
+              </Text>
+              </View>
+            </View>
+            <View style={{ flex: 1, paddingHorizontal: 8, paddingTop: 5 }}>
+              <MyInput
+                value={this.state.name}
+                leftIcon='ios-person'
+                style={{ fontSize: 16 }}
+                isSecure={false}
+                placeHolder='Name'
+                isAutoCorrect={false}
+                onChangeText={value => this.setState({ name: value })}
+              />
+              <this.separator />
+              <MyInput
+                value={this.state.role}
+                leftIcon='ios-briefcase'
+                style={{ fontSize: 16 }}
+                isSecure={false}
+                placeHolder='Role'
+                isAutoCorrect={false}
+                onChangeText={value => this.setState({ role: value })}
+              />
+              <this.separator />
+              <MyInput
+                keyboardType="decimal-pad"
+                value={this.state.salary}
+                leftIcon='ios-cash'
+                style={{ fontSize: 16 }}
+                isSecure={false}
+                placeHolder='Salary'
+                isAutoCorrect={false}
+                onChangeText={value => this.setState({ salary: value })}
+              />
+              <this.separator />
+              <MyInput
+                keyboardType="number-pad"
+                value={this.state.phone}
+                leftIcon='ios-call'
+                style={{ fontSize: 16 }}
+                isSecure={false}
+                placeHolder='Phone'
+                isAutoCorrect={false}
+                onChangeText={value => this.setState({ phone: value })}
+              />
+              <this.separator />
+              <MyInput
+                keyboardType="email-address"
+                value={this.state.email}
+                leftIcon='ios-mail'
+                style={{ fontSize: 16 }}
+                isSecure={false}
+                placeHolder='Email'
+                isAutoCorrect={false}
+                onChangeText={value => this.setState({ email: value })}
+              />
+              <Text style={{ marginTop: 10, fontSize: 12, fontWeight: 'bold', fontStyle: 'italic', color: '#bbb' }}>
+                Email is not required! **
+              </Text>
+            </View>
+            <View style={{ height: 125, justifyContent: 'center' }}>
+              <MyButton
+                style={{ marginBottom: 0, marginHorizontal: 10, borderRadius: 10, height: 56 }}
+                disabled={this.isAddDisabled()}
+                disabledColor='#355973'
+                color='#008ee0'
+                textStyle={{ fontSize: 18 }}
+                onPress={() => {
+                  const { name, role, salary, phone, email } = this.state
+                  this.props.addEmployee(this.props.componentId, { name, role, salary, phone, email })
+                }}
+              >Add</MyButton>
+            </View>
           </View>
         </View>
         :
@@ -119,17 +136,25 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#000',
-    paddingHorizontal: 10,
-    paddingTop: 15
+    paddingHorizontal: 4
   },
-  backButton: {
-    marginRight: 15,
-    alignItems: 'center',
-    marginLeft: 5
+  header: {
+    height: 56,
+    flexDirection: 'row',
+    backgroundColor: '#000',
+    marginBottom: 10
   },
-  backIcon: {
-    fontSize: 29,
-    color: '#fff',
+  titleContainer: {
+    flex: 1,
+    paddingLeft: 10,
+    justifyContent: 'center',
+    backgroundColor: '#000'
+  },
+  backIconContainer: {
+    width: 42,
+    backgroundColor: '#000',
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   loadingModalContainer: {
     backgroundColor: 'rgba(0,0,0,0.5)',

@@ -3,6 +3,8 @@ import { Text, StyleSheet, View, Linking, InteractionManager, ActivityIndicator,
 import { connect } from 'react-redux'
 import { updateEmployeeInfo, deleteEmployee } from '../actions'
 import { Spinner } from 'native-base'
+import { Navigation } from 'react-native-navigation'
+import Ionicons from 'react-native-vector-icons/Ionicons'
 import MyInput from '../components/MyInput'
 import MyButton from '../components/MyButton'
 
@@ -84,76 +86,88 @@ class EmployeeDetailsScreen extends Component {
               </View>
             </View>
           </Modal>
-          <MyInput
-            leftIcon='ios-person'
-            value={this.state.name}
-            style={{ fontSize: 16 }}
-            isSecure={false}
-            placeHolder='Name'
-            isAutoCorrect={false}
-            onChangeText={value => this.setState({ name: value })}
-          />
-          <MyInput
-            value={this.state.role}
-            leftIcon='ios-briefcase'
-            style={{ fontSize: 16 }}
-            isSecure={false}
-            placeHolder='Role'
-            isAutoCorrect={false}
-            onChangeText={value => this.setState({ role: value })}
-          />
-          <MyInput
-            keyboardType="decimal-pad"
-            value={this.state.salary}
-            leftIcon='ios-cash'
-            style={{ fontSize: 16 }}
-            isSecure={false}
-            placeHolder='Salary'
-            isAutoCorrect={false}
-            onChangeText={value => this.setState({ salary: value })}
-          />
-          <MyInput
-            keyboardType="number-pad"
-            value={this.state.phone}
-            leftIcon='ios-call'
-            rightIcon='ios-arrow-forward'
-            rightIconStyle={{ color: '#c5c5c5' }}
-            onRightIconPress={() => Linking.openURL(`tel:${this.state.phone}`)}
-            style={{ fontSize: 16 }}
-            isSecure={false}
-            placeHolder='Phone'
-            isAutoCorrect={false}
-            onChangeText={value => this.setState({ phone: value })}
-          />
-          <MyInput
-            keyboardType="email-address"
-            value={this.state.email}
-            leftIcon='ios-mail'
-            rightIcon='ios-arrow-forward'
-            rightIconStyle={{ color: '#c5c5c5' }}
-            onRightIconPress={() => { Linking.openURL(`mailto:${this.state.email}`) }}
-            style={{ fontSize: 16 }}
-            isSecure={false}
-            placeHolder='Email'
-            isAutoCorrect={false}
-            onChangeText={value => this.setState({ email: value })}
-          />
-          <View style={{ flex: 1, justifyContent: 'flex-end' }}>
-            <MyButton
-              style={{ marginBottom: 10, height: 50 }}
-              color='#008ee0'
-              textStyle={{ fontSize: 20 }}
-              onPress={() => {
-                const { name, role, salary, phone, email } = this.state
-                this.props.updateEmployeeInfo(this.props.componentId, { name, role, salary, phone, email, uid: this.uid })
-              }}
-            >Save</MyButton>
-            <MyButton
-              style={{ marginBottom: 20, height: 50 }}
-              color='#e65100'
-              textStyle={{ fontSize: 20 }}
-              onPress={() => this.setState({ modalVisible: true })}
-            >Delete</MyButton>
+          <View style={styles.header}>
+            <TouchableOpacity activeOpacity={0.85} onPress={() => Navigation.pop(this.props.componentId)} style={styles.backIconContainer}>
+              <Ionicons name="md-arrow-back" size={26} color="#fff" />
+            </TouchableOpacity>
+            <View style={styles.titleContainer}>
+              <Text numberOfLines={1} style={{ color: '#fff', fontSize: 22.5, fontWeight: 'bold' }}>
+                Task Details
+            </Text>
+            </View>
+          </View>
+          <View style={{ flex: 1, paddingHorizontal: 12 }}>
+            <MyInput
+              leftIcon='ios-person'
+              value={this.state.name}
+              style={{ fontSize: 16 }}
+              isSecure={false}
+              placeHolder='Name'
+              isAutoCorrect={false}
+              onChangeText={value => this.setState({ name: value })}
+            />
+            <MyInput
+              value={this.state.role}
+              leftIcon='ios-briefcase'
+              style={{ fontSize: 16 }}
+              isSecure={false}
+              placeHolder='Role'
+              isAutoCorrect={false}
+              onChangeText={value => this.setState({ role: value })}
+            />
+            <MyInput
+              keyboardType="decimal-pad"
+              value={this.state.salary}
+              leftIcon='ios-cash'
+              style={{ fontSize: 16 }}
+              isSecure={false}
+              placeHolder='Salary'
+              isAutoCorrect={false}
+              onChangeText={value => this.setState({ salary: value })}
+            />
+            <MyInput
+              keyboardType="number-pad"
+              value={this.state.phone}
+              leftIcon='ios-call'
+              rightIcon='ios-arrow-forward'
+              rightIconStyle={{ color: '#c5c5c5' }}
+              onRightIconPress={() => Linking.openURL(`tel:${this.state.phone}`)}
+              style={{ fontSize: 16 }}
+              isSecure={false}
+              placeHolder='Phone'
+              isAutoCorrect={false}
+              onChangeText={value => this.setState({ phone: value })}
+            />
+            <MyInput
+              keyboardType="email-address"
+              value={this.state.email}
+              leftIcon='ios-mail'
+              rightIcon='ios-arrow-forward'
+              rightIconStyle={{ color: '#c5c5c5' }}
+              onRightIconPress={() => { Linking.openURL(`mailto:${this.state.email}`) }}
+              style={{ fontSize: 16 }}
+              isSecure={false}
+              placeHolder='Email'
+              isAutoCorrect={false}
+              onChangeText={value => this.setState({ email: value })}
+            />
+            <View style={{ flex: 1, justifyContent: 'flex-end' }}>
+              <MyButton
+                style={{ marginBottom: 10, height: 50 }}
+                color='#008ee0'
+                textStyle={{ fontSize: 20 }}
+                onPress={() => {
+                  const { name, role, salary, phone, email } = this.state
+                  this.props.updateEmployeeInfo(this.props.componentId, { name, role, salary, phone, email, uid: this.uid })
+                }}
+              >Save</MyButton>
+              <MyButton
+                style={{ marginBottom: 20, height: 50 }}
+                color='#e65100'
+                textStyle={{ fontSize: 20 }}
+                onPress={() => this.setState({ modalVisible: true })}
+              >Delete</MyButton>
+            </View>
           </View>
         </View>
         :
@@ -167,18 +181,26 @@ class EmployeeDetailsScreen extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#000'
+  },
+  header: {
+    height: 56,
+    flexDirection: 'row',
     backgroundColor: '#000',
-    paddingHorizontal: 10,
-    paddingTop: 15
+    marginBottom: 15,
+    paddingHorizontal: 4
   },
-  backButton: {
-    marginRight: 15,
-    alignItems: 'center',
-    marginLeft: 5
+  titleContainer: {
+    flex: 1,
+    paddingLeft: 10,
+    justifyContent: 'center',
+    backgroundColor: '#000'
   },
-  backIcon: {
-    fontSize: 29,
-    color: '#fff',
+  backIconContainer: {
+    width: 42,
+    backgroundColor: '#000',
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   modal: {
     backgroundColor: '#171717',

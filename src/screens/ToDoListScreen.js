@@ -77,6 +77,13 @@ class ToDoListScreen extends Component {
   render() {
     return (
       <View style={styles.container}>
+        <View style={styles.header}>
+          <View style={styles.titleContainer}>
+            <Text numberOfLines={1} style={{ color: '#fff', fontSize: 24, fontWeight: 'bold' }}>
+              My Tasks
+            </Text>
+          </View>
+        </View>
         <View style={styles.addView}>
           <TextInput
             editable={this.props.fetchingTasks ? false : true}
@@ -100,37 +107,36 @@ class ToDoListScreen extends Component {
             />
           </TouchableOpacity>
         </View>
-        {this.renderScreen()}
-        <TouchableOpacity
-          activeOpacity={1}
-          style={styles.addButton}
-          onPress={() => (
-            Navigation.push(this.props.componentId, {
-              component: {
-                name: 'todoAdd',
-                options: {
-                  topBar: {
-                    title: { text: 'Add Task' },
-                    backButton: { color: '#fff' }
-                  },
-                  animations: {
-                    push: {
-                      content: {
-                        translationY: {
-                          from: Dimensions.get('window').height,
-                          to: 0,
-                          duration: 150
+        <View style={{ paddingHorizontal: 6, flex: 1 }}>
+          {this.renderScreen()}
+          <TouchableOpacity
+            activeOpacity={1}
+            style={styles.addButton}
+            onPress={() => (
+              Navigation.push(this.props.componentId, {
+                component: {
+                  name: 'todoAdd',
+                  options: {
+                    animations: {
+                      push: {
+                        content: {
+                          waitForRender: true,
+                          translationY: {
+                            from: Dimensions.get('window').height,
+                            to: 0,
+                            duration: 200
+                          }
                         }
                       }
                     }
                   }
                 }
-              }
-            })
-          )}
-        >
-          <Icon name='ios-add' style={{ color: '#fff', fontSize: 38 }} />
-        </TouchableOpacity>
+              })
+            )}
+          >
+            <Icon name='ios-add' style={{ color: '#fff', fontSize: 38 }} />
+          </TouchableOpacity>
+        </View>
       </View>
     )
   }
@@ -139,7 +145,18 @@ class ToDoListScreen extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 15,
+    paddingHorizontal: 5,
+    backgroundColor: '#000'
+  },
+  header: {
+    height: 56,
+    flexDirection: 'row',
+    backgroundColor: '#000'
+  },
+  titleContainer: {
+    flex: 1,
+    paddingLeft: 12,
+    justifyContent: 'center',
     backgroundColor: '#000'
   },
   addView: {
@@ -156,7 +173,6 @@ const styles = StyleSheet.create({
   input: {
     borderRadius: 10,
     flex: 1,
-    marginHorizontal: 4,
     fontSize: 16,
     color: '#e3e3e3',
     alignItems: 'center'

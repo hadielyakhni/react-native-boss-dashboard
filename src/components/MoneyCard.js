@@ -36,7 +36,7 @@ export default class EmployeeCard extends PureComponent {
     })
   }
   render() {
-    const { name, amount } = this.props.data[1]
+    const { name, phone, amount } = this.props.data[1]
     return (
       <View style={styles.container} >
         <View style={styles.imageContainer}>
@@ -49,22 +49,7 @@ export default class EmployeeCard extends PureComponent {
             Navigation.push(this.props.componentId, {
               component: {
                 name: 'moneyDetails',
-                passProps: { name, accountId: this.props.data[0] },
-                options: {
-                  animations: {
-                    push: {
-                      content: {
-                        waitForRender: true,
-                        translationY: {
-                          from: Dimensions.get('window').height,
-                          to: 0,
-                          duration: 260
-                        }
-                      }
-                    }
-                  },
-                  topBar: { title: { text: name } }
-                }
+                passProps: { accountId: this.props.data[0] }
               }
             })
           }}

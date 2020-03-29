@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
-import { View, StyleSheet, TextInput, Dimensions, Modal, Text } from 'react-native'
+import { View, StyleSheet, TextInput, Dimensions, Modal, Text, TouchableOpacity } from 'react-native'
 import { connect } from 'react-redux'
 import { updateTask, deleteTask } from '../actions'
 import { Spinner } from 'native-base'
+import { Navigation } from 'react-native-navigation'
+import Ionicons from 'react-native-vector-icons/Ionicons'
 import MyButton from '../components/MyButton'
 
 class ToDoDetailsScreen extends Component {
@@ -14,65 +16,77 @@ class ToDoDetailsScreen extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <View>
-          <TextInput
-            value={this.state.task}
-            style={[styles.input, {
-              borderTopWidth: 0.5,
-              borderTopColor: '#575757',
-              borderBottomWidth: 0.5,
-              borderBottomColor: '#575757'
-            }]}
-            selectionColor='#008ee0'
-            placeholder="What would you like to do?"
-            placeholderTextColor="#575755"
-            onChangeText={task => this.setState({ task })}
-          />
+        <View style={styles.header}>
+          <TouchableOpacity activeOpacity={0.85} onPress={() => Navigation.pop(this.props.componentId)} style={styles.backIconContainer}>
+            <Ionicons name="md-arrow-back" size={26} color="#fff" />
+          </TouchableOpacity>
+          <View style={styles.titleContainer}>
+            <Text numberOfLines={1} style={{ color: '#fff', fontSize: 22.5, fontWeight: 'bold' }}>
+              Task Details
+            </Text>
+          </View>
         </View>
-        <View style={styles.descriptionContainer}>
-          <TextInput
-            multiline
-            value={this.state.description}
-            style={[styles.input, { textAlignVertical: "top", flex: 1 }]}
-            selectionColor='#008ee0'
-            placeholder="Description"
-            placeholderTextColor="#575757"
-            onChangeText={description => this.setState({ description })}
-          />
-        </View>
-        <View style={styles.buttonView}>
-          <MyButton
-            activeOpacity={0.9}
-            style={{ height: 55 }}
-            textStyle={{ fontSize: 20 }}
-            color='#008ee0'
-            onPress={() => {
-              const { task, description, isDone } = this.state
-              this.props.updateTask(this.props.taskId, task, description, isDone, this.props.componentId)
-            }}
-          >Save
+        <View style={{ paddingHorizontal: 8, flex: 1 }}>
+          <View>
+            <TextInput
+              value={this.state.task}
+              style={[styles.input, {
+                borderTopWidth: 0.5,
+                borderTopColor: '#575757',
+                borderBottomWidth: 0.5,
+                borderBottomColor: '#575757'
+              }]}
+              selectionColor='#008ee0'
+              placeholder="What would you like to do?"
+              placeholderTextColor="#575755"
+              onChangeText={task => this.setState({ task })}
+            />
+          </View>
+          <View style={styles.descriptionContainer}>
+            <TextInput
+              multiline
+              value={this.state.description}
+              style={[styles.input, { textAlignVertical: "top", flex: 1 }]}
+              selectionColor='#008ee0'
+              placeholder="Description"
+              placeholderTextColor="#575757"
+              onChangeText={description => this.setState({ description })}
+            />
+          </View>
+          <View style={styles.buttonView}>
+            <MyButton
+              activeOpacity={0.9}
+              style={{ height: 55 }}
+              textStyle={{ fontSize: 20 }}
+              color='#008ee0'
+              onPress={() => {
+                const { task, description, isDone } = this.state
+                this.props.updateTask(this.props.taskId, task, description, isDone, this.props.componentId)
+              }}
+            >Save
           </MyButton>
-          <MyButton
-            activeOpacity={0.9}
-            style={{ marginBottom: 20, height: 50 }}
-            color='#e65100'
-            textStyle={{ fontSize: 20 }}
-            onPress={() => {
-              this.props.deleteTask(this.props.taskId, 'todoDetails', this.props.componentId)
-            }}
-          >Delete
+            <MyButton
+              activeOpacity={0.9}
+              style={{ marginBottom: 20, height: 50 }}
+              color='#e65100'
+              textStyle={{ fontSize: 20 }}
+              onPress={() => {
+                this.props.deleteTask(this.props.taskId, 'todoDetails', this.props.componentId)
+              }}
+            >Delete
           </MyButton>
-          <Modal
-            animationType="fade"
-            transparent={true}
-            visible={this.props.deletingTask}>
-            <View style={styles.loadingModalContainer} >
-              <View style={styles.loadingModal}>
-                <Spinner color='#eeeeee' size={27} style={{ marginRight: 0 }} />
-                <Text style={{ color: '#eeeeee', fontSize: 15 }}>Deleting...</Text>
+            <Modal
+              animationType="fade"
+              transparent={true}
+              visible={this.props.deletingTask}>
+              <View style={styles.loadingModalContainer} >
+                <View style={styles.loadingModal}>
+                  <Spinner color='#eeeeee' size={27} style={{ marginRight: 0 }} />
+                  <Text style={{ color: '#eeeeee', fontSize: 15 }}>Deleting...</Text>
+                </View>
               </View>
-            </View>
-          </Modal>
+            </Modal>
+          </View>
         </View>
       </View>
     )
@@ -83,8 +97,25 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#000',
-    paddingTop: Dimensions.get('window').height / 30,
-    paddingHorizontal: 12
+    paddingHorizontal: 4
+  },
+  header: {
+    height: 56,
+    flexDirection: 'row',
+    backgroundColor: '#000',
+    marginBottom: 15
+  },
+  titleContainer: {
+    flex: 1,
+    paddingLeft: 10,
+    justifyContent: 'center',
+    backgroundColor: '#000'
+  },
+  backIconContainer: {
+    width: 42,
+    backgroundColor: '#000',
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   descriptionContainer: {
     flex: 1

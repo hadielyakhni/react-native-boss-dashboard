@@ -62,17 +62,14 @@ class ToDoItem extends PureComponent {
                 isDone
               },
               options: {
-                topBar: {
-                  title: { text: 'Task Details' },
-                  backButton: { color: '#fff' }
-                },
                 animations: {
                   push: {
                     content: {
+                      waitForRender: true,
                       translationX: {
                         from: Dimensions.get('window').width,
                         to: 0,
-                        duration: 200
+                        duration: 250
                       }
                     }
                   }
@@ -88,7 +85,7 @@ class ToDoItem extends PureComponent {
             checked={this.props.data.isDone}
             onPress={this.onBoxPress.bind(this)}
             size={22}
-            uncheckedColor='#de3b5b'
+            uncheckedColor='#aaa'
           />
           <Text numberOfLines={1} style={styles.taskTitle}>
             {this.props.data.task}

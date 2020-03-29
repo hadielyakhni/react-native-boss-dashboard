@@ -56,6 +56,13 @@ class EmployeesListScreen extends Component {
   render() {
     return (
       <View style={styles.container}>
+        <View style={styles.header}>
+          <View style={styles.titleContainer}>
+            <Text numberOfLines={1} style={{ color: '#fff', fontSize: 24, fontWeight: 'bold' }}>
+              My Employees
+            </Text>
+          </View>
+        </View>
         <View style={styles.searchView}>
           <TextInput
             editable={this.props.fetchingEmployees ? false : true}
@@ -97,6 +104,17 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#000',
     paddingHorizontal: 5
+  },
+  header: {
+    height: 56,
+    flexDirection: 'row',
+    backgroundColor: '#000'
+  },
+  titleContainer: {
+    flex: 1,
+    paddingLeft: 12,
+    justifyContent: 'center',
+    backgroundColor: '#000'
   },
   addButton: {
     position: 'absolute',
