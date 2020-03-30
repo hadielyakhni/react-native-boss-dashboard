@@ -11,17 +11,18 @@ import {
   UIManager,
   LayoutAnimation,
   FlatList,
-  ActivityIndicator,
   Linking
 } from 'react-native'
 import { connect } from 'react-redux'
 import { addTransaction, deleteAccount } from '../actions'
 import { Spinner } from 'native-base'
+import SpinnerSpinkit from 'react-native-spinkit'
 import { Navigation } from 'react-native-navigation'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
+import Octicons from 'react-native-vector-icons/Octicons'
 import TransactionCard from '../components/TransactionCard'
 
 UIManager.setLayoutAnimationEnabledExperimental &&
@@ -32,6 +33,11 @@ const { height, width } = Dimensions.get("window")
 class MoneyDetailsScreen extends Component {
   constructor(props) {
     super(props)
+    setTimeout(() => {
+      InteractionManager.runAfterInteractions(() => {
+        this.setState({ canRender: true })
+      })
+    }, 80)
     const { name, phone, accountId } = this.props
     this.accountId = accountId
     this.state = {
@@ -43,11 +49,6 @@ class MoneyDetailsScreen extends Component {
       transType: '',
       transAmount: ''
     }
-    setTimeout(() => {
-      InteractionManager.runAfterInteractions(() => {
-        this.setState({ canRender: true })
-      })
-    }, 140);
   }
   getName() {
     let name = this.props.name.split(' ')[0]
@@ -145,7 +146,7 @@ class MoneyDetailsScreen extends Component {
                 style={styles.trashButtonContainer}
                 onPress={() => this.setState({ modalVisible: true })}
               >
-                <FontAwesome name="trash" color="rgba(156, 175, 186, 0.5)" size={25} />
+                <Octicons name="trashcan" size={23} color='rgba(156, 175, 186, 0.7)' />
               </TouchableOpacity>
             </View>
             <View style={styles.transButtonsContainer}>
@@ -348,7 +349,7 @@ class MoneyDetailsScreen extends Component {
         </View >
         :
         <View style={{ flex: 1, backgroundColor: '#000', alignItems: 'center', justifyContent: 'center' }}>
-          <ActivityIndicator color="#008ee0" size={38} />
+          <SpinnerSpinkit color="#008ee0" size={38} type="ThreeBounce" />
         </View>
     )
   }
@@ -427,8 +428,8 @@ const styles = StyleSheet.create({
   },
   trashButtonContainer: {
     position: 'absolute',
-    top: 11,
-    right: 11,
+    top: 10,
+    right: 10,
     height: 30,
     width: 30,
     justifyContent: 'center',

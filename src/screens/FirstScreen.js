@@ -18,7 +18,6 @@ export class FirstScreen extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Spinner color='#008ee0' />
       </View>
     )
   }

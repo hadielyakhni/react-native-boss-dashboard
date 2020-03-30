@@ -8,7 +8,7 @@ import {
   UIManager,
   Dimensions
 } from 'react-native'
-import { Icon } from 'native-base'
+import Octicons from 'react-native-vector-icons/Octicons'
 import { Navigation } from 'react-native-navigation'
 import { connect } from 'react-redux'
 import { deleteTask, updateTask } from '../actions'
@@ -94,10 +94,7 @@ class ToDoItem extends PureComponent {
           style={styles.secondContainer}
           onPress={this.onDelete.bind(this)}
         >
-          <Icon
-            name='ios-trash'
-            style={styles.trashStyle}
-          />
+          <Octicons name="trashcan" size={22} color='#aaa' />
         </TouchableOpacity>
       </TouchableOpacity>
     )
@@ -139,10 +136,6 @@ const styles = StyleSheet.create({
     width: Dimensions.get('window').width - 115,
     textAlign: 'left',
     fontFamily: 'SourceSansPro-Regular'
-  },
-  trashStyle: {
-    fontSize: 26,
-    color: '#e3e3e3'
   },
   dialogStyle: {
     height: 220,

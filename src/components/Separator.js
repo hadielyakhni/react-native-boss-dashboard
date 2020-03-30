@@ -1,27 +1,37 @@
 import React from 'react'
-import { View, Text } from 'react-native'
+import { View, Text, StyleSheet } from 'react-native'
 
-const Separator = ({ text }) => {
+const Separator = ({ text, number }) => {
   return (
     <View style={styles.view}>
       <Text style={styles.text}>
-        {text}
+        {text + "  "}
+      </Text>
+      <Text style={styles.number}>
+        ({number})
       </Text>
     </View>
   )
 }
 
-const styles = {
+const styles = StyleSheet.create({
   view: {
+    marginBottom: 6,
+    marginTop: 8,
     height: 26,
-    justifyContent: 'center',
-    marginLeft: 1
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start'
   },
   text: {
-    fontSize: 12,
-    color: 'rgba(255,255,255,0.8)',
-    fontFamily: 'SourceSansPro-Regular'
+    fontSize: 14.5,
+    color: '#eee',
+    fontFamily: 'SourceSansPro-SemiBold'
+  },
+  number: {
+    color: '#eee',
+    fontFamily: 'SourceSansPro-SemiBold'
   }
-}
+})
 
 export default React.memo(Separator)

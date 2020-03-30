@@ -7,7 +7,8 @@ import {
   FlatList,
   TextInput,
   ScrollView,
-  Dimensions
+  LayoutAnimation,
+  UIManager
 } from 'react-native'
 import { Navigation } from 'react-native-navigation'
 import { connect } from 'react-redux'
@@ -16,6 +17,9 @@ import { Icon } from 'native-base'
 import Spinner from 'react-native-spinkit'
 import MoneyCard from '../components/MoneyCard'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
+
+UIManager.setLayoutAnimationEnabledExperimental &&
+  UIManager.setLayoutAnimationEnabledExperimental(true)
 
 class MyMoneyScreen extends Component {
   constructor(props) {
@@ -28,10 +32,18 @@ class MyMoneyScreen extends Component {
   }
   renderScreen() {
     if (!this.props.fetchingAccounts) {
+      if (!this.props.allAccounts.length)
+        return (
+          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', paddingBottom: 120 }}>
+            <Text style={{ color: '#eee', fontFamily: 'SourceSansPro-SemiBold', fontSize: 17, marginBottom: 2 }}>Do you have money with others</Text>
+            <Text style={{ color: '#eee', fontFamily: 'SourceSansPro-SemiBold', fontSize: 17, marginBottom: 5 }}>{''}and/or visversa?</Text>
+            <Text style={{ color: '#eee', fontFamily: 'SourceSansPro-Regular', fontSize: 15 }}>Add accounts now and easily</Text>
+            <Text style={{ color: '#eee', fontFamily: 'SourceSansPro-Regular', fontSize: 15, marginTop: 3 }}>{' '}manage all your transactions.</Text>
+          </View>
+        )
       let matchedAccounts
-      if (this.state.searchWord === '') {
+      if (this.state.searchWord === '')
         matchedAccounts = this.props.allAccounts
-      }
       else {
         let reg = RegExp(`${this.state.searchWord}`, 'i')
         matchedAccounts = this.props.allAccounts.filter(account => reg.test(account[1].name))
@@ -47,71 +59,90 @@ class MyMoneyScreen extends Component {
           nTotal += parseFloat(-account[1].amount)
         return account[1].amount < 0
       })
+      if (!pAccounts.length && !nAccounts.length)
+        return (
+          <View style={{ flex: 1, justifyContent: 'flex-start', alignItems: 'center', paddingTop: 30 }}>
+            <Text style={{ color: '#ddd', fontFamily: 'SourceSansPro-Regular', fontSize: 17, marginBottom: 2 }}>
+              No matching accounts found!
+            </Text>
+          </View>
+        )
       return (
         <ScrollView>
           <View style={{ paddingHorizontal: 5, paddingTop: 25 }}>
-            <View style={{ marginBottom: 40 }}>
-              <View style={{ paddingHorizontal: 14, marginBottom: 5 }}>
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                  <Text style={{ color: '#fff', fontSize: 26, fontFamily: 'SourceSansPro-Bold' }}>
-                    YOU ARE OWED
-                  </Text>
-                  <Text
-                    numberOfLines={1}
-                    ellipsizeMode="middle"
-                    style={{ textAlign: 'right', marginLeft: 15, flex: 1, color: '#008ee0', fontSize: 27, fontFamily: 'SourceSansPro-Bold' }}
-                  >
-                    {pTotal + ' '}
-                  </Text>
-                  <View style={{ justifyContent: 'center', marginLeft: 2 }}>
-                    <FontAwesome5 name="coins" color="#008ee0" size={15} />
+            {
+              pAccounts.length ?
+                <View style={{ marginBottom: 40 }}>
+                  <View style={{ paddingHorizontal: 14, marginBottom: 5 }}>
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                      <Text style={{ color: '#fff', fontSize: 26, fontFamily: 'SourceSansPro-Bold' }}>
+                        YOU ARE OWED
+                      </Text>
+                      <Text
+                        numberOfLines={1}
+                        ellipsizeMode="middle"
+                        style={{ textAlign: 'right', marginLeft: 15, flex: 1, color: '#008ee0', fontSize: 27, fontFamily: 'SourceSansPro-Bold' }}
+                      >
+                        {pTotal + ' '}
+                      </Text>
+                      <View style={{ justifyContent: 'center', marginLeft: 2 }}>
+                        <FontAwesome5 name="coins" color="#008ee0" size={15} />
+                      </View>
+                    </View>
+                    <View style={{ flexDirection: 'row', marginVertical: 10 }}>
+                      <Icon name='md-person' style={{ color: '#0088e0', fontSize: 24, marginRight: 12 }} />
+                      <Text style={{ color: 'rgba(255, 255, 255, 0.7)', fontSize: 19, fontFamily: 'SourceSansPro-Regular' }}>
+                        by {pAccounts.length} people
+                      </Text>
+                    </View>
                   </View>
+                  <FlatList
+                    contentContainerStyle={{ marginVertical: 5, borderRadius: 10 }}
+                    data={pAccounts}
+                    keyExtractor={account => account[0]}
+                    renderItem={account => <MoneyCard componentId={this.props.componentId} data={account.item} />}
+                  />
                 </View>
-                <View style={{ flexDirection: 'row', marginVertical: 10 }}>
-                  <Icon name='md-person' style={{ color: '#0088e0', fontSize: 24, marginRight: 12 }} />
-                  <Text style={{ color: 'rgba(255, 255, 255, 0.7)', fontSize: 19, fontFamily: 'SourceSansPro-Regular' }}>
-                    by {pAccounts.length} people
+                :
+                null
+            }
+            {
+              nAccounts.length ?
+
+                <View style={{ marginBottom: 15 }}>
+                  <View style={{ paddingHorizontal: 14, marginBottom: 5 }}>
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                      <Text style={{ color: '#fff', fontSize: 26, fontFamily: 'SourceSansPro-Bold' }}>
+                        YOU OWE
+                      </Text>
+                      <Text
+                        numberOfLines={1}
+                        ellipsizeMode="middle"
+                        style={{ textAlign: 'right', marginLeft: 15, flex: 1, color: '#de3b5b', fontSize: 27, fontFamily: 'SourceSansPro-Bold' }}
+                      >
+                        {nTotal + ' '}
+                      </Text>
+                      <View style={{ justifyContent: 'center', marginLeft: 2 }}>
+                        <FontAwesome5 name="coins" color="#de3b5b" size={15} />
+                      </View>
+                    </View>
+                    <View style={{ flexDirection: 'row', marginVertical: 10 }}>
+                      <Icon name='md-person' style={{ color: '#de3b5b', fontSize: 24, marginRight: 15 }} />
+                      <Text style={{ color: 'rgba(255,255,255,0.7)', fontSize: 19, fontFamily: 'SourceSansPro-Regular' }}>
+                        to {nAccounts.length} people
                   </Text>
-                </View>
-              </View>
-              <FlatList
-                contentContainerStyle={{ marginVertical: 5, borderRadius: 10 }}
-                data={pAccounts}
-                keyExtractor={account => account[0]}
-                renderItem={account => <MoneyCard componentId={this.props.componentId} data={account.item} />}
-              />
-            </View>
-            <View style={{ marginBottom: 15 }}>
-              <View style={{ paddingHorizontal: 14, marginBottom: 5 }}>
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                  <Text style={{ color: '#fff', fontSize: 26, fontFamily: 'SourceSansPro-Bold' }}>
-                    YOU OWE
-                  </Text>
-                  <Text
-                    numberOfLines={1}
-                    ellipsizeMode="middle"
-                    style={{ textAlign: 'right', marginLeft: 15, flex: 1, color: '#de3b5b', fontSize: 27, fontFamily: 'SourceSansPro-Bold' }}
-                  >
-                    {nTotal + ' '}
-                  </Text>
-                  <View style={{ justifyContent: 'center', marginLeft: 2 }}>
-                    <FontAwesome5 name="coins" color="#de3b5b" size={15} />
+                    </View>
                   </View>
+                  <FlatList
+                    contentContainerStyle={{ marginVertical: 5, borderRadius: 10 }}
+                    data={nAccounts}
+                    keyExtractor={account => account[0]}
+                    renderItem={account => <MoneyCard componentId={this.props.componentId} data={account.item} />}
+                  />
                 </View>
-                <View style={{ flexDirection: 'row', marginVertical: 10 }}>
-                  <Icon name='md-person' style={{ color: '#de3b5b', fontSize: 24, marginRight: 15 }} />
-                  <Text style={{ color: 'rgba(255,255,255,0.7)', fontSize: 19, fontFamily: 'SourceSansPro-Regular' }}>
-                    to {nAccounts.length} people
-                  </Text>
-                </View>
-              </View>
-              <FlatList
-                contentContainerStyle={{ marginVertical: 5, borderRadius: 10 }}
-                data={nAccounts}
-                keyExtractor={account => account[0]}
-                renderItem={account => <MoneyCard componentId={this.props.componentId} data={account.item} />}
-              />
-            </View>
+                :
+                null
+            }
           </View>
         </ScrollView>
       )
@@ -141,17 +172,17 @@ class MyMoneyScreen extends Component {
           </View>
         </View>
         <View style={styles.searchView}>
-          <TextInput
-            editable={this.props.fetchingAccounts ? false : true}
-            value={this.state.searchWord}
-            style={styles.input}
-            placeholderTextColor='rgba(255, 255, 255, 0.7)'
-            placeholder='Enter a name'
-            onChangeText={this.changeSearchWord}
-          />
           <Icon
             name='md-search'
             style={styles.searchIcon}
+          />
+          <TextInput
+            editable={this.props.fetchingAccounts || !this.props.allAccounts.length ? false : true}
+            value={this.state.searchWord}
+            style={styles.input}
+            placeholderTextColor='#777'
+            placeholder='Search accounts'
+            onChangeText={this.changeSearchWord}
           />
         </View>
         {this.renderScreen()}
@@ -204,8 +235,8 @@ const styles = StyleSheet.create({
   searchView: {
     marginBottom: 2,
     marginTop: 10,
-    paddingRight: 15,
-    paddingLeft: 5,
+    paddingRight: 10,
+    paddingLeft: 16,
     borderRadius: 20,
     flexDirection: 'row',
     alignItems: 'center',
@@ -216,11 +247,11 @@ const styles = StyleSheet.create({
   input: {
     borderRadius: 10,
     flex: 1,
-    marginHorizontal: 5,
     color: '#e3e3e3',
     alignItems: 'center',
     fontSize: 17,
-    fontFamily: 'SourceSansPro-Regular'
+    fontFamily: 'SourceSansPro-Regular',
+    marginLeft: 8
   },
   searchIcon: {
     fontSize: 26,

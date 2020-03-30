@@ -26,8 +26,24 @@ class EmployeesListScreen extends Component {
   }
   renderScreen() {
     if (!this.props.fetchingEmployees) {
+      if (!this.props.allEmployees.length)
+        return (
+          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', paddingBottom: 120 }}>
+            <Text style={{ color: '#eee', fontFamily: 'SourceSansPro-SemiBold', fontSize: 17, marginBottom: 2 }}>Easily check all</Text>
+            <Text style={{ color: '#eee', fontFamily: 'SourceSansPro-SemiBold', fontSize: 17, marginBottom: 5 }}>{''} your employees!</Text>
+            <Text style={{ color: '#eee', fontFamily: 'SourceSansPro-Regular', fontSize: 15 }}>Add them now.</Text>
+          </View>
+        )
       let reg = RegExp(`${this.state.searchWord}`, 'i')
       let matchedEmployees = this.props.allEmployees.filter(account => reg.test(account[1].name))
+      if (!matchedEmployees.length)
+        return (
+          <View style={{ flex: 1, justifyContent: 'flex-start', alignItems: 'center', paddingTop: 12 }}>
+            <Text style={{ color: '#ddd', fontFamily: 'SourceSansPro-Regular', fontSize: 17, marginBottom: 2 }}>
+              No matching employees found!
+            </Text>
+          </View>
+        )
       return (
         <FlatList
           contentContainerStyle={{ paddingVertical: 15 }}
@@ -64,17 +80,17 @@ class EmployeesListScreen extends Component {
           </View>
         </View>
         <View style={styles.searchView}>
+          <Icon
+            name='md-search'
+            style={styles.searchIcon}
+          />
           <TextInput
             editable={this.props.fetchingEmployees ? false : true}
             value={this.state.searchWord}
             style={styles.input}
-            placeholderTextColor='rgba(255, 255, 255, 0.7)'
-            placeholder='Enter a name'
+            placeholderTextColor='#777'
+            placeholder='Search employee'
             onChangeText={this.changeSearchWord}
-          />
-          <Icon
-            name='md-search'
-            style={styles.searchIcon}
           />
         </View>
         {this.renderScreen()}
@@ -134,8 +150,8 @@ const styles = StyleSheet.create({
   searchView: {
     marginBottom: 20,
     marginTop: 10,
-    paddingRight: 15,
-    paddingLeft: 5,
+    paddingRight: 10,
+    paddingLeft: 16,
     borderRadius: 20,
     flexDirection: 'row',
     alignItems: 'center',
@@ -146,11 +162,11 @@ const styles = StyleSheet.create({
   input: {
     borderRadius: 10,
     flex: 1,
-    marginHorizontal: 5,
     color: '#e3e3e3',
     alignItems: 'center',
     fontSize: 17,
-    fontFamily: 'SourceSansPro-Regular'
+    fontFamily: 'SourceSansPro-Regular',
+    marginLeft: 8
   },
   searchIcon: {
     fontSize: 26,

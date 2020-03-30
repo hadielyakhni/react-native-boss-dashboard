@@ -13,10 +13,8 @@ import { Navigation } from 'react-native-navigation'
 import { connect } from 'react-redux'
 import { addTask, fetchTasks } from '../actions'
 import { Icon } from 'native-base'
-import Spinner from 'react-native-spinkit'
 import ToDoItem from '../components/ToDoItem'
 import Separator from '../components/Separator'
-
 
 class ToDoListScreen extends Component {
   constructor(props) {
@@ -43,36 +41,43 @@ class ToDoListScreen extends Component {
   renderScreen() {
     if (!this.props.fetchingTasks)
       return (
-        <ScrollView >
-          <Separator text='INCOMPLETED' />
-          <FlatList
-            initialNumToRender={200}
-            style={{ marginBottom: 10 }}
-            data={this.props.unDoneTasks}
-            keyExtractor={task => task[0]}
-            renderItem={this.rendertask.bind(this)}
-          />
-          <Separator text='COMPLETED' />
-          <FlatList
-            data={this.props.doneTasks}
-            keyExtractor={task => task[0]}
-            renderItem={this.rendertask.bind(this)}
-          />
-        </ScrollView>
+        !!this.props.unDoneTasks.length || !!this.props.doneTasks.length ?
+          <ScrollView >
+            {
+              this.props.unDoneTasks.length ?
+                <>
+                  <Separator text='INCOMPLETED' number={this.props.unDoneTasks.length} />
+                  <FlatList
+                    initialNumToRender={200}
+                    style={{ marginBottom: 10 }}
+                    data={this.props.unDoneTasks}
+                    keyExtractor={task => task[0]}
+                    renderItem={this.rendertask.bind(this)}
+                  />
+                </>
+                :
+                null
+            }
+            {
+              this.props.doneTasks.length ?
+                <>
+                  <Separator text='COMPLETED' number={this.props.doneTasks.length} />
+                  <FlatList
+                    data={this.props.doneTasks}
+                    keyExtractor={task => task[0]}
+                    renderItem={this.rendertask.bind(this)}
+                  />
+                </>
+                :
+                null
+            }
+          </ScrollView>
+          :
+          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', paddingBottom: 120 }}>
+            <Text style={{ color: '#eee', fontFamily: 'SourceSansPro-SemiBold', fontSize: 17, marginBottom: 5 }}>Start organizing your life!</Text>
+            <Text style={{ color: '#eee', fontFamily: 'SourceSansPro-Regular', fontSize: 15 }}>Any thing to do?</Text>
+          </View>
       )
-    return (
-      <View style={{
-        flex: 1,
-        backgroundColor: '#000',
-        justifyContent: 'center',
-        alignItems: 'center',
-        flexDirection: 'row'
-      }}>
-        <Text style={{ fontSize: 14, color: '#464953' }}>L</Text>
-        <Spinner type='Circle' size={24} color='#008ee0' />
-        <Text style={{ fontSize: 14, color: '#464953' }}>ADING</Text>
-      </View>
-    )
   }
   render() {
     return (
@@ -148,6 +153,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 5,
     backgroundColor: '#000'
   },
+  loadingContainer: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#555'
+  },
   header: {
     height: 56,
     flexDirection: 'row',
@@ -160,7 +173,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#000'
   },
   addView: {
-    marginBottom: 20,
+    marginBottom: 14,
     paddingHorizontal: 10,
     marginTop: 10,
     borderRadius: 20,

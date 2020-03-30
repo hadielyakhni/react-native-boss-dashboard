@@ -82,7 +82,7 @@ class AuthScreen extends Component {
               :
               <Text numberOfLines={2} style={styles.title}>Welcome to Boss Dashboard</Text>
           }
-          <View style={{ paddingHorizontal: 33 }}>
+          <View style={{ paddingHorizontal: 33, paddingBottom: this.state.isKeyboardOpened ? 0 : 50 }}>
             <MyInput
               keyboardType='email-address'
               value={this.state.email}

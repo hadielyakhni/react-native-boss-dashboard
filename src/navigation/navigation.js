@@ -1,5 +1,6 @@
 import { Navigation } from 'react-native-navigation'
-import FontAwesome from 'react-native-vector-icons/FontAwesome'
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
+import Fontisto from 'react-native-vector-icons/Fontisto'
 import { Dimensions } from 'react-native'
 
 export const goToAuth = () => Navigation.setRoot({
@@ -42,10 +43,10 @@ export const goToAuth = () => Navigation.setRoot({
 })
 
 export const goToMain = () => Promise.all([
-  FontAwesome.getImageSource('tasks', 25),
-  FontAwesome.getImageSource('briefcase', 25),
-  FontAwesome.getImageSource('money', 25),
-  FontAwesome.getImageSource('user-circle', 25)
+  FontAwesome5.getImageSource('tasks', 25),
+  FontAwesome5.getImageSource('user-tie', 25),
+  Fontisto.getImageSource('wallet', 25),
+  Fontisto.getImageSource('player-settings', 25)
 ]).then(([tasksIcon, workIcon, moneyIcon, personIcon]) => Navigation.setRoot({
   root: {
     bottomTabs: {
@@ -66,8 +67,8 @@ export const goToMain = () => Promise.all([
                 selectedIconColor: '#008ee0',
                 text: 'Tasks',
                 fontFamily: 'SourceSansPro-Regular',
-                selectedFontSize: 14,
-                fontSize: 12,
+                selectedFontSize: 13.5,
+                fontSize: 11,
                 selectedTextColor: '#008ee0'
               },
               topBar: {
@@ -92,8 +93,8 @@ export const goToMain = () => Promise.all([
                 selectedIconColor: '#008ee0',
                 text: 'Employees',
                 fontFamily: 'SourceSansPro-Regular',
-                selectedFontSize: 14,
-                fontSize: 12,
+                selectedFontSize: 13.5,
+                fontSize: 11,
                 selectedTextColor: '#008ee0'
               },
               topBar: {
@@ -118,8 +119,8 @@ export const goToMain = () => Promise.all([
                 selectedIconColor: '#008ee0',
                 text: 'Wallet',
                 fontFamily: 'SourceSansPro-Regular',
-                selectedFontSize: 14,
-                fontSize: 12,
+                selectedFontSize: 13.5,
+                fontSize: 11,
                 selectedTextColor: '#008ee0'
               },
               topBar: {
@@ -142,10 +143,10 @@ export const goToMain = () => Promise.all([
                 icon: personIcon,
                 iconColor: '#c8d2da',
                 selectedIconColor: '#008ee0',
-                text: 'Profile',
+                text: 'Settings',
                 fontFamily: 'SourceSansPro-Regular',
-                selectedFontSize: 14,
-                fontSize: 12,
+                selectedFontSize: 13.5,
+                fontSize: 11,
                 selectedTextColor: '#008ee0'
               },
               topBar: {
@@ -158,9 +159,7 @@ export const goToMain = () => Promise.all([
       options: {
         animations: {
           setRoot: {
-            waitForRender: true,
-            scaleX: { from: 0, to: 1, duration: 100, interpolation: 'decelerate' },
-            scaleY: { from: 0, to: 1, duration: 100, interpolation: 'decelerate' }
+            waitForRender: true
           }
         },
         bottomTabs: {
