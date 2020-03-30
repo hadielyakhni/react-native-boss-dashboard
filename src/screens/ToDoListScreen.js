@@ -79,7 +79,7 @@ class ToDoListScreen extends Component {
       <View style={styles.container}>
         <View style={styles.header}>
           <View style={styles.titleContainer}>
-            <Text numberOfLines={1} style={{ color: '#fff', fontSize: 24, fontWeight: 'bold' }}>
+            <Text numberOfLines={1} style={{ color: '#fff', fontSize: 26, fontFamily: 'SourceSansPro-SemiBold' }}>
               My Tasks
             </Text>
           </View>
@@ -89,7 +89,7 @@ class ToDoListScreen extends Component {
             editable={this.props.fetchingTasks ? false : true}
             value={this.state.task}
             style={styles.input}
-            placeholderTextColor='rgba(255, 255, 255, 0.6)'
+            placeholderTextColor='rgba(255, 255, 255, 0.7)'
             placeholder='Quick Task'
             selectionColor='#008ee0'
             onChangeText={task => this.setState({ task })}
@@ -173,7 +173,8 @@ const styles = StyleSheet.create({
   input: {
     borderRadius: 10,
     flex: 1,
-    fontSize: 16,
+    fontSize: 17,
+    fontFamily: 'SourceSansPro-Regular',
     color: '#e3e3e3',
     alignItems: 'center'
   },
@@ -193,7 +194,7 @@ const styles = StyleSheet.create({
   },
   addButton: {
     position: 'absolute',
-    right: 10,
+    right: 9,
     bottom: 20,
     backgroundColor: '#008ee0',
     height: 55,

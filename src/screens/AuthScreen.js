@@ -18,6 +18,7 @@ import { Spinner } from 'native-base'
 import MyInput from '../components/MyInput'
 import MyButton from '../components/MyButton'
 import { userSignin, userSignup, userAuthenticateWithFacebook, dsimissAuthError } from '../actions'
+import getAuthError from '../utils/getAuthError'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import { Navigation } from 'react-native-navigation'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
@@ -75,7 +76,12 @@ class AuthScreen extends Component {
         <View
           style={{ flex: 1, justifyContent: 'center', paddingBottom: Dimensions.get('window').height / 10 }}
         >
-          <Text style={styles.title}>Hadi's Top</Text>
+          {
+            this.state.isKeyboardOpened ?
+              <Text style={[styles.title, { marginBottom: 20, fontSize: 50 }]}>Boss</Text>
+              :
+              <Text numberOfLines={2} style={styles.title}>Welcome to Boss Dashboard</Text>
+          }
           <View style={{ paddingHorizontal: 33 }}>
             <MyInput
               keyboardType='email-address'
@@ -123,7 +129,7 @@ class AuthScreen extends Component {
                 <View style={{ height: 0, flex: 1, borderColor: '#fff', borderWidth: 0.3 }}></View>
                 <Text
                   onPress={() => Navigation.push(this.props.componentId, { component: { name: 'forgetPassword' } })}
-                  style={{ color: '#fff', fontSize: 12, fontWeight: 'bold', marginHorizontal: 12 }}
+                  style={{ color: '#fff', fontSize: 13, fontFamily: 'SourceSansPro-SemiBold', marginHorizontal: 12 }}
                 >
                   Forgot Password?
                   </Text>
@@ -142,32 +148,31 @@ class AuthScreen extends Component {
             </MyButton>
           </View>
           <View style={[styles.switchMethodeOption, { bottom: this.state.isKeyboardOpened ? 30 : 0 }]}>
-            <View style={{ flexDirection: 'row' }}>
+            <TouchableOpacity
+              activeOpacity={1}
+              onPress={() => {
+                LayoutAnimation.configureNext({
+                  update: {
+                    duration: 100,
+                    type: LayoutAnimation.Types.linear,
+                    property: LayoutAnimation.Properties.opacity
+                  }
+                })
+                this.setState(({ screen }) => {
+                  if (screen === 'login')
+                    return { screen: 'signup' }
+                  return { screen: 'login' }
+                })
+              }}
+              style={{ flexDirection: 'row', alignItems: 'center', flex: 1, height: 50, justifyContent: 'center' }}
+            >
               <Text style={styles.switchMethodeText}>
                 {this.state.screen === 'login' ? "Don't have an account?" : "Already a member?"}
               </Text>
-              <TouchableWithoutFeedback
-                onPress={() => {
-                  LayoutAnimation.configureNext({
-                    update: {
-                      duration: 100,
-                      type: LayoutAnimation.Types.linear,
-                      property: LayoutAnimation.Properties.opacity
-                    }
-                  })
-                  // this.setState({ email: '', password: '', isPasswordSecure: true })
-                  this.setState(({ screen }) => {
-                    if (screen === 'login')
-                      return { screen: 'signup' }
-                    return { screen: 'login' }
-                  })
-                }}
-              >
-                <Text style={styles.switchMethodeLink}>
-                  {this.state.screen === 'login' ? 'Sign up.' : 'Log in.'}
-                </Text>
-              </TouchableWithoutFeedback>
-            </View>
+              <Text style={styles.switchMethodeLink}>
+                {this.state.screen === 'login' ? 'Sign up.' : 'Log in.'}
+              </Text>
+            </TouchableOpacity>
           </View>
         </View>
         <Modal
@@ -177,20 +182,23 @@ class AuthScreen extends Component {
           <View style={styles.errorModalContainer} >
             <View style={styles.errorModal}>
               <View style={styles.upperModalPart}>
-                <Text style={{ color: '#eef', fontSize: 20, fontWeight: 'bold' }}>Error</Text>
+                <Text style={{ color: '#eef', fontSize: 21, fontFamily: 'SourceSansPro-Bold' }}>Error</Text>
                 <Text style={{
                   textAlign: 'center',
                   color: '#bbb',
-                  fontSize: 12,
+                  fontSize: 14.5,
+                  fontFamily: 'SourceSansPro-Regular',
                   marginTop: 12
-                }}>{this.props.error}</Text>
+                }}>{getAuthError(this.props.error)}</Text>
               </View>
               <TouchableOpacity
                 activeOpacity={0.78}
                 style={styles.lowerModalPart}
                 onPress={() => this.props.dsimissAuthError()}
               >
-                <Text style={{ color: '#008ee0', fontSize: 16 }}>Dismiss</Text>
+                <Text style={{ color: '#008ee0', fontSize: 17, fontFamily: 'SourceSansPro-Regular' }}>
+                  Dismiss
+                </Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -207,11 +215,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   title: {
+    textAlign: 'center',
     marginBottom: 25,
     color: '#fff',
     fontSize: 44,
     alignSelf: 'center',
-    fontFamily: 'PermanentMarker-Regular'
+    fontFamily: 'SourceSansPro-SemiBold'
   },
   switchMethodeOption: {
     position: 'absolute',
@@ -224,14 +233,15 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   switchMethodeText: {
-    fontSize: 12.5,
+    fontFamily: 'SourceSansPro-Regular',
+    fontSize: 13.5,
     color: 'rgba(255, 255, 255, 0.6)',
     marginRight: 4
   },
   switchMethodeLink: {
+    fontFamily: 'SourceSansPro-SemiBold',
     color: '#fff',
-    fontSize: 12.5,
-    fontWeight: 'bold'
+    fontSize: 14
   },
   loadingContainer: {
     flexDirection: 'row',
@@ -281,9 +291,10 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 45,
     borderRadius: 5,
-    fontSize: 14,
     color: '#fff',
-    paddingHorizontal: 15
+    paddingHorizontal: 15,
+    fontSize: 16.5,
+    fontFamily: 'SourceSansPro-Regular'
   },
   rightIconContainer: {
     height: 45,

@@ -5,6 +5,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import { Navigation } from 'react-native-navigation'
 import { connect } from 'react-redux'
 import { sendPasswordResetEmail, dsimissAuthError, hidePasswordResetSuccessModal } from '../actions'
+import getAuthError from '../utils/getAuthError'
 
 class ForgetPasswordScreen extends Component {
   state = { email: '' }
@@ -29,15 +30,15 @@ class ForgetPasswordScreen extends Component {
               size={25}
             />
           </TouchableOpacity>
-          <Text style={{ marginLeft: 10, color: '#fff', fontSize: 20 }}>Back</Text>
+          <Text style={{ marginLeft: 10, color: '#fff', fontSize: 25, fontFamily: 'SourceSansPro-SemiBold' }}>Back</Text>
         </View>
         <View style={{
           backgroundColor: '#000',
           flex: 1,
           paddingHorizontal: 16,
-          paddingTop: 60
+          paddingTop: 52
         }}>
-          <Text style={{ fontSize: 22, color: '#fff', fontWeight: 'bold' }}>Forgot Password?</Text>
+          <Text style={{ fontSize: 24, color: '#fff', fontFamily: 'SourceSansPro-Bold' }}>Forgot Password?</Text>
           <View style={{
             marginTop: 15,
             flexDirection: 'row',
@@ -45,25 +46,30 @@ class ForgetPasswordScreen extends Component {
             alignItems: 'center',
             borderBottomWidth: 1,
             paddingHorizontal: 6,
-            marginBottom: 60
+            marginBottom: 52
           }}>
-            <MaterialCommunityIcons name="email" color="#fff" size={24} />
+            <MaterialCommunityIcons style={{ paddingBottom: 2 }} name="email" color="#fff" size={24} />
             <TextInput
+              editable={!this.props.sendingPasswordResetEmail}
+              keyboardType="email-address"
+              ref={ref => this.inputRef = ref}
               value={this.state.email}
               onChangeText={email => this.setState({ email })}
               placeholder="Enter your Email"
               placeholderTextColor="#bbb"
               style={{
+                alignSelf: 'center',
                 flex: 1,
                 color: '#fff',
-                fontSize: 16,
-                paddingLeft: 12
+                fontSize: 18,
+                paddingLeft: 12,
+                fontFamily: 'SourceSansPro-Regular'
               }}
             />
           </View>
           <TouchableOpacity
+            disabled={this.props.sendingPasswordResetEmail}
             activeOpacity={0.9}
-            disabled={!this.state.email}
             style={{
               height: 60,
               backgroundColor: '#212121',
@@ -71,17 +77,33 @@ class ForgetPasswordScreen extends Component {
               alignItems: 'center',
               justifyContent: 'center'
             }}
-            onPress={() => this.props.sendPasswordResetEmail(this.state.email.trim())}
+            onPress={() => {
+              if (!this.state.email)
+                this.inputRef.focus()
+              else
+                this.props.sendPasswordResetEmail(this.state.email.trim())
+            }}
           >
-            <Text style={{
-              color: !this.state.email.trim() ? '#aaa' : '#fff',
-              fontSize: 20,
-              fontWeight: 'bold'
-            }}>Send Email</Text>
+            {
+              this.props.sendingPasswordResetEmail ?
+                <Text style={{
+                  color: !this.state.email.trim() ? '#aaa' : '#fff',
+                  fontSize: 22,
+                  fontFamily: 'SourceSansPro-SemiBold'
+                }}>Sending...</Text>
+                :
+                <Text style={{
+                  color: !this.state.email.trim() ? '#aaa' : '#fff',
+                  fontSize: 22,
+                  fontFamily: 'SourceSansPro-SemiBold'
+                }}>
+                  Send Email
+                </Text>
+            }
           </TouchableOpacity>
         </View>
         <View style={{ padding: 15, backgroundColor: '#000', paddingBottom: 40 }}>
-          <Text style={{ color: '#d6af00', fontSize: 13, fontWeight: 'normal' }}>
+          <Text style={{ color: '#d6af00', fontSize: 13, fontFamily: 'SourceSansPro-Regular' }}>
             Don't reset your password if you signed in with FACEBOOK.
             If you do, you will no longer be able to login with FACEBOOK,
             and you should login with your EMAIL ADDRESS and the new PASSWORD!
@@ -94,20 +116,23 @@ class ForgetPasswordScreen extends Component {
           <View style={styles.errorModalContainer} >
             <View style={styles.errorModal}>
               <View style={styles.upperModalPart}>
-                <Text style={{ color: '#eef', fontSize: 20, fontWeight: 'bold' }}>Error</Text>
+                <Text style={{ color: '#eef', fontSize: 21, fontFamily: 'SourceSansPro-Bold' }}>Error</Text>
                 <Text style={{
                   textAlign: 'center',
                   color: '#ccc',
-                  fontSize: 13,
+                  fontSize: 14.5,
+                  fontFamily: 'SourceSansPro-Regular',
                   marginTop: 12
-                }}>{this.props.error}</Text>
+                }}>{getAuthError(this.props.error)}</Text>
               </View>
               <TouchableOpacity
                 activeOpacity={0.78}
                 style={styles.lowerModalPart}
                 onPress={() => this.props.dsimissAuthError()}
               >
-                <Text style={{ color: '#008ee0', fontSize: 16 }}>Dismiss</Text>
+                <Text style={{ color: '#008ee0', fontSize: 17, fontFamily: 'SourceSansPro-Regular' }}>
+                  Dismiss
+                </Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -120,8 +145,8 @@ class ForgetPasswordScreen extends Component {
           <View style={styles.errorModalContainer} >
             <View style={styles.errorModal}>
               <View style={styles.upperModalPart}>
-                <Text style={{ color: '#eef', fontSize: 20, fontWeight: 'bold', textAlign: 'center' }}>
-                  A password reset email was sent to
+                <Text style={{ color: '#eef', fontSize: 17, fontWeight: 'bold', textAlign: 'center', marginBottom: 2 }}>
+                  Email was sent to
                 </Text>
                 <Text style={{ color: '#fff', fontSize: 17, fontWeight: 'bold' }}>
                   {this.state.email}
@@ -129,7 +154,7 @@ class ForgetPasswordScreen extends Component {
                 <Text style={{
                   textAlign: 'center',
                   color: '#bbb',
-                  fontSize: 12,
+                  fontSize: 13,
                   marginTop: 12
                 }}>Please check your inbox..</Text>
               </View>
@@ -163,8 +188,9 @@ const styles = {
     justifyContent: 'center'
   },
   upperModalPart: {
+    paddingHorizontal: 12,
     paddingBottom: 20,
-    paddingTop: 10,
+    paddingTop: 14,
     alignItems: 'center',
     borderBottomWidth: 1,
     borderBottomColor: '#363636'
@@ -179,6 +205,7 @@ const styles = {
 
 const mapStateToProps = ({ auth }) => ({
   error: auth.error,
+  sendingPasswordResetEmail: auth.sendingPasswordResetEmail,
   showPasswordResetSuccess: auth.showPasswordResetSuccess
 })
 

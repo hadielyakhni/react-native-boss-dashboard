@@ -4,7 +4,6 @@ import {
   StyleSheet,
   View,
   TouchableOpacity,
-  Keyboard,
   LayoutAnimation,
   UIManager,
   Dimensions
@@ -135,9 +134,11 @@ const styles = StyleSheet.create({
     borderColor: '#121212',
     borderWidth: 1,
     alignSelf: 'center',
-    fontSize: 16.6,
+    fontSize: 18.5,
     color: '#f5f5f5',
-    width: Dimensions.get('window').width - 115
+    width: Dimensions.get('window').width - 115,
+    textAlign: 'left',
+    fontFamily: 'SourceSansPro-Regular'
   },
   trashStyle: {
     fontSize: 26,

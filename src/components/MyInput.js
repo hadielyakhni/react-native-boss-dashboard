@@ -22,7 +22,7 @@ export default class MyInput extends PureComponent {
           keyboardType={this.props.keyboardType}
           style={[styles.InputStyle, this.props.style]}
           placeholder={this.props.placeHolder}
-          placeholderTextColor='rgba(255, 255, 255, 0.6)'
+          placeholderTextColor='#aaa'
           autoCapitalize={this.props.autoCapitalize || 'none'}
           autoCorrect={this.props.isAutoCorrect}
           onChangeText={this.props.onChangeText}
@@ -45,9 +45,10 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 45,
     borderRadius: 5,
-    fontSize: 14,
+    fontSize: 16.5,
     color: '#fff',
-    paddingRight: 10
+    paddingRight: 10,
+    fontFamily: 'SourceSansPro-Regular'
   },
   iconLeft: {
     paddingHorizontal: 14,

@@ -75,20 +75,20 @@ export const userAuthenticateWithFacebook = () =>
       }, 100);
     }
     catch (err) {
-      dispatch({ type: 'facebook_auth_error', payload: err.toString() })
+      dispatch({
+        type: 'facebook_auth_error',
+        payload: err.toString()
+      })
     }
   }
 
 export const sendPasswordResetEmail = email =>
   async dispatch => {
-    console.log(email)
     try {
+      dispatch({ type: 'send_password_reset_email_start' })
       await firebase.auth().sendPasswordResetEmail(email)
-      dispatch({
-        type: 'password_reset_done'
-      })
+      dispatch({ type: 'password_reset_done' })
     } catch (error) {
-      console.log(error)
       dispatch({
         type: 'auth_error',
         payload: error.toString()
@@ -209,7 +209,7 @@ export const fetchAccounts = () => {
   }
 }
 
-export const addMoneyAccount = (initialStackId, componentId, { name, phone = '', status, amount }) => {
+export const addMoneyAccount = (componentId, { name, phone = '', status, amount }) => {
   if (status === 'HIM')
     amount *= -1
   return () => {

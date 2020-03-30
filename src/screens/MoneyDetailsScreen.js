@@ -47,7 +47,7 @@ class MoneyDetailsScreen extends Component {
       InteractionManager.runAfterInteractions(() => {
         this.setState({ canRender: true })
       })
-    }, 160);
+    }, 140);
   }
   getName() {
     let name = this.props.name.split(' ')[0]
@@ -74,11 +74,15 @@ class MoneyDetailsScreen extends Component {
             zIndex: this.state.transConfirmationModalVisible || this.state.modalVisible ? 1 : 0
           }]}></View>
           <View style={styles.header}>
-            <TouchableOpacity activeOpacity={0.85} onPress={() => Navigation.pop(this.props.componentId)} style={styles.backIconContainer}>
+            <TouchableOpacity
+              activeOpacity={0.85}
+              onPress={() => Navigation.pop(this.props.componentId)}
+              style={styles.backIconContainer}
+            >
               <Ionicons name="md-arrow-back" size={26} color="#fff" />
             </TouchableOpacity>
             <View style={styles.titleContainer}>
-              <Text numberOfLines={1} style={{ color: '#fff', fontSize: 22.5, fontWeight: 'bold' }}>
+              <Text numberOfLines={1} style={{ color: '#fff', fontSize: 25, fontFamily: 'SourceSansPro-SemiBold', textAlign: 'left' }}>
                 {this.props.name}
               </Text>
             </View>
@@ -113,23 +117,23 @@ class MoneyDetailsScreen extends Component {
                   <Text
                     ellipsizeMode={this.props.amount < 0 ? "tail" : "head"}
                     numberOfLines={1}
-                    style={{ fontSize: 9, fontWeight: 'bold', color: this.props.amount < 0 ? '#cdacaf' : '#9cafba' }}>
+                    style={{ textAlign: 'left', fontSize: 10, fontFamily: 'SourceSansPro-Bold', color: this.props.amount < 0 ? '#cdacaf' : '#9cafba' }}>
                     {
                       this.props.amount < 0 ?
-                        `Y O U  S H O U L D  P A Y  T O  ${this.getName()}`
+                        `${'Y O U  S H O U L D  P A Y  T O  ' + this.getName()}`
                         :
-                        `${this.getName()}  S H O U L D  P A Y  F O R  Y O U`
+                        `${this.getName() + '  S H O U L D  P A Y  F O R  Y O U'}`
                     }
                   </Text>
                 </View>
               </View>
               <View style={styles.amountContainer}>
-                <Text numberOfLines={1} ellipsizeMode="middle" style={styles.amountText}>
+                <Text numberOfLines={1} style={styles.amountText}>
                   {Math.abs(this.props.amount)}
                 </Text>
               </View>
               <View style={styles.transNumberContainer}>
-                <Text style={{ fontSize: 9, fontWeight: 'bold', color: '#9cafba' }}>
+                <Text style={{ fontSize: 10.5, fontFamily: 'SourceSansPro-SemiBold', color: '#9cafba' }}>
                   T O T A L  T R A N S A C T I O N S :  {this.props.transactions.length}
                 </Text>
               </View>
@@ -156,7 +160,7 @@ class MoneyDetailsScreen extends Component {
                 <View style={[styles.arrowIconContainer, { backgroundColor: '#34282d' }]}>
                   <FontAwesome name="arrow-up" color="#de3b5b" size={24} />
                 </View>
-                <Text style={{ marginLeft: 8, fontWeight: 'bold', color: '#fff', fontSize: 20 }}>Send</Text>
+                <Text style={{ marginLeft: 8, fontFamily: 'SourceSansPro-Bold', color: '#f7f7f7', fontSize: 23 }}>Send</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 activeOpacity={0.85}
@@ -169,7 +173,7 @@ class MoneyDetailsScreen extends Component {
                 <View style={[styles.arrowIconContainer, { backgroundColor: '#2e3b47' }]}>
                   <FontAwesome name="arrow-down" color="#008ee0" size={24} />
                 </View>
-                <Text style={{ marginLeft: 8, fontWeight: 'bold', color: '#fff', fontSize: 20 }}>Receive</Text>
+                <Text style={{ marginLeft: 8, fontFamily: 'SourceSansPro-Bold', color: '#f7f7f7', fontSize: 23 }}>Receive</Text>
               </TouchableOpacity>
             </View>
             <View style={styles.transTextContainer}>
@@ -197,10 +201,10 @@ class MoneyDetailsScreen extends Component {
               >
                 <View style={styles.modal}>
                   <View style={styles.upperModal}>
-                    <Text style={{ fontWeight: 'bold', marginBottom: 7, textAlign: 'center', color: '#eeeeee', fontSize: 17 }}>
+                    <Text style={{ fontFamily: 'SourceSansPro-Regular', marginBottom: 7, textAlign: 'center', color: '#eeeeee', fontSize: 18 }}>
                       Delete this account?
                   </Text>
-                    <Text style={{ fontWeight: 'bold', textAlign: 'center', color: '#eeeeee', fontSize: 15 }}>
+                    <Text style={{ fontFamily: 'SourceSansPro-Regular', textAlign: 'center', color: '#eeeeee', fontSize: 18 }}>
                       This action cannot be undo.
                   </Text>
                   </View>
@@ -211,7 +215,9 @@ class MoneyDetailsScreen extends Component {
                         this.setState({ modalVisible: false });
                       }}
                       style={[styles.modalButton, { borderBottomLeftRadius: 4 }]}>
-                      <Text style={{ color: '#eeeeee', fontSize: 18, fontWeight: 'bold' }}>Cancel</Text>
+                      <Text style={{ color: '#eeeeee', fontSize: 18, fontFamily: 'SourceSansPro-Regular' }}>
+                        Cancel
+                    </Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                       activeOpacity={0.8}
@@ -220,7 +226,7 @@ class MoneyDetailsScreen extends Component {
                         this.props.deleteAccount(this.props.componentId, this.accountId)
                       }}
                       style={[styles.modalButton, { borderBottomRightRadius: 4 }]}>
-                      <Text style={{ color: '#e65100', fontSize: 18, fontWeight: 'bold' }}>Delete</Text>
+                      <Text style={{ color: '#e65100', fontSize: 18, fontFamily: 'SourceSansPro-Regular' }}>Delete</Text>
                     </TouchableOpacity>
                   </View>
                 </View>
@@ -233,7 +239,9 @@ class MoneyDetailsScreen extends Component {
               <View style={styles.loadingModalContainer} >
                 <View style={styles.loadingModal}>
                   <Spinner color='#eeeeee' size={27} style={{ marginRight: 0 }} />
-                  <Text style={{ color: '#eeeeee', fontSize: 15 }}>Updating...</Text>
+                  <Text style={{ color: '#eeeeee', fontSize: 17, fontFamily: 'SourceSansPro-Regular' }}>
+                    Updating...
+                </Text>
                 </View>
               </View>
             </Modal>
@@ -244,7 +252,9 @@ class MoneyDetailsScreen extends Component {
               <View style={styles.loadingModalContainer} >
                 <View style={styles.loadingModal}>
                   <Spinner color='#eeeeee' size={27} style={{ marginRight: 0 }} />
-                  <Text style={{ color: '#eeeeee', fontSize: 15 }}>Deleting...</Text>
+                  <Text style={{ color: '#eeeeee', fontSize: 17, fontFamily: 'SourceSansPro-Regular' }}>
+                    Deleting...
+                </Text>
                 </View>
               </View>
             </Modal>
@@ -262,7 +272,7 @@ class MoneyDetailsScreen extends Component {
                 ></TouchableOpacity>
                 <View style={styles.innerTransConfirmationModal}>
                   <View style={styles.transInputContainer}>
-                    <Text numberOfLines={1} style={{ color: '#fff', fontWeight: 'bold', fontSize: 20, paddingRight: 7 }}>
+                    <Text numberOfLines={1} style={{ color: '#eee', fontFamily: 'SourceSansPro-Bold', fontSize: 22, paddingRight: 7 }}>
                       {
                         this.state.transType === 'send' ?
                           "Sending to " + this.props.name + "..." :
@@ -275,7 +285,7 @@ class MoneyDetailsScreen extends Component {
                         ref={ref => this.transInputRef = ref}
                         style={styles.amountInput}
                         placeholder="Specify the amount"
-                        placeholderTextColor="#888"
+                        placeholderTextColor="#aaa"
                         keyboardType="decimal-pad"
                         onChangeText={transAmount => this.setState({ transAmount })}
                       />
@@ -289,7 +299,7 @@ class MoneyDetailsScreen extends Component {
                         this.setState({ transConfirmationModalVisible: false, transAmount: '', transType: '' })
                       }}
                     >
-                      <Text style={{ marginLeft: 8, fontWeight: 'bold', color: '#fff', fontSize: 20 }}>
+                      <Text style={{ marginLeft: 8, fontFamily: 'SourceSansPro-Bold', color: '#fff', fontSize: 22 }}>
                         Cancel
                   </Text>
                     </TouchableOpacity>
@@ -323,9 +333,9 @@ class MoneyDetailsScreen extends Component {
                       </View>
                       <Text style={{
                         marginLeft: 8,
-                        fontWeight: 'bold',
+                        fontFamily: 'SourceSansPro-Bold',
                         color: this.state.transType === 'send' ? '#de3b5b' : "#008ee0",
-                        fontSize: 20
+                        fontSize: 22
                       }}>
                         {this.state.transType === 'send' ? "Send" : "Receive"}
                       </Text>
@@ -406,10 +416,10 @@ const styles = StyleSheet.create({
     height: height / 10
   },
   amountText: {
-    paddingHorizontal: width / 20,
+    paddingHorizontal: width / 18,
     color: '#ffffff',
-    fontSize: 44,
-    fontWeight: 'bold'
+    fontSize: 50,
+    fontFamily: 'SourceSansPro-Bold'
   },
   transNumberContainer: {
     flex: 1,
@@ -466,8 +476,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   transText: {
+    fontFamily: 'SourceSansPro-SemiBold',
     color: '#9cafba',
-    fontSize: 10.5
+    fontSize: 10.8
   },
   transListContainer: {
     flex: 1
@@ -507,7 +518,8 @@ const styles = StyleSheet.create({
   },
   amountInput: {
     backgroundColor: 'transparent',
-    fontSize: 16,
+    fontSize: 17,
+    fontFamily: 'SourceSansPro-Regular',
     color: '#fff',
     borderBottomWidth: 0.5,
     paddingBottom: 3,

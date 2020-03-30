@@ -35,7 +35,9 @@ class MoneyAddScreen extends Component {
             <View style={[styles.loadingModalContainer]} >
               <View style={styles.loadingModal}>
                 <Spinner color='#eeeeee' size={27} style={{ marginRight: 0 }} />
-                <Text style={{ color: '#eeeeee', fontSize: 15 }}>Adding...</Text>
+                <Text style={{ color: '#eeeeee', fontSize: 17, fontFamily: 'SourceSansPro-Regular' }}>
+                  Adding...
+                </Text>
               </View>
             </View>
           </Modal>
@@ -44,7 +46,7 @@ class MoneyAddScreen extends Component {
               <Ionicons name="md-arrow-back" size={26} color="#fff" />
             </TouchableOpacity>
             <View style={styles.titleContainer}>
-              <Text numberOfLines={1} style={{ color: '#fff', fontSize: 22.5, fontWeight: 'bold' }}>
+              <Text numberOfLines={1} style={{ color: '#fff', fontSize: 25, fontFamily: 'SourceSansPro-SemiBold' }}>
                 Add Account
               </Text>
             </View>
@@ -54,7 +56,7 @@ class MoneyAddScreen extends Component {
               <MyInput
                 placeHolder="Name"
                 leftIcon='ios-person'
-                style={{ fontSize: 16 }}
+                style={{ fontSize: 17, paddingRight: 15 }}
                 inputContainerStyle={{ marginTop: 15 }}
                 value={name}
                 autoCapitalize="words"
@@ -64,7 +66,7 @@ class MoneyAddScreen extends Component {
                 placeHolder="How much money?"
                 leftIcon='ios-cash'
                 inputContainerStyle={{ marginTop: 10 }}
-                style={{ fontSize: 16 }}
+                style={{ fontSize: 17, paddingRight: 15 }}
                 value={amount}
                 keyboardType="decimal-pad"
                 onChangeText={amount => this.setState({ amount })}
@@ -74,7 +76,7 @@ class MoneyAddScreen extends Component {
                 placeHolder="Phone number (optional)"
                 inputContainerStyle={{ marginTop: 10 }}
                 leftIcon='ios-call'
-                style={{ fontSize: 16 }}
+                style={{ fontSize: 17, paddingRight: 15 }}
                 value={phone}
                 onChangeText={phone => this.setState({ phone })}
               />
@@ -89,7 +91,7 @@ class MoneyAddScreen extends Component {
                   checked={status === 'ME'}
                   onPress={() => { this.setState({ status: 'ME' }) }}
                 />
-                <Text style={{ fontSize: 15, fontWeight: 'bold', color: '#fff' }}>FOR ME</Text>
+                <Text style={{ fontSize: 17, fontFamily: 'SourceSansPro-Bold', color: '#f7f7f7' }}>FOR ME</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 activeOpacity={1}
@@ -103,7 +105,7 @@ class MoneyAddScreen extends Component {
                   checked={status === 'HIM'}
                   onPress={() => { this.setState({ status: 'HIM' }) }}
                 />
-                <Text style={{ fontSize: 15, fontWeight: 'bold', color: '#fff' }}>FOR HIM</Text>
+                <Text style={{ fontSize: 17, fontFamily: 'SourceSansPro-Bold', color: '#f7f7f7' }}>FOR HIM</Text>
               </TouchableOpacity>
             </View>
             <View style={styles.addButtonView}>
@@ -111,10 +113,10 @@ class MoneyAddScreen extends Component {
                 disabled={this.isAddDisabled()}
                 disabledColor='#355973'
                 color='#008ee0'
-                textStyle={{ fontSize: 18 }}
+                textStyle={{ fontSize: 20 }}
                 style={[styles.addButton, { marginBottom: 0 }]}
                 onPress={() => {
-                  return this.props.addMoneyAccount(this.props.initialStackId, this.props.componentId, { name, phone, status, amount: amount || 0 })
+                  return this.props.addMoneyAccount(this.props.componentId, { name, phone, status, amount: amount || 0 })
                 }}
               >Add</MyButton>
             </View>
@@ -191,8 +193,8 @@ const styles = StyleSheet.create({
 
 const mapDispatchToProps = dispatch => {
   return {
-    addMoneyAccount: (initialStackId, componentId, { name, phone, status, amount }) => (
-      dispatch(addMoneyAccount(initialStackId, componentId, { name, phone, status, amount }))
+    addMoneyAccount: (componentId, { name, phone, status, amount }) => (
+      dispatch(addMoneyAccount(componentId, { name, phone, status, amount }))
     )
   }
 }

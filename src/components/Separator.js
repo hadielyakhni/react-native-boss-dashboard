@@ -18,9 +18,9 @@ const styles = {
     marginLeft: 1
   },
   text: {
-    fontSize: 11.5,
-    color: '#404040',
-    fontWeight: 'bold'
+    fontSize: 12,
+    color: 'rgba(255,255,255,0.8)',
+    fontFamily: 'SourceSansPro-Regular'
   }
 }
 

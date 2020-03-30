@@ -35,10 +35,10 @@ class EmployeeDetailsScreen extends Component {
             >
               <View style={styles.modal}>
                 <View style={styles.upperModal}>
-                  <Text style={{ fontWeight: 'bold', marginBottom: 7, textAlign: 'center', color: '#eeeeee', fontSize: 17 }}>
+                  <Text style={{ marginBottom: 7, textAlign: 'center', color: '#eeeeee', fontSize: 18, fontFamily: 'SourceSansPro-Regular' }}>
                     Delete this employee?
                   </Text>
-                  <Text style={{ fontWeight: 'bold', textAlign: 'center', color: '#eeeeee', fontSize: 15 }}>
+                  <Text style={{ textAlign: 'center', color: '#eeeeee', fontSize: 18, fontFamily: 'SourceSansPro-Regular' }}>
                     This action cannot be undo.
                   </Text>
                 </View>
@@ -49,7 +49,9 @@ class EmployeeDetailsScreen extends Component {
                       this.setState({ modalVisible: false });
                     }}
                     style={[styles.modalButton, { borderBottomLeftRadius: 4 }]}>
-                    <Text style={{ color: '#eeeeee', fontSize: 18, fontWeight: 'bold' }}>Cancel</Text>
+                    <Text style={{ color: '#eeeeee', fontSize: 18, fontFamily: 'SourceSansPro-Regular' }}>
+                      Cancel
+                    </Text>
                   </TouchableOpacity>
                   <TouchableOpacity
                     activeOpacity={0.8}
@@ -58,7 +60,9 @@ class EmployeeDetailsScreen extends Component {
                       this.props.deleteEmployee(this.props.componentId, { uid: this.uid })
                     }}
                     style={[styles.modalButton, { borderBottomRightRadius: 4 }]}>
-                    <Text style={{ color: '#e65100', fontSize: 18, fontWeight: 'bold' }}>Delete</Text>
+                    <Text style={{ color: '#e65100', fontSize: 18, fontFamily: 'SourceSansPro-Regular' }}>
+                      Delete
+                    </Text>
                   </TouchableOpacity>
                 </View>
               </View>
@@ -71,7 +75,9 @@ class EmployeeDetailsScreen extends Component {
             <View style={styles.loadingModalContainer} >
               <View style={styles.loadingModal}>
                 <Spinner color='#eeeeee' size={27} style={{ marginRight: 0 }} />
-                <Text style={{ color: '#eeeeee', fontSize: 15 }}>Updating...</Text>
+                <Text style={{ color: '#eeeeee', fontSize: 17, fontFamily: 'SourceSansPro-Regular' }}>
+                  Updating...
+                </Text>
               </View>
             </View>
           </Modal>
@@ -82,25 +88,31 @@ class EmployeeDetailsScreen extends Component {
             <View style={[styles.loadingModalContainer]} >
               <View style={styles.loadingModal}>
                 <Spinner color='#eeeeee' size={27} style={{ marginRight: 0 }} />
-                <Text style={{ color: '#eeeeee', fontSize: 15 }}>Deleting...</Text>
+                <Text style={{ color: '#eeeeee', fontSize: 17, fontFamily: 'SourceSansPro-Regular' }}>
+                  Deleting...
+                </Text>
               </View>
             </View>
           </Modal>
           <View style={styles.header}>
-            <TouchableOpacity activeOpacity={0.85} onPress={() => Navigation.pop(this.props.componentId)} style={styles.backIconContainer}>
+            <TouchableOpacity
+              activeOpacity={0.85}
+              onPress={() => Navigation.pop(this.props.componentId)}
+              style={styles.backIconContainer}
+            >
               <Ionicons name="md-arrow-back" size={26} color="#fff" />
             </TouchableOpacity>
             <View style={styles.titleContainer}>
-              <Text numberOfLines={1} style={{ color: '#fff', fontSize: 22.5, fontWeight: 'bold' }}>
-                Task Details
-            </Text>
+              <Text numberOfLines={1} style={{ color: '#fff', fontSize: 25, fontFamily: 'SourceSansPro-SemiBold', textAlign: 'left' }}>
+                {this.props.data.name}
+              </Text>
             </View>
           </View>
           <View style={{ flex: 1, paddingHorizontal: 12 }}>
             <MyInput
               leftIcon='ios-person'
               value={this.state.name}
-              style={{ fontSize: 16 }}
+              style={{ fontSize: 16, paddingRight: 15 }}
               isSecure={false}
               placeHolder='Name'
               isAutoCorrect={false}
@@ -109,7 +121,7 @@ class EmployeeDetailsScreen extends Component {
             <MyInput
               value={this.state.role}
               leftIcon='ios-briefcase'
-              style={{ fontSize: 16 }}
+              style={{ fontSize: 16, paddingRight: 15 }}
               isSecure={false}
               placeHolder='Role'
               isAutoCorrect={false}
@@ -119,7 +131,7 @@ class EmployeeDetailsScreen extends Component {
               keyboardType="decimal-pad"
               value={this.state.salary}
               leftIcon='ios-cash'
-              style={{ fontSize: 16 }}
+              style={{ fontSize: 16, paddingRight: 15 }}
               isSecure={false}
               placeHolder='Salary'
               isAutoCorrect={false}
@@ -132,7 +144,7 @@ class EmployeeDetailsScreen extends Component {
               rightIcon='ios-arrow-forward'
               rightIconStyle={{ color: '#c5c5c5' }}
               onRightIconPress={() => Linking.openURL(`tel:${this.state.phone}`)}
-              style={{ fontSize: 16 }}
+              style={{ fontSize: 16, paddingRight: 15 }}
               isSecure={false}
               placeHolder='Phone'
               isAutoCorrect={false}
@@ -145,7 +157,7 @@ class EmployeeDetailsScreen extends Component {
               rightIcon='ios-arrow-forward'
               rightIconStyle={{ color: '#c5c5c5' }}
               onRightIconPress={() => { Linking.openURL(`mailto:${this.state.email}`) }}
-              style={{ fontSize: 16 }}
+              style={{ fontSize: 16, paddingRight: 15 }}
               isSecure={false}
               placeHolder='Email'
               isAutoCorrect={false}

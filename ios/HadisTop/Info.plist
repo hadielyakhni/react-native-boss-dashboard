@@ -76,6 +76,12 @@
 		<string>rubicon-icon-font.ttf</string>
 		<string>Righteous.ttf</string>
 		<string>PermanentMarker-Regular.ttf</string>
+		<string>SourceSansPro-Black.ttf</string>
+		<string>SourceSansPro-Bold.ttf</string>
+		<string>SourceSansPro-ExtraLight.ttf</string>
+		<string>SourceSansPro-Light.ttf</string>
+		<string>SourceSansPro-Regular.ttf</string>
+		<string>SourceSansPro-SemiBold.ttf</string>
 	</array>
 </dict>
 </plist>

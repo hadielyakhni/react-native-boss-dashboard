@@ -65,7 +65,9 @@ export const goToMain = () => Promise.all([
                 iconColor: '#c8d2da',
                 selectedIconColor: '#008ee0',
                 text: 'Tasks',
-                selectedFontSize: 12,
+                fontFamily: 'SourceSansPro-Regular',
+                selectedFontSize: 14,
+                fontSize: 12,
                 selectedTextColor: '#008ee0'
               },
               topBar: {
@@ -89,7 +91,9 @@ export const goToMain = () => Promise.all([
                 iconColor: '#c8d2da',
                 selectedIconColor: '#008ee0',
                 text: 'Employees',
-                selectedFontSize: 12,
+                fontFamily: 'SourceSansPro-Regular',
+                selectedFontSize: 14,
+                fontSize: 12,
                 selectedTextColor: '#008ee0'
               },
               topBar: {
@@ -113,7 +117,9 @@ export const goToMain = () => Promise.all([
                 iconColor: '#c8d2da',
                 selectedIconColor: '#008ee0',
                 text: 'Wallet',
-                selectedFontSize: 12,
+                fontFamily: 'SourceSansPro-Regular',
+                selectedFontSize: 14,
+                fontSize: 12,
                 selectedTextColor: '#008ee0'
               },
               topBar: {
@@ -137,21 +143,13 @@ export const goToMain = () => Promise.all([
                 iconColor: '#c8d2da',
                 selectedIconColor: '#008ee0',
                 text: 'Profile',
-                selectedFontSize: 12,
+                fontFamily: 'SourceSansPro-Regular',
+                selectedFontSize: 14,
+                fontSize: 12,
                 selectedTextColor: '#008ee0'
               },
               topBar: {
-                background: {
-                  color: '#000'
-                },
-                title: {
-                  fontSize: 21,
-                  text: 'My Profile',
-                  color: '#fff'
-                },
-                backButton: {
-                  color: '#fff'
-                }
+                visible: false
               }
             }
           }

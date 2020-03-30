@@ -31,7 +31,9 @@ class MyProfileScreen extends Component {
           >
             <View style={styles.modal}>
               <View style={styles.upperModal}>
-                <Text style={{ color: '#fff', fontSize: 15 }}>Log out of The Boss?</Text>
+                <Text style={{ color: '#fff', fontSize: 18, fontFamily: 'SourceSansPro-Regular' }}>
+                  Log out of Boss Dasboard?
+                </Text>
               </View>
               <TouchableOpacity
                 onPress={() => {
@@ -48,14 +50,14 @@ class MyProfileScreen extends Component {
                 activeOpacity={0.6}
                 style={styles.centerModal}
               >
-                <Text style={{ color: '#de3b5b', fontSize: 18, fontWeight: 'bold' }}>Logout</Text>
+                <Text style={{ color: '#de3b5b', fontSize: 18, fontFamily: 'SourceSansPro-SemiBold' }}>Logout</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => this.setState({ modalVisible: false })}
                 activeOpacity={0.6}
                 style={styles.lowerModal}
               >
-                <Text style={{ color: '#fff' }}>Cancel</Text>
+                <Text style={{ color: '#fff', fontSize: 18, fontFamily: 'SourceSansPro-Regular' }}>Cancel</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -67,17 +69,19 @@ class MyProfileScreen extends Component {
           <View style={styles.loadingModalContainer} >
             <View style={styles.loadingModal}>
               <Spinner color='#cccccc' size={26} style={{ marginRight: 15 }} />
-              <Text style={{ color: '#cccccc', fontSize: 16 }}>logging out...</Text>
+              <Text style={{ color: '#eeeeee', fontSize: 17, fontFamily: 'SourceSansPro-Regular' }}>
+                logging out...
+              </Text>
             </View>
           </View>
         </Modal>
-        <Text style={{ color: '#fff', fontWeight: 'bold', fontSize: 24 }}>
-          {
-            this.props.user && this.props.user.additionalUserInfo.profile ?
-              'Welcome ' + this.props.user.additionalUserInfo.profile.name :
-              null
-          }
-        </Text>
+        <View style={styles.header}>
+          <View style={styles.titleContainer}>
+            <Text numberOfLines={1} style={{ color: '#fff', fontSize: 26, fontFamily: 'SourceSansPro-SemiBold' }}>
+              Settings
+            </Text>
+          </View>
+        </View>
         <TouchableOpacity
           style={styles.logoutButton}
           onPress={() => {
@@ -98,7 +102,19 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#000',
     justifyContent: 'space-between',
-    padding: 15
+    paddingHorizontal: 15,
+    paddingBottom: 15
+  },
+  header: {
+    height: 56,
+    flexDirection: 'row',
+    backgroundColor: '#000'
+  },
+  titleContainer: {
+    flex: 1,
+    paddingLeft: 12,
+    justifyContent: 'center',
+    backgroundColor: '#000'
   },
   logoutButton: {
     backgroundColor: '#de3b5b',
@@ -109,26 +125,26 @@ const styles = StyleSheet.create({
   },
   logoutText: {
     color: '#fff',
-    fontSize: 18,
-    fontWeight: 'bold'
+    fontSize: 19,
+    fontFamily: 'SourceSansPro-SemiBold'
   },
   modal: {
     backgroundColor: '#171717',
-    width: 250,
-    height: 175,
+    height: 168,
     alignSelf: 'center',
     borderRadius: 4
   },
   upperModal: {
-    height: 75,
+    height: 70,
     backgroundColor: '#171717',
     borderTopLeftRadius: 4,
     borderTopRightRadius: 4,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    paddingHorizontal: 25
   },
   centerModal: {
-    height: 50,
+    height: 49,
     backgroundColor: '#171717',
     justifyContent: 'center',
     alignItems: 'center',
@@ -138,7 +154,7 @@ const styles = StyleSheet.create({
     borderTopColor: '#282828'
   },
   lowerModal: {
-    height: 50,
+    height: 49,
     backgroundColor: '#171717',
     justifyContent: 'center',
     alignItems: 'center',

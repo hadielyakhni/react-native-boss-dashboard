@@ -58,7 +58,7 @@ export default class EmployeeCard extends PureComponent {
             <Text numberOfLines={1} style={styles.name}>
               {name}
             </Text>
-            <Text style={{ fontWeight: 'bold', color: amount >= 0 ? '#008ee0' : '#de3b5b', fontSize: 16 }}>
+            <Text style={{ fontFamily: 'SourceSansPro-SemiBold', color: amount >= 0 ? '#008ee0' : '#de3b5b', fontSize: 18 }}>
               {Math.abs(amount) + ' '}
               <FontAwesome5 name="coins" color={amount >= 0 ? '#008ee0' : '#de3b5b'} size={11} />
             </Text>
@@ -98,9 +98,9 @@ const styles = StyleSheet.create({
   name: {
     borderColor: '#121212',
     borderWidth: 1,
-    fontSize: 20,
+    fontSize: 21,
     color: '#fff',
-    fontWeight: 'bold',
+    fontFamily: 'SourceSansPro-SemiBold',
     marginRight: Dimensions.get('window').width / 12
   },
   amount: {

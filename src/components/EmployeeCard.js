@@ -41,10 +41,7 @@ export default class EmployeeCard extends PureComponent {
             Navigation.push(componentId, {
               component: {
                 name: 'employeeDetails',
-                passProps: { data, uid },
-                options: {
-                  topBar: { title: { text: data.name } }
-                }
+                passProps: { data, uid }
               }
             })
           }}
@@ -54,8 +51,9 @@ export default class EmployeeCard extends PureComponent {
               {data.name}
             </Text>
             <Text numberOfLines={1} style={{
-              color: '#c5c5c5',
-              fontSize: 16,
+              fontFamily: 'SourceSansPro-Light',
+              color: '#eee',
+              fontSize: 17,
               marginRight: Dimensions.get('window').width / 8
             }}>
               {data.role}
@@ -99,9 +97,9 @@ const styles = StyleSheet.create({
   name: {
     borderColor: '#121212',
     borderWidth: 1,
-    fontSize: 20,
+    fontSize: 21,
     color: '#fff',
-    fontWeight: 'bold',
+    fontFamily: 'SourceSansPro-SemiBold',
     marginRight: Dimensions.get('window').width / 12
   },
   amount: {

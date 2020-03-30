@@ -23,20 +23,20 @@ const TransactionCard = ({ data }) => {
       </View>
       <View style={styles.dataContainer}>
         <View style={styles.upperDataContainer}>
-          <Text style={{ fontSize: 18, color: '#fff', fontWeight: 'bold' }}>
+          <Text style={{ fontSize: 20, color: '#f7f7f7', fontFamily: 'SourceSansPro-SemiBold' }}>
             {status}
           </Text>
           <Text ellipsizeMode="middle" numberOfLines={1} style={{
             flex: 1,
             textAlign: 'right',
             marginLeft: 24,
-            fontSize: 18,
-            fontWeight: 'bold',
+            fontSize: 19.5,
+            fontFamily: 'SourceSansPro-Bold',
             color: status === 'Sent' ? "#de3b5b" : "#008ee0"
           }}>
             {transAmount + " "}
           </Text>
-          <View style={{ justifyContent: 'flex-end' }}>
+          <View style={{ justifyContent: 'flex-end', marginLeft: 2 }}>
             <FontAwesome5 name="coins" color={status === 'Sent' ? "#de3b5b" : "#008ee0"} size={13} />
           </View>
         </View>
@@ -76,6 +76,7 @@ const styles = StyleSheet.create({
   },
   dataContainer: {
     height: 48,
+    paddingLeft: 4,
     flex: 1
   },
   upperDataContainer: {
@@ -91,8 +92,8 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   lowerDataContainerText: {
-    fontSize: 12,
-    fontWeight: '100',
-    color: 'rgba(140, 140, 140 , 0.75)'
+    fontSize: 13,
+    fontFamily: 'SourceSansPro-Light',
+    color: '#aaa'
   }
 })

@@ -53,23 +53,23 @@ class MyMoneyScreen extends Component {
             <View style={{ marginBottom: 40 }}>
               <View style={{ paddingHorizontal: 14, marginBottom: 5 }}>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                  <Text style={{ color: '#fff', fontSize: 26, fontWeight: 'bold' }}>
+                  <Text style={{ color: '#fff', fontSize: 26, fontFamily: 'SourceSansPro-Bold' }}>
                     YOU ARE OWED
                   </Text>
                   <Text
                     numberOfLines={1}
                     ellipsizeMode="middle"
-                    style={{ textAlign: 'right', marginLeft: 15, flex: 1, color: '#008ee0', fontSize: 25, fontWeight: 'bold' }}
+                    style={{ textAlign: 'right', marginLeft: 15, flex: 1, color: '#008ee0', fontSize: 27, fontFamily: 'SourceSansPro-Bold' }}
                   >
                     {pTotal + ' '}
                   </Text>
-                  <View style={{ justifyContent: 'center' }}>
+                  <View style={{ justifyContent: 'center', marginLeft: 2 }}>
                     <FontAwesome5 name="coins" color="#008ee0" size={15} />
                   </View>
                 </View>
                 <View style={{ flexDirection: 'row', marginVertical: 10 }}>
-                  <Icon name='md-person' style={{ color: '#0088e0', fontSize: 26, marginRight: 15 }} />
-                  <Text style={{ color: 'rgba(255, 255, 255, 0.5)', fontSize: 18 }}>
+                  <Icon name='md-person' style={{ color: '#0088e0', fontSize: 24, marginRight: 12 }} />
+                  <Text style={{ color: 'rgba(255, 255, 255, 0.7)', fontSize: 19, fontFamily: 'SourceSansPro-Regular' }}>
                     by {pAccounts.length} people
                   </Text>
                 </View>
@@ -84,23 +84,23 @@ class MyMoneyScreen extends Component {
             <View style={{ marginBottom: 15 }}>
               <View style={{ paddingHorizontal: 14, marginBottom: 5 }}>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                  <Text style={{ color: '#fff', fontSize: 26, fontWeight: 'bold' }}>
+                  <Text style={{ color: '#fff', fontSize: 26, fontFamily: 'SourceSansPro-Bold' }}>
                     YOU OWE
                   </Text>
                   <Text
                     numberOfLines={1}
                     ellipsizeMode="middle"
-                    style={{ textAlign: 'right', marginLeft: 15, flex: 1, color: '#de3b5b', fontSize: 25, fontWeight: 'bold' }}
+                    style={{ textAlign: 'right', marginLeft: 15, flex: 1, color: '#de3b5b', fontSize: 27, fontFamily: 'SourceSansPro-Bold' }}
                   >
                     {nTotal + ' '}
                   </Text>
-                  <View style={{ justifyContent: 'center' }}>
+                  <View style={{ justifyContent: 'center', marginLeft: 2 }}>
                     <FontAwesome5 name="coins" color="#de3b5b" size={15} />
                   </View>
                 </View>
                 <View style={{ flexDirection: 'row', marginVertical: 10 }}>
-                  <Icon name='md-person' style={{ color: '#de3b5b', fontSize: 26, marginRight: 15 }} />
-                  <Text style={{ color: 'rgba(255, 255, 255, 0.5)', fontSize: 18 }}>
+                  <Icon name='md-person' style={{ color: '#de3b5b', fontSize: 24, marginRight: 15 }} />
+                  <Text style={{ color: 'rgba(255,255,255,0.7)', fontSize: 19, fontFamily: 'SourceSansPro-Regular' }}>
                     to {nAccounts.length} people
                   </Text>
                 </View>
@@ -135,7 +135,7 @@ class MyMoneyScreen extends Component {
       <View style={styles.container}>
         <View style={styles.header}>
           <View style={styles.titleContainer}>
-            <Text numberOfLines={1} style={{ color: '#fff', fontSize: 24, fontWeight: 'bold' }}>
+            <Text numberOfLines={1} style={{ color: '#fff', fontSize: 26, fontFamily: 'SourceSansPro-SemiBold' }}>
               My Wallet
             </Text>
           </View>
@@ -145,7 +145,7 @@ class MyMoneyScreen extends Component {
             editable={this.props.fetchingAccounts ? false : true}
             value={this.state.searchWord}
             style={styles.input}
-            placeholderTextColor='rgba(255, 255, 255, 0.6)'
+            placeholderTextColor='rgba(255, 255, 255, 0.7)'
             placeholder='Enter a name'
             onChangeText={this.changeSearchWord}
           />
@@ -161,10 +161,7 @@ class MyMoneyScreen extends Component {
           onPress={() => {
             Navigation.push(this.props.componentId, {
               component: {
-                name: 'moneyAdd',
-                passProps: {
-                  initialStackId: this.props.componentId
-                }
+                name: 'moneyAdd'
               }
             })
           }}
@@ -195,7 +192,7 @@ const styles = StyleSheet.create({
   },
   addButton: {
     position: 'absolute',
-    right: 10,
+    right: 14,
     bottom: 20,
     backgroundColor: '#008ee0',
     height: 55,
@@ -220,9 +217,10 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     flex: 1,
     marginHorizontal: 5,
-    fontSize: 16,
     color: '#e3e3e3',
-    alignItems: 'center'
+    alignItems: 'center',
+    fontSize: 17,
+    fontFamily: 'SourceSansPro-Regular'
   },
   searchIcon: {
     fontSize: 26,

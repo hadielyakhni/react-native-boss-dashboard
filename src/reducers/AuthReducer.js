@@ -5,6 +5,7 @@ const INITIAL_STATE = {
   loading: false,
   user: null,
   facebookButtonDisabled: false,
+  sendingPasswordResetEmail: false,
   showPasswordResetSuccess: false
 }
 
@@ -26,8 +27,10 @@ export default (state = INITIAL_STATE, action) => {
       return { ...state, facebookButtonDisabled: true }
     case 'facebook_auth_error':
       return { ...state, facebookButtonDisabled: false, error: action.payload }
+    case 'send_password_reset_email_start':
+      return { ...state, sendingPasswordResetEmail: true }
     case 'password_reset_done':
-      return { ...state, showPasswordResetSuccess: true }
+      return { ...state, sendingPasswordResetEmail: false, showPasswordResetSuccess: true }
     default:
       return state
   }

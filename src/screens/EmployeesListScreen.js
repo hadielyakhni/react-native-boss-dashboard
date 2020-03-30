@@ -58,7 +58,7 @@ class EmployeesListScreen extends Component {
       <View style={styles.container}>
         <View style={styles.header}>
           <View style={styles.titleContainer}>
-            <Text numberOfLines={1} style={{ color: '#fff', fontSize: 24, fontWeight: 'bold' }}>
+            <Text numberOfLines={1} style={{ color: '#fff', fontSize: 26, fontFamily: 'SourceSansPro-SemiBold' }}>
               My Employees
             </Text>
           </View>
@@ -68,7 +68,7 @@ class EmployeesListScreen extends Component {
             editable={this.props.fetchingEmployees ? false : true}
             value={this.state.searchWord}
             style={styles.input}
-            placeholderTextColor='rgba(255, 255, 255, 0.6)'
+            placeholderTextColor='rgba(255, 255, 255, 0.7)'
             placeholder='Enter a name'
             onChangeText={this.changeSearchWord}
           />
@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
   },
   addButton: {
     position: 'absolute',
-    right: 10,
+    right: 14,
     bottom: 20,
     backgroundColor: '#008ee0',
     height: 55,
@@ -147,9 +147,10 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     flex: 1,
     marginHorizontal: 5,
-    fontSize: 16,
     color: '#e3e3e3',
-    alignItems: 'center'
+    alignItems: 'center',
+    fontSize: 17,
+    fontFamily: 'SourceSansPro-Regular'
   },
   searchIcon: {
     fontSize: 26,

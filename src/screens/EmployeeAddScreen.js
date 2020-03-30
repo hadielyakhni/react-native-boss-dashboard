@@ -3,6 +3,7 @@ import { Text, StyleSheet, View, ActivityIndicator, InteractionManager, Modal, T
 import { connect } from 'react-redux'
 import { addEmployee, resetEmployee } from '../actions'
 import { Spinner } from 'native-base'
+import { Navigation } from 'react-native-navigation'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import MyInput from '../components/MyInput'
 import MyButton from '../components/MyButton'
@@ -33,7 +34,9 @@ class EmployeeAddScreen extends Component {
             <View style={[styles.loadingModalContainer]} >
               <View style={styles.loadingModal}>
                 <Spinner color='#eeeeee' size={27} style={{ marginRight: 0 }} />
-                <Text style={{ color: '#eeeeee', fontSize: 15 }}>Adding...</Text>
+                <Text style={{ color: '#eeeeee', fontSize: 17, fontFamily: 'SourceSansPro-Regular' }}>
+                  Adding...
+                </Text>
               </View>
             </View>
           </Modal>
@@ -47,7 +50,7 @@ class EmployeeAddScreen extends Component {
                 <Ionicons name="md-arrow-back" size={26} color="#fff" />
               </TouchableOpacity>
               <View style={styles.titleContainer}>
-                <Text numberOfLines={1} style={{ color: '#fff', fontSize: 22.5, fontWeight: 'bold' }}>
+                <Text numberOfLines={1} style={{ color: '#fff', fontSize: 25, fontFamily: 'SourceSansPro-SemiBold' }}>
                   Add Empployee
               </Text>
               </View>
@@ -56,7 +59,7 @@ class EmployeeAddScreen extends Component {
               <MyInput
                 value={this.state.name}
                 leftIcon='ios-person'
-                style={{ fontSize: 16 }}
+                style={{ fontSize: 17, paddingRight: 15 }}
                 isSecure={false}
                 placeHolder='Name'
                 isAutoCorrect={false}
@@ -66,7 +69,7 @@ class EmployeeAddScreen extends Component {
               <MyInput
                 value={this.state.role}
                 leftIcon='ios-briefcase'
-                style={{ fontSize: 16 }}
+                style={{ fontSize: 17, paddingRight: 15 }}
                 isSecure={false}
                 placeHolder='Role'
                 isAutoCorrect={false}
@@ -77,7 +80,7 @@ class EmployeeAddScreen extends Component {
                 keyboardType="decimal-pad"
                 value={this.state.salary}
                 leftIcon='ios-cash'
-                style={{ fontSize: 16 }}
+                style={{ fontSize: 17, paddingRight: 15 }}
                 isSecure={false}
                 placeHolder='Salary'
                 isAutoCorrect={false}
@@ -88,7 +91,7 @@ class EmployeeAddScreen extends Component {
                 keyboardType="number-pad"
                 value={this.state.phone}
                 leftIcon='ios-call'
-                style={{ fontSize: 16 }}
+                style={{ fontSize: 16, paddingRight: 15 }}
                 isSecure={false}
                 placeHolder='Phone'
                 isAutoCorrect={false}
@@ -99,19 +102,16 @@ class EmployeeAddScreen extends Component {
                 keyboardType="email-address"
                 value={this.state.email}
                 leftIcon='ios-mail'
-                style={{ fontSize: 16 }}
+                style={{ fontSize: 16, paddingRight: 15 }}
                 isSecure={false}
-                placeHolder='Email'
+                placeHolder='Email (optional)'
                 isAutoCorrect={false}
                 onChangeText={value => this.setState({ email: value })}
               />
-              <Text style={{ marginTop: 10, fontSize: 12, fontWeight: 'bold', fontStyle: 'italic', color: '#bbb' }}>
-                Email is not required! **
-              </Text>
             </View>
             <View style={{ height: 125, justifyContent: 'center' }}>
               <MyButton
-                style={{ marginBottom: 0, marginHorizontal: 10, borderRadius: 10, height: 56 }}
+                style={{ marginBottom: 0, marginHorizontal: 8, borderRadius: 10, height: 56 }}
                 disabled={this.isAddDisabled()}
                 disabledColor='#355973'
                 color='#008ee0'

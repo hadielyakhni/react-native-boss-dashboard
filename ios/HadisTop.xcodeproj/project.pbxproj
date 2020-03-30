@@ -5,6 +5,7 @@
 	};
 	objectVersion = 46;
 	objects = {
+
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* HadisTopTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* HadisTopTests.m */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
@@ -52,6 +53,12 @@
 		EC58FFD5D0C24B0586561799 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5D444E800A254FEDAB954B1A /* Zocial.ttf */; };
 		4A74D98ECF4F46A59A769566 /* Righteous.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 68F18220A22B4C168BE9FB71 /* Righteous.ttf */; };
 		9324B85837EC40D4B4A1304B /* PermanentMarker-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A88A950908B246A88059ECAD /* PermanentMarker-Regular.ttf */; };
+		307781B5A9884A8389C7C7D0 /* SourceSansPro-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EA79F7B97FB748A594F58434 /* SourceSansPro-Black.ttf */; };
+		9C8C664AC9F5486AA38FA777 /* SourceSansPro-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9BE3F4CDB7D64F7E8A32DEDD /* SourceSansPro-Bold.ttf */; };
+		5751FBA4E5494B7FABCA8C1C /* SourceSansPro-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 90390785D9C9408D934BBC61 /* SourceSansPro-ExtraLight.ttf */; };
+		1628A91E3C7F41EBA75E434E /* SourceSansPro-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E59D5A8BBF8B40BCB355B6B7 /* SourceSansPro-Light.ttf */; };
+		DE2D2AF9F31B4F84A9ACD446 /* SourceSansPro-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A417C6845B2A4AD4A6908134 /* SourceSansPro-Regular.ttf */; };
+		B89A77907A7E4A4D9F1334B6 /* SourceSansPro-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A46688F048BE419DB2A245C5 /* SourceSansPro-SemiBold.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -124,6 +131,12 @@
 		5D444E800A254FEDAB954B1A /* Zocial.ttf */ = {isa = PBXFileReference; name = "Zocial.ttf"; path = "../node_modules/native-base/Fonts/Zocial.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		68F18220A22B4C168BE9FB71 /* Righteous.ttf */ = {isa = PBXFileReference; name = "Righteous.ttf"; path = "../src/assets/fonts/Righteous.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		A88A950908B246A88059ECAD /* PermanentMarker-Regular.ttf */ = {isa = PBXFileReference; name = "PermanentMarker-Regular.ttf"; path = "../src/assets/fonts/PermanentMarker-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		EA79F7B97FB748A594F58434 /* SourceSansPro-Black.ttf */ = {isa = PBXFileReference; name = "SourceSansPro-Black.ttf"; path = "../src/assets/fonts/SourceSansPro-Black.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		9BE3F4CDB7D64F7E8A32DEDD /* SourceSansPro-Bold.ttf */ = {isa = PBXFileReference; name = "SourceSansPro-Bold.ttf"; path = "../src/assets/fonts/SourceSansPro-Bold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		90390785D9C9408D934BBC61 /* SourceSansPro-ExtraLight.ttf */ = {isa = PBXFileReference; name = "SourceSansPro-ExtraLight.ttf"; path = "../src/assets/fonts/SourceSansPro-ExtraLight.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		E59D5A8BBF8B40BCB355B6B7 /* SourceSansPro-Light.ttf */ = {isa = PBXFileReference; name = "SourceSansPro-Light.ttf"; path = "../src/assets/fonts/SourceSansPro-Light.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		A417C6845B2A4AD4A6908134 /* SourceSansPro-Regular.ttf */ = {isa = PBXFileReference; name = "SourceSansPro-Regular.ttf"; path = "../src/assets/fonts/SourceSansPro-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		A46688F048BE419DB2A245C5 /* SourceSansPro-SemiBold.ttf */ = {isa = PBXFileReference; name = "SourceSansPro-SemiBold.ttf"; path = "../src/assets/fonts/SourceSansPro-SemiBold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -271,6 +284,12 @@
 				5D444E800A254FEDAB954B1A /* Zocial.ttf */,
 				68F18220A22B4C168BE9FB71 /* Righteous.ttf */,
 				A88A950908B246A88059ECAD /* PermanentMarker-Regular.ttf */,
+				EA79F7B97FB748A594F58434 /* SourceSansPro-Black.ttf */,
+				9BE3F4CDB7D64F7E8A32DEDD /* SourceSansPro-Bold.ttf */,
+				90390785D9C9408D934BBC61 /* SourceSansPro-ExtraLight.ttf */,
+				E59D5A8BBF8B40BCB355B6B7 /* SourceSansPro-Light.ttf */,
+				A417C6845B2A4AD4A6908134 /* SourceSansPro-Regular.ttf */,
+				A46688F048BE419DB2A245C5 /* SourceSansPro-SemiBold.ttf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -449,6 +468,12 @@
 				EC58FFD5D0C24B0586561799 /* Zocial.ttf in Resources */,
 				4A74D98ECF4F46A59A769566 /* Righteous.ttf in Resources */,
 				9324B85837EC40D4B4A1304B /* PermanentMarker-Regular.ttf in Resources */,
+				307781B5A9884A8389C7C7D0 /* SourceSansPro-Black.ttf in Resources */,
+				9C8C664AC9F5486AA38FA777 /* SourceSansPro-Bold.ttf in Resources */,
+				5751FBA4E5494B7FABCA8C1C /* SourceSansPro-ExtraLight.ttf in Resources */,
+				1628A91E3C7F41EBA75E434E /* SourceSansPro-Light.ttf in Resources */,
+				DE2D2AF9F31B4F84A9ACD446 /* SourceSansPro-Regular.ttf in Resources */,
+				B89A77907A7E4A4D9F1334B6 /* SourceSansPro-SemiBold.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

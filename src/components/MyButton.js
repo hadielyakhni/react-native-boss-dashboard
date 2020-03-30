@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
   text: {
     marginHorizontal: 5,
     color: '#fff',
-    fontSize: 15,
-    fontWeight: 'bold'
+    fontSize: 17.8,
+    fontFamily: 'SourceSansPro-SemiBold'
   }
 })

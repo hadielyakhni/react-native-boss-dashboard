@@ -21,7 +21,7 @@ class ToDoDetailsScreen extends Component {
             <Ionicons name="md-arrow-back" size={26} color="#fff" />
           </TouchableOpacity>
           <View style={styles.titleContainer}>
-            <Text numberOfLines={1} style={{ color: '#fff', fontSize: 22.5, fontWeight: 'bold' }}>
+            <Text numberOfLines={1} style={{ color: '#fff', fontSize: 25, fontFamily: 'SourceSansPro-SemiBold' }}>
               Task Details
             </Text>
           </View>
@@ -34,7 +34,7 @@ class ToDoDetailsScreen extends Component {
                 borderTopWidth: 0.5,
                 borderTopColor: '#575757',
                 borderBottomWidth: 0.5,
-                borderBottomColor: '#575757'
+                borderBottomColor: '#575757',
               }]}
               selectionColor='#008ee0'
               placeholder="What would you like to do?"
@@ -82,7 +82,9 @@ class ToDoDetailsScreen extends Component {
               <View style={styles.loadingModalContainer} >
                 <View style={styles.loadingModal}>
                   <Spinner color='#eeeeee' size={27} style={{ marginRight: 0 }} />
-                  <Text style={{ color: '#eeeeee', fontSize: 15 }}>Deleting...</Text>
+                  <Text style={{ color: '#eeeeee', fontSize: 17, fontFamily: 'SourceSansPro-Regular' }}>
+                    Deleting...
+                  </Text>
                 </View>
               </View>
             </Modal>
@@ -122,8 +124,10 @@ const styles = StyleSheet.create({
   },
   input: {
     color: '#fff',
-    fontSize: 15,
-    paddingLeft: 10
+    paddingLeft: 10,
+    paddingRight: 10,
+    fontSize: 17.8,
+    fontFamily: 'SourceSansPro-Regular'
   },
   buttonView: {
     height: 150,

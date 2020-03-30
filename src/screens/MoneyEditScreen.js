@@ -39,7 +39,7 @@ class MoneyEditScreen extends React.PureComponent {
             <Ionicons name="md-arrow-back" size={26} color="#fff" />
           </TouchableOpacity>
           <View style={styles.titleContainer}>
-            <Text numberOfLines={1} style={{ color: '#fff', fontSize: 22.5, fontWeight: 'bold' }}>
+            <Text numberOfLines={1} style={{ color: '#fff', fontSize: 25, fontFamily: 'SourceSansPro-SemiBold', textAlign: 'left' }}>
               Edit Info
           </Text>
           </View>
@@ -48,7 +48,7 @@ class MoneyEditScreen extends React.PureComponent {
           <MyInput
             placeHolder="Name"
             leftIcon='ios-person'
-            style={{ fontSize: 16 }}
+            style={{ fontSize: 17, paddingRight: 15 }}
             inputContainerStyle={{ marginTop: 15 }}
             value={this.state.name}
             autoCapitalize="words"
@@ -59,7 +59,7 @@ class MoneyEditScreen extends React.PureComponent {
             placeHolder="Phone number (optional)"
             inputContainerStyle={{ marginTop: 10 }}
             leftIcon='ios-call'
-            style={{ fontSize: 16 }}
+            style={{ fontSize: 17, paddingRight: 15 }}
             value={this.state.phone}
             onChangeText={phone => this.setState({ phone })}
           />
@@ -67,7 +67,7 @@ class MoneyEditScreen extends React.PureComponent {
         <TouchableOpacity
           activeOpacity={0.8}
           style={[styles.updateButton, {
-            marginBottom: this.state.isKeyboardOpened ? 60 : 15
+            marginBottom: this.state.isKeyboardOpened ? 60 : 25
           }]}
           onPress={() => {
             const { accountId, componentId } = this.props
@@ -75,7 +75,7 @@ class MoneyEditScreen extends React.PureComponent {
             this.props.editAccountInfo(accountId, name.trim(), phone, componentId)
           }}
         >
-          <Text style={{ color: "#fff", fontSize: 22, fontWeight: 'bold' }}>
+          <Text style={{ color: "#fff", fontSize: 20, fontFamily: 'SourceSansPro-SemiBold' }}>
             Save
           </Text>
         </TouchableOpacity>
@@ -93,8 +93,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 4,
     height: 56,
     flexDirection: 'row',
-    backgroundColor: '#000',
-    marginBottom: 6
+    backgroundColor: '#000'
   },
   titleContainer: {
     flex: 1,
@@ -109,8 +108,8 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   mainContainer: {
-    paddingHorizontal: 10,
-    marginTop: 16,
+    paddingHorizontal: 12,
+    marginTop: 10,
     flex: 1
   },
   updateButton: {

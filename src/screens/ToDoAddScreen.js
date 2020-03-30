@@ -40,7 +40,7 @@ class ToDoAddScreen extends Component {
             <Ionicons name="md-arrow-back" size={26} color="#fff" />
           </TouchableOpacity>
           <View style={styles.titleContainer}>
-            <Text numberOfLines={1} style={{ color: '#fff', fontSize: 22.5, fontWeight: 'bold' }}>
+            <Text numberOfLines={1} style={{ color: '#fff', fontSize: 25, fontFamily: 'SourceSansPro-SemiBold' }}>
               Add Task
               </Text>
           </View>
@@ -55,7 +55,6 @@ class ToDoAddScreen extends Component {
                 borderBottomWidth: 0.5,
                 borderBottomColor: '#575757'
               }]}
-              autoFocus
               selectionColor='#008ee0'
               placeholder="What would you like to do?"
               placeholderTextColor="#575755"
@@ -124,8 +123,10 @@ const styles = StyleSheet.create({
   },
   input: {
     color: '#fff',
-    fontSize: 15,
-    paddingLeft: 10
+    paddingLeft: 10,
+    paddingRight: 10,
+    fontSize: 17.8,
+    fontFamily: 'SourceSansPro-Regular'
   },
   addButtonView: {
     height: 125,
@@ -133,8 +134,7 @@ const styles = StyleSheet.create({
   },
   addButton: {
     borderRadius: 10,
-    height: 56,
-    marginHorizontal: 2
+    height: 56
   }
 })
 
