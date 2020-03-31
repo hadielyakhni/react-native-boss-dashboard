@@ -6,8 +6,6 @@ firebase.database().setPersistenceEnabled(true)
 
 registerScreens()
 
-console.disableYellowBox = true
-
 Navigation.events().registerAppLaunchedListener(() => {
   Navigation.setRoot({
     root: {

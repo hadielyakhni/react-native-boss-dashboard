@@ -4,9 +4,11 @@
   "private": true,
   "scripts": {
     "android": "react-native run-android",
+    "android:release": "react-native run-android --variant=release",
     "ios": "react-native run-ios",
     "start": "react-native start",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "postinstall": "node ./android/fixAndroid/android-release-fix.js"
   },
   "dependencies": {
     "@react-native-community/async-storage": "^1.8.1",
