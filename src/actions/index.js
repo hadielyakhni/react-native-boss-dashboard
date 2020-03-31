@@ -57,9 +57,7 @@ export const userAuthenticateWithFacebook = () =>
   async dispatch => {
     try {
       dispatch({ type: 'disable_facebook_button' })
-      const result = await LoginManager.logInWithPermissions(['public_profile', 'email']);
-      if (result.isCancelled)
-        throw new Error('User cancelled the login process');
+      await LoginManager.logInWithPermissions(['public_profile', 'email']);
       const data = await AccessToken.getCurrentAccessToken();
       if (!data)
         throw new Error('Something went wrong obtaining access token');

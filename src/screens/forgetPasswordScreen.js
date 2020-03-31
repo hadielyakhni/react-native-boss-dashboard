@@ -123,7 +123,7 @@ class ForgetPasswordScreen extends Component {
                   fontSize: 14.5,
                   fontFamily: 'SourceSansPro-Regular',
                   marginTop: 12
-                }}>{getAuthError(this.props.error)}</Text>
+                }}>{getAuthError(this.props.error, true)}</Text>
               </View>
               <TouchableOpacity
                 activeOpacity={0.78}

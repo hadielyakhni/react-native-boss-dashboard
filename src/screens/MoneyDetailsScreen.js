@@ -33,11 +33,9 @@ const { height, width } = Dimensions.get("window")
 class MoneyDetailsScreen extends Component {
   constructor(props) {
     super(props)
-    setTimeout(() => {
-      InteractionManager.runAfterInteractions(() => {
-        this.setState({ canRender: true })
-      })
-    }, 80)
+    InteractionManager.runAfterInteractions(() => {
+      this.setState({ canRender: true })
+    })
     const { name, phone, accountId } = this.props
     this.accountId = accountId
     this.state = {
@@ -183,12 +181,15 @@ class MoneyDetailsScreen extends Component {
             </View>
             <View style={styles.transListContainer}>
               <FlatList
-                maxToRenderPerBatch={10}
+                maxToRenderPerBatch={15}
                 ref={ref => this.flatListRef = ref}
                 contentContainerStyle={{ paddingBottom: 6 }}
                 data={this.props.transactions}
                 keyExtractor={transaction => transaction[0]}
                 renderItem={({ item }) => <TransactionCard data={item} />}
+                getItemLayout={(data, index) => (
+                  { length: 81, offset: 81 * index, index }
+                )}
               />
             </View>
             <Modal

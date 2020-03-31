@@ -28,7 +28,7 @@ class ToDoListScreen extends Component {
     this.hintOpacity.addListener(({ value }) => this.hintOpacityValue = value)
     this.hintTranslateY = this.hintOpacity.interpolate({
       inputRange: [0, 1],
-      outputRange: [20, -Dimensions.get('window').height / 12]
+      outputRange: [40, -Dimensions.get('window').height / 12]
     })
     this.undoneOpacityValue = 0
     this.undoneOpacity = new Animated.Value(0)
@@ -85,7 +85,7 @@ class ToDoListScreen extends Component {
                 <Animated.View style={{ flex: 1, opacity: this.undoneOpacity }}>
                   <Separator text='INCOMPLETED' number={this.props.unDoneTasks.length} />
                   <FlatList
-                    initialNumToRender={200}
+                    initialNumToRender={25}
                     style={{ marginBottom: 10 }}
                     data={this.props.unDoneTasks}
                     keyExtractor={task => task[0]}
@@ -100,9 +100,13 @@ class ToDoListScreen extends Component {
                 <Animated.View style={{ flex: 1, opacity: this.doneOpacity }}>
                   <Separator text='COMPLETED' number={this.props.doneTasks.length} />
                   <FlatList
+                    initialNumToRender={25}
                     data={this.props.doneTasks}
                     keyExtractor={task => task[0]}
                     renderItem={this.rendertask.bind(this)}
+                    getItemLayout={(data, index) => (
+                      { length: 50, offset: 50 * index, index }
+                    )}
                   />
                 </Animated.View>
                 :

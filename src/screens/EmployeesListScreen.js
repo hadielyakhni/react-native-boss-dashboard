@@ -26,7 +26,7 @@ class EmployeesListScreen extends Component {
     this.hintOpacity.addListener(({ value }) => this.hintOpacityValue = value)
     this.hintTranslateY = this.hintOpacity.interpolate({
       inputRange: [0, 1],
-      outputRange: [20, -Dimensions.get('window').height / 12]
+      outputRange: [40, -Dimensions.get('window').height / 12]
     })
     this.listOpacityValue = 0
     this.listOpacity = new Animated.Value(0)
@@ -86,6 +86,9 @@ class EmployeesListScreen extends Component {
             keyExtractor={employee => employee[0]}
             renderItem={employee => (
               <EmployeeCard componentId={this.props.componentId} uid={employee.item[0]} data={employee.item[1]} />
+            )}
+            getItemLayout={(data, index) => (
+              { length: 92, offset: 92 * index, index }
             )}
           />
         </Animated.View>

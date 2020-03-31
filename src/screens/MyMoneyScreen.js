@@ -29,7 +29,7 @@ class MyMoneyScreen extends Component {
     this.hintOpacity.addListener(({ value }) => this.hintOpacityValue = value)
     this.hintTranslateY = this.hintOpacity.interpolate({
       inputRange: [0, 1],
-      outputRange: [20, -Dimensions.get('window').height / 12]
+      outputRange: [40, -Dimensions.get('window').height / 12]
     })
     this.pAccountsOpacityValue = 0
     this.pAccountsOpacity = new Animated.Value(0)
@@ -144,6 +144,9 @@ class MyMoneyScreen extends Component {
                     data={pAccounts}
                     keyExtractor={account => account[0]}
                     renderItem={account => <MoneyCard componentId={this.props.componentId} data={account.item} />}
+                    getItemLayout={(data, index) => (
+                      { length: 92, offset: 92 * index, index }
+                    )}
                   />
                 </Animated.View>
                 :
@@ -180,6 +183,9 @@ class MyMoneyScreen extends Component {
                     data={nAccounts}
                     keyExtractor={account => account[0]}
                     renderItem={account => <MoneyCard componentId={this.props.componentId} data={account.item} />}
+                    getItemLayout={(data, index) => (
+                      { length: 92, offset: 92 * index, index }
+                    )}
                   />
                 </Animated.View>
                 :

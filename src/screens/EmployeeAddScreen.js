@@ -57,6 +57,7 @@ class EmployeeAddScreen extends Component {
             </View>
             <View style={{ flex: 1, paddingHorizontal: 8, paddingTop: 5 }}>
               <MyInput
+                autoCapitalize
                 value={this.state.name}
                 leftIcon='ios-person'
                 style={{ fontSize: 17, paddingRight: 15 }}
@@ -67,6 +68,7 @@ class EmployeeAddScreen extends Component {
               />
               <this.separator />
               <MyInput
+                autoCapitalize
                 value={this.state.role}
                 leftIcon='ios-briefcase'
                 style={{ fontSize: 17, paddingRight: 15 }}
