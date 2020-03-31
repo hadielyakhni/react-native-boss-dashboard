@@ -61,3 +61,6 @@ buck-out/
 
 # FireBase Configuration
 /src/firebaseConfig.js
+
+#google services
+google-services.json
