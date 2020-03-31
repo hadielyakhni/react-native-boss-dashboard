@@ -11,7 +11,6 @@ export default class EmployeeCard extends PureComponent {
     LayoutAnimation.configureNext({
       update: {
         duration: 80,
-        delay: 100,
         type: LayoutAnimation.Types.linear,
         property: LayoutAnimation.Properties.opacity
       }

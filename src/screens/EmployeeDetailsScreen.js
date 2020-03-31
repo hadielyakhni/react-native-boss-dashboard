@@ -142,7 +142,8 @@ class EmployeeDetailsScreen extends Component {
               value={this.state.phone}
               leftIcon='ios-call'
               rightIcon='ios-arrow-forward'
-              rightIconStyle={{ color: '#c5c5c5' }}
+              rightIconStyle={{ color: this.state.phone ? '#c8c8c8' : '#777' }}
+              isRightIconDisabled={!this.state.phone}
               onRightIconPress={() => Linking.openURL(`tel:${this.state.phone}`)}
               style={{ fontSize: 16, paddingRight: 15 }}
               isSecure={false}
@@ -155,7 +156,8 @@ class EmployeeDetailsScreen extends Component {
               value={this.state.email}
               leftIcon='ios-mail'
               rightIcon='ios-arrow-forward'
-              rightIconStyle={{ color: '#c5c5c5' }}
+              rightIconStyle={{ color: this.state.email ? '#c8c8c8' : '#777' }}
+              isRightIconDisabled={!this.state.email}
               onRightIconPress={() => { Linking.openURL(`mailto:${this.state.email}`) }}
               style={{ fontSize: 16, paddingRight: 15 }}
               isSecure={false}

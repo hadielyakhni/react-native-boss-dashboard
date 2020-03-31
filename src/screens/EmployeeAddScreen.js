@@ -18,8 +18,8 @@ class EmployeeAddScreen extends Component {
     })
   }
   isAddDisabled() {
-    const { name, role, salary, phone } = this.state
-    if (!name || !role || !salary || !phone)
+    const { name, role, salary } = this.state
+    if (!name || !role || !salary)
       return true
     return false
   }
@@ -93,7 +93,7 @@ class EmployeeAddScreen extends Component {
                 leftIcon='ios-call'
                 style={{ fontSize: 16, paddingRight: 15 }}
                 isSecure={false}
-                placeHolder='Phone'
+                placeHolder='Phone (optional)'
                 isAutoCorrect={false}
                 onChangeText={value => this.setState({ phone: value })}
               />

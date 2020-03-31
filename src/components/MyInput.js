@@ -6,8 +6,16 @@ export default class MyInput extends PureComponent {
   renderButton() {
     if (this.props.rightIcon)
       return (
-        <TouchableOpacity style={styles.rightIconContainer} onPress={this.props.onRightIconPress}>
-          <Icon name={this.props.rightIcon} style={[styles.iconRight, this.props.rightIconStyle]} />
+        <TouchableOpacity
+          activeOpacity={0.7}
+          disabled={this.props.isRightIconDisabled}
+          style={styles.rightIconContainer}
+          onPress={this.props.onRightIconPress}
+        >
+          <Icon
+            name={this.props.rightIcon}
+            style={[styles.iconRight, this.props.rightIconStyle]}
+          />
         </TouchableOpacity>
       )
   }

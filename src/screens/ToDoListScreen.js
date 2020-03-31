@@ -7,7 +7,8 @@ import {
   TextInput,
   FlatList,
   ScrollView,
-  Dimensions
+  Dimensions,
+  Animated
 } from 'react-native'
 import { Navigation } from 'react-native-navigation'
 import { connect } from 'react-redux'
@@ -22,6 +23,24 @@ class ToDoListScreen extends Component {
     console.log(this.props.componentId)
     this.state = { task: '' }
     this.props.fetchTasks()
+    this.hintOpacityValue = 0
+    this.hintOpacity = new Animated.Value(0)
+    this.hintOpacity.addListener(({ value }) => this.hintOpacityValue = value)
+    this.hintTranslateY = this.hintOpacity.interpolate({
+      inputRange: [0, 1],
+      outputRange: [20, -Dimensions.get('window').height / 12]
+    })
+    this.undoneOpacityValue = 0
+    this.undoneOpacity = new Animated.Value(0)
+    this.undoneOpacity.addListener(({ value }) => this.undoneOpacityValue = value)
+    this.doneOpacityValue = 0
+    this.doneOpacity = new Animated.Value(0)
+    this.doneOpacity.addListener(({ value }) => this.doneOpacityValue = value)
+  }
+  componentWillUnmount() {
+    this.hintOpacity.removeAllListeners()
+    this.undoneOpacity.removeAllListeners()
+    this.doneOpacity.removeAllListeners()
   }
   onAdd() {
     if (this.state.task !== '') {
@@ -40,12 +59,30 @@ class ToDoListScreen extends Component {
   }
   renderScreen() {
     if (!this.props.fetchingTasks)
-      return (
-        !!this.props.unDoneTasks.length || !!this.props.doneTasks.length ?
-          <ScrollView >
+      if (!!this.props.unDoneTasks.length || !!this.props.doneTasks.length) {
+        if (this.hintOpacityValue !== 0)
+          this.hintOpacity.setValue(0)
+        if (!!this.props.unDoneTasks.length && this.undoneOpacityValue !== 1)
+          Animated.timing(this.undoneOpacity, {
+            toValue: 1,
+            duration: 175,
+            useNativeDriver: true
+          }).start()
+        if (!!this.props.doneTasks.length && this.doneOpacityValue !== 1)
+          Animated.timing(this.doneOpacity, {
+            toValue: 1,
+            duration: 175,
+            useNativeDriver: true
+          }).start()
+        if (!this.props.unDoneTasks.length && this.undoneOpacityValue !== 0)
+          this.undoneOpacity.setValue(0)
+        if (!this.props.doneTasks.length && this.doneOpacityValue !== 0)
+          this.doneOpacity.setValue(0)
+        return (
+          <ScrollView>
             {
               this.props.unDoneTasks.length ?
-                <>
+                <Animated.View style={{ flex: 1, opacity: this.undoneOpacity }}>
                   <Separator text='INCOMPLETED' number={this.props.unDoneTasks.length} />
                   <FlatList
                     initialNumToRender={200}
@@ -54,30 +91,47 @@ class ToDoListScreen extends Component {
                     keyExtractor={task => task[0]}
                     renderItem={this.rendertask.bind(this)}
                   />
-                </>
+                </Animated.View>
                 :
                 null
             }
             {
               this.props.doneTasks.length ?
-                <>
+                <Animated.View style={{ flex: 1, opacity: this.doneOpacity }}>
                   <Separator text='COMPLETED' number={this.props.doneTasks.length} />
                   <FlatList
                     data={this.props.doneTasks}
                     keyExtractor={task => task[0]}
                     renderItem={this.rendertask.bind(this)}
                   />
-                </>
+                </Animated.View>
                 :
                 null
             }
           </ScrollView>
-          :
-          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', paddingBottom: 120 }}>
-            <Text style={{ color: '#eee', fontFamily: 'SourceSansPro-SemiBold', fontSize: 17, marginBottom: 5 }}>Start organizing your life!</Text>
-            <Text style={{ color: '#eee', fontFamily: 'SourceSansPro-Regular', fontSize: 15 }}>Any thing to do?</Text>
+        )
+      }
+      else {
+        if (!this.props.unDoneTasks.length && this.undoneOpacityValue !== 0)
+          this.undoneOpacity.setValue(0)
+        if (!this.props.doneTasks.length && this.doneOpacityValue !== 0)
+          this.doneOpacity.setValue(0)
+        if (this.hintOpacityValue !== 1)
+          Animated.timing(this.hintOpacity, {
+            toValue: 1,
+            duration: 375,
+            useNativeDriver: true
+          }).start()
+        return (
+          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }} >
+            <Animated.View style={{ opacity: this.hintOpacity, alignItems: 'center', transform: [{ translateY: this.hintTranslateY }] }}>
+              <Text style={{ color: '#eee', fontFamily: 'SourceSansPro-SemiBold', fontSize: 17, marginBottom: 5 }}>Start organizing your life!</Text>
+              <Text style={{ color: '#eee', fontFamily: 'SourceSansPro-Regular', fontSize: 15 }}>Any thing to do?</Text>
+            </Animated.View>
           </View>
-      )
+        )
+      }
+    return null
   }
   render() {
     return (

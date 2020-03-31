@@ -88,11 +88,12 @@ class MoneyDetailsScreen extends Component {
               </Text>
             </View>
             <TouchableOpacity
+              disabled={!this.props.phone}
               activeOpacity={0.85}
               onPress={() => Linking.openURL(`tel:${this.props.phone}`)}
               style={styles.callIconContainer}
             >
-              <MaterialIcons name="perm-phone-msg" size={24} color="#fff" />
+              <MaterialIcons name="perm-phone-msg" size={24} color={this.props.phone ? '#fff' : '#888'} />
             </TouchableOpacity>
             <TouchableOpacity
               activeOpacity={0.85}

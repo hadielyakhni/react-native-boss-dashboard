@@ -7,8 +7,8 @@ import {
   FlatList,
   TextInput,
   ScrollView,
-  LayoutAnimation,
-  UIManager
+  Animated,
+  Dimensions
 } from 'react-native'
 import { Navigation } from 'react-native-navigation'
 import { connect } from 'react-redux'
@@ -18,29 +18,60 @@ import Spinner from 'react-native-spinkit'
 import MoneyCard from '../components/MoneyCard'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 
-UIManager.setLayoutAnimationEnabledExperimental &&
-  UIManager.setLayoutAnimationEnabledExperimental(true)
 
 class MyMoneyScreen extends Component {
   constructor(props) {
     super(props)
     this.props.fetchAccounts()
     this.state = { searchWord: '' }
+    this.hintOpacityValue = 0
+    this.hintOpacity = new Animated.Value(0)
+    this.hintOpacity.addListener(({ value }) => this.hintOpacityValue = value)
+    this.hintTranslateY = this.hintOpacity.interpolate({
+      inputRange: [0, 1],
+      outputRange: [20, -Dimensions.get('window').height / 12]
+    })
+    this.pAccountsOpacityValue = 0
+    this.pAccountsOpacity = new Animated.Value(0)
+    this.pAccountsOpacity.addListener(({ value }) => this.pAccountsOpacityValue = value)
+    this.nAccountsOpacityValue = 0
+    this.nAccountsOpacity = new Animated.Value(0)
+    this.nAccountsOpacity.addListener(({ value }) => this.nAccountsOpacityValue = value)
+  }
+  componentWillUnmount() {
+    this.hintOpacity.removeAllListeners()
+    this.pAccountsOpacity.removeAllListeners()
+    this.pAccountsOpacity.removeAllListeners()
   }
   changeSearchWord = (text) => {
     this.setState({ searchWord: text })
   }
   renderScreen() {
     if (!this.props.fetchingAccounts) {
-      if (!this.props.allAccounts.length)
+      if (!this.props.allAccounts.length) {
+        if (this.hintOpacityValue !== 1)
+          Animated.timing(this.hintOpacity, {
+            toValue: 1,
+            duration: 375,
+            useNativeDriver: true
+          }).start()
+        if (this.pAccountsOpacityValue !== 0)
+          this.pAccountsOpacity.setValue(0)
+        if (this.nAccountsOpacityValue !== 0)
+          this.nAccountsOpacity.setValue(0)
         return (
-          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', paddingBottom: 120 }}>
-            <Text style={{ color: '#eee', fontFamily: 'SourceSansPro-SemiBold', fontSize: 17, marginBottom: 2 }}>Do you have money with others</Text>
-            <Text style={{ color: '#eee', fontFamily: 'SourceSansPro-SemiBold', fontSize: 17, marginBottom: 5 }}>{''}and/or visversa?</Text>
-            <Text style={{ color: '#eee', fontFamily: 'SourceSansPro-Regular', fontSize: 15 }}>Add accounts now and easily</Text>
-            <Text style={{ color: '#eee', fontFamily: 'SourceSansPro-Regular', fontSize: 15, marginTop: 3 }}>{' '}manage all your transactions.</Text>
+          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            <Animated.View style={{ alignItems: 'center', translateY: this.hintTranslateY, opacity: this.hintOpacity }}>
+              <Text style={{ color: '#eee', fontFamily: 'SourceSansPro-SemiBold', fontSize: 17, marginBottom: 2 }}>Do you have money with others</Text>
+              <Text style={{ color: '#eee', fontFamily: 'SourceSansPro-SemiBold', fontSize: 17, marginBottom: 5 }}>{''}and/or visversa?</Text>
+              <Text style={{ color: '#eee', fontFamily: 'SourceSansPro-Regular', fontSize: 15 }}>Add accounts now and easily</Text>
+              <Text style={{ color: '#eee', fontFamily: 'SourceSansPro-Regular', fontSize: 15, marginTop: 3 }}>{' '}manage all your transactions.</Text>
+            </Animated.View>
           </View>
         )
+      }
+      if (this.hintOpacityValue !== 0)
+        this.hintOpacity.setValue(0)
       let matchedAccounts
       if (this.state.searchWord === '')
         matchedAccounts = this.props.allAccounts
@@ -67,12 +98,24 @@ class MyMoneyScreen extends Component {
             </Text>
           </View>
         )
+      if (pAccounts.length && this.pAccountsOpacityValue !== 1)
+        Animated.timing(this.pAccountsOpacity, {
+          toValue: 1,
+          duration: 175,
+          useNativeDriver: true
+        }).start()
+      if (nAccounts.length && this.nAccountsOpacityValue !== 1)
+        Animated.timing(this.nAccountsOpacity, {
+          toValue: 1,
+          duration: 175,
+          useNativeDriver: true
+        }).start()
       return (
         <ScrollView>
           <View style={{ paddingHorizontal: 5, paddingTop: 25 }}>
             {
               pAccounts.length ?
-                <View style={{ marginBottom: 40 }}>
+                <Animated.View style={{ marginBottom: 40, opacity: this.pAccountsOpacity }}>
                   <View style={{ paddingHorizontal: 14, marginBottom: 5 }}>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                       <Text style={{ color: '#fff', fontSize: 26, fontFamily: 'SourceSansPro-Bold' }}>
@@ -102,14 +145,13 @@ class MyMoneyScreen extends Component {
                     keyExtractor={account => account[0]}
                     renderItem={account => <MoneyCard componentId={this.props.componentId} data={account.item} />}
                   />
-                </View>
+                </Animated.View>
                 :
                 null
             }
             {
               nAccounts.length ?
-
-                <View style={{ marginBottom: 15 }}>
+                <Animated.View style={{ marginBottom: 15, opacity: this.nAccountsOpacity }}>
                   <View style={{ paddingHorizontal: 14, marginBottom: 5 }}>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                       <Text style={{ color: '#fff', fontSize: 26, fontFamily: 'SourceSansPro-Bold' }}>
@@ -139,7 +181,7 @@ class MyMoneyScreen extends Component {
                     keyExtractor={account => account[0]}
                     renderItem={account => <MoneyCard componentId={this.props.componentId} data={account.item} />}
                   />
-                </View>
+                </Animated.View>
                 :
                 null
             }
@@ -147,19 +189,7 @@ class MyMoneyScreen extends Component {
         </ScrollView>
       )
     }
-    return (
-      <View style={{
-        flex: 1,
-        backgroundColor: '#000',
-        justifyContent: 'center',
-        alignItems: 'center',
-        flexDirection: 'row'
-      }}>
-        <Text style={{ fontSize: 14, color: '#464953' }}>L</Text>
-        <Spinner type='Circle' size={24} color='#008ee0' />
-        <Text style={{ fontSize: 14, color: '#464953' }}>ADING</Text>
-      </View>
-    )
+    return null
   }
   render() {
     return (
@@ -174,7 +204,7 @@ class MyMoneyScreen extends Component {
         <View style={styles.searchView}>
           <Icon
             name='md-search'
-            style={styles.searchIcon}
+            style={{ color: this.props.fetchingAccounts || !this.props.allAccounts.length ? '#777' : '#e3e3e3', fontSize: 26 }}
           />
           <TextInput
             editable={this.props.fetchingAccounts || !this.props.allAccounts.length ? false : true}
@@ -252,10 +282,6 @@ const styles = StyleSheet.create({
     fontSize: 17,
     fontFamily: 'SourceSansPro-Regular',
     marginLeft: 8
-  },
-  searchIcon: {
-    fontSize: 26,
-    color: '#e3e3e3'
   }
 })
 
