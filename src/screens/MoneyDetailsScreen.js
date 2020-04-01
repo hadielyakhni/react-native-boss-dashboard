@@ -193,7 +193,7 @@ class MoneyDetailsScreen extends Component {
               />
             </View>
             <Modal
-              animationType="slide"
+              animationType="fade"
               transparent={true}
               visible={this.state.modalVisible}
               onRequestClose={() => {
@@ -588,7 +588,6 @@ const mapStateToProps = ({ money }, ownProps) => {
       .sort((trans1, trans2) => trans2[1].date - trans1[1].date)
   }
   else {
-    console.log('in elseeeeeeeee')
     name = ''
     phone = ''
     amount = 0

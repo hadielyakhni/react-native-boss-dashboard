@@ -114,11 +114,13 @@ class EmployeeDetailsScreen extends Component {
               value={this.state.name}
               style={{ fontSize: 16, paddingRight: 15 }}
               isSecure={false}
+              autoCapitalize="words"
               placeHolder='Name'
               isAutoCorrect={false}
               onChangeText={value => this.setState({ name: value })}
             />
             <MyInput
+              autoCapitalize="words"
               value={this.state.role}
               leftIcon='ios-briefcase'
               style={{ fontSize: 16, paddingRight: 15 }}

@@ -14,13 +14,12 @@ import { Navigation } from 'react-native-navigation'
 import { connect } from 'react-redux'
 import { addTask, fetchTasks } from '../actions'
 import { Icon } from 'native-base'
+import Ionicons from 'react-native-vector-icons/Ionicons'
 import ToDoItem from '../components/ToDoItem'
-import Separator from '../components/Separator'
 
 class ToDoListScreen extends Component {
   constructor(props) {
     super(props)
-    console.log(this.props.componentId)
     this.state = { task: '' }
     this.props.fetchTasks()
     this.hintOpacityValue = 0
@@ -36,17 +35,69 @@ class ToDoListScreen extends Component {
     this.doneOpacityValue = 0
     this.doneOpacity = new Animated.Value(0)
     this.doneOpacity.addListener(({ value }) => this.doneOpacityValue = value)
+    this.undoneListOpacityValue = 1
+    this.undoneListOpacity = new Animated.Value(1)
+    this.undoneListOpacity.addListener(({ value }) => this.undoneListOpacityValue = value)
+    this.lastUndoneListArrowDiewction = 'up'
+    this.undoneArrowRotationAngle = this.undoneListOpacity.interpolate({
+      inputRange: [0, 1],
+      outputRange: [0, 3.14]
+    })
+    this.doneListOpacityValue = 0
+    this.doneListOpacity = new Animated.Value(0)
+    this.doneListOpacity.addListener(({ value }) => this.doneListOpacityValue = value)
+    this.lastDoneListArrowDiewction = 'down'
+    this.doneArrowRotationAngle = this.doneListOpacity.interpolate({
+      inputRange: [0, 1],
+      outputRange: [0, 3.14]
+    })
   }
   componentWillUnmount() {
     this.hintOpacity.removeAllListeners()
     this.undoneOpacity.removeAllListeners()
     this.doneOpacity.removeAllListeners()
+    this.undoneListOpacity.removeAllListeners()
+    this.doneListOpacity.removeAllListeners()
   }
   onAdd() {
     if (this.state.task !== '') {
       this.props.addTask(this.state.task)
       this.setState({ task: '' })
     }
+  }
+  handleUndoneOpacity() {
+    let toValue
+    if (this.undoneListOpacityValue === 1 || (this.lastUndoneListArrowDiewction === 'down' && this.undoneListOpacityValue !== 0))
+      toValue = 0
+    if (this.undoneListOpacityValue === 0 || (this.lastUndoneListArrowDiewction === 'up' && this.undoneListOpacityValue !== 1))
+      toValue = 1
+    Animated.timing(this.undoneListOpacity, {
+      toValue,
+      duration: 300
+    }).start()
+    setTimeout(() => {
+      if (this.lastUndoneListArrowDiewction === 'up')
+        this.lastUndoneListArrowDiewction = 'down'
+      else
+        this.lastUndoneListArrowDiewction = 'up'
+    }, 300)
+  }
+  handleDoneOpacity() {
+    let toValue
+    if (this.doneListOpacityValue === 1 || (this.lastDoneListArrowDiewction === 'down' && this.doneListOpacityValue !== 0))
+      toValue = 0
+    if (this.doneListOpacityValue === 0 || (this.lastDoneListArrowDiewction === 'up' && this.doneListOpacityValue !== 1))
+      toValue = 1
+    Animated.timing(this.doneListOpacity, {
+      toValue,
+      duration: 300
+    }).start()
+    setTimeout(() => {
+      if (this.lastDoneListArrowDiewction === 'up')
+        this.lastDoneListArrowDiewction = 'down'
+      else
+        this.lastDoneListArrowDiewction = 'up'
+    }, 300)
   }
   rendertask(task) {
     return (
@@ -82,32 +133,80 @@ class ToDoListScreen extends Component {
           <ScrollView>
             {
               this.props.unDoneTasks.length ?
-                <Animated.View style={{ flex: 1, opacity: this.undoneOpacity }}>
-                  <Separator text='INCOMPLETED' number={this.props.unDoneTasks.length} />
-                  <FlatList
-                    initialNumToRender={25}
-                    style={{ marginBottom: 10 }}
-                    data={this.props.unDoneTasks}
-                    keyExtractor={task => task[0]}
-                    renderItem={this.rendertask.bind(this)}
-                  />
+                <Animated.View style={{ opacity: this.undoneOpacity }}>
+                  <TouchableOpacity activeOpacity={1} onPress={this.handleUndoneOpacity.bind(this)}>
+                    <View style={styles.separotorView}>
+                      <View style={{ flexDirection: 'row' }}>
+                        <Text style={styles.separotorText}>
+                          {'INCOMPLETED' + "  "}
+                        </Text>
+                        <Text style={styles.SeparatorNumber}>
+                          ({this.props.unDoneTasks.length})
+                        </Text>
+                      </View>
+                      <Animated.View style={{ transform: [{ rotate: this.undoneArrowRotationAngle }] }}>
+                        <Ionicons name="ios-arrow-down" size={22} color="#eee" />
+                      </Animated.View>
+                    </View>
+                  </TouchableOpacity>
+                  <Animated.View style={{
+                    opacity: this.undoneListOpacity,
+                    height: this.undoneListOpacity.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: [0, 50 * this.props.unDoneTasks.length + 10]
+                    })
+                  }}>
+                    <FlatList
+                      initialNumToRender={25}
+                      style={{ marginBottom: 10 }}
+                      data={this.props.unDoneTasks}
+                      keyExtractor={task => task[0]}
+                      renderItem={this.rendertask.bind(this)}
+                      getItemLayout={(data, index) => (
+                        { length: 50, offset: 50 * index, index }
+                      )}
+                    />
+                  </Animated.View>
                 </Animated.View>
                 :
                 null
             }
             {
               this.props.doneTasks.length ?
-                <Animated.View style={{ flex: 1, opacity: this.doneOpacity }}>
-                  <Separator text='COMPLETED' number={this.props.doneTasks.length} />
-                  <FlatList
-                    initialNumToRender={25}
-                    data={this.props.doneTasks}
-                    keyExtractor={task => task[0]}
-                    renderItem={this.rendertask.bind(this)}
-                    getItemLayout={(data, index) => (
-                      { length: 50, offset: 50 * index, index }
-                    )}
-                  />
+                <Animated.View style={{ opacity: this.doneOpacity }}>
+                  <TouchableOpacity activeOpacity={1} onPress={this.handleDoneOpacity.bind(this)}>
+                    <View style={styles.separotorView}>
+                      <View style={{ flexDirection: 'row' }}>
+                        <Text style={styles.separotorText}>
+                          {'INCOMPLETED' + "  "}
+                        </Text>
+                        <Text style={styles.SeparatorNumber}>
+                          ({this.props.doneTasks.length})
+                        </Text>
+                      </View>
+                      <Animated.View style={{ transform: [{ rotate: this.doneArrowRotationAngle }] }}>
+                        <Ionicons name="ios-arrow-down" size={22} color="#eee" />
+                      </Animated.View>
+                    </View>
+                  </TouchableOpacity>
+                  <Animated.View style={{
+                    opacity: this.doneListOpacity,
+                    height: this.doneListOpacity.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: [0, 50 * this.props.doneTasks.length + 10]
+                    })
+                  }}>
+                    <FlatList
+                      initialNumToRender={25}
+                      style={{ marginBottom: 10 }}
+                      data={this.props.doneTasks}
+                      keyExtractor={task => task[0]}
+                      renderItem={this.rendertask.bind(this)}
+                      getItemLayout={(data, index) => (
+                        { length: 50, offset: 50 * index, index }
+                      )}
+                    />
+                  </Animated.View>
                 </Animated.View>
                 :
                 null
@@ -242,6 +341,7 @@ const styles = StyleSheet.create({
     height: 46
   },
   input: {
+    marginRight: 10,
     borderRadius: 10,
     flex: 1,
     fontSize: 17,
@@ -273,6 +373,24 @@ const styles = StyleSheet.create({
     borderRadius: 27.5,
     alignItems: 'center',
     justifyContent: 'center'
+  },
+  separotorView: {
+    marginHorizontal: 4,
+    marginBottom: 8,
+    marginTop: 8,
+    height: 26,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between'
+  },
+  separotorText: {
+    fontSize: 14.5,
+    color: '#eee',
+    fontFamily: 'SourceSansPro-SemiBold'
+  },
+  SeparatorNumber: {
+    color: '#eee',
+    fontFamily: 'SourceSansPro-SemiBold'
   }
 })
 

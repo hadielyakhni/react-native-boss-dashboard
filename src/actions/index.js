@@ -124,7 +124,7 @@ export const addTask = (task, description, fromWichScreen, componentId) => {
   return dispatch => {
     dispatch({ type: 'add_pressed' })
     firebase.database().ref(`users/${UID}/tasks`)
-      .push({ task, description, isDone: false, date: Date.now() })
+      .push({ task, description: description.trim(), isDone: false, date: Date.now() })
     if (fromWichScreen === 'todoAdd')
       Navigation.pop(componentId)
   }

@@ -14,7 +14,6 @@ import { Navigation } from 'react-native-navigation'
 import { connect } from 'react-redux'
 import { fetchAccounts } from '../actions'
 import { Icon } from 'native-base'
-import Spinner from 'react-native-spinkit'
 import MoneyCard from '../components/MoneyCard'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 

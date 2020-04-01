@@ -57,18 +57,18 @@ class EmployeeAddScreen extends Component {
             </View>
             <View style={{ flex: 1, paddingHorizontal: 8, paddingTop: 5 }}>
               <MyInput
-                autoCapitalize
                 value={this.state.name}
                 leftIcon='ios-person'
                 style={{ fontSize: 17, paddingRight: 15 }}
                 isSecure={false}
                 placeHolder='Name'
+                autoCapitalize="words"
                 isAutoCorrect={false}
                 onChangeText={value => this.setState({ name: value })}
               />
               <this.separator />
               <MyInput
-                autoCapitalize
+                autoCapitalize="words"
                 value={this.state.role}
                 leftIcon='ios-briefcase'
                 style={{ fontSize: 17, paddingRight: 15 }}

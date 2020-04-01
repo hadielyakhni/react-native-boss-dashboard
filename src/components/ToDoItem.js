@@ -5,6 +5,7 @@ import {
   View,
   TouchableOpacity,
   LayoutAnimation,
+  TouchableHighlight,
   UIManager,
   Dimensions
 } from 'react-native'
@@ -21,9 +22,9 @@ class ToDoItem extends PureComponent {
   componentDidMount() {
     LayoutAnimation.configureNext({
       update: {
-        duration: 300,
-        type: LayoutAnimation.Types.spring,
-        springDamping: 0.8
+        duration: 200,
+        type: LayoutAnimation.Types.linear,
+        property: LayoutAnimation.Properties.opacity
       }
     })
   }
