@@ -15,6 +15,7 @@ import { connect } from 'react-redux'
 import { addTask, fetchTasks } from '../actions'
 import { Icon } from 'native-base'
 import Ionicons from 'react-native-vector-icons/Ionicons'
+import { gestureHandlerRootHOC } from 'react-native-gesture-handler'
 import ToDoItem from '../components/ToDoItem'
 
 class ToDoListScreen extends Component {
@@ -99,12 +100,12 @@ class ToDoListScreen extends Component {
         this.lastDoneListArrowDiewction = 'up'
     }, 300)
   }
-  rendertask(task) {
+  rendertask({ item }) {
     return (
       <ToDoItem
         componentId={this.props.componentId}
-        taskId={task.item[0]}
-        data={task.item[1]}
+        taskId={item[0]}
+        data={item[1]}
       />
     )
   }
@@ -157,7 +158,7 @@ class ToDoListScreen extends Component {
                     })
                   }}>
                     <FlatList
-                      initialNumToRender={25}
+                      initialNumToRender={200}
                       style={{ marginBottom: 10 }}
                       data={this.props.unDoneTasks}
                       keyExtractor={task => task[0]}
@@ -197,7 +198,7 @@ class ToDoListScreen extends Component {
                     })
                   }}>
                     <FlatList
-                      initialNumToRender={25}
+                      initialNumToRender={200}
                       style={{ marginBottom: 10 }}
                       data={this.props.doneTasks}
                       keyExtractor={task => task[0]}
@@ -418,4 +419,4 @@ const mapStateToProps = ({ todo }) => {
   }
 }
 
-export default connect(mapStateToProps, mapActionsToProps)(ToDoListScreen) 
+export default connect(mapStateToProps, mapActionsToProps)(gestureHandlerRootHOC(ToDoListScreen)) 

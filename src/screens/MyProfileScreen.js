@@ -189,6 +189,3 @@ const mapDiaptchToProps = dispatch => ({
 })
 
 export default connect(mapStateToProps, mapDiaptchToProps)(MyProfileScreen)
-
-
-
