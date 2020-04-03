@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
-import { Text, StyleSheet, View, Linking, InteractionManager, ActivityIndicator, Modal, TouchableOpacity } from 'react-native'
+import { Text, StyleSheet, View, Linking, Keyboard, InteractionManager, ActivityIndicator, Modal, TouchableOpacity } from 'react-native'
 import { connect } from 'react-redux'
 import { updateEmployeeInfo, deleteEmployee } from '../actions'
 import { Spinner } from 'native-base'
 import { Navigation } from 'react-native-navigation'
+import DateTimePicker from '@react-native-community/datetimepicker'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import MyInput from '../components/MyInput'
 import MyButton from '../components/MyButton'
@@ -15,8 +16,8 @@ class EmployeeDetailsScreen extends Component {
     InteractionManager.runAfterInteractions(() => {
       this.separator = () => <View style={{ marginVertical: 2 }}></View>
       this.uid = this.props.uid
-      const { data: { name, role, salary, phone, email } } = this.props
-      this.setState({ canRender: true, name, role, salary, phone, email })
+      const { data: { name, role, salary, phone, email, joinDate } } = this.props
+      this.setState({ canRender: true, name, role, salary, phone, email, joinDate, showDatePicker: false })
     })
   }
   render() {
@@ -111,6 +112,7 @@ class EmployeeDetailsScreen extends Component {
           <View style={{ flex: 1, paddingHorizontal: 12 }}>
             <MyInput
               leftIcon='ios-person'
+              inputContainerStyle={{ marginTop: 10, marginBottom: 8 }}
               value={this.state.name}
               style={{ fontSize: 16, paddingRight: 15 }}
               isSecure={false}
@@ -122,6 +124,7 @@ class EmployeeDetailsScreen extends Component {
             <MyInput
               autoCapitalize="words"
               value={this.state.role}
+              inputContainerStyle={{ marginVertical: 8 }}
               leftIcon='ios-briefcase'
               style={{ fontSize: 16, paddingRight: 15 }}
               isSecure={false}
@@ -132,6 +135,7 @@ class EmployeeDetailsScreen extends Component {
             <MyInput
               keyboardType="decimal-pad"
               value={this.state.salary}
+              inputContainerStyle={{ marginVertical: 8 }}
               leftIcon='ios-cash'
               style={{ fontSize: 16, paddingRight: 15 }}
               isSecure={false}
@@ -142,6 +146,7 @@ class EmployeeDetailsScreen extends Component {
             <MyInput
               keyboardType="number-pad"
               value={this.state.phone}
+              inputContainerStyle={{ marginVertical: 8 }}
               leftIcon='ios-call'
               rightIcon='ios-arrow-forward'
               rightIconStyle={{ color: this.state.phone ? '#c8c8c8' : '#777' }}
@@ -155,6 +160,7 @@ class EmployeeDetailsScreen extends Component {
             />
             <MyInput
               keyboardType="email-address"
+              inputContainerStyle={{ marginVertical: 8 }}
               value={this.state.email}
               leftIcon='ios-mail'
               rightIcon='ios-arrow-forward'
@@ -167,23 +173,57 @@ class EmployeeDetailsScreen extends Component {
               isAutoCorrect={false}
               onChangeText={value => this.setState({ email: value })}
             />
-            <View style={{ flex: 1, justifyContent: 'flex-end' }}>
-              <MyButton
-                style={{ marginBottom: 10, height: 50 }}
-                color='#008ee0'
-                textStyle={{ fontSize: 20 }}
-                onPress={() => {
-                  const { name, role, salary, phone, email } = this.state
-                  this.props.updateEmployeeInfo(this.props.componentId, { name, role, salary, phone, email, uid: this.uid })
+            <MyInput
+              inputContainerStyle={{ marginVertical: 8 }}
+              onTouchStart={() => {
+                Keyboard.dismiss()
+                this.setState({ showDatePicker: true })
+              }}
+              editable={false}
+              value={'Joined since :  ' + ("0" + new Date(this.state.joinDate).getDate()).slice(-2) + "-" + ("0" + (new Date(this.state.joinDate).getMonth() + 1)).slice(-2) + "-" + new Date(this.state.joinDate).getFullYear()}
+              leftIcon='md-calendar'
+              inputContainerStyle={{ marginVertical: 8 }}
+              style={{ fontSize: 16, paddingRight: 15 }}
+            />
+            {
+              this.state.showDatePicker
+              &&
+              <DateTimePicker
+                timeZoneOffsetInMinutes={0}
+                value={this.state.joinDate}
+                mode={"date"}
+                is24Hour={true}
+                display="default"
+                minimumDate={315529260000}
+                onChange={date => {
+                  this.setState(() => {
+                    if (date.type === "dismissed")
+                      return { showDatePicker: false }
+                    return {
+                      showDatePicker: false,
+                      joinDate: date.nativeEvent.timestamp
+                    }
+                  })
                 }}
-              >Save</MyButton>
-              <MyButton
-                style={{ marginBottom: 20, height: 50 }}
-                color='#e65100'
-                textStyle={{ fontSize: 20 }}
-                onPress={() => this.setState({ modalVisible: true })}
-              >Delete</MyButton>
-            </View>
+              />
+            }
+          </View>
+          <View style={{ flex: 1, justifyContent: 'flex-end' }}>
+            <MyButton
+              style={{ marginBottom: 10, height: 50 }}
+              color='#008ee0'
+              textStyle={{ fontSize: 20 }}
+              onPress={() => {
+                const { name, role, salary, phone, email, joinDate } = this.state
+                this.props.updateEmployeeInfo(this.props.componentId, { name, role, salary, phone, email, joinDate, uid: this.uid })
+              }}
+            >Save</MyButton>
+            <MyButton
+              style={{ marginBottom: 20, height: 50 }}
+              color='#e65100'
+              textStyle={{ fontSize: 20 }}
+              onPress={() => this.setState({ modalVisible: true })}
+            >Delete</MyButton>
           </View>
         </View>
         :
@@ -260,7 +300,7 @@ const styles = StyleSheet.create({
 })
 
 const mapDispatchToProps = dispatch => ({
-  updateEmployeeInfo: (componentId, { name, role, salary, phone, email, uid }) => dispatch(updateEmployeeInfo(componentId, { name, role, salary, phone, email, uid })),
+  updateEmployeeInfo: (componentId, { name, role, salary, phone, email, joinDate, uid }) => dispatch(updateEmployeeInfo(componentId, { name, role, salary, phone, email, joinDate, uid })),
   deleteEmployee: (componentId, { uid }) => dispatch(deleteEmployee(componentId, { uid }))
 })
 

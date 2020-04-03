@@ -155,10 +155,10 @@ export const deleteTask = (taskId, fromWichScreen, componentId) => {
 }
 
 // Employees Actions
-export const addEmployee = (componentId, { name, role, salary, phone, email }) => {
+export const addEmployee = (componentId, { name, role, salary, phone, email, joinDate }) => {
   return dispatch => {
     firebase.database().ref(`/users/${UID}/employees`)
-      .push({ name, role, salary, phone, email })
+      .push({ name, role, salary, phone, email, joinDate })
     Navigation.pop(componentId)
   }
 }
@@ -177,10 +177,10 @@ export const fetchEmployees = () => {
   }
 }
 
-export const updateEmployeeInfo = (componentId, { name, role, salary, phone, email, uid }) => {
+export const updateEmployeeInfo = (componentId, { name, role, salary, phone, email, joinDate, uid }) => {
   return () => {
     firebase.database().ref(`users/${UID}/employees/${uid}`)
-      .set({ name, role, salary, phone, email })
+      .set({ name, role, salary, phone, email, joinDate })
     Navigation.pop(componentId)
   }
 }
@@ -210,9 +210,10 @@ export const fetchAccounts = () => {
 export const addMoneyAccount = (componentId, { name, phone = '', status, amount }) => {
   if (status === 'HIM')
     amount *= -1
+  name = name.trim()
   return () => {
     const addedAccountId = firebase.database().ref(`/users/${UID}/money`)
-      .push({ name: name.trim(), phone, amount }).key
+      .push({ name, phone, amount, lastTransaction: Date.now() }).key
     firebase.database().ref(`/users/${UID}/money/${addedAccountId}/transactions`)
       .push({
         transAmount: Math.abs(amount),
@@ -231,7 +232,7 @@ export const addTransaction = (oldAmount, transAmount, status, accountId) => {
     amount = oldAmount - transAmount
   return () => {
     firebase.database().ref(`users/${UID}/money/${accountId}`)
-      .update({ amount })
+      .update({ amount, lastTransaction: Date.now() })
     firebase.database().ref(`users/${UID}/money/${accountId}/transactions`)
       .push({
         transAmount,

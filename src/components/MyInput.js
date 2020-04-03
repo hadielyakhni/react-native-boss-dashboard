@@ -21,7 +21,7 @@ export default class MyInput extends PureComponent {
   }
   render() {
     return (
-      <View style={[styles.inputContainer, this.props.inputContainerStyle]}>
+      <View onTouchStart={this.props.onTouchStart || null} style={[styles.inputContainer, this.props.inputContainerStyle]}>
         {this.props.leftIcon && <Icon name={this.props.leftIcon} style={[styles.iconLeft, this.props.leftIconStyle]} />}
         <TextInput
           editable={this.props.editable}

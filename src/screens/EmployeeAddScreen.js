@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, StyleSheet, View, ActivityIndicator, InteractionManager, Modal, TouchableOpacity } from 'react-native'
+import { Text, StyleSheet, View, ActivityIndicator, InteractionManager, Keyboard, Modal, TouchableOpacity } from 'react-native'
 import { connect } from 'react-redux'
 import { addEmployee, resetEmployee } from '../actions'
 import { Spinner } from 'native-base'
@@ -7,6 +7,7 @@ import { Navigation } from 'react-native-navigation'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import MyInput from '../components/MyInput'
 import MyButton from '../components/MyButton'
+import DateTimePicker from '@react-native-community/datetimepicker'
 
 class EmployeeAddScreen extends Component {
   constructor(props) {
@@ -14,7 +15,7 @@ class EmployeeAddScreen extends Component {
     this.state = { canRender: false }
     InteractionManager.runAfterInteractions(() => {
       this.separator = () => <View style={{ marginVertical: 2 }}></View>
-      this.setState({ canRender: true, name: '', role: '', salary: '', phone: '', email: '' })
+      this.setState({ canRender: true, name: '', role: '', salary: '', phone: '', email: '', showDatePicker: false, joinDate: '' })
     })
   }
   isAddDisabled() {
@@ -59,6 +60,7 @@ class EmployeeAddScreen extends Component {
               <MyInput
                 value={this.state.name}
                 leftIcon='ios-person'
+                inputContainerStyle={{ marginTop: 10, marginBottom: 8 }}
                 style={{ fontSize: 17, paddingRight: 15 }}
                 isSecure={false}
                 placeHolder='Name'
@@ -69,6 +71,7 @@ class EmployeeAddScreen extends Component {
               <this.separator />
               <MyInput
                 autoCapitalize="words"
+                inputContainerStyle={{ marginVertical: 8 }}
                 value={this.state.role}
                 leftIcon='ios-briefcase'
                 style={{ fontSize: 17, paddingRight: 15 }}
@@ -81,6 +84,7 @@ class EmployeeAddScreen extends Component {
               <MyInput
                 keyboardType="decimal-pad"
                 value={this.state.salary}
+                inputContainerStyle={{ marginVertical: 8 }}
                 leftIcon='ios-cash'
                 style={{ fontSize: 17, paddingRight: 15 }}
                 isSecure={false}
@@ -93,6 +97,7 @@ class EmployeeAddScreen extends Component {
                 keyboardType="number-pad"
                 value={this.state.phone}
                 leftIcon='ios-call'
+                inputContainerStyle={{ marginVertical: 8 }}
                 style={{ fontSize: 16, paddingRight: 15 }}
                 isSecure={false}
                 placeHolder='Phone (optional)'
@@ -104,12 +109,52 @@ class EmployeeAddScreen extends Component {
                 keyboardType="email-address"
                 value={this.state.email}
                 leftIcon='ios-mail'
+                inputContainerStyle={{ marginVertical: 8 }}
                 style={{ fontSize: 16, paddingRight: 15 }}
                 isSecure={false}
                 placeHolder='Email (optional)'
                 isAutoCorrect={false}
                 onChangeText={value => this.setState({ email: value })}
               />
+              <MyInput
+                onTouchStart={() => {
+                  Keyboard.dismiss()
+                  this.setState({ showDatePicker: true })
+                }}
+                editable={false}
+                placeHolder={'Joined since :  ' + ("0" + new Date(Date.now()).getDate()).slice(-2) + "-" + ("0" + (new Date(Date.now()).getMonth() + 1)).slice(-2) + "-" + new Date(Date.now()).getFullYear() + " - Today"}
+                value={
+                  this.state.joinDate ?
+                    'Joined since :  ' + ("0" + new Date(this.state.joinDate).getDate()).slice(-2) + "-" + ("0" + (new Date(this.state.joinDate).getMonth() + 1)).slice(-2) + "-" + new Date(this.state.joinDate).getFullYear()
+                    :
+                    this.state.joinDate
+                }
+                leftIcon='md-calendar'
+                inputContainerStyle={{ marginVertical: 8 }}
+                style={{ fontSize: 16, paddingRight: 15 }}
+              />
+              {
+                this.state.showDatePicker
+                &&
+                <DateTimePicker
+                  timeZoneOffsetInMinutes={0}
+                  value={this.state.joinDate || Date.now()}
+                  mode={"date"}
+                  is24Hour={true}
+                  display="default"
+                  minimumDate={315529260000}
+                  onChange={date => {
+                    this.setState(() => {
+                      if (date.type === "dismissed")
+                        return { showDatePicker: false }
+                      return {
+                        showDatePicker: false,
+                        joinDate: date.nativeEvent.timestamp
+                      }
+                    })
+                  }}
+                />
+              }
             </View>
             <View style={{ height: 125, justifyContent: 'center' }}>
               <MyButton
@@ -119,8 +164,8 @@ class EmployeeAddScreen extends Component {
                 color='#008ee0'
                 textStyle={{ fontSize: 18 }}
                 onPress={() => {
-                  const { name, role, salary, phone, email } = this.state
-                  this.props.addEmployee(this.props.componentId, { name, role, salary, phone, email })
+                  const { name, role, salary, phone, email, joinDate } = this.state
+                  this.props.addEmployee(this.props.componentId, { name, role, salary, phone, email, joinDate })
                 }}
               >Add</MyButton>
             </View>
@@ -181,7 +226,7 @@ const mapStateToProps = state => ({
 })
 
 const mapActionsToProps = dispatch => ({
-  addEmployee: (componentId, { name, role, salary, phone, email }) => dispatch(addEmployee(componentId, { name, role, salary, phone, email })),
+  addEmployee: (componentId, { name, role, salary, phone, email, joinDate }) => dispatch(addEmployee(componentId, { name, role, salary, phone, email, joinDate })),
   resetEmployee: () => dispatch(resetEmployee())
 })
 

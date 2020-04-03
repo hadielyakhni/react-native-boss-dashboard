@@ -28,6 +28,7 @@ export default class EmployeeCard extends PureComponent {
   }
   render() {
     const { componentId, uid, data } = this.props
+    const d = new Date(data.joinDate)
     return (
       <View style={styles.container} >
         <View style={styles.imageContainer}>
@@ -49,14 +50,23 @@ export default class EmployeeCard extends PureComponent {
             <Text numberOfLines={1} style={styles.name}>
               {data.name}
             </Text>
-            <Text numberOfLines={1} style={{
-              fontFamily: 'SourceSansPro-Light',
-              color: '#eee',
-              fontSize: 17,
-              marginRight: Dimensions.get('window').width / 8
-            }}>
-              {data.role}
-            </Text>
+            <View style={{ flexDirection: 'row', flex: 1 }}>
+              <Text numberOfLines={1} style={{
+                fontFamily: 'SourceSansPro-Regular',
+                color: '#eee',
+                fontSize: 17
+              }}>
+                {data.role + " - "}
+              </Text>
+              <Text numberOfLines={1} style={{
+                fontFamily: 'SourceSansPro-Regular',
+                color: '#eee',
+                fontSize: 17,
+                marginRight: Dimensions.get('window').width / 8
+              }}>
+                since {("0" + d.getDate()).slice(-2) + "-" + ("0" + (d.getMonth() + 1)).slice(-2) + "-" + d.getFullYear()}
+              </Text>
+            </View>
           </View>
           <Icon name='ios-arrow-forward' style={{ fontSize: 28, color: '#c5c5c5' }} />
         </TouchableOpacity>
