@@ -4,10 +4,11 @@ import '@react-native-firebase/database'
 import { LoginManager, AccessToken } from 'react-native-fbsdk'
 import { Navigation } from 'react-native-navigation'
 import { goToMain } from '../navigation/navigation'
-import { Keyboard, Dimensions } from 'react-native'
+import { Keyboard } from 'react-native'
 import AsyncStorage from '@react-native-community/async-storage'
 
-let UID
+let UID, TASKS_SORT_BY, TASKS_SORT_ORDER, EMPLOYEES_SORT_BY, EMPLOYEES_SORT_ORDER, ACCOUNTS_SORT_BY, ACCOUNTS_SORT_ORDER
+
 // Auth Actions
 export const userSignin = (email, password) =>
   dispatch => {
@@ -15,6 +16,12 @@ export const userSignin = (email, password) =>
     firebase.auth().signInWithEmailAndPassword(email.trim(), password)
       .then(async user => {
         await AsyncStorage.setItem('uid', user.user.uid)
+        if (!TASKS_SORT_BY && !TASKS_SORT_ORDER)
+          dispatch(getTasksSortData(user.user.uid))
+        if (!EMPLOYEES_SORT_BY && !EMPLOYEES_SORT_ORDER)
+          dispatch(getEmployeesSortData(user.user.uid))
+        if (!ACCOUNTS_SORT_BY && !ACCOUNTS_SORT_ORDER)
+          dispatch(getAccountsSortData(user.user.uid))
         goToMain()
         setTimeout(() => {
           dispatch({
@@ -36,7 +43,16 @@ export const userSignup = (email, password) =>
     dispatch({ type: 'auth_attempt_started' })
     firebase.auth().createUserWithEmailAndPassword(email.trim(), password)
       .then(async user => {
-        await AsyncStorage.setItem('uid', user.user.uid)
+        let uid = user.user.uid
+        await Promise.all([
+          AsyncStorage.setItem('uid', uid),
+          firebase.database().ref(`users/${uid}/tasks/sortData`).set({ sortBy: 'time', sortOrder: 'asc' }),
+          firebase.database().ref(`users/${uid}/employees/sortData`).set({ sortBy: 'default', sortOrder: 'asc' }),
+          firebase.database().ref(`users/${uid}/money/sortData`).set({ sortBy: 'default', sortOrder: 'asc' })
+        ])
+        dispatch(getTasksSortData(uid))
+        dispatch(getEmployeesSortData(uid))
+        dispatch(getAccountsSortData(uid))
         goToMain()
         setTimeout(() => {
           dispatch({
@@ -63,7 +79,28 @@ export const userAuthenticateWithFacebook = () =>
         throw new Error('Something went wrong obtaining access token');
       const credential = firebase.auth.FacebookAuthProvider.credential(data.accessToken);
       const user = await firebase.auth().signInWithCredential(credential);
-      await AsyncStorage.setItem('uid', user.user.uid)
+      if (user.additionalUserInfo.isNewUser) {
+        let uid = user.user.uid
+        await Promise.all([
+          await AsyncStorage.setItem('uid', uid),
+          firebase.database().ref(`users/${uid}/tasks/sortData`).set({ sortBy: 'time', sortOrder: 'asc' }),
+          firebase.database().ref(`users/${uid}/employees/sortData`).set({ sortBy: 'default', sortOrder: 'asc' }),
+          firebase.database().ref(`users/${uid}/money/sortData`).set({ sortBy: 'default', sortOrder: 'asc' })
+        ])
+        dispatch(getTasksSortData(uid))
+        dispatch(getEmployeesSortData(uid))
+        dispatch(getAccountsSortData(uid))
+      }
+      else {
+        let uid = user.user.uid
+        await AsyncStorage.setItem('uid', uid)
+        if (!TASKS_SORT_BY && !TASKS_SORT_ORDER)
+          dispatch(getTasksSortData(uid))
+        if (!EMPLOYEES_SORT_BY && !EMPLOYEES_SORT_ORDER)
+          dispatch(getEmployeesSortData(uid))
+        if (!ACCOUNTS_SORT_BY && !ACCOUNTS_SORT_ORDER)
+          dispatch(getAccountsSortData(uid))
+      }
       goToMain()
       setTimeout(() => {
         dispatch({
@@ -73,10 +110,13 @@ export const userAuthenticateWithFacebook = () =>
       }, 100);
     }
     catch (err) {
-      dispatch({
-        type: 'facebook_auth_error',
-        payload: err.toString()
-      })
+      if (err.toString() === 'Error: Something went wrong obtaining access token')
+        dispatch({ type: 'user_cancel_facebook_auth' })
+      else
+        dispatch({
+          type: 'facebook_auth_error',
+          payload: err.toString()
+        })
     }
   }
 
@@ -103,12 +143,24 @@ export const hidePasswordResetSuccessModal = () => ({
 })
 
 // ToDo Actions
+export const getTasksSortData = uid => dispatch => {
+  console.log('will teshtefgel getTasksSortDetails')
+  firebase.database().ref(`/users/${uid}/tasks/sortData`)
+    .on('value', snapshot => {
+      TASKS_SORT_BY = snapshot.val().sortBy
+      TASKS_SORT_ORDER = snapshot.val().sortOrder
+      dispatch({
+        type: 'tasks_sort_data_change',
+        payload: snapshot.val()
+      })
+    })
+}
+
 export const fetchTasks = () => {
-  return async (dispatch) => {
+  return async dispatch => {
     dispatch({ type: 'fetching_tasks' })
-    var d = new Date()
     UID = await AsyncStorage.getItem('uid')
-    firebase.database().ref(`users/${UID}/tasks`)
+    firebase.database().ref(`users/${UID}/tasks/tasks`)
       .on('value', snapshot => {
         dispatch({
           type: 'tasks_fetch_success',
@@ -117,47 +169,65 @@ export const fetchTasks = () => {
       })
   }
 }
+
 export const addTask = (task, description, fromWichScreen, componentId) => {
   Keyboard.dismiss()
   if (!description)
     description = ''
   return dispatch => {
     dispatch({ type: 'add_pressed' })
-    firebase.database().ref(`users/${UID}/tasks`)
-      .push({ task, description: description.trim(), isDone: false, date: Date.now(), customDate: Date.now() })
+    firebase.database().ref(`users/${UID}/tasks/tasks`)
+      .push({ task: task.trim(), description: description.trim(), isDone: false, date: Date.now(), customDate: Date.now() })
     if (fromWichScreen === 'todoAdd')
       Navigation.pop(componentId)
   }
 }
 
 export const updateTask = (taskId, task, description, isDone, componentId) => {
-  if (componentId) {
-    firebase.database().ref(`users/${UID}/tasks/${taskId}`)
-      .update({ task, description, isDone })
-    Navigation.pop(componentId)
-  }
-  else
-    firebase.database().ref(`users/${UID}/tasks/${taskId}`)
-      .update({ isDone: !isDone, date: Date.now() })
   return () => {
-    null
+    if (componentId) {
+      firebase.database().ref(`users/${UID}/tasks/tasks/${taskId}`)
+        .update({ task, description, isDone })
+      Navigation.pop(componentId)
+    }
+    else
+      firebase.database().ref(`users/${UID}/tasks/tasks/${taskId}`)
+        .update({ isDone: !isDone, date: Date.now() })
   }
 }
 
 export const deleteTask = (taskId, fromWichScreen, componentId) => {
   return dispatch => {
     dispatch({ type: 'deleting_task_started' })
-    firebase.database().ref(`users/${UID}/tasks/${taskId}`).remove()
+    firebase.database().ref(`users/${UID}/tasks/tasks/${taskId}`).remove()
     dispatch({ type: 'deleting_task_finished' })
     if (fromWichScreen === 'todoDetails')
       Navigation.pop(componentId)
   }
 }
 
+export const changeTasksSortData = (sortBy, sortOrder) => {
+  return () => {
+    firebase.database().ref(`users/${UID}/tasks/sortData`).update({ sortBy, sortOrder })
+  }
+}
+
 // Employees Actions
+export const getEmployeesSortData = uid => dispatch => {
+  firebase.database().ref(`/users/${uid}/employees/sortData`)
+    .on('value', snapshot => {
+      EMPLOYEES_SORT_BY = snapshot.val().sortBy
+      EMPLOYEES_SORT_ORDER = snapshot.val().sortOrder
+      dispatch({
+        type: 'employees_sort_data_change',
+        payload: snapshot.val()
+      })
+    })
+}
+
 export const addEmployee = (componentId, { name, role, salary, phone, email, joinDate }) => {
   return dispatch => {
-    firebase.database().ref(`/users/${UID}/employees`)
+    firebase.database().ref(`/users/${UID}/employees/employees`)
       .push({ name, role, salary, phone, email, joinDate })
     Navigation.pop(componentId)
   }
@@ -167,7 +237,7 @@ export const fetchEmployees = () => {
   return async dispatch => {
     dispatch({ type: 'fetching_employees' })
     UID = await AsyncStorage.getItem('uid')
-    firebase.database().ref(`/users/${UID}/employees`)
+    firebase.database().ref(`/users/${UID}/employees/employees`)
       .on('value', snapshot => {
         dispatch({
           type: 'employees_fetch_success',
@@ -179,7 +249,7 @@ export const fetchEmployees = () => {
 
 export const updateEmployeeInfo = (componentId, { name, role, salary, phone, email, joinDate, uid }) => {
   return () => {
-    firebase.database().ref(`users/${UID}/employees/${uid}`)
+    firebase.database().ref(`users/${UID}/employees/employees/${uid}`)
       .set({ name, role, salary, phone, email, joinDate })
     Navigation.pop(componentId)
   }
@@ -187,17 +257,36 @@ export const updateEmployeeInfo = (componentId, { name, role, salary, phone, ema
 
 export const deleteEmployee = (componentId, { uid }) => {
   return () => {
-    firebase.database().ref(`users/${UID}/employees/${uid}`).remove()
+    firebase.database().ref(`users/${UID}/employees/employees/${uid}`).remove()
     Navigation.pop(componentId)
   }
 }
 
+export const changeEmployeesSortData = (sortBy, sortOrder) => {
+  return () => {
+    firebase.database().ref(`users/${UID}/employees/sortData`).update({ sortBy, sortOrder })
+  }
+}
+
 // Money Actions
+export const getAccountsSortData = uid => dispatch => {
+  console.log('get accounts sort data')
+  firebase.database().ref(`/users/${uid}/money/sortData`)
+    .on('value', snapshot => {
+      ACCOUNTS_SORT_BY = snapshot.val().sortBy
+      ACCOUNTS_SORT_ORDER = snapshot.val().sortOrder
+      dispatch({
+        type: 'accounts_sort_data_change',
+        payload: snapshot.val()
+      })
+    })
+}
+
 export const fetchAccounts = () => {
   return async dispatch => {
     dispatch({ type: 'fetching_accounts' })
     UID = await AsyncStorage.getItem('uid')
-    firebase.database().ref(`/users/${UID}/money`)
+    firebase.database().ref(`/users/${UID}/money/accounts`)
       .on('value', snapshot => {
         dispatch({
           type: 'accounts_fetch_success',
@@ -212,9 +301,9 @@ export const addMoneyAccount = (componentId, { name, phone = '', status, amount 
     amount *= -1
   name = name.trim()
   return () => {
-    const addedAccountId = firebase.database().ref(`/users/${UID}/money`)
+    const addedAccountId = firebase.database().ref(`/users/${UID}/money/accounts`)
       .push({ name, phone, amount, lastTransaction: Date.now() }).key
-    firebase.database().ref(`/users/${UID}/money/${addedAccountId}/transactions`)
+    firebase.database().ref(`/users/${UID}/money/accounts/${addedAccountId}/transactions`)
       .push({
         transAmount: Math.abs(amount),
         status: amount < 0 ? 'Received' : 'Sent',
@@ -231,9 +320,9 @@ export const addTransaction = (oldAmount, transAmount, status, accountId) => {
   else if (status === 'Received')
     amount = oldAmount - transAmount
   return () => {
-    firebase.database().ref(`users/${UID}/money/${accountId}`)
+    firebase.database().ref(`users/${UID}/money/accounts/${accountId}`)
       .update({ amount, lastTransaction: Date.now() })
-    firebase.database().ref(`users/${UID}/money/${accountId}/transactions`)
+    firebase.database().ref(`users/${UID}/money/accounts/${accountId}/transactions`)
       .push({
         transAmount,
         status: status === 'Sent' ? 'Sent' : 'Received',
@@ -244,13 +333,19 @@ export const addTransaction = (oldAmount, transAmount, status, accountId) => {
 
 export const editAccountInfo = (accountId, name, phone, componentId) =>
   () => {
-    firebase.database().ref(`users/${UID}/money/${accountId}`).update({ name, phone })
+    firebase.database().ref(`users/${UID}/money/accounts/${accountId}`).update({ name, phone })
     Navigation.pop(componentId)
   }
 
 export const deleteAccount = (componentId, accountId) => {
   return () => {
-    firebase.database().ref(`users/${UID}/money/${accountId}`).remove()
+    firebase.database().ref(`users/${UID}/money/accounts/${accountId}`).remove()
     Navigation.pop(componentId)
+  }
+}
+
+export const changeAccountsSortData = (sortBy, sortOrder) => {
+  return () => {
+    firebase.database().ref(`users/${UID}/money/sortData`).update({ sortBy, sortOrder })
   }
 }

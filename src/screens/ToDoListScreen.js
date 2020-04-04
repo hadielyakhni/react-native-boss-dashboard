@@ -12,17 +12,21 @@ import {
 } from 'react-native'
 import { Navigation } from 'react-native-navigation'
 import { connect } from 'react-redux'
-import { addTask, fetchTasks } from '../actions'
+import { addTask, fetchTasks, changeTasksSortData } from '../actions'
 import { Icon } from 'native-base'
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { gestureHandlerRootHOC } from 'react-native-gesture-handler'
 import ToDoItem from '../components/ToDoItem'
+import SortChoicesModal from '../components/SortChoicesModal'
 
 class ToDoListScreen extends Component {
   constructor(props) {
     super(props)
-    this.state = { task: '' }
     this.props.fetchTasks()
+    this.state = { task: '', sortChoicesModalVisible: false }
+    this.dataAppearsAtLeastOnce = false
+    this.sortChoices = [{ id: '1', prop: 'time' }, { id: "2", prop: 'title' }]
     this.hintOpacityValue = 0
     this.hintOpacity = new Animated.Value(0)
     this.hintOpacity.addListener(({ value }) => this.hintOpacityValue = value)
@@ -51,6 +55,10 @@ class ToDoListScreen extends Component {
     this.doneArrowRotationAngle = this.doneListOpacity.interpolate({
       inputRange: [0, 1],
       outputRange: [0, 3.14]
+    })
+    this.sortOpacity = this.hintOpacity.interpolate({
+      inputRange: [0, 1],
+      outputRange: [1, 0]
     })
   }
   componentWillUnmount() {
@@ -112,6 +120,8 @@ class ToDoListScreen extends Component {
   renderScreen() {
     if (!this.props.fetchingTasks)
       if (!!this.props.unDoneTasks.length || !!this.props.doneTasks.length) {
+        if (!this.dataAppearsAtLeastOnce)
+          this.dataAppearsAtLeastOnce = true
         if (this.hintOpacityValue !== 0)
           this.hintOpacity.setValue(0)
         if (!!this.props.unDoneTasks.length && this.undoneOpacityValue !== 1)
@@ -237,15 +247,52 @@ class ToDoListScreen extends Component {
       }
     return null
   }
+  closeSortChoicesModal = () => {
+    this.setState({ sortChoicesModalVisible: false })
+  }
+  onSelectSortChoice = choice => {
+    this.setState({ sortChoicesModalVisible: false })
+    switch (choice) {
+      case 'time':
+        this.props.changeTasksSortData('time', 'desc')
+        break
+      case 'title':
+        this.props.changeTasksSortData('title', 'asc')
+    }
+  }
+  renderSortButton() {
+    if ((!this.props.fetchingTasks && this.dataAppearsAtLeastOnce) || !!this.props.unDoneTasks.length || !!this.props.doneTasks.length)
+      return (
+        <Animated.View style={{ justifyContent: 'center', opacity: this.sortOpacity }}>
+          <TouchableOpacity
+            disabled={this.hintOpacityValue === 1}
+            activeOpacity={0.8}
+            style={{ width: 40, paddingLeft: 8, justifyContent: 'center' }}
+            onPress={() => this.setState({ sortChoicesModalVisible: true })}
+          >
+            <MaterialCommunityIcons name="sort" color="#fff" size={28} />
+          </TouchableOpacity>
+        </Animated.View>
+      )
+    else return null
+  }
   render() {
     return (
       <View style={styles.container}>
+        <SortChoicesModal
+          choices={this.sortChoices}
+          visible={this.state.sortChoicesModalVisible}
+          selectedChoice={this.props.sortBy}
+          onSelect={this.onSelectSortChoice}
+          onCancel={this.closeSortChoicesModal}
+        />
         <View style={styles.header}>
           <View style={styles.titleContainer}>
             <Text numberOfLines={1} style={{ color: '#fff', fontSize: 26, fontFamily: 'SourceSansPro-SemiBold' }}>
               My Tasks
-            </Text>
+          </Text>
           </View>
+          {this.renderSortButton()}
         </View>
         <View style={styles.addView}>
           <TextInput
@@ -397,16 +444,33 @@ const styles = StyleSheet.create({
 
 const mapActionsToProps = dispatch => ({
   addTask: newTask => dispatch(addTask(newTask)),
-  fetchTasks: () => dispatch(fetchTasks())
+  fetchTasks: () => dispatch(fetchTasks()),
+  changeTasksSortData: (sortBy, sortOrder) => dispatch(changeTasksSortData(sortBy, sortOrder))
 })
 
-const mapStateToProps = ({ todo }) => {
-  const tasks = todo.tasks
+const mapStateToProps = (state) => {
+  const { tasks, sortBy, sortOrder } = state.todo
   let result, doneTasks, unDoneTasks
-  if (tasks && tasks !== []) {
+  if (tasks && tasks !== [] && sortBy && sortOrder) {
     result = Object.keys(tasks).map(key => [key, tasks[key]])
-    doneTasks = result.filter(task => task[1].isDone).sort((task1, task2) => task2[1].date - task1[1].date)
-    unDoneTasks = result.filter(task => !task[1].isDone).sort((task1, task2) => task2[1].date - task1[1].date)
+    if (sortBy === 'title')
+      if (sortOrder === 'asc') {
+        doneTasks = result.filter(task => task[1].isDone).sort((a, b) => (a[1].task.toLowerCase() > b[1].task.toLowerCase()) ? 1 : ((b[1].task.toLowerCase() > a[1].task.toLowerCase()) ? -1 : 0))
+        unDoneTasks = result.filter(task => !task[1].isDone).sort((a, b) => (a[1].task.toLowerCase() > b[1].task.toLowerCase()) ? 1 : ((b[1].task.toLowerCase() > a[1].task.toLowerCase()) ? -1 : 0))
+      }
+      else {
+        doneTasks = result.filter(task => task[1].isDone).sort((a, b) => (a[1].task.toLowerCase() > b[1].task.toLowerCase()) ? -1 : ((b[1].task.toLowerCase() > a[1].task.toLowerCase()) ? 1 : 0))
+        unDoneTasks = result.filter(task => !task[1].isDone).sort((a, b) => (a[1].task.toLowerCase() > b[1].task.toLowerCase()) ? -1 : ((b[1].task.toLowerCase() > a[1].task.toLowerCase()) ? 1 : 0))
+      }
+    if (sortBy === 'time')
+      if (sortOrder === 'asc') {
+        doneTasks = result.filter(task => task[1].isDone).sort((a, b) => a[1].date - b[1].date)
+        unDoneTasks = result.filter(task => !task[1].isDone).sort((a, b) => a[1].date - b[1].date)
+      }
+      else {
+        doneTasks = result.filter(task => task[1].isDone).reverse().sort((a, b) => b[1].date - a[1].date)
+        unDoneTasks = result.filter(task => !task[1].isDone).reverse().sort((a, b) => b[1].date - a[1].date)
+      }
   }
   else {
     doneTasks = []
@@ -415,7 +479,9 @@ const mapStateToProps = ({ todo }) => {
   return {
     doneTasks,
     unDoneTasks,
-    fetchingTasks: todo.fetchingTasks
+    sortBy,
+    sortOrder,
+    fetchingTasks: state.todo.fetchingTasks
   }
 }
 

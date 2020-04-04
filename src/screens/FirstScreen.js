@@ -2,16 +2,21 @@ import React, { Component } from 'react'
 import { StyleSheet, View } from 'react-native'
 import AsyncStorage from '@react-native-community/async-storage'
 import { goToAuth, goToMain } from '../navigation/navigation'
-import { Spinner } from 'native-base'
+import { connect } from 'react-redux'
+import { getTasksSortData, getEmployeesSortData, getAccountsSortData } from '../actions'
 
-export class FirstScreen extends Component {
+class FirstScreen extends Component {
   componentDidMount() {
     this.tryAutomaticSignIn()
   }
   tryAutomaticSignIn = async () => {
     const uid = await AsyncStorage.getItem('uid')
-    if (uid)
+    if (uid) {
+      this.props.getTasksSortData(uid)
+      this.props.getEmployeesSortData(uid)
+      this.props.getAccountsSortData(uid)
       goToMain()
+    }
     else
       goToAuth()
   }
@@ -31,3 +36,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   }
 })
+
+export default connect(null, {
+  getTasksSortData,
+  getEmployeesSortData,
+  getAccountsSortData
+})(FirstScreen)

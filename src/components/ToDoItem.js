@@ -22,6 +22,7 @@ UIManager.setLayoutAnimationEnabledExperimental &&
   UIManager.setLayoutAnimationEnabledExperimental(true)
 
 class ToDoItem extends PureComponent {
+  state = { isDone: this.props.data.isDone }
   componentDidMount() {
     LayoutAnimation.configureNext({
       update: {
@@ -42,6 +43,7 @@ class ToDoItem extends PureComponent {
     })
   }
   onBoxPress() {
+    this.setState(prevState => ({ isDone: !prevState.isDone }))
     const { task, description, isDone } = this.props.data
     this.props.updateTask(this.props.taskId, task, description, isDone)
   }
@@ -89,26 +91,26 @@ class ToDoItem extends PureComponent {
   }
   renderRightActions(progress, dragX) {
     const arrowTranslateX = dragX.interpolate({
-      inputRange: [-180, -20, 0],
+      inputRange: [-200, -23, 0],
       outputRange: [-120, 0, 0],
       extrapolate: 'clamp'
     })
     const backgroundColorOpacity = dragX.interpolate({
-      inputRange: [-180, 0],
+      inputRange: [-200, 0],
       outputRange: [1, 0.25]
     })
     const arrowOpacity = dragX.interpolate({
-      inputRange: [-180, -132, 0],
+      inputRange: [-200, -164, 0],
       outputRange: [0, 0.75, 1],
       extrapolate: 'clamp'
     })
     const deleteTranslateX = dragX.interpolate({
-      inputRange: [-180, 0],
+      inputRange: [-200, 0],
       outputRange: [-20, -10],
       extrapolate: 'clamp'
     })
     const deleteOpacity = dragX.interpolate({
-      inputRange: [-180, -170, 0],
+      inputRange: [-200, -182, 0],
       outputRange: [1, 0, 0]
     })
     return (
@@ -124,15 +126,16 @@ class ToDoItem extends PureComponent {
     )
   }
   render() {
-    const { task, description, isDone } = this.props
+    const { task, description, isDone } = this.props.data
     return (
       <Swipeable
-        containerStyle={{ marginVertical: 5, borderRadius: 4 }}
+        useNativeAnimations={true}
+        containerStyle={{ marginVertical: 5, borderRadius: 8 }}
         renderLeftActions={this.renderLeftActions.bind(this)}
         leftThreshold={125}
         onSwipeableLeftOpen={this.onBoxPress.bind(this)}
         renderRightActions={this.renderRightActions.bind(this)}
-        rightThreshold={180}
+        rightThreshold={200}
         onSwipeableRightOpen={this.onDelete.bind(this)}
       >
         <TouchableOpacity
@@ -169,7 +172,7 @@ class ToDoItem extends PureComponent {
           <View style={styles.firstContainer}>
             <CheckBox
               containerStyle={styles.CheckBoxContainer}
-              checked={this.props.data.isDone}
+              checked={this.state.isDone}
               onPress={this.onBoxPress.bind(this)}
               size={22}
               uncheckedColor='#aaa'

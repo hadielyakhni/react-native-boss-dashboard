@@ -27,6 +27,8 @@ export default (state = INITIAL_STATE, action) => {
       return { ...state, facebookButtonDisabled: true }
     case 'facebook_auth_error':
       return { ...state, facebookButtonDisabled: false, error: action.payload }
+    case 'user_cancel_facebook_auth':
+      return { ...state, facebookButtonDisabled: false }
     case 'send_password_reset_email_start':
       return { ...state, sendingPasswordResetEmail: true }
     case 'password_reset_done':

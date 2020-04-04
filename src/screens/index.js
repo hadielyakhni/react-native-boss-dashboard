@@ -1,5 +1,5 @@
 import AuthScreen from './AuthScreen'
-export { FirstScreen } from './FirstScreen'
+import FirstScreen from './FirstScreen'
 import ToDoListScreen from './ToDoListScreen'
 import ToDoAddScreen from './ToDoAddScreen'
 import ToDoDetailsScreen from './ToDoDetailsScreen'
@@ -11,8 +11,9 @@ import MoneyDetailsScreen from './MoneyDetailsScreen'
 import MoneyAddScreen from './MoneyAddScreen'
 import MoneyEditScreen from './MoneyEditScreen'
 import MyProfileScreen from './MyProfileScreen'
-import ForgetPasswordScreen from './forgetPasswordScreen'
+import ForgetPasswordScreen from './ForgetPasswordScreen'
 export {
+  FirstScreen,
   AuthScreen,
   ToDoListScreen,
   ToDoAddScreen,

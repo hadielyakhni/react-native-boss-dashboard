@@ -32,7 +32,7 @@ function ReduxProvider(Component) {
 }
 
 export default registerScreens = () => {
-  Navigation.registerComponent('first', () => FirstScreen)
+  Navigation.registerComponent('first', () => ReduxProvider(FirstScreen), () => FirstScreen)
   Navigation.registerComponent('auth', () => ReduxProvider(AuthScreen), () => AuthScreen)
   Navigation.registerComponent('forgetPassword', () => ReduxProvider(ForgetPasswordScreen), () => ForgetPasswordScreen)
   Navigation.registerComponent('todo', () => ReduxProvider(ToDoListScreen), () => ToDoListScreen)

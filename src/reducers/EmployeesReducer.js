@@ -4,6 +4,8 @@ const INITIAL_STATE = {
   salary: '',
   phone: '',
   email: '',
+  sortBy: '',
+  sortOrder: '',
   fetchingEmployees: true,
   deletingEmployee: false,
   addingEmployee: false,
@@ -12,6 +14,8 @@ const INITIAL_STATE = {
 
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
+    case 'employees_sort_data_change':
+      return { ...state, sortBy: action.payload.sortBy, sortOrder: action.payload.sortOrder }
     case 'fetching_employees':
       return { ...state, fetchingEmployees: true }
     case 'employees_fetch_success':
@@ -29,7 +33,7 @@ export default (state = INITIAL_STATE, action) => {
     case 'employee_updating_finished':
       return { ...state, updatingEmployee: false }
     case 'logout_employees_reset':
-      return { ...INITIAL_STATE }
+      return { ...INITIAL_STATE, sortBy: state.sortBy, sortOrder: state.sortOrder }
     default:
       return state
   }

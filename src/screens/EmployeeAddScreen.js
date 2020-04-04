@@ -165,7 +165,7 @@ class EmployeeAddScreen extends Component {
                 textStyle={{ fontSize: 18 }}
                 onPress={() => {
                   const { name, role, salary, phone, email, joinDate } = this.state
-                  this.props.addEmployee(this.props.componentId, { name, role, salary, phone, email, joinDate })
+                  this.props.addEmployee(this.props.componentId, { name, role, salary, phone, email, joinDate: joinDate || Date.now() })
                 }}
               >Add</MyButton>
             </View>

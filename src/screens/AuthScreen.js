@@ -4,7 +4,7 @@ import {
   Text,
   StyleSheet,
   View,
-  TouchableWithoutFeedback,
+  Animated,
   Keyboard,
   Dimensions,
   Modal,
@@ -74,15 +74,15 @@ class AuthScreen extends Component {
     return (
       <KeyboardAvoidingView behavior='padding' style={styles.container}>
         <View
-          style={{ flex: 1, justifyContent: 'center', paddingBottom: Dimensions.get('window').height / 10 }}
+          style={{ flex: 1, justifyContent: 'center', paddingBottom: !this.state.isKeyboardOpened ? Dimensions.get('window').height / 27 : 100 }}
         >
           {
             this.state.isKeyboardOpened ?
-              <Text style={[styles.title, { marginBottom: 20, fontSize: 50 }]}>Boss</Text>
+              <Text style={{ fontSize: 26, color: '#fff', fontFamily: 'SourceSansPro-SemiBold', marginVertical: 12, alignSelf: 'center' }}>B.D</Text>
               :
-              <Text numberOfLines={2} style={styles.title}>Welcome to Boss Dashboard</Text>
+              <Text numberOfLines={1} style={styles.title}>Boss Dashboard</Text>
           }
-          <View style={{ paddingHorizontal: 33, paddingBottom: this.state.isKeyboardOpened ? 0 : 50 }}>
+          <View style={{ paddingHorizontal: 33 }}>
             <MyInput
               keyboardType='email-address'
               value={this.state.email}
@@ -124,28 +124,42 @@ class AuthScreen extends Component {
               }
             </View>
             {this.renderSignButton()}
-            {this.state.screen === 'login' ?
-              <View style={{ flexDirection: 'row', marginBottom: 16, marginTop: 6, alignItems: 'center' }}>
-                <View style={{ height: 0, flex: 1, borderColor: '#fff', borderWidth: 0.3 }}></View>
-                <Text
-                  onPress={() => Navigation.push(this.props.componentId, { component: { name: 'forgetPassword' } })}
-                  style={{ color: '#fff', fontSize: 13, fontFamily: 'SourceSansPro-SemiBold', marginHorizontal: 12 }}
-                >
-                  Forgot Password?
-                  </Text>
-                <View style={{ height: 0, flex: 1, borderColor: '#fff', borderWidth: 0.3 }}></View>
-              </View>
-              :
-              null}
-            <MyButton
-              disabledColor='#355973'
-              disabled={this.props.facebookButtonDisabled}
-              onPress={this.props.userAuthenticateWithFacebook}
-              color='#008ee0'
-            >
-              <FontAwesome size={22} name="facebook-square" color="#fff" />
-              {""}   Continue With Facebook
-            </MyButton>
+            <View style={{ flexDirection: 'row', marginBottom: 16, marginTop: 6, alignItems: 'center' }}>
+              <View style={{ height: 0, flex: 1, borderColor: '#fff', borderWidth: 0.3 }}></View>
+              <Text
+                onPress={() => {
+                  if (this.state.screen === 'login')
+                    Navigation.push(this.props.componentId, { component: { name: 'forgetPassword' } })
+                }}
+                style={{ color: '#fff', fontSize: 13, fontFamily: 'SourceSansPro-SemiBold', marginHorizontal: 12 }}
+              >
+                {this.state.screen === 'login' ? "Forgot Password?" : "OR"}
+              </Text>
+              <View style={{ height: 0, flex: 1, borderColor: '#fff', borderWidth: 0.3 }}></View>
+            </View>
+            <View>
+              <MyButton
+                disabledColor='#355973'
+                // disabled={this.props.facebookButtonDisabled}
+                // onPress={this.props.userAuthenticateWithFacebook}
+                color='#E53935'
+              >
+                <FontAwesome size={22} name="google" color="#fff" />
+                {""}   Continue With Google
+              </MyButton>
+              <MyButton
+                disabledColor='#355973'
+                disabled={this.props.facebookButtonDisabled}
+                onPress={() => {
+                  Keyboard.dismiss()
+                  this.props.userAuthenticateWithFacebook()
+                }}
+                color='#008ee0'
+              >
+                <FontAwesome size={22} name="facebook-square" color="#fff" />
+                {""}   Continue With Facebook
+              </MyButton>
+            </View>
           </View>
           <View style={[styles.switchMethodeOption, { bottom: this.state.isKeyboardOpened ? 30 : 0 }]}>
             <TouchableOpacity

@@ -12,17 +12,28 @@ import {
 } from 'react-native'
 import { Navigation } from 'react-native-navigation'
 import { connect } from 'react-redux'
-import { fetchAccounts } from '../actions'
+import { fetchAccounts, changeAccountsSortData } from '../actions'
 import { Icon } from 'native-base'
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import MoneyCard from '../components/MoneyCard'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
-
+import SortChoicesModal from '../components/SortChoicesModal'
 
 class MyMoneyScreen extends Component {
   constructor(props) {
     super(props)
     this.props.fetchAccounts()
-    this.state = { searchWord: '' }
+    this.dataAppearsAtLeastOnce = false
+    this.sortChoices = [
+      { id: "2", prop: "default" },
+      { id: "3", prop: "name" },
+      { id: "4", prop: "amount - Low to High" },
+      { id: "5", prop: "amount - High to Low" },
+      { id: "6", prop: "last transaction - Oldest to Newest" },
+      { id: "7", prop: "last transaction - Newest to Oldest" }
+    ]
+    this.activeSortLabel = ''
+    this.state = { searchWord: '', sortChoicesModalVisible: false }
     this.hintOpacityValue = 0
     this.hintOpacity = new Animated.Value(0)
     this.hintOpacity.addListener(({ value }) => this.hintOpacityValue = value)
@@ -36,6 +47,10 @@ class MyMoneyScreen extends Component {
     this.nAccountsOpacityValue = 0
     this.nAccountsOpacity = new Animated.Value(0)
     this.nAccountsOpacity.addListener(({ value }) => this.nAccountsOpacityValue = value)
+    this.sortOpacity = this.hintOpacity.interpolate({
+      inputRange: [0, 1],
+      outputRange: [1, 0]
+    })
   }
   componentWillUnmount() {
     this.hintOpacity.removeAllListeners()
@@ -69,6 +84,8 @@ class MyMoneyScreen extends Component {
           </View>
         )
       }
+      if (!this.dataAppearsAtLeastOnce)
+        this.dataAppearsAtLeastOnce = true
       if (this.hintOpacityValue !== 0)
         this.hintOpacity.setValue(0)
       let matchedAccounts
@@ -89,6 +106,8 @@ class MyMoneyScreen extends Component {
           nTotal += parseFloat(-account[1].amount)
         return account[1].amount < 0
       })
+      if (this.props.sortBy === 'amount')
+        nAccounts.reverse()
       if (!pAccounts.length && !nAccounts.length)
         return (
           <View style={{ flex: 1, justifyContent: 'flex-start', alignItems: 'center', paddingTop: 30 }}>
@@ -196,15 +215,80 @@ class MyMoneyScreen extends Component {
     }
     return null
   }
+  closeSortChoicesModal = () => {
+    this.setState({ sortChoicesModalVisible: false })
+  }
+  onSelectSortChoice = choice => {
+    this.setState({ sortChoicesModalVisible: false })
+    switch (choice) {
+      case 'default':
+        this.props.changeAccountsSortData('default', 'asc')
+        break
+      case 'name':
+        this.props.changeAccountsSortData('name', 'asc')
+        break
+      case 'amount - Low to High':
+        this.props.changeAccountsSortData('amount', 'asc')
+        break
+      case 'amount - High to Low':
+        this.props.changeAccountsSortData('amount', 'desc')
+        break
+      case 'last transaction - Oldest to Newest':
+        this.props.changeAccountsSortData('lastTransaction', 'asc')
+        break
+      case 'last transaction - Newest to Oldest':
+        this.props.changeAccountsSortData('lastTransaction', 'desc')
+        break
+    }
+  }
+  checkActiveSortLabel() {
+    if (this.props.sortBy === 'default' && this.props.sortOrder === 'asc')
+      this.activeSortLabel = 'default'
+    if (this.props.sortBy === 'name' && this.props.sortOrder === 'asc')
+      this.activeSortLabel = 'name'
+    if (this.props.sortBy === 'amount' && this.props.sortOrder === 'asc')
+      this.activeSortLabel = 'amount - Low to High'
+    if (this.props.sortBy === 'amount' && this.props.sortOrder === 'desc')
+      this.activeSortLabel = 'amount - High to Low'
+    if (this.props.sortBy === 'lastTransaction' && this.props.sortOrder === 'asc')
+      this.activeSortLabel = 'last transaction - Oldest to Newest'
+    if (this.props.sortBy === 'lastTransaction' && this.props.sortOrder === 'desc')
+      this.activeSortLabel = 'last transaction - Newest to Oldest'
+  }
+  renderSortButton() {
+    if ((!this.props.fetchingAccounts && this.dataAppearsAtLeastOnce) || this.props.allAccounts.length)
+      return (
+        <Animated.View style={{ justifyContent: 'center', opacity: this.sortOpacity }}>
+          <TouchableOpacity
+            activeOpacity={0.8}
+            style={{ width: 40, paddingLeft: 4, justifyContent: 'center' }}
+            onPress={() => this.setState({ sortChoicesModalVisible: true })}
+          >
+            <MaterialCommunityIcons name="sort" color="#fff" size={28} />
+          </TouchableOpacity>
+        </Animated.View>
+      )
+    else
+      return null
+  }
   render() {
+    { this.checkActiveSortLabel() }
     return (
       <View style={styles.container}>
+        <SortChoicesModal
+          choices={this.sortChoices}
+          visible={this.state.sortChoicesModalVisible}
+          selectedChoice={this.activeSortLabel}
+          onSelect={this.onSelectSortChoice}
+          onCancel={this.closeSortChoicesModal}
+        />
         <View style={styles.header}>
           <View style={styles.titleContainer}>
             <Text numberOfLines={1} style={{ color: '#fff', fontSize: 26, fontFamily: 'SourceSansPro-SemiBold' }}>
               My Wallet
             </Text>
           </View>
+          {this.renderSortButton()}
         </View>
         <View style={styles.searchView}>
           <Icon
@@ -234,7 +318,7 @@ class MyMoneyScreen extends Component {
         >
           <Icon name='ios-add' style={{ color: '#fff', fontSize: 38 }} />
         </TouchableOpacity>
-      </View>
+      </View >
     )
   }
 }
@@ -290,17 +374,44 @@ const styles = StyleSheet.create({
   }
 })
 
-const mapStateToProps = state => {
-  const accounts = state.money.allAccounts
+const mapDispatchToProp = dispatch => ({
+  fetchAccounts: () => dispatch(fetchAccounts()),
+  changeAccountsSortData: (sortBy, sortOrder) => dispatch(changeAccountsSortData(sortBy, sortOrder))
+})
+
+const mapStateToProps = ({ money }) => {
+  const { allAccounts: accounts, sortBy, sortOrder } = money
   let allAccounts
-  if (accounts)
-    allAccounts = Object.keys(accounts).map(key => [key, accounts[key]])
+  if (accounts && sortBy && sortOrder) {
+    if (sortBy === 'default')
+      if (sortOrder === 'asc')
+        allAccounts = Object.keys(accounts).map(key => [key, accounts[key]])
+      else
+        allAccounts = Object.keys(accounts).map(key => [key, accounts[key]]).reverse()
+    if (sortBy === 'amount')
+      if (sortOrder === 'asc')
+        allAccounts = Object.keys(accounts).map(key => [key, accounts[key]]).sort((a, b) => a[1].amount - b[1].amount)
+      else
+        allAccounts = Object.keys(accounts).map(key => [key, accounts[key]]).sort((a, b) => b[1].amount - a[1].amount)
+    if (sortBy === 'lastTransaction')
+      if (sortOrder === 'asc')
+        allAccounts = Object.keys(accounts).map(key => [key, accounts[key]]).sort((a, b) => a[1].lastTransaction - b[1].lastTransaction)
+      else
+        allAccounts = Object.keys(accounts).map(key => [key, accounts[key]]).sort((a, b) => b[1].lastTransaction - a[1].lastTransaction)
+    if (sortBy === 'name')
+      if (sortOrder === 'asc')
+        allAccounts = Object.keys(accounts).map(key => [key, accounts[key]]).sort((a, b) => (a[1].name.toLowerCase() > b[1].name.toLowerCase()) ? 1 : ((b[1].name.toLowerCase() > a[1].name.toLowerCase()) ? -1 : 0))
+      else
+        allAccounts = Object.keys(accounts).map(key => [key, accounts[key]]).sort((a, b) => (a[1].name.toLowerCase() > b[1].name.toLowerCase()) ? -1 : ((b[1].name.toLowerCase() > a[1].name.toLowerCase()) ? 1 : 0))
+  }
   else
     allAccounts = []
   return {
     allAccounts,
-    fetchingAccounts: state.money.fetchingAccounts
+    sortBy,
+    sortOrder,
+    fetchingAccounts: money.fetchingAccounts
   }
 }
 
-export default connect(mapStateToProps, { fetchAccounts })(MyMoneyScreen)
+export default connect(mapStateToProps, mapDispatchToProp)(MyMoneyScreen)
