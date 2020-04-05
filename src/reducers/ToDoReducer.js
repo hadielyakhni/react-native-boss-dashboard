@@ -4,7 +4,8 @@ const INITIAL_STATE = {
   sortBy: '',
   sortOrder: '',
   fetchingTasks: true,
-  deletingTask: false
+  deletingTask: false,
+  showUndoDelete: false
 }
 
 export default (state = INITIAL_STATE, action) => {
@@ -23,6 +24,13 @@ export default (state = INITIAL_STATE, action) => {
       return { ...state, deletingTask: false }
     case 'logout_tasks_reset':
       return { ...INITIAL_STATE, sortBy: state.sortBy, sortOrder: state.sortOrder }
+    case 'show_undo_task_message':
+      return { ...state, showUndoDelete: true }
+    case 'hide_undo_task_message': {
+      if (!state.showUndoDelete)
+        return { ...state }
+      return { ...state, showUndoDelete: false }
+    }
     default:
       return state
   }

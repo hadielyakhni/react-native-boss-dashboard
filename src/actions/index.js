@@ -7,7 +7,7 @@ import { goToMain } from '../navigation/navigation'
 import { Keyboard } from 'react-native'
 import AsyncStorage from '@react-native-community/async-storage'
 
-let UID, TASKS_SORT_BY, TASKS_SORT_ORDER, EMPLOYEES_SORT_BY, EMPLOYEES_SORT_ORDER, ACCOUNTS_SORT_BY, ACCOUNTS_SORT_ORDER
+let UID, TASKS_SORT_BY, TASKS_SORT_ORDER, EMPLOYEES_SORT_BY, EMPLOYEES_SORT_ORDER, ACCOUNTS_SORT_BY, ACCOUNTS_SORT_ORDER, LAST_DELETED_TASK, LAST_TASK_DELETE_DATE
 
 // Auth Actions
 export const userSignin = (email, password) =>
@@ -196,13 +196,27 @@ export const updateTask = (taskId, task, description, isDone, componentId) => {
   }
 }
 
-export const deleteTask = (taskId, fromWichScreen, componentId) => {
+export const deleteTask = (taskId, fromWichScreen, componentId, taskData) => {
+  LAST_DELETED_TASK = taskData
   return dispatch => {
     dispatch({ type: 'deleting_task_started' })
     firebase.database().ref(`users/${UID}/tasks/tasks/${taskId}`).remove()
+    LAST_TASK_DELETE_DATE = Date.now()
     dispatch({ type: 'deleting_task_finished' })
     if (fromWichScreen === 'todoDetails')
       Navigation.pop(componentId)
+    dispatch({ type: 'show_undo_task_message' })
+    setTimeout(() => {
+      if (Date.now() - LAST_TASK_DELETE_DATE >= 2000)
+        dispatch({ type: 'hide_undo_task_message' })
+    }, 2000);
+  }
+}
+
+export const restoreLastDeletedTask = () => {
+  firebase.database().ref(`users/${UID}/tasks/tasks/`).push(LAST_DELETED_TASK)
+  return dispatch => {
+    dispatch({ type: 'hide_undo_task_message' })
   }
 }
 

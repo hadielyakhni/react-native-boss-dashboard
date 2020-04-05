@@ -10,8 +10,9 @@ import MyButton from '../components/MyButton'
 class ToDoDetailsScreen extends Component {
   constructor(props) {
     super(props)
-    const { task, description, isDone } = this.props
+    const { task, description, isDone, date, customDate } = this.props
     this.state = { task, description, isDone }
+    this.taskData = { task, description, isDone, date, customDate }
   }
   render() {
     return (
@@ -71,7 +72,7 @@ class ToDoDetailsScreen extends Component {
               color='#e65100'
               textStyle={{ fontSize: 20 }}
               onPress={() => {
-                this.props.deleteTask(this.props.taskId, 'todoDetails', this.props.componentId)
+                this.props.deleteTask(this.props.taskId, 'todoDetails', this.props.componentId, this.taskData)
               }}
             >Delete
           </MyButton>
@@ -157,12 +158,10 @@ const mapStateToProps = ({ todo }) => ({
 
 const mapActionsToProps = dispatch => {
   return {
-    updateTask: (taskId, task, description, isDone, componentId) => (
-      dispatch(updateTask(taskId, task, description, isDone, componentId))
-    ),
-    deleteTask: (taskId, fromWichScreen, componentId) => (
-      dispatch(deleteTask(taskId, fromWichScreen, componentId))
-    )
+    updateTask: (taskId, task, description, isDone, componentId) =>
+      dispatch(updateTask(taskId, task, description, isDone, componentId)),
+    deleteTask: (taskId, fromWichScreen, componentId, taskData) =>
+      dispatch(deleteTask(taskId, fromWichScreen, componentId, taskData))
   }
 }
 

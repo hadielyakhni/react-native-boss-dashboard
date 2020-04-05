@@ -12,7 +12,7 @@ import {
 } from 'react-native'
 import { Navigation } from 'react-native-navigation'
 import { connect } from 'react-redux'
-import { addTask, fetchTasks, changeTasksSortData } from '../actions'
+import { addTask, fetchTasks, changeTasksSortData, restoreLastDeletedTask } from '../actions'
 import { Icon } from 'native-base'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import Ionicons from 'react-native-vector-icons/Ionicons'
@@ -189,7 +189,7 @@ class ToDoListScreen extends Component {
                     <View style={styles.separotorView}>
                       <View style={{ flexDirection: 'row' }}>
                         <Text style={styles.separotorText}>
-                          {'INCOMPLETED' + "  "}
+                          {'COMPLETED' + "  "}
                         </Text>
                         <Text style={styles.SeparatorNumber}>
                           ({this.props.doneTasks.length})
@@ -276,9 +276,30 @@ class ToDoListScreen extends Component {
       )
     else return null
   }
+  renderUndoMessage() {
+    return (
+      <View style={[styles.undoView, {
+        bottom: this.props.showUndoDelete ? 96 : -80
+      }]}>
+        <Text style={{ fontSize: 15, color: '#fff', fontFamily: 'SourceSansPro-Regular' }}>1 deleted</Text>
+        <TouchableOpacity
+          activeOpacity={0.8}
+          style={{ alignItems: 'center', justifyContent: 'center', padding: 6, borderRadius: 6 }}
+          onPress={() => {
+            this.props.restoreLastDeletedTask()
+          }}
+        >
+          <Text style={{ fontSize: 17, fontFamily: 'SourceSansPro-SemiBold', color: '#008ee0' }}>
+            Undo
+            </Text>
+        </TouchableOpacity>
+      </View>
+    )
+  }
   render() {
     return (
       <View style={styles.container}>
+        {this.renderUndoMessage()}
         <SortChoicesModal
           choices={this.sortChoices}
           visible={this.state.sortChoicesModalVisible}
@@ -290,7 +311,7 @@ class ToDoListScreen extends Component {
           <View style={styles.titleContainer}>
             <Text numberOfLines={1} style={{ color: '#fff', fontSize: 26, fontFamily: 'SourceSansPro-SemiBold' }}>
               My Tasks
-          </Text>
+            </Text>
           </View>
           {this.renderSortButton()}
         </View>
@@ -357,6 +378,20 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 5,
     backgroundColor: '#000'
+  },
+  undoView: {
+    height: 46,
+    left: 14,
+    right: 14,
+    zIndex: 1,
+    paddingHorizontal: 20,
+    backgroundColor: '#272727',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    position: 'absolute',
+    alignSelf: 'center',
+    borderRadius: 6
   },
   loadingContainer: {
     width: 30,
@@ -445,7 +480,8 @@ const styles = StyleSheet.create({
 const mapActionsToProps = dispatch => ({
   addTask: newTask => dispatch(addTask(newTask)),
   fetchTasks: () => dispatch(fetchTasks()),
-  changeTasksSortData: (sortBy, sortOrder) => dispatch(changeTasksSortData(sortBy, sortOrder))
+  changeTasksSortData: (sortBy, sortOrder) => dispatch(changeTasksSortData(sortBy, sortOrder)),
+  restoreLastDeletedTask: () => dispatch(restoreLastDeletedTask())
 })
 
 const mapStateToProps = (state) => {
@@ -481,7 +517,8 @@ const mapStateToProps = (state) => {
     unDoneTasks,
     sortBy,
     sortOrder,
-    fetchingTasks: state.todo.fetchingTasks
+    fetchingTasks: state.todo.fetchingTasks,
+    showUndoDelete: state.todo.showUndoDelete
   }
 }
 

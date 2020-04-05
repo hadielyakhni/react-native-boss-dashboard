@@ -48,7 +48,7 @@ class ToDoItem extends PureComponent {
     this.props.updateTask(this.props.taskId, task, description, isDone)
   }
   onDelete() {
-    this.props.deleteTask(this.props.taskId)
+    this.props.deleteTask(this.props.taskId, undefined, undefined, this.props.data)
   }
   renderLeftActions(progress, dragX) {
     const arrowTranslateX = dragX.interpolate({
@@ -126,7 +126,7 @@ class ToDoItem extends PureComponent {
     )
   }
   render() {
-    const { task, description, isDone } = this.props.data
+    const { task, description, isDone, date, customDate } = this.props.data
     return (
       <Swipeable
         useNativeAnimations={true}
@@ -149,7 +149,9 @@ class ToDoItem extends PureComponent {
                   taskId: this.props.taskId,
                   task,
                   description,
-                  isDone
+                  isDone,
+                  date,
+                  customDate
                 },
                 options: {
                   animations: {
@@ -233,7 +235,7 @@ const styles = StyleSheet.create({
 })
 
 const mapDispatchToProps = dispatch => ({
-  deleteTask: taskId => dispatch(deleteTask(taskId)),
+  deleteTask: (taskId, fromWichScreen, componentId, taskData) => dispatch(deleteTask(taskId, fromWichScreen, componentId, taskData)),
   updateTask: (taskId, task, description, isDone) => dispatch(updateTask(taskId, task, description, isDone))
 })
 
