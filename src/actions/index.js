@@ -2,6 +2,7 @@ import firebase from '@react-native-firebase/app'
 import '@react-native-firebase/auth'
 import '@react-native-firebase/database'
 import { LoginManager, AccessToken } from 'react-native-fbsdk'
+import { GoogleSignin } from '@react-native-community/google-signin'
 import { Navigation } from 'react-native-navigation'
 import { goToMain } from '../navigation/navigation'
 import { Keyboard } from 'react-native'
@@ -43,6 +44,7 @@ export const userSignup = (email, password) =>
     dispatch({ type: 'auth_attempt_started' })
     firebase.auth().createUserWithEmailAndPassword(email.trim(), password)
       .then(async user => {
+        console.log(user)
         let uid = user.user.uid
         await Promise.all([
           AsyncStorage.setItem('uid', uid),
@@ -79,6 +81,7 @@ export const userAuthenticateWithFacebook = () =>
         throw new Error('Something went wrong obtaining access token');
       const credential = firebase.auth.FacebookAuthProvider.credential(data.accessToken);
       const user = await firebase.auth().signInWithCredential(credential);
+      console.log(user)
       if (user.additionalUserInfo.isNewUser) {
         let uid = user.user.uid
         await Promise.all([
@@ -110,6 +113,7 @@ export const userAuthenticateWithFacebook = () =>
       }, 100);
     }
     catch (err) {
+      console.log(err)
       if (err.toString() === 'Error: Something went wrong obtaining access token')
         dispatch({ type: 'user_cancel_facebook_auth' })
       else
@@ -117,6 +121,48 @@ export const userAuthenticateWithFacebook = () =>
           type: 'facebook_auth_error',
           payload: err.toString()
         })
+    }
+  }
+
+export const userAuthenticateWithGoogle = () =>
+  async dispatch => {
+    try {
+      const { idToken } = await GoogleSignin.signIn()
+      const googleCredential = firebase.auth.GoogleAuthProvider.credential(idToken)
+      const user = await firebase.auth().signInWithCredential(googleCredential)
+      console.log(user)
+      if (user.additionalUserInfo.isNewUser) {
+        let uid = user.user.uid
+        await Promise.all([
+          await AsyncStorage.setItem('uid', uid),
+          firebase.database().ref(`users/${uid}/tasks/sortData`).set({ sortBy: 'time', sortOrder: 'asc' }),
+          firebase.database().ref(`users/${uid}/employees/sortData`).set({ sortBy: 'default', sortOrder: 'asc' }),
+          firebase.database().ref(`users/${uid}/money/sortData`).set({ sortBy: 'default', sortOrder: 'asc' })
+        ])
+        dispatch(getTasksSortData(uid))
+        dispatch(getEmployeesSortData(uid))
+        dispatch(getAccountsSortData(uid))
+      }
+      else {
+        let uid = user.user.uid
+        await AsyncStorage.setItem('uid', uid)
+        if (!TASKS_SORT_BY && !TASKS_SORT_ORDER)
+          dispatch(getTasksSortData(uid))
+        if (!EMPLOYEES_SORT_BY && !EMPLOYEES_SORT_ORDER)
+          dispatch(getEmployeesSortData(uid))
+        if (!ACCOUNTS_SORT_BY && !ACCOUNTS_SORT_ORDER)
+          dispatch(getAccountsSortData(uid))
+      }
+      goToMain()
+      setTimeout(() => {
+        dispatch({
+          type: 'user_signedin',
+          payload: user
+        })
+      }, 100);
+    }
+    catch (err) {
+      alert(err.toString())
     }
   }
 

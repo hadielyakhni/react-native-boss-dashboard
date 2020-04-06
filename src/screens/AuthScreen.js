@@ -17,7 +17,7 @@ import {
 import { Spinner } from 'native-base'
 import MyInput from '../components/MyInput'
 import MyButton from '../components/MyButton'
-import { userSignin, userSignup, userAuthenticateWithFacebook, dsimissAuthError } from '../actions'
+import { userSignin, userSignup, userAuthenticateWithFacebook, userAuthenticateWithGoogle, dsimissAuthError } from '../actions'
 import getAuthError from '../utils/getAuthError'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import { Navigation } from 'react-native-navigation'
@@ -141,7 +141,10 @@ class AuthScreen extends Component {
               <MyButton
                 disabledColor='#355973'
                 // disabled={this.props.facebookButtonDisabled}
-                // onPress={this.props.userAuthenticateWithFacebook}
+                onPress={() => {
+                  Keyboard.dismiss()
+                  this.props.userAuthenticateWithGoogle()
+                }}
                 color='#E53935'
               >
                 <FontAwesome size={22} name="google" color="#fff" />
@@ -321,6 +324,7 @@ const mapActionsToProps = dispatch => ({
   userSignin: (email, password) => dispatch(userSignin(email, password)),
   userSignup: (email, password) => dispatch(userSignup(email, password)),
   userAuthenticateWithFacebook: () => dispatch(userAuthenticateWithFacebook()),
+  userAuthenticateWithGoogle: () => dispatch(userAuthenticateWithGoogle()),
   dsimissAuthError: () => dispatch(dsimissAuthError())
 })
 

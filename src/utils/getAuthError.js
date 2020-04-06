@@ -12,7 +12,7 @@ const getAuthError = (nativeError, isFromForget) => {
     case 'Error: [auth/user-not-found] There is no user record corresponding to this identifier. The user may have been deleted.':
       return 'No user found with this email address.'
     case 'Error: [auth/account-exists-with-different-credential] An account already exists with the same email address but different sign-in credentials. Sign in using a provider associated with this email address.':
-      return 'An account with the same email address already exists! Try signin with email and password, or click on the Forgot Password link to reset your password.'
+      return 'An account with the same email address already exists but with another signin method!'
     case 'Error: [auth/email-already-in-use] The email address is already in use by another account.':
       return 'The email address is already in use by another account! You can click on the Forgot Password link to reset your password.'
     case 'Error: [auth/unknown] We have blocked all requests from this device due to unusual activity. Try again later.':

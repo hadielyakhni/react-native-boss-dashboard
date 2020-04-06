@@ -137,6 +137,12 @@ android {
         multiDexEnabled true
     }
     signingConfigs {
+        debug {
+          storeFile file('debug.keystore')
+          storePassword 'android'
+          keyAlias 'androiddebugkey'
+          keyPassword 'android'
+        }
         release {
             if (project.hasProperty('MYAPP_UPLOAD_STORE_FILE')) {
                 storeFile file(MYAPP_UPLOAD_STORE_FILE)
@@ -191,12 +197,13 @@ android {
 }
 
 dependencies {
-  implementation 'com.facebook.android:facebook-android-sdk:[5,6)'
+    implementation 'com.facebook.android:facebook-android-sdk:[5,6)'
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.facebook.react:react-native:+"  // From node_modules
     implementation 'androidx.appcompat:appcompat:1.1.0-rc01'
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0-alpha02'
     implementation 'com.android.support:multidex:1.0.3'
+    implementation 'com.google.android.gms:play-services-auth:18.0.0'
 
     if (enableHermes) {
         def hermesPath = "../../node_modules/hermes-engine/android/";

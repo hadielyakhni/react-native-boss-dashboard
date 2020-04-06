@@ -279,7 +279,7 @@ class ToDoListScreen extends Component {
   renderUndoMessage() {
     return (
       <View style={[styles.undoView, {
-        bottom: this.props.showUndoDelete ? 96 : -80
+        bottom: this.props.showUndoDelete ? 24.5 : -100
       }]}>
         <Text style={{ fontSize: 15, color: '#fff', fontFamily: 'SourceSansPro-Regular' }}>1 deleted</Text>
         <TouchableOpacity
@@ -379,20 +379,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 5,
     backgroundColor: '#000'
   },
-  undoView: {
-    height: 46,
-    left: 14,
-    right: 14,
-    zIndex: 1,
-    paddingHorizontal: 20,
-    backgroundColor: '#272727',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    position: 'absolute',
-    alignSelf: 'center',
-    borderRadius: 6
-  },
   loadingContainer: {
     width: 30,
     height: 30,
@@ -409,6 +395,7 @@ const styles = StyleSheet.create({
   titleContainer: {
     flex: 1,
     paddingLeft: 12,
+    paddingTop: 8,
     justifyContent: 'center',
     backgroundColor: '#000'
   },
@@ -456,6 +443,20 @@ const styles = StyleSheet.create({
     borderRadius: 27.5,
     alignItems: 'center',
     justifyContent: 'center'
+  },
+  undoView: {
+    height: 46,
+    left: 14,
+    right: 88,
+    zIndex: 1,
+    paddingHorizontal: 20,
+    backgroundColor: '#272727',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    position: 'absolute',
+    alignSelf: 'center',
+    borderRadius: 6
   },
   separotorView: {
     marginHorizontal: 4,

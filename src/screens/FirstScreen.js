@@ -4,6 +4,12 @@ import AsyncStorage from '@react-native-community/async-storage'
 import { goToAuth, goToMain } from '../navigation/navigation'
 import { connect } from 'react-redux'
 import { getTasksSortData, getEmployeesSortData, getAccountsSortData } from '../actions'
+import { GoogleSignin } from '@react-native-community/google-signin'
+import Keys from '../keys/google'
+
+GoogleSignin.configure({
+  webClientId: Keys.webClientId
+});
 
 class FirstScreen extends Component {
   componentDidMount() {

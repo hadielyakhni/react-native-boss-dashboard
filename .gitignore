@@ -64,3 +64,5 @@ buck-out/
 
 #google services
 google-services.json
+
+/src/keys/google.js

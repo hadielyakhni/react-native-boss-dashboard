@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Text, StyleSheet, View, TouchableOpacity, Modal } from 'react-native'
 import { LoginManager } from 'react-native-fbsdk'
+import { GoogleSignin } from '@react-native-community/google-signin'
 import AsyncStorage from '@react-native-community/async-storage'
 import { goToAuth } from '../navigation/navigation'
 import { connect } from 'react-redux'
@@ -39,6 +40,7 @@ class MyProfileScreen extends Component {
                 onPress={() => {
                   this.setState({ modalVisible: false, loggingout: true })
                   LoginManager.logOut()
+                  GoogleSignin.signOut()
                   AsyncStorage.clear()
                   this.props.resetTasks()
                   this.props.resetEmployees()
@@ -106,6 +108,7 @@ const styles = StyleSheet.create({
     paddingBottom: 15
   },
   header: {
+    paddingTop: 8,
     height: 56,
     flexDirection: 'row',
     backgroundColor: '#000'

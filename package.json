@@ -3,16 +3,17 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "android": "react-native run-android",
-    "android:release": "react-native run-android --variant=release",
+    "android": "npx react-native run-android",
+    "android:release": "npx react-native run-android --variant=release",
     "ios": "react-native run-ios",
-    "start": "react-native start",
+    "start": "npx react-native start",
     "lint": "eslint .",
     "postinstall": "node ./android/fixAndroid/android-release-fix.js"
   },
   "dependencies": {
     "@react-native-community/async-storage": "^1.8.1",
     "@react-native-community/datetimepicker": "^2.3.1",
+    "@react-native-community/google-signin": "^4.0.0",
     "@react-native-firebase/app": "^6.3.4",
     "@react-native-firebase/auth": "^6.3.4",
     "@react-native-firebase/database": "^6.3.4",
