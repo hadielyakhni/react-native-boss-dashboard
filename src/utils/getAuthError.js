@@ -1,5 +1,6 @@
 const getAuthError = (nativeError, isFromForget) => {
   switch (nativeError) {
+    case 'Error: NETWORK_ERROR':
     case 'Error: CONNECTION_FAILURE: CONNECTION_FAILURE':
     case 'Error: [auth/unknown] A network error (such as timeout, interrupted connection or unreachable host) has occurred.':
       return 'Connection not available. Check your internet connection and try again!'

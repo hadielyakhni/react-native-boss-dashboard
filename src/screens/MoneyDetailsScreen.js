@@ -95,6 +95,7 @@ class MoneyDetailsScreen extends Component {
             </TouchableOpacity>
             <TouchableOpacity
               activeOpacity={0.85}
+              style={styles.editIconContainer}
               onPress={() => Navigation.push(this.props.componentId, {
                 component: {
                   name: 'moneyEdit',
@@ -105,7 +106,6 @@ class MoneyDetailsScreen extends Component {
                   }
                 }
               })}
-              style={styles.editIconContainer}
             >
               <MaterialIcons name="mode-edit" size={24} color="#fff" />
             </TouchableOpacity>
@@ -187,29 +187,24 @@ class MoneyDetailsScreen extends Component {
                 data={this.props.transactions}
                 keyExtractor={transaction => transaction[0]}
                 renderItem={({ item }) => <TransactionCard data={item} />}
-                getItemLayout={(data, index) => (
-                  { length: 81, offset: 81 * index, index }
-                )}
+                getItemLayout={(data, index) => ({ length: 81, offset: 81 * index, index })}
               />
             </View>
             <Modal
               animationType="fade"
               transparent={true}
               visible={this.state.modalVisible}
-              onRequestClose={() => {
-                this.setState({ modalVisible: false })
-              }}>
-              <View
-                style={{ flex: 1, justifyContent: 'center' }}
-              >
+              onRequestClose={() => { this.setState({ modalVisible: false }) }}
+            >
+              <View style={{ flex: 1, justifyContent: 'center' }}>
                 <View style={styles.modal}>
                   <View style={styles.upperModal}>
                     <Text style={{ fontFamily: 'SourceSansPro-Regular', marginBottom: 7, textAlign: 'center', color: '#eeeeee', fontSize: 18 }}>
                       Delete this account?
-                  </Text>
+                    </Text>
                     <Text style={{ fontFamily: 'SourceSansPro-Regular', textAlign: 'center', color: '#eeeeee', fontSize: 18 }}>
                       This action cannot be undo.
-                  </Text>
+                    </Text>
                   </View>
                   <View style={{ flexDirection: 'row' }}>
                     <TouchableOpacity
@@ -220,7 +215,7 @@ class MoneyDetailsScreen extends Component {
                       style={[styles.modalButton, { borderBottomLeftRadius: 4 }]}>
                       <Text style={{ color: '#eeeeee', fontSize: 18, fontFamily: 'SourceSansPro-Regular' }}>
                         Cancel
-                    </Text>
+                      </Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                       activeOpacity={0.8}
@@ -232,32 +227,6 @@ class MoneyDetailsScreen extends Component {
                       <Text style={{ color: '#e65100', fontSize: 18, fontFamily: 'SourceSansPro-Regular' }}>Delete</Text>
                     </TouchableOpacity>
                   </View>
-                </View>
-              </View>
-            </Modal>
-            <Modal
-              animationType="fade"
-              transparent={true}
-              visible={this.props.updatingAccount}>
-              <View style={styles.loadingModalContainer} >
-                <View style={styles.loadingModal}>
-                  <Spinner color='#eeeeee' size={27} style={{ marginRight: 0 }} />
-                  <Text style={{ color: '#eeeeee', fontSize: 17, fontFamily: 'SourceSansPro-Regular' }}>
-                    Updating...
-                </Text>
-                </View>
-              </View>
-            </Modal>
-            <Modal
-              animationType="fade"
-              transparent={true}
-              visible={this.props.deletingAccount}>
-              <View style={styles.loadingModalContainer} >
-                <View style={styles.loadingModal}>
-                  <Spinner color='#eeeeee' size={27} style={{ marginRight: 0 }} />
-                  <Text style={{ color: '#eeeeee', fontSize: 17, fontFamily: 'SourceSansPro-Regular' }}>
-                    Deleting...
-                </Text>
                 </View>
               </View>
             </Modal>
@@ -597,9 +566,7 @@ const mapStateToProps = ({ money }, ownProps) => {
     amount,
     name,
     phone,
-    transactions,
-    deletingAccount: money.deletingAccount,
-    updatingAccount: money.updatingAccount
+    transactions
   }
 }
 

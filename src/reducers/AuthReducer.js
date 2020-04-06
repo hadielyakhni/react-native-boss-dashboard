@@ -5,6 +5,7 @@ const INITIAL_STATE = {
   loading: false,
   user: null,
   facebookButtonDisabled: false,
+  googleButtonDisabled: false,
   sendingPasswordResetEmail: false,
   showPasswordResetSuccess: false
 }
@@ -29,6 +30,10 @@ export default (state = INITIAL_STATE, action) => {
       return { ...state, facebookButtonDisabled: false, error: action.payload }
     case 'user_cancel_facebook_auth':
       return { ...state, facebookButtonDisabled: false }
+    case 'disable_google_button':
+      return { ...state, googleButtonDisabled: true }
+    case 'user_cancel_google_auth':
+      return { ...state, googleButtonDisabled: false }
     case 'send_password_reset_email_start':
       return { ...state, sendingPasswordResetEmail: true }
     case 'password_reset_done':

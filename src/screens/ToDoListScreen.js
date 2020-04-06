@@ -1,15 +1,5 @@
 import React, { Component } from 'react'
-import {
-  Text,
-  StyleSheet,
-  View,
-  TouchableOpacity,
-  TextInput,
-  FlatList,
-  ScrollView,
-  Dimensions,
-  Animated
-} from 'react-native'
+import { Text, StyleSheet, View, TouchableOpacity, TextInput, FlatList, ScrollView, Dimensions, Animated } from 'react-native'
 import { Navigation } from 'react-native-navigation'
 import { connect } from 'react-redux'
 import { addTask, fetchTasks, changeTasksSortData, restoreLastDeletedTask } from '../actions'
@@ -173,9 +163,7 @@ class ToDoListScreen extends Component {
                       data={this.props.unDoneTasks}
                       keyExtractor={task => task[0]}
                       renderItem={this.rendertask.bind(this)}
-                      getItemLayout={(data, index) => (
-                        { length: 50, offset: 50 * index, index }
-                      )}
+                      getItemLayout={(data, index) => ({ length: 50, offset: 50 * index, index })}
                     />
                   </Animated.View>
                 </Animated.View>
@@ -291,7 +279,7 @@ class ToDoListScreen extends Component {
         >
           <Text style={{ fontSize: 17, fontFamily: 'SourceSansPro-SemiBold', color: '#008ee0' }}>
             Undo
-            </Text>
+          </Text>
         </TouchableOpacity>
       </View>
     )

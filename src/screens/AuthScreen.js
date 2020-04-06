@@ -139,8 +139,8 @@ class AuthScreen extends Component {
             </View>
             <View>
               <MyButton
-                disabledColor='#355973'
-                // disabled={this.props.facebookButtonDisabled}
+                disabledColor='#9e4242'
+                disabled={this.props.googleButtonDisabled}
                 onPress={() => {
                   Keyboard.dismiss()
                   this.props.userAuthenticateWithGoogle()
@@ -206,7 +206,9 @@ class AuthScreen extends Component {
                   fontSize: 14.5,
                   fontFamily: 'SourceSansPro-Regular',
                   marginTop: 12
-                }}>{getAuthError(this.props.error)}</Text>
+                }}>
+                  {getAuthError(this.props.error)}
+                </Text>
               </View>
               <TouchableOpacity
                 activeOpacity={0.78}
@@ -286,7 +288,7 @@ const styles = StyleSheet.create({
   upperModalPart: {
     paddingBottom: 20,
     paddingTop: 10,
-    paddingHorizontal: 8,
+    paddingHorizontal: 12,
     alignItems: 'center',
     borderBottomWidth: 1,
     borderBottomColor: '#363636'
@@ -334,7 +336,8 @@ const mapStateToProps = state => {
     password: state.auth.password,
     error: state.auth.error,
     loading: state.auth.loading,
-    facebookButtonDisabled: state.auth.facebookButtonDisabled
+    facebookButtonDisabled: state.auth.facebookButtonDisabled,
+    googleButtonDisabled: state.auth.googleButtonDisabled
   }
 }
 

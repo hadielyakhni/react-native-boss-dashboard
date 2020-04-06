@@ -21,7 +21,7 @@ class MyProfileScreen extends Component {
         }]}>
         </View>
         <Modal
-          animationType="slide"
+          animationType="fade"
           transparent={true}
           visible={this.state.modalVisible}
           onRequestClose={() => {
@@ -33,7 +33,7 @@ class MyProfileScreen extends Component {
             <View style={styles.modal}>
               <View style={styles.upperModal}>
                 <Text style={{ color: '#fff', fontSize: 18, fontFamily: 'SourceSansPro-Regular' }}>
-                  Log out of Boss Dasboard?
+                  Log out of Boss Dashboard?
                 </Text>
               </View>
               <TouchableOpacity
@@ -120,14 +120,17 @@ const styles = StyleSheet.create({
     backgroundColor: '#000'
   },
   logoutButton: {
-    backgroundColor: '#de3b5b',
+    backgroundColor: '#000',
     height: 50,
+    borderBottomWidth: 0.7,
+    borderTopWidth: 0.7,
+    borderColor: '#444',
     borderRadius: 8,
     alignItems: 'center',
     justifyContent: 'center'
   },
   logoutText: {
-    color: '#fff',
+    color: '#de3b5b',
     fontSize: 19,
     fontFamily: 'SourceSansPro-SemiBold'
   },

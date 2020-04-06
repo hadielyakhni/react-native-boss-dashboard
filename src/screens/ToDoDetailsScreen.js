@@ -75,20 +75,7 @@ class ToDoDetailsScreen extends Component {
                 this.props.deleteTask(this.props.taskId, 'todoDetails', this.props.componentId, this.taskData)
               }}
             >Delete
-          </MyButton>
-            <Modal
-              animationType="fade"
-              transparent={true}
-              visible={this.props.deletingTask}>
-              <View style={styles.loadingModalContainer} >
-                <View style={styles.loadingModal}>
-                  <Spinner color='#eeeeee' size={27} style={{ marginRight: 0 }} />
-                  <Text style={{ color: '#eeeeee', fontSize: 17, fontFamily: 'SourceSansPro-Regular' }}>
-                    Deleting...
-                  </Text>
-                </View>
-              </View>
-            </Modal>
+            </MyButton>
           </View>
         </View>
       </View>
@@ -152,10 +139,6 @@ const styles = StyleSheet.create({
   }
 })
 
-const mapStateToProps = ({ todo }) => ({
-  deletingTask: todo.deletingTask
-})
-
 const mapActionsToProps = dispatch => {
   return {
     updateTask: (taskId, task, description, isDone, componentId) =>
@@ -165,4 +148,4 @@ const mapActionsToProps = dispatch => {
   }
 }
 
-export default connect(mapStateToProps, mapActionsToProps)(ToDoDetailsScreen)
+export default connect(null, mapActionsToProps)(ToDoDetailsScreen)

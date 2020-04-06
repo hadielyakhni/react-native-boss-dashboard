@@ -4,7 +4,6 @@ const INITIAL_STATE = {
   sortBy: '',
   sortOrder: '',
   fetchingTasks: true,
-  deletingTask: false,
   showUndoDelete: false
 }
 
@@ -18,10 +17,6 @@ export default (state = INITIAL_STATE, action) => {
       return { ...state, fetchingTasks: true }
     case 'tasks_fetch_success':
       return { ...state, tasks: action.payload, fetchingTasks: false }
-    case 'deleting_task_started':
-      return { ...state, deletingTask: true }
-    case 'deleting_task_finished':
-      return { ...state, deletingTask: false }
     case 'logout_tasks_reset':
       return { ...INITIAL_STATE, sortBy: state.sortBy, sortOrder: state.sortOrder }
     case 'show_undo_task_message':

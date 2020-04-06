@@ -7,10 +7,7 @@ const INITIAL_STATE = {
   amount3: 0,
   sortBy: '',
   sortOrder: '',
-  fetchingAccounts: true,
-  deletingAccount: false,
-  addingAccount: false,
-  updatingAccount: false
+  fetchingAccounts: true
 }
 
 export default (state = INITIAL_STATE, action) => {
@@ -21,14 +18,6 @@ export default (state = INITIAL_STATE, action) => {
       return { ...state, fetchingAccounts: true }
     case 'accounts_fetch_success':
       return { ...state, allAccounts: action.payload, fetchingAccounts: false }
-    case 'account_deleting_started':
-      return { ...state, deletingAccount: true }
-    case 'account_deleting_finished':
-      return { ...state, deletingAccount: false }
-    case 'account_adding_started':
-      return { ...state, addingAccount: true }
-    case 'account_adding_finished':
-      return { ...state, addingAccount: false }
     case 'logout_accounts_reset':
       return { ...INITIAL_STATE, sortBy: state.sortBy, sortOrder: state.sortOrder }
     default:

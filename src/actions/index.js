@@ -44,7 +44,6 @@ export const userSignup = (email, password) =>
     dispatch({ type: 'auth_attempt_started' })
     firebase.auth().createUserWithEmailAndPassword(email.trim(), password)
       .then(async user => {
-        console.log(user)
         let uid = user.user.uid
         await Promise.all([
           AsyncStorage.setItem('uid', uid),
@@ -81,7 +80,6 @@ export const userAuthenticateWithFacebook = () =>
         throw new Error('Something went wrong obtaining access token');
       const credential = firebase.auth.FacebookAuthProvider.credential(data.accessToken);
       const user = await firebase.auth().signInWithCredential(credential);
-      console.log(user)
       if (user.additionalUserInfo.isNewUser) {
         let uid = user.user.uid
         await Promise.all([
@@ -113,7 +111,6 @@ export const userAuthenticateWithFacebook = () =>
       }, 100);
     }
     catch (err) {
-      console.log(err)
       if (err.toString() === 'Error: Something went wrong obtaining access token')
         dispatch({ type: 'user_cancel_facebook_auth' })
       else
@@ -127,10 +124,10 @@ export const userAuthenticateWithFacebook = () =>
 export const userAuthenticateWithGoogle = () =>
   async dispatch => {
     try {
+      dispatch({ type: 'disable_google_button' })
       const { idToken } = await GoogleSignin.signIn()
       const googleCredential = firebase.auth.GoogleAuthProvider.credential(idToken)
       const user = await firebase.auth().signInWithCredential(googleCredential)
-      console.log(user)
       if (user.additionalUserInfo.isNewUser) {
         let uid = user.user.uid
         await Promise.all([
@@ -162,7 +159,13 @@ export const userAuthenticateWithGoogle = () =>
       }, 100);
     }
     catch (err) {
-      alert(err.toString())
+      if (err.toString() !== 'Error: Sign in action cancelled')
+        dispatch({
+          type: 'auth_error',
+          payload: err.toString()
+        })
+      else
+        dispatch({ type: 'user_cancel_google_auth' })
     }
   }
 
@@ -190,7 +193,6 @@ export const hidePasswordResetSuccessModal = () => ({
 
 // ToDo Actions
 export const getTasksSortData = uid => dispatch => {
-  console.log('will teshtefgel getTasksSortDetails')
   firebase.database().ref(`/users/${uid}/tasks/sortData`)
     .on('value', snapshot => {
       TASKS_SORT_BY = snapshot.val().sortBy
@@ -245,10 +247,8 @@ export const updateTask = (taskId, task, description, isDone, componentId) => {
 export const deleteTask = (taskId, fromWichScreen, componentId, taskData) => {
   LAST_DELETED_TASK = taskData
   return dispatch => {
-    dispatch({ type: 'deleting_task_started' })
     firebase.database().ref(`users/${UID}/tasks/tasks/${taskId}`).remove()
     LAST_TASK_DELETE_DATE = Date.now()
-    dispatch({ type: 'deleting_task_finished' })
     if (fromWichScreen === 'todoDetails')
       Navigation.pop(componentId)
     dispatch({ type: 'show_undo_task_message' })
@@ -330,7 +330,6 @@ export const changeEmployeesSortData = (sortBy, sortOrder) => {
 
 // Money Actions
 export const getAccountsSortData = uid => dispatch => {
-  console.log('get accounts sort data')
   firebase.database().ref(`/users/${uid}/money/sortData`)
     .on('value', snapshot => {
       ACCOUNTS_SORT_BY = snapshot.val().sortBy
@@ -397,15 +396,13 @@ export const editAccountInfo = (accountId, name, phone, componentId) =>
     Navigation.pop(componentId)
   }
 
-export const deleteAccount = (componentId, accountId) => {
-  return () => {
+export const deleteAccount = (componentId, accountId) =>
+  () => {
     firebase.database().ref(`users/${UID}/money/accounts/${accountId}`).remove()
     Navigation.pop(componentId)
   }
-}
 
-export const changeAccountsSortData = (sortBy, sortOrder) => {
-  return () => {
+export const changeAccountsSortData = (sortBy, sortOrder) =>
+  () => {
     firebase.database().ref(`users/${UID}/money/sortData`).update({ sortBy, sortOrder })
   }
-}

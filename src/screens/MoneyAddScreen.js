@@ -28,19 +28,6 @@ class MoneyAddScreen extends Component {
     return (
       this.state.canRender ?
         <View style={styles.container}>
-          <Modal
-            animationType="fade"
-            transparent={true}
-            visible={this.props.addingAccount}>
-            <View style={[styles.loadingModalContainer]} >
-              <View style={styles.loadingModal}>
-                <Spinner color='#eeeeee' size={27} style={{ marginRight: 0 }} />
-                <Text style={{ color: '#eeeeee', fontSize: 17, fontFamily: 'SourceSansPro-Regular' }}>
-                  Adding...
-                </Text>
-              </View>
-            </View>
-          </Modal>
           <View style={styles.header}>
             <TouchableOpacity activeOpacity={0.85} onPress={() => Navigation.pop(this.props.componentId)} style={styles.backIconContainer}>
               <Ionicons name="md-arrow-back" size={26} color="#fff" />
@@ -86,8 +73,8 @@ class MoneyAddScreen extends Component {
                 style={{ flexDirection: 'row', alignItems: 'center', marginTop: 15, alignSelf: 'flex-start' }}>
                 <CheckBox
                   containerStyle={styles.checkBoxContainer}
+                  uncheckedColor="#aaa"
                   checkedColor="#008ee0"
-                  uncheckedColor="#008ee0"
                   checked={status === 'ME'}
                   onPress={() => { this.setState({ status: 'ME' }) }}
                 />
@@ -100,8 +87,8 @@ class MoneyAddScreen extends Component {
               >
                 <CheckBox
                   containerStyle={styles.checkBoxContainer}
-                  checkedColor='#ff006a'
-                  uncheckedColor='#ff006a'
+                  uncheckedColor='#aaa'
+                  checkedColor='#de3b5b'
                   checked={status === 'HIM'}
                   onPress={() => { this.setState({ status: 'HIM' }) }}
                 />
@@ -199,8 +186,4 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-const mapStateToProps = ({ money }) => ({
-  addingAccount: money.addingAccount
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(MoneyAddScreen)
+export default connect(null, mapDispatchToProps)(MoneyAddScreen)

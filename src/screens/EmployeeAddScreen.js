@@ -28,19 +28,6 @@ class EmployeeAddScreen extends Component {
     return (
       this.state.canRender ?
         <View style={styles.container}>
-          <Modal
-            animationType="fade"
-            transparent={true}
-            visible={this.props.addingEmployee}>
-            <View style={[styles.loadingModalContainer]} >
-              <View style={styles.loadingModal}>
-                <Spinner color='#eeeeee' size={27} style={{ marginRight: 0 }} />
-                <Text style={{ color: '#eeeeee', fontSize: 17, fontFamily: 'SourceSansPro-Regular' }}>
-                  Adding...
-                </Text>
-              </View>
-            </View>
-          </Modal>
           <View style={{ flex: 1 }}>
             <View style={styles.header}>
               <TouchableOpacity
@@ -221,13 +208,9 @@ const styles = StyleSheet.create({
   }
 })
 
-const mapStateToProps = state => ({
-  addingEmployee: state.employees.addingEmployee
-})
-
 const mapActionsToProps = dispatch => ({
   addEmployee: (componentId, { name, role, salary, phone, email, joinDate }) => dispatch(addEmployee(componentId, { name, role, salary, phone, email, joinDate })),
   resetEmployee: () => dispatch(resetEmployee())
 })
 
-export default connect(mapStateToProps, mapActionsToProps)(EmployeeAddScreen)
+export default connect(null, mapActionsToProps)(EmployeeAddScreen)

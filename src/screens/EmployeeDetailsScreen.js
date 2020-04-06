@@ -69,32 +69,6 @@ class EmployeeDetailsScreen extends Component {
               </View>
             </View>
           </Modal>
-          <Modal
-            animationType="fade"
-            transparent={true}
-            visible={this.props.updatingEmployee}>
-            <View style={styles.loadingModalContainer} >
-              <View style={styles.loadingModal}>
-                <Spinner color='#eeeeee' size={27} style={{ marginRight: 0 }} />
-                <Text style={{ color: '#eeeeee', fontSize: 17, fontFamily: 'SourceSansPro-Regular' }}>
-                  Updating...
-                </Text>
-              </View>
-            </View>
-          </Modal>
-          <Modal
-            animationType="fade"
-            transparent={true}
-            visible={this.props.deletingEmployee}>
-            <View style={[styles.loadingModalContainer]} >
-              <View style={styles.loadingModal}>
-                <Spinner color='#eeeeee' size={27} style={{ marginRight: 0 }} />
-                <Text style={{ color: '#eeeeee', fontSize: 17, fontFamily: 'SourceSansPro-Regular' }}>
-                  Deleting...
-                </Text>
-              </View>
-            </View>
-          </Modal>
           <View style={styles.header}>
             <TouchableOpacity
               activeOpacity={0.85}
@@ -304,9 +278,4 @@ const mapDispatchToProps = dispatch => ({
   deleteEmployee: (componentId, { uid }) => dispatch(deleteEmployee(componentId, { uid }))
 })
 
-const mapStateToProps = state => ({
-  updatingEmployee: state.employees.updatingEmployee,
-  deletingEmployee: state.employees.deletingEmployee
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(EmployeeDetailsScreen)
+export default connect(null, mapDispatchToProps)(EmployeeDetailsScreen)
