@@ -438,3 +438,17 @@ export const changeAccountsSortData = (sortBy, sortOrder) =>
   () => {
     firebase.database().ref(`users/${UID}/money/sortData`).update({ sortBy, sortOrder })
   }
+
+
+//Exit action
+export const incrementExitCount = () =>
+  dispatch => {
+    dispatch({ type: 'increment_exit_count' })
+    setTimeout(() => {
+      dispatch({ type: 'reset_exit_count' })
+    }, 2000);
+  }
+
+export const resetExitCount = () => ({
+  type: 'reset_exit_count'
+})

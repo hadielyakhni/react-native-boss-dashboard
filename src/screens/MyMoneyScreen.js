@@ -39,7 +39,7 @@ class MyMoneyScreen extends Component {
     this.hintOpacity.addListener(({ value }) => this.hintOpacityValue = value)
     this.hintTranslateY = this.hintOpacity.interpolate({
       inputRange: [0, 1],
-      outputRange: [40, -Dimensions.get('window').height / 12]
+      outputRange: [90, 0]
     })
     this.pAccountsOpacityValue = 0
     this.pAccountsOpacity = new Animated.Value(0)
@@ -75,7 +75,12 @@ class MyMoneyScreen extends Component {
           this.nAccountsOpacity.setValue(0)
         return (
           <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-            <Animated.View style={{ alignItems: 'center', translateY: this.hintTranslateY, opacity: this.hintOpacity }}>
+            <Animated.View style={{
+              alignItems: 'center',
+              translateY: this.hintTranslateY,
+              opacity: this.hintOpacity,
+              marginBottom: 140
+            }}>
               <Text style={{ color: '#eee', fontFamily: 'SourceSansPro-SemiBold', fontSize: 17, marginBottom: 2 }}>Do you have money with others</Text>
               <Text style={{ color: '#eee', fontFamily: 'SourceSansPro-SemiBold', fontSize: 17, marginBottom: 5 }}>{''}and/or visversa?</Text>
               <Text style={{ color: '#eee', fontFamily: 'SourceSansPro-Regular', fontSize: 15 }}>Add accounts now and easily</Text>
@@ -271,6 +276,25 @@ class MyMoneyScreen extends Component {
     else
       return null
   }
+  checkExit() {
+    if (this.props.exitCount === 0)
+      return null
+    if (this.props.exitCount === 1) {
+      return <View style={{
+        borderRadius: 16,
+        height: 38,
+        width: 190,
+        backgroundColor: '#555',
+        position: 'absolute',
+        bottom: 16,
+        alignItems: 'center',
+        justifyContent: 'center',
+        alignSelf: 'center'
+      }}>
+        <Text style={{ fontSize: 15, color: '#ffffff', fontFamily: 'SourceSansPro-Regular' }}>Press again to exit...</Text>
+      </View>
+    }
+  }
   renderUndoMessage() {
     return (
       <View style={[styles.undoView, {
@@ -296,6 +320,7 @@ class MyMoneyScreen extends Component {
     return (
       <View style={styles.container}>
         {this.renderUndoMessage()}
+        {this.checkExit()}
         <SortChoicesModal
           choices={this.sortChoices}
           visible={this.state.sortChoicesModalVisible}
@@ -416,7 +441,7 @@ const mapDispatchToProp = dispatch => ({
   restoreLastDeletedAccount: () => dispatch(restoreLastDeletedAccount())
 })
 
-const mapStateToProps = ({ money }) => {
+const mapStateToProps = ({ money, exit }) => {
   const { allAccounts: accounts, sortBy, sortOrder } = money
   let allAccounts
   if (accounts && sortBy && sortOrder) {
@@ -448,7 +473,8 @@ const mapStateToProps = ({ money }) => {
     sortBy,
     sortOrder,
     fetchingAccounts: money.fetchingAccounts,
-    showUndoDelete: money.showUndoDelete
+    showUndoDelete: money.showUndoDelete,
+    exitCount: exit.exitCount
   }
 }
 

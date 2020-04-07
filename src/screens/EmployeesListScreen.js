@@ -38,7 +38,7 @@ class EmployeesListScreen extends Component {
     this.hintOpacity.addListener(({ value }) => this.hintOpacityValue = value)
     this.hintTranslateY = this.hintOpacity.interpolate({
       inputRange: [0, 1],
-      outputRange: [40, -Dimensions.get('window').height / 12]
+      outputRange: [90, 0]
     })
     this.listOpacityValue = 0
     this.listOpacity = new Animated.Value(0)
@@ -68,7 +68,12 @@ class EmployeesListScreen extends Component {
           this.listOpacity.setValue(0)
         return (
           <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-            <Animated.View style={{ alignItems: 'center', translateY: this.hintTranslateY, opacity: this.hintOpacity }}>
+            <Animated.View style={{
+              alignItems: 'center',
+              translateY: this.hintTranslateY,
+              opacity: this.hintOpacity,
+              marginBottom: 140
+            }}>
               <Text style={{ color: '#eee', fontFamily: 'SourceSansPro-SemiBold', fontSize: 17, marginBottom: 2 }}>Easily check all</Text>
               <Text style={{ color: '#eee', fontFamily: 'SourceSansPro-SemiBold', fontSize: 17, marginBottom: 5 }}>{''} your employees!</Text>
               <Text style={{ color: '#eee', fontFamily: 'SourceSansPro-Regular', fontSize: 15 }}>Add them now.</Text>
@@ -113,6 +118,25 @@ class EmployeesListScreen extends Component {
       )
     }
     return null
+  }
+  checkExit() {
+    if (this.props.exitCount === 0)
+      return null
+    if (this.props.exitCount === 1) {
+      return <View style={{
+        borderRadius: 16,
+        height: 38,
+        width: 190,
+        backgroundColor: '#555',
+        position: 'absolute',
+        bottom: 16,
+        alignItems: 'center',
+        justifyContent: 'center',
+        alignSelf: 'center'
+      }}>
+        <Text style={{ fontSize: 15, color: '#ffffff', fontFamily: 'SourceSansPro-Regular' }}>Press again to exit...</Text>
+      </View>
+    }
   }
   closeSortChoicesModal = () => {
     this.setState({ sortChoicesModalVisible: false })
@@ -199,6 +223,7 @@ class EmployeesListScreen extends Component {
     { this.checkActiveSortLabel() }
     return (
       <View style={styles.container}>
+        {this.checkExit()}
         {this.renderUndoMessage()}
         <SortChoicesModal
           choices={this.sortChoices}
@@ -365,7 +390,8 @@ const mapStateToProps = state => {
     sortBy,
     sortOrder,
     fetchingEmployees: state.employees.fetchingEmployees,
-    showUndoDelete: state.employees.showUndoDelete
+    showUndoDelete: state.employees.showUndoDelete,
+    exitCount: state.exit.exitCount
   }
 }
 

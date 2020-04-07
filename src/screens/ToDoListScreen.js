@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
-import { Text, StyleSheet, View, TouchableOpacity, TextInput, FlatList, ScrollView, Dimensions, Animated } from 'react-native'
+import { Text, StyleSheet, View, TouchableOpacity, TextInput, FlatList, ScrollView, Dimensions, Animated, BackHandler } from 'react-native'
 import { Navigation } from 'react-native-navigation'
 import { connect } from 'react-redux'
-import { addTask, fetchTasks, changeTasksSortData, restoreLastDeletedTask } from '../actions'
-import { Icon } from 'native-base'
+import { addTask, fetchTasks, changeTasksSortData, restoreLastDeletedTask, incrementExitCount, resetExitCount } from '../actions'
+import { Root, Icon, Toast } from 'native-base'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { gestureHandlerRootHOC } from 'react-native-gesture-handler'
@@ -14,7 +14,7 @@ class ToDoListScreen extends Component {
   constructor(props) {
     super(props)
     this.props.fetchTasks()
-    this.state = { task: '', sortChoicesModalVisible: false }
+    this.state = { task: '', sortChoicesModalVisible: false, clickCount: 0 }
     this.dataAppearsAtLeastOnce = false
     this.sortChoices = [{ id: '1', prop: 'time' }, { id: "2", prop: 'title' }]
     this.hintOpacityValue = 0
@@ -22,7 +22,7 @@ class ToDoListScreen extends Component {
     this.hintOpacity.addListener(({ value }) => this.hintOpacityValue = value)
     this.hintTranslateY = this.hintOpacity.interpolate({
       inputRange: [0, 1],
-      outputRange: [40, -Dimensions.get('window').height / 12]
+      outputRange: [90, 0]
     })
     this.undoneOpacityValue = 0
     this.undoneOpacity = new Animated.Value(0)
@@ -51,12 +51,19 @@ class ToDoListScreen extends Component {
       outputRange: [1, 0]
     })
   }
+  componentDidMount() {
+    this.backButtonListner = BackHandler.addEventListener("hardwareBackPress", () => {
+      this.props.incrementExitCount()
+      return true
+    })
+  }
   componentWillUnmount() {
     this.hintOpacity.removeAllListeners()
     this.undoneOpacity.removeAllListeners()
     this.doneOpacity.removeAllListeners()
     this.undoneListOpacity.removeAllListeners()
     this.doneListOpacity.removeAllListeners()
+    this.backButtonListner.remove()
   }
   onAdd() {
     if (this.state.task !== '') {
@@ -226,7 +233,11 @@ class ToDoListScreen extends Component {
           }).start()
         return (
           <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }} >
-            <Animated.View style={{ opacity: this.hintOpacity, alignItems: 'center', transform: [{ translateY: this.hintTranslateY }] }}>
+            <Animated.View style={{
+              opacity: this.hintOpacity, alignItems: 'center',
+              transform: [{ translateY: this.hintTranslateY }],
+              marginBottom: 140
+            }}>
               <Text style={{ color: '#eee', fontFamily: 'SourceSansPro-SemiBold', fontSize: 17, marginBottom: 5 }}>Start organizing your life!</Text>
               <Text style={{ color: '#eee', fontFamily: 'SourceSansPro-Regular', fontSize: 15 }}>Any thing to do?</Text>
             </Animated.View>
@@ -284,79 +295,105 @@ class ToDoListScreen extends Component {
       </View>
     )
   }
+  checkExit() {
+    if (this.props.exitCount === 0)
+      return null
+    if (this.props.exitCount === 1) {
+      return <View style={{
+        borderRadius: 16,
+        height: 38,
+        width: 190,
+        backgroundColor: '#555',
+        position: 'absolute',
+        bottom: 16,
+        alignItems: 'center',
+        justifyContent: 'center',
+        alignSelf: 'center'
+      }}>
+        <Text style={{ fontSize: 15, color: '#ffffff', fontFamily: 'SourceSansPro-Regular' }}>Press again to exit...</Text>
+      </View>
+    }
+    else if (this.props.exitCount === 2) {
+      console.log(this.hintOpacityValue)
+      BackHandler.exitApp()
+    }
+  }
   render() {
     return (
-      <View style={styles.container}>
-        {this.renderUndoMessage()}
-        <SortChoicesModal
-          choices={this.sortChoices}
-          visible={this.state.sortChoicesModalVisible}
-          selectedChoice={this.props.sortBy}
-          onSelect={this.onSelectSortChoice}
-          onCancel={this.closeSortChoicesModal}
-        />
-        <View style={styles.header}>
-          <View style={styles.titleContainer}>
-            <Text numberOfLines={1} style={{ color: '#fff', fontSize: 26, fontFamily: 'SourceSansPro-SemiBold' }}>
-              My Tasks
-            </Text>
-          </View>
-          {this.renderSortButton()}
-        </View>
-        <View style={styles.addView}>
-          <TextInput
-            editable={this.props.fetchingTasks ? false : true}
-            value={this.state.task}
-            style={styles.input}
-            placeholderTextColor='rgba(255, 255, 255, 0.7)'
-            placeholder='Quick Task'
-            selectionColor='#008ee0'
-            onChangeText={task => this.setState({ task })}
-            onSubmitEditing={this.onAdd.bind(this)}
+      <Root>
+        <View style={styles.container}>
+          {this.renderUndoMessage()}
+          {this.checkExit()}
+          <SortChoicesModal
+            choices={this.sortChoices}
+            visible={this.state.sortChoicesModalVisible}
+            selectedChoice={this.props.sortBy}
+            onSelect={this.onSelectSortChoice}
+            onCancel={this.closeSortChoicesModal}
           />
-          <TouchableOpacity
-            disabled={!this.state.task.trim()}
-            activeOpacity={0.85}
-            style={this.state.task.trim() ? styles.iconView : { ...styles.iconView, borderColor: 'grey' }}
-            onPress={this.onAdd.bind(this)}
-          >
-            <Icon
-              name='md-add-circle'
-              style={this.state.task.trim() ? styles.addIcon : { ...styles.addIcon, color: 'grey' }}
+          <View style={styles.header}>
+            <View style={styles.titleContainer}>
+              <Text numberOfLines={1} style={{ color: '#fff', fontSize: 26, fontFamily: 'SourceSansPro-SemiBold' }}>
+                My Tasks
+            </Text>
+            </View>
+            {this.renderSortButton()}
+          </View>
+          <View style={styles.addView}>
+            <TextInput
+              editable={this.props.fetchingTasks ? false : true}
+              value={this.state.task}
+              style={styles.input}
+              placeholderTextColor='rgba(255, 255, 255, 0.7)'
+              placeholder='Quick Task'
+              selectionColor='#008ee0'
+              onChangeText={task => this.setState({ task })}
+              onSubmitEditing={this.onAdd.bind(this)}
             />
-          </TouchableOpacity>
-        </View>
-        <View style={{ paddingHorizontal: 6, flex: 1 }}>
-          {this.renderScreen()}
-          <TouchableOpacity
-            activeOpacity={1}
-            style={styles.addButton}
-            onPress={() => (
-              Navigation.push(this.props.componentId, {
-                component: {
-                  name: 'todoAdd',
-                  options: {
-                    animations: {
-                      push: {
-                        content: {
-                          waitForRender: true,
-                          translationY: {
-                            from: Dimensions.get('window').height,
-                            to: 0,
-                            duration: 200
+            <TouchableOpacity
+              disabled={!this.state.task.trim()}
+              activeOpacity={0.85}
+              style={this.state.task.trim() ? styles.iconView : { ...styles.iconView, borderColor: 'grey' }}
+              onPress={this.onAdd.bind(this)}
+            >
+              <Icon
+                name='md-add-circle'
+                style={this.state.task.trim() ? styles.addIcon : { ...styles.addIcon, color: 'grey' }}
+              />
+            </TouchableOpacity>
+          </View>
+          <View style={{ paddingHorizontal: 6, flex: 1 }}>
+            {this.renderScreen()}
+            <TouchableOpacity
+              activeOpacity={1}
+              style={styles.addButton}
+              onPress={() => (
+                Navigation.push(this.props.componentId, {
+                  component: {
+                    name: 'todoAdd',
+                    options: {
+                      animations: {
+                        push: {
+                          content: {
+                            waitForRender: true,
+                            translationY: {
+                              from: Dimensions.get('window').height,
+                              to: 0,
+                              duration: 200
+                            }
                           }
                         }
                       }
                     }
                   }
-                }
-              })
-            )}
-          >
-            <Icon name='ios-add' style={{ color: '#fff', fontSize: 38 }} />
-          </TouchableOpacity>
+                })
+              )}
+            >
+              <Icon name='ios-add' style={{ color: '#fff', fontSize: 38 }} />
+            </TouchableOpacity>
+          </View>
         </View>
-      </View>
+      </Root>
     )
   }
 }
@@ -470,7 +507,9 @@ const mapActionsToProps = dispatch => ({
   addTask: newTask => dispatch(addTask(newTask)),
   fetchTasks: () => dispatch(fetchTasks()),
   changeTasksSortData: (sortBy, sortOrder) => dispatch(changeTasksSortData(sortBy, sortOrder)),
-  restoreLastDeletedTask: () => dispatch(restoreLastDeletedTask())
+  restoreLastDeletedTask: () => dispatch(restoreLastDeletedTask()),
+  incrementExitCount: () => dispatch(incrementExitCount()),
+  resetExitCount: () => dispatch(resetExitCount())
 })
 
 const mapStateToProps = (state) => {
@@ -507,7 +546,8 @@ const mapStateToProps = (state) => {
     sortBy,
     sortOrder,
     fetchingTasks: state.todo.fetchingTasks,
-    showUndoDelete: state.todo.showUndoDelete
+    showUndoDelete: state.todo.showUndoDelete,
+    exitCount: state.exit.exitCount
   }
 }
 
