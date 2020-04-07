@@ -6,7 +6,8 @@ const INITIAL_STATE = {
   email: '',
   sortBy: '',
   sortOrder: '',
-  fetchingEmployees: true
+  fetchingEmployees: true,
+  showUndoDelete: false
 }
 
 export default (state = INITIAL_STATE, action) => {
@@ -19,6 +20,13 @@ export default (state = INITIAL_STATE, action) => {
       return { ...state, allEmployees: action.payload, fetchingEmployees: false }
     case 'logout_employees_reset':
       return { ...INITIAL_STATE, sortBy: state.sortBy, sortOrder: state.sortOrder }
+    case 'show_undo_employee_message':
+      return { ...state, showUndoDelete: true }
+    case 'hide_undo_employee_message': {
+      if (!state.showUndoDelete)
+        return { ...state }
+      return { ...state, showUndoDelete: false }
+    }
     default:
       return state
   }

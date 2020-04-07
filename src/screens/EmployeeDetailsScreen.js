@@ -18,6 +18,7 @@ class EmployeeDetailsScreen extends Component {
       this.uid = this.props.uid
       const { data: { name, role, salary, phone, email, joinDate } } = this.props
       this.setState({ canRender: true, name, role, salary, phone, email, joinDate, showDatePicker: false })
+      this.employeeData = this.props.data
     })
   }
   render() {
@@ -58,10 +59,10 @@ class EmployeeDetailsScreen extends Component {
                     activeOpacity={0.8}
                     onPress={() => {
                       this.setState({ modalVisible: false });
-                      this.props.deleteEmployee(this.props.componentId, { uid: this.uid })
+                      this.props.deleteEmployee(this.props.componentId, { uid: this.uid }, this.employeeData)
                     }}
                     style={[styles.modalButton, { borderBottomRightRadius: 4 }]}>
-                    <Text style={{ color: '#e65100', fontSize: 18, fontFamily: 'SourceSansPro-Regular' }}>
+                    <Text style={{ color: '#e65100', fontSize: 18, fontFamily: 'SourceSansPro-SemiBold' }}>
                       Delete
                     </Text>
                   </TouchableOpacity>
@@ -275,7 +276,7 @@ const styles = StyleSheet.create({
 
 const mapDispatchToProps = dispatch => ({
   updateEmployeeInfo: (componentId, { name, role, salary, phone, email, joinDate, uid }) => dispatch(updateEmployeeInfo(componentId, { name, role, salary, phone, email, joinDate, uid })),
-  deleteEmployee: (componentId, { uid }) => dispatch(deleteEmployee(componentId, { uid }))
+  deleteEmployee: (componentId, { uid }, employeeData) => dispatch(deleteEmployee(componentId, { uid }, employeeData))
 })
 
 export default connect(null, mapDispatchToProps)(EmployeeDetailsScreen)

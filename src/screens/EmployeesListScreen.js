@@ -11,7 +11,7 @@ import {
 } from 'react-native'
 import { Navigation } from 'react-native-navigation'
 import { connect } from 'react-redux'
-import { fetchEmployees, changeEmployeesSortData } from '../actions'
+import { fetchEmployees, restoreLastDeletedEmployee, changeEmployeesSortData } from '../actions'
 import { Icon } from 'native-base'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import EmployeeCard from '../components/EmployeeCard'
@@ -175,10 +175,31 @@ class EmployeesListScreen extends Component {
     else
       return null
   }
+  renderUndoMessage() {
+    return (
+      <View style={[styles.undoView, {
+        bottom: this.props.showUndoDelete ? 24.5 : -100
+      }]}>
+        <Text style={{ fontSize: 15, color: '#fff', fontFamily: 'SourceSansPro-Regular' }}>1 deleted</Text>
+        <TouchableOpacity
+          activeOpacity={0.8}
+          style={{ alignItems: 'center', justifyContent: 'center', padding: 6, borderRadius: 6 }}
+          onPress={() => {
+            this.props.restoreLastDeletedEmployee()
+          }}
+        >
+          <Text style={{ fontSize: 17, fontFamily: 'SourceSansPro-SemiBold', color: '#008ee0' }}>
+            Undo
+          </Text>
+        </TouchableOpacity>
+      </View>
+    )
+  }
   render() {
     { this.checkActiveSortLabel() }
     return (
       <View style={styles.container}>
+        {this.renderUndoMessage()}
         <SortChoicesModal
           choices={this.sortChoices}
           visible={this.state.sortChoicesModalVisible}
@@ -259,6 +280,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center'
   },
+  undoView: {
+    height: 46,
+    left: 14,
+    right: 88,
+    zIndex: 1,
+    paddingHorizontal: 20,
+    backgroundColor: '#272727',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    position: 'absolute',
+    alignSelf: 'center',
+    borderRadius: 6
+  },
   addIcon: {
     fontSize: 29,
     color: '#fff',
@@ -288,7 +323,8 @@ const styles = StyleSheet.create({
 
 const mapDispatchToProp = dispatch => ({
   fetchEmployees: () => dispatch(fetchEmployees()),
-  changeEmployeesSortData: (sortBy, sortOrder) => dispatch(changeEmployeesSortData(sortBy, sortOrder))
+  changeEmployeesSortData: (sortBy, sortOrder) => dispatch(changeEmployeesSortData(sortBy, sortOrder)),
+  restoreLastDeletedEmployee: () => dispatch(restoreLastDeletedEmployee())
 })
 
 const mapStateToProps = state => {
@@ -328,7 +364,8 @@ const mapStateToProps = state => {
     allEmployees,
     sortBy,
     sortOrder,
-    fetchingEmployees: state.employees.fetchingEmployees
+    fetchingEmployees: state.employees.fetchingEmployees,
+    showUndoDelete: state.employees.showUndoDelete
   }
 }
 

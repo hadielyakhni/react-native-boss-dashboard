@@ -8,7 +8,10 @@ import { goToMain } from '../navigation/navigation'
 import { Keyboard } from 'react-native'
 import AsyncStorage from '@react-native-community/async-storage'
 
-let UID, TASKS_SORT_BY, TASKS_SORT_ORDER, EMPLOYEES_SORT_BY, EMPLOYEES_SORT_ORDER, ACCOUNTS_SORT_BY, ACCOUNTS_SORT_ORDER, LAST_DELETED_TASK, LAST_TASK_DELETE_DATE
+let
+  UID,
+  TASKS_SORT_BY, TASKS_SORT_ORDER, EMPLOYEES_SORT_BY, EMPLOYEES_SORT_ORDER, ACCOUNTS_SORT_BY, ACCOUNTS_SORT_ORDER,
+  LAST_DELETED_TASK, LAST_TASK_DELETE_DATE, LAST_DELETED_EMPLOYEE, LAST_EMPLOYEE_DELETE_DATE, LAST_DELETED_ACCOUNT, LAST_ACCOUNT_DELETE_DATE
 
 // Auth Actions
 export const userSignin = (email, password) =>
@@ -253,9 +256,9 @@ export const deleteTask = (taskId, fromWichScreen, componentId, taskData) => {
       Navigation.pop(componentId)
     dispatch({ type: 'show_undo_task_message' })
     setTimeout(() => {
-      if (Date.now() - LAST_TASK_DELETE_DATE >= 2000)
+      if (Date.now() - LAST_TASK_DELETE_DATE >= 2500)
         dispatch({ type: 'hide_undo_task_message' })
-    }, 2000);
+    }, 2500);
   }
 }
 
@@ -315,10 +318,24 @@ export const updateEmployeeInfo = (componentId, { name, role, salary, phone, ema
   }
 }
 
-export const deleteEmployee = (componentId, { uid }) => {
-  return () => {
+export const deleteEmployee = (componentId, { uid }, employeeData) => {
+  LAST_DELETED_EMPLOYEE = employeeData
+  return dispatch => {
     firebase.database().ref(`users/${UID}/employees/employees/${uid}`).remove()
+    LAST_EMPLOYEE_DELETE_DATE = Date.now()
     Navigation.pop(componentId)
+    dispatch({ type: 'show_undo_employee_message' })
+    setTimeout(() => {
+      if (Date.now() - LAST_EMPLOYEE_DELETE_DATE >= 2500)
+        dispatch({ type: 'hide_undo_employee_message' })
+    }, 2500);
+  }
+}
+
+export const restoreLastDeletedEmployee = () => {
+  firebase.database().ref(`users/${UID}/employees/employees/`).push(LAST_DELETED_EMPLOYEE)
+  return dispatch => {
+    dispatch({ type: 'hide_undo_employee_message' })
   }
 }
 
@@ -396,11 +413,26 @@ export const editAccountInfo = (accountId, name, phone, componentId) =>
     Navigation.pop(componentId)
   }
 
-export const deleteAccount = (componentId, accountId) =>
-  () => {
+export const deleteAccount = (componentId, accountId, accountData) => {
+  LAST_DELETED_ACCOUNT = accountData
+  return dispatch => {
     firebase.database().ref(`users/${UID}/money/accounts/${accountId}`).remove()
+    LAST_ACCOUNT_DELETE_DATE = Date.now()
     Navigation.pop(componentId)
+    dispatch({ type: 'show_undo_account_message' })
+    setTimeout(() => {
+      if (Date.now() - LAST_ACCOUNT_DELETE_DATE >= 2500)
+        dispatch({ type: 'hide_undo_account_message' })
+    }, 2500);
   }
+}
+
+export const restoreLastDeletedAccount = () => {
+  firebase.database().ref(`users/${UID}/money/accounts`).push(LAST_DELETED_ACCOUNT)
+  return dispatch => {
+    dispatch({ type: 'hide_undo_account_message' })
+  }
+}
 
 export const changeAccountsSortData = (sortBy, sortOrder) =>
   () => {

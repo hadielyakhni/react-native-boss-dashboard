@@ -7,7 +7,8 @@ const INITIAL_STATE = {
   amount3: 0,
   sortBy: '',
   sortOrder: '',
-  fetchingAccounts: true
+  fetchingAccounts: true,
+  showUndoDelete: false
 }
 
 export default (state = INITIAL_STATE, action) => {
@@ -20,6 +21,13 @@ export default (state = INITIAL_STATE, action) => {
       return { ...state, allAccounts: action.payload, fetchingAccounts: false }
     case 'logout_accounts_reset':
       return { ...INITIAL_STATE, sortBy: state.sortBy, sortOrder: state.sortOrder }
+    case 'show_undo_account_message':
+      return { ...state, showUndoDelete: true }
+    case 'hide_undo_account_message': {
+      if (!state.showUndoDelete)
+        return { ...state }
+      return { ...state, showUndoDelete: false }
+    }
     default:
       return state
   }

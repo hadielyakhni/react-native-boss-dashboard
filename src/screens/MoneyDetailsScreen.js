@@ -221,10 +221,10 @@ class MoneyDetailsScreen extends Component {
                       activeOpacity={0.8}
                       onPress={() => {
                         this.setState({ modalVisible: false });
-                        this.props.deleteAccount(this.props.componentId, this.accountId)
+                        this.props.deleteAccount(this.props.componentId, this.accountId, this.props.accountData)
                       }}
                       style={[styles.modalButton, { borderBottomRightRadius: 4 }]}>
-                      <Text style={{ color: '#e65100', fontSize: 18, fontFamily: 'SourceSansPro-Regular' }}>Delete</Text>
+                      <Text style={{ color: '#e65100', fontSize: 18, fontFamily: 'SourceSansPro-SemiBold' }}>Delete</Text>
                     </TouchableOpacity>
                   </View>
                 </View>
@@ -542,27 +542,30 @@ const mapDispatchToProps = dispatch => ({
   addTransaction: (oldAmount, transAmount, status, accountId) => (
     dispatch(addTransaction(oldAmount, transAmount, status, accountId))
   ),
-  deleteAccount: (componentId, accountId) => dispatch(deleteAccount(componentId, accountId))
+  deleteAccount: (componentId, accountId, accountData) => dispatch(deleteAccount(componentId, accountId, accountData))
 })
 
 const mapStateToProps = ({ money }, ownProps) => {
-  let transactions, amount, name, phone
+  let accountData, transactions, amount, name, phone
   if (money.allAccounts && money.allAccounts[ownProps.accountId]) {
     name = money.allAccounts[ownProps.accountId].name
     phone = money.allAccounts[ownProps.accountId].phone
     amount = money.allAccounts[ownProps.accountId].amount
     transactions = money.allAccounts[ownProps.accountId].transactions
+    accountData = money.allAccounts[ownProps.accountId]
     transactions = Object.keys(transactions)
       .map(key => [key, transactions[key]])
       .sort((trans1, trans2) => trans2[1].date - trans1[1].date)
   }
   else {
+    accountData = {}
     name = ''
     phone = ''
     amount = 0
     transactions = []
   }
   return {
+    accountData,
     amount,
     name,
     phone,
