@@ -3,16 +3,20 @@ import { Text, StyleSheet, View, TouchableOpacity, TextInput, FlatList, ScrollVi
 import { Navigation } from 'react-native-navigation'
 import { connect } from 'react-redux'
 import { addTask, fetchTasks, changeTasksSortData, restoreLastDeletedTask, incrementExitCount, resetExitCount } from '../actions'
-import { Root, Icon, Toast } from 'native-base'
+import { Icon } from 'native-base'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { gestureHandlerRootHOC } from 'react-native-gesture-handler'
 import ToDoItem from '../components/ToDoItem'
 import SortChoicesModal from '../components/SortChoicesModal'
+import ToDoLoadingContainer from '../components/ToDoLoadingContainer'
 
 class ToDoListScreen extends Component {
   constructor(props) {
     super(props)
+    this.navigationListner = Navigation.events().registerComponentDidAppearListener(data => {
+      this.activeScreenName = data.componentName
+    })
     this.props.fetchTasks()
     this.state = { task: '', sortChoicesModalVisible: false, clickCount: 0 }
     this.dataAppearsAtLeastOnce = false
@@ -53,11 +57,15 @@ class ToDoListScreen extends Component {
   }
   componentDidMount() {
     this.backButtonListner = BackHandler.addEventListener("hardwareBackPress", () => {
-      this.props.incrementExitCount()
-      return true
+      const screen = this.activeScreenName
+      if (screen === 'todo' || screen === 'employees' || screen === 'money') {
+        this.props.incrementExitCount()
+        return true
+      }
     })
   }
   componentWillUnmount() {
+    this.navigationListner.remove()
     this.hintOpacity.removeAllListeners()
     this.undoneOpacity.removeAllListeners()
     this.doneOpacity.removeAllListeners()
@@ -179,7 +187,7 @@ class ToDoListScreen extends Component {
             }
             {
               this.props.doneTasks.length ?
-                <Animated.View style={{ opacity: this.doneOpacity }}>
+                <Animated.View style={{ marginTop: 6, opacity: this.doneOpacity }}>
                   <TouchableOpacity activeOpacity={1} onPress={this.handleDoneOpacity.bind(this)}>
                     <View style={styles.separotorView}>
                       <View style={{ flexDirection: 'row' }}>
@@ -244,7 +252,7 @@ class ToDoListScreen extends Component {
           </View>
         )
       }
-    return null
+    return <ToDoLoadingContainer />
   }
   closeSortChoicesModal = () => {
     this.setState({ sortChoicesModalVisible: false })
@@ -313,87 +321,83 @@ class ToDoListScreen extends Component {
         <Text style={{ fontSize: 15, color: '#ffffff', fontFamily: 'SourceSansPro-Regular' }}>Press again to exit...</Text>
       </View>
     }
-    else if (this.props.exitCount === 2) {
-      console.log(this.hintOpacityValue)
+    else if (this.props.exitCount === 2)
       BackHandler.exitApp()
-    }
   }
   render() {
     return (
-      <Root>
-        <View style={styles.container}>
-          {this.renderUndoMessage()}
-          {this.checkExit()}
-          <SortChoicesModal
-            choices={this.sortChoices}
-            visible={this.state.sortChoicesModalVisible}
-            selectedChoice={this.props.sortBy}
-            onSelect={this.onSelectSortChoice}
-            onCancel={this.closeSortChoicesModal}
-          />
-          <View style={styles.header}>
-            <View style={styles.titleContainer}>
-              <Text numberOfLines={1} style={{ color: '#fff', fontSize: 26, fontFamily: 'SourceSansPro-SemiBold' }}>
-                My Tasks
+      <View style={styles.container}>
+        {this.renderUndoMessage()}
+        {this.checkExit()}
+        <SortChoicesModal
+          choices={this.sortChoices}
+          visible={this.state.sortChoicesModalVisible}
+          selectedChoice={this.props.sortBy}
+          onSelect={this.onSelectSortChoice}
+          onCancel={this.closeSortChoicesModal}
+        />
+        <View style={styles.header}>
+          <View style={styles.titleContainer}>
+            <Text numberOfLines={1} style={{ color: '#fff', fontSize: 26, fontFamily: 'SourceSansPro-SemiBold' }}>
+              My Tasks
             </Text>
-            </View>
-            {this.renderSortButton()}
           </View>
-          <View style={styles.addView}>
-            <TextInput
-              editable={this.props.fetchingTasks ? false : true}
-              value={this.state.task}
-              style={styles.input}
-              placeholderTextColor='rgba(255, 255, 255, 0.7)'
-              placeholder='Quick Task'
-              selectionColor='#008ee0'
-              onChangeText={task => this.setState({ task })}
-              onSubmitEditing={this.onAdd.bind(this)}
+          {this.renderSortButton()}
+        </View>
+        <View style={styles.addView}>
+          <TextInput
+            editable={this.props.fetchingTasks ? false : true}
+            value={this.state.task}
+            style={styles.input}
+            placeholderTextColor='rgba(255, 255, 255, 0.7)'
+            placeholder='Quick Task'
+            selectionColor='#008ee0'
+            onChangeText={task => this.setState({ task })}
+            onSubmitEditing={this.onAdd.bind(this)}
+          />
+          <TouchableOpacity
+            disabled={!this.state.task.trim()}
+            activeOpacity={0.85}
+            style={this.state.task.trim() ? styles.iconView : { ...styles.iconView, borderColor: 'grey' }}
+            onPress={this.onAdd.bind(this)}
+          >
+            <Icon
+              name='md-add-circle'
+              style={this.state.task.trim() ? styles.addIcon : { ...styles.addIcon, color: 'grey' }}
             />
-            <TouchableOpacity
-              disabled={!this.state.task.trim()}
-              activeOpacity={0.85}
-              style={this.state.task.trim() ? styles.iconView : { ...styles.iconView, borderColor: 'grey' }}
-              onPress={this.onAdd.bind(this)}
-            >
-              <Icon
-                name='md-add-circle'
-                style={this.state.task.trim() ? styles.addIcon : { ...styles.addIcon, color: 'grey' }}
-              />
-            </TouchableOpacity>
-          </View>
-          <View style={{ paddingHorizontal: 6, flex: 1 }}>
-            {this.renderScreen()}
-            <TouchableOpacity
-              activeOpacity={1}
-              style={styles.addButton}
-              onPress={() => (
-                Navigation.push(this.props.componentId, {
-                  component: {
-                    name: 'todoAdd',
-                    options: {
-                      animations: {
-                        push: {
-                          content: {
-                            waitForRender: true,
-                            translationY: {
-                              from: Dimensions.get('window').height,
-                              to: 0,
-                              duration: 200
-                            }
+          </TouchableOpacity>
+        </View>
+        <View style={{ paddingHorizontal: 6, flex: 1 }}>
+          {this.renderScreen()}
+          <TouchableOpacity
+            activeOpacity={1}
+            style={styles.addButton}
+            onPress={() => (
+              Navigation.push(this.props.componentId, {
+                component: {
+                  name: 'todoAdd',
+                  options: {
+                    animations: {
+                      push: {
+                        content: {
+                          waitForRender: true,
+                          translationY: {
+                            from: Dimensions.get('window').height,
+                            to: 0,
+                            duration: 200
                           }
                         }
                       }
                     }
                   }
-                })
-              )}
-            >
-              <Icon name='ios-add' style={{ color: '#fff', fontSize: 38 }} />
-            </TouchableOpacity>
-          </View>
+                }
+              })
+            )}
+          >
+            <Icon name='ios-add' style={{ color: '#fff', fontSize: 38 }} />
+          </TouchableOpacity>
         </View>
-      </Root>
+      </View>
     )
   }
 }
@@ -485,7 +489,7 @@ const styles = StyleSheet.create({
   },
   separotorView: {
     marginHorizontal: 4,
-    marginBottom: 8,
+    marginBottom: 10,
     marginTop: 8,
     height: 26,
     flexDirection: 'row',

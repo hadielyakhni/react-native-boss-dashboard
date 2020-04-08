@@ -18,6 +18,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import MoneyCard from '../components/MoneyCard'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import SortChoicesModal from '../components/SortChoicesModal'
+import AccountsLoadingContainer from '../components/AccountsLoadingContainer'
 
 class MyMoneyScreen extends Component {
   constructor(props) {
@@ -138,7 +139,7 @@ class MyMoneyScreen extends Component {
           <View style={{ paddingHorizontal: 5, paddingTop: 25 }}>
             {
               pAccounts.length ?
-                <Animated.View style={{ marginBottom: 40, opacity: this.pAccountsOpacity }}>
+                <Animated.View style={{ marginBottom: 25, opacity: this.pAccountsOpacity }}>
                   <View style={{ paddingHorizontal: 14, marginBottom: 5 }}>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                       <Text style={{ color: '#fff', fontSize: 26, fontFamily: 'SourceSansPro-Bold' }}>
@@ -198,7 +199,7 @@ class MyMoneyScreen extends Component {
                       <Icon name='md-person' style={{ color: '#de3b5b', fontSize: 24, marginRight: 15 }} />
                       <Text style={{ color: 'rgba(255,255,255,0.7)', fontSize: 19, fontFamily: 'SourceSansPro-Regular' }}>
                         to {nAccounts.length} people
-                  </Text>
+                      </Text>
                     </View>
                   </View>
                   <FlatList
@@ -218,7 +219,7 @@ class MyMoneyScreen extends Component {
         </ScrollView>
       )
     }
-    return null
+    return <AccountsLoadingContainer />
   }
   closeSortChoicesModal = () => {
     this.setState({ sortChoicesModalVisible: false })

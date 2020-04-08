@@ -85,7 +85,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginHorizontal: 4,
     marginBottom: 12,
-    paddingHorizontal: 5,
+    paddingLeft: 9,
+    paddingRight: 5,
     borderRadius: 10
   },
   imageContainer: {
@@ -109,9 +110,7 @@ const styles = StyleSheet.create({
     fontSize: 21,
     color: '#fff',
     fontFamily: 'SourceSansPro-SemiBold',
-    marginRight: Dimensions.get('window').width / 12
-  },
-  amount: {
-    fontSize: 16
+    marginRight: Dimensions.get('window').width / 12,
+    marginBottom: 3
   }
 })

@@ -6,8 +6,7 @@ import {
   TouchableOpacity,
   FlatList,
   TextInput,
-  Animated,
-  Dimensions
+  Animated
 } from 'react-native'
 import { Navigation } from 'react-native-navigation'
 import { connect } from 'react-redux'
@@ -15,6 +14,7 @@ import { fetchEmployees, restoreLastDeletedEmployee, changeEmployeesSortData } f
 import { Icon } from 'native-base'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import EmployeeCard from '../components/EmployeeCard'
+import EmployeeLoadingContainer from '../components/EmployeeLoadingContainer'
 import SortChoicesModal from '../components/SortChoicesModal'
 
 class EmployeesListScreen extends Component {
@@ -117,7 +117,7 @@ class EmployeesListScreen extends Component {
         </Animated.View>
       )
     }
-    return null
+    return <EmployeeLoadingContainer />
   }
   checkExit() {
     if (this.props.exitCount === 0)
@@ -184,7 +184,7 @@ class EmployeesListScreen extends Component {
       this.activeSortLabel = 'join Date - Newest to Oldest'
   }
   renderSortButton() {
-    if ((!this.props.fetchingAccounts && this.dataAppearsAtLeastOnce) || this.props.allEmployees.length)
+    if ((!this.props.fetchingEmployees && this.dataAppearsAtLeastOnce) || this.props.allEmployees.length)
       return (
         <Animated.View style={{ justifyContent: 'center', opacity: this.sortOpacity }}>
           <TouchableOpacity
@@ -255,6 +255,7 @@ class EmployeesListScreen extends Component {
           />
         </View>
         {this.renderScreen()}
+
         <TouchableOpacity
           activeOpacity={1}
           style={styles.addButton}
