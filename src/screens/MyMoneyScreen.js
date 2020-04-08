@@ -286,6 +286,7 @@ class MyMoneyScreen extends Component {
         height: 38,
         width: 190,
         backgroundColor: '#555',
+        zIndex: 1,
         position: 'absolute',
         bottom: 16,
         alignItems: 'center',

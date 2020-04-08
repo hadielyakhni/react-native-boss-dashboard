@@ -313,6 +313,7 @@ class ToDoListScreen extends Component {
         width: 190,
         backgroundColor: '#555',
         position: 'absolute',
+        zIndex: 1,
         bottom: 16,
         alignItems: 'center',
         justifyContent: 'center',
