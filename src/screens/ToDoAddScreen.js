@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Text, StyleSheet, TextInput, Keyboard, TouchableOpacity, KeyboardAvoidingView } from 'react-native'
+import { View, Text, StyleSheet, TextInput, Keyboard, TouchableOpacity, KeyboardAvoidingView, Dimensions } from 'react-native'
 import { connect } from 'react-redux'
 import { addTask } from '../actions'
 import { Navigation } from 'react-native-navigation'
@@ -36,13 +36,18 @@ class ToDoAddScreen extends Component {
     return (
       <KeyboardAvoidingView behavior={"padding"} style={styles.container}>
         <View style={styles.header}>
-          <TouchableOpacity activeOpacity={0.85} onPress={() => Navigation.pop(this.props.componentId)} style={styles.backIconContainer}>
+          <TouchableOpacity
+            activeOpacity={0.8}
+            hitSlop={{ bottom: 10, top: 10, left: 10, right: 10 }}
+            style={styles.backIconContainer}
+            onPress={() => Navigation.pop(this.props.componentId)}
+          >
             <Ionicons name="md-arrow-back" size={26} color="#fff" />
           </TouchableOpacity>
           <View style={styles.titleContainer}>
             <Text numberOfLines={1} style={{ color: '#fff', fontSize: 25, fontFamily: 'SourceSansPro-SemiBold' }}>
               Add Task
-              </Text>
+            </Text>
           </View>
         </View>
         <View style={{ paddingHorizontal: 12, flex: 1 }}>
@@ -80,7 +85,7 @@ class ToDoAddScreen extends Component {
               disabled={this.isAddDisabled()}
               disabledColor='#355973'
               style={[styles.addButton, { marginBottom: this.state.isKeyboardOpened ? 40 : 0 }]}
-              textStyle={{ fontSize: 18 }}
+              textStyle={{ fontSize: 19 }}
               color='#008ee0'
               onPress={() => {
                 const { task, description } = this.state
@@ -97,12 +102,32 @@ class ToDoAddScreen extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000'
+    backgroundColor: '#000',
+    paddingHorizontal:
+      Dimensions.get('window').width > 800 ? 62
+        :
+        Dimensions.get('window').width > 700 ? 48
+          :
+          Dimensions.get('window').width > 600 ? 36
+            :
+            Dimensions.get('window').width > 500 ? 10
+              :
+              0
   },
   header: {
     height: 56,
     flexDirection: 'row',
     backgroundColor: '#000',
+    marginVertical:
+      Dimensions.get('window').width > 800 ? 20
+        :
+        Dimensions.get('window').width > 700 ? 12
+          :
+          Dimensions.get('window').width > 600 ? 8
+            :
+            Dimensions.get('window').width > 500 ? 6
+              :
+              0,
     marginBottom: 15,
     paddingHorizontal: 4
   },

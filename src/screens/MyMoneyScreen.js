@@ -14,6 +14,7 @@ import { Navigation } from 'react-native-navigation'
 import { connect } from 'react-redux'
 import { fetchAccounts, restoreLastDeletedAccount, changeAccountsSortData } from '../actions'
 import { Icon } from 'native-base'
+import { Tooltip } from 'react-native-elements'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import MoneyCard from '../components/MoneyCard'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
@@ -23,6 +24,7 @@ import AccountsLoadingContainer from '../components/AccountsLoadingContainer'
 class MyMoneyScreen extends Component {
   constructor(props) {
     super(props)
+    this.ref = React.createRef()
     this.props.fetchAccounts()
     this.dataAppearsAtLeastOnce = false
     this.sortChoices = [
@@ -78,7 +80,7 @@ class MyMoneyScreen extends Component {
           <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
             <Animated.View style={{
               alignItems: 'center',
-              translateY: this.hintTranslateY,
+              transform: [{ translateY: this.hintTranslateY }],
               opacity: this.hintOpacity,
               marginBottom: 140
             }}>
@@ -142,24 +144,33 @@ class MyMoneyScreen extends Component {
                 <Animated.View style={{ marginBottom: 25, opacity: this.pAccountsOpacity }}>
                   <View style={{ paddingHorizontal: 14, marginBottom: 5 }}>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                      <Text style={{ color: '#fff', fontSize: 26, fontFamily: 'SourceSansPro-Bold' }}>
-                        YOU ARE OWED
+                      <Text style={{ color: '#fff', fontSize: 24, fontFamily: 'SourceSansPro-Bold' }}>
+                        I HAVE
                       </Text>
-                      <Text
-                        numberOfLines={1}
-                        ellipsizeMode="middle"
-                        style={{ textAlign: 'right', marginLeft: 15, flex: 1, color: '#008ee0', fontSize: 27, fontFamily: 'SourceSansPro-Bold' }}
+                      <ScrollView
+                        horizontal
+                        showsHorizontalScrollIndicator={false}
+                        contentContainerStyle={{
+                          flexGrow: 1,
+                          paddingLeft: 10,
+                          justifyContent: 'flex-end'
+                        }}
+                        style={{ marginLeft: 25, marginRight: 4 }}
                       >
-                        {pTotal + ' '}
-                      </Text>
-                      <View style={{ justifyContent: 'center', marginLeft: 2 }}>
-                        <FontAwesome5 name="coins" color="#008ee0" size={15} />
+                        <Text
+                          numberOfLines={1}
+                          style={{ color: '#008ee0', fontSize: 24, fontFamily: 'SourceSansPro-Bold' }}
+                        >
+                          {pTotal + ' '}
+                        </Text>
+                      </ScrollView>
+                      <View style={{ justifyContent: 'center' }}>
+                        <FontAwesome5 name="coins" color="#008ee0" size={13} />
                       </View>
                     </View>
-                    <View style={{ flexDirection: 'row', marginVertical: 10 }}>
-                      <Icon name='md-person' style={{ color: '#0088e0', fontSize: 24, marginRight: 12 }} />
-                      <Text style={{ color: 'rgba(255, 255, 255, 0.7)', fontSize: 19, fontFamily: 'SourceSansPro-Regular' }}>
-                        by {pAccounts.length} people
+                    <View style={{ flexDirection: 'row', marginTop: 4, marginBottom: 10 }}>
+                      <Text style={{ color: '#ddd', fontSize: 18, fontFamily: 'SourceSansPro-Regular' }}>
+                        with {pAccounts.length} {pAccounts.length === 1 ? 'person' : 'people'}
                       </Text>
                     </View>
                   </View>
@@ -181,24 +192,33 @@ class MyMoneyScreen extends Component {
                 <Animated.View style={{ marginBottom: 15, opacity: this.nAccountsOpacity }}>
                   <View style={{ paddingHorizontal: 14, marginBottom: 5 }}>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                      <Text style={{ color: '#fff', fontSize: 26, fontFamily: 'SourceSansPro-Bold' }}>
-                        YOU OWE
+                      <Text style={{ color: '#fff', fontSize: 24, fontFamily: 'SourceSansPro-Bold' }}>
+                        I SHOULD PAY
                       </Text>
-                      <Text
-                        numberOfLines={1}
-                        ellipsizeMode="middle"
-                        style={{ textAlign: 'right', marginLeft: 15, flex: 1, color: '#de3b5b', fontSize: 27, fontFamily: 'SourceSansPro-Bold' }}
+                      <ScrollView
+                        horizontal
+                        showsHorizontalScrollIndicator={false}
+                        contentContainerStyle={{
+                          flexGrow: 1,
+                          paddingLeft: 10,
+                          justifyContent: 'flex-end'
+                        }}
+                        style={{ marginLeft: 25, marginRight: 4 }}
                       >
-                        {nTotal + ' '}
-                      </Text>
+                        <Text
+                          numberOfLines={1}
+                          style={{ color: '#de3b5b', fontSize: 24, fontFamily: 'SourceSansPro-Bold' }}
+                        >
+                          {nTotal + ' '}
+                        </Text>
+                      </ScrollView>
                       <View style={{ justifyContent: 'center', marginLeft: 2 }}>
                         <FontAwesome5 name="coins" color="#de3b5b" size={15} />
                       </View>
                     </View>
-                    <View style={{ flexDirection: 'row', marginVertical: 10 }}>
-                      <Icon name='md-person' style={{ color: '#de3b5b', fontSize: 24, marginRight: 15 }} />
-                      <Text style={{ color: 'rgba(255,255,255,0.7)', fontSize: 19, fontFamily: 'SourceSansPro-Regular' }}>
-                        to {nAccounts.length} people
+                    <View style={{ flexDirection: 'row', marginTop: 4, marginBottom: 10 }}>
+                      <Text style={{ color: '#ddd', fontSize: 18, fontFamily: 'SourceSansPro-Regular' }}>
+                        to {nAccounts.length} {nAccounts.length === 1 ? 'person' : 'people'}
                       </Text>
                     </View>
                   </View>
@@ -216,7 +236,7 @@ class MyMoneyScreen extends Component {
                 null
             }
           </View>
-        </ScrollView>
+        </ScrollView >
       )
     }
     return <AccountsLoadingContainer />
@@ -267,7 +287,8 @@ class MyMoneyScreen extends Component {
         <Animated.View style={{ justifyContent: 'center', opacity: this.sortOpacity }}>
           <TouchableOpacity
             activeOpacity={0.8}
-            style={{ width: 40, paddingLeft: 4, justifyContent: 'center' }}
+            disabled={this.hintOpacity === 1}
+            style={{ width: 40, paddingLeft: 6, justifyContent: 'center' }}
             onPress={() => this.setState({ sortChoicesModalVisible: true })}
           >
             <MaterialCommunityIcons name="sort" color="#fff" size={28} />
@@ -321,52 +342,54 @@ class MyMoneyScreen extends Component {
     { this.checkActiveSortLabel() }
     return (
       <View style={styles.container}>
-        {this.renderUndoMessage()}
-        {this.checkExit()}
-        <SortChoicesModal
-          choices={this.sortChoices}
-          visible={this.state.sortChoicesModalVisible}
-          selectedChoice={this.activeSortLabel}
-          onSelect={this.onSelectSortChoice}
-          onCancel={this.closeSortChoicesModal}
-        />
-        <View style={styles.header}>
-          <View style={styles.titleContainer}>
-            <Text numberOfLines={1} style={{ color: '#fff', fontSize: 26, fontFamily: 'SourceSansPro-SemiBold' }}>
-              My Wallet
+        <View style={{ flex: 1 }}>
+          {this.renderUndoMessage()}
+          {this.checkExit()}
+          <SortChoicesModal
+            choices={this.sortChoices}
+            visible={this.state.sortChoicesModalVisible}
+            selectedChoice={this.activeSortLabel}
+            onSelect={this.onSelectSortChoice}
+            onCancel={this.closeSortChoicesModal}
+          />
+          <View style={styles.header}>
+            <View style={styles.titleContainer}>
+              <Text numberOfLines={1} style={{ color: '#fff', fontSize: 26, fontFamily: 'SourceSansPro-SemiBold' }}>
+                My Wallet
             </Text>
+            </View>
+            {this.renderSortButton()}
           </View>
-          {this.renderSortButton()}
+          <View style={styles.searchView}>
+            <Icon
+              name='md-search'
+              style={{ color: this.props.fetchingAccounts || !this.props.allAccounts.length ? '#777' : '#e3e3e3', fontSize: 26 }}
+            />
+            <TextInput
+              editable={this.props.fetchingAccounts || !this.props.allAccounts.length ? false : true}
+              value={this.state.searchWord}
+              style={styles.input}
+              placeholderTextColor='#777'
+              placeholder='Search accounts'
+              onChangeText={this.changeSearchWord}
+            />
+          </View>
+          {this.renderScreen()}
+          <TouchableOpacity
+            activeOpacity={1}
+            style={styles.addButton}
+            onPress={() => {
+              Navigation.push(this.props.componentId, {
+                component: {
+                  name: 'moneyAdd'
+                }
+              })
+            }}
+          >
+            <Icon name='ios-add' style={{ color: '#fff', fontSize: 38 }} />
+          </TouchableOpacity>
         </View>
-        <View style={styles.searchView}>
-          <Icon
-            name='md-search'
-            style={{ color: this.props.fetchingAccounts || !this.props.allAccounts.length ? '#777' : '#e3e3e3', fontSize: 26 }}
-          />
-          <TextInput
-            editable={this.props.fetchingAccounts || !this.props.allAccounts.length ? false : true}
-            value={this.state.searchWord}
-            style={styles.input}
-            placeholderTextColor='#777'
-            placeholder='Search accounts'
-            onChangeText={this.changeSearchWord}
-          />
-        </View>
-        {this.renderScreen()}
-        <TouchableOpacity
-          activeOpacity={1}
-          style={styles.addButton}
-          onPress={() => {
-            Navigation.push(this.props.componentId, {
-              component: {
-                name: 'moneyAdd'
-              }
-            })
-          }}
-        >
-          <Icon name='ios-add' style={{ color: '#fff', fontSize: 38 }} />
-        </TouchableOpacity>
-      </View >
+      </View>
     )
   }
 }
@@ -375,13 +398,31 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#000',
-    paddingHorizontal: 5
+    paddingHorizontal:
+      Dimensions.get('window').width > 800 ? 62
+        :
+        Dimensions.get('window').width > 700 ? 48
+          :
+          Dimensions.get('window').width > 600 ? 36
+            :
+            Dimensions.get('window').width > 500 ? 10
+              :
+              0
   },
   header: {
     height: 56,
-    paddingTop: 8,
     flexDirection: 'row',
-    backgroundColor: '#000'
+    backgroundColor: '#000',
+    marginVertical:
+      Dimensions.get('window').width > 800 ? 20
+        :
+        Dimensions.get('window').width > 700 ? 12
+          :
+          Dimensions.get('window').width > 600 ? 8
+            :
+            Dimensions.get('window').width > 500 ? 6
+              :
+              0
   },
   titleContainer: {
     flex: 1,

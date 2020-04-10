@@ -21,6 +21,7 @@
     "native-base": "^2.13.8",
     "react": "16.13.0",
     "react-native": "0.61.5",
+    "react-native-animated-flatlist": "0.0.3",
     "react-native-elements": "^1.2.7",
     "react-native-fbsdk": "^1.1.2",
     "react-native-gesture-handler": "^1.6.0",

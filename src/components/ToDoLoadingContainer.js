@@ -8,35 +8,35 @@ const ToDoLoadingContainer = () => {
       marginBottom: 8,
       marginTop: 12
     }}>
-      <Shimmer style={{ marginTop: -4, marginBottom: 8, width: '30%' }}>
+      <Shimmer animationOpacity={0.85} style={{ marginTop: -4, marginBottom: 8, width: '30%' }}>
         <Text numberOfLines={1} style={styles.separator}>
         </Text>
       </Shimmer>
-      <Shimmer style={{ marginVertical: 5 }}>
+      <Shimmer animationOpacity={0.85} style={{ marginVertical: 5 }}>
         <Text numberOfLines={1} style={styles.item}>
         </Text>
       </Shimmer>
-      <Shimmer style={{ marginVertical: 5 }}>
+      <Shimmer animationOpacity={0.85} style={{ marginVertical: 5 }}>
         <Text numberOfLines={1} style={styles.item}>
         </Text>
       </Shimmer>
-      <Shimmer style={{ marginTop: 5, marginBottom: 8 }}>
+      <Shimmer animationOpacity={0.85} style={{ marginTop: 5, marginBottom: 8 }}>
         <Text numberOfLines={1} style={styles.item}>
         </Text>
       </Shimmer>
-      <Shimmer style={{ marginTop: 15, marginBottom: 8, width: '30%' }}>
+      <Shimmer animationOpacity={0.85} style={{ marginTop: 15, marginBottom: 8, width: '30%' }}>
         <Text numberOfLines={1} style={styles.separator}>
         </Text>
       </Shimmer>
-      <Shimmer style={{ marginVertical: 5 }}>
+      <Shimmer animationOpacity={0.85} style={{ marginVertical: 5 }}>
         <Text numberOfLines={1} style={styles.item}>
         </Text>
       </Shimmer>
-      <Shimmer style={{ marginVertical: 5 }}>
+      <Shimmer animationOpacity={0.85} style={{ marginVertical: 5 }}>
         <Text numberOfLines={1} style={styles.item}>
         </Text>
       </Shimmer>
-    </View>
+    </View >
   )
 }
 

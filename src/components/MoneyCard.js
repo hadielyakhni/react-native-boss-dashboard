@@ -1,11 +1,8 @@
 import React, { PureComponent } from 'react'
-import { Text, View, StyleSheet, TouchableOpacity, Image, InteractionManager, Dimensions, LayoutAnimation, UIManager } from 'react-native'
+import { Text, View, StyleSheet, TouchableOpacity, Image, InteractionManager, Dimensions } from 'react-native'
 import { Icon } from 'native-base'
 import { Navigation } from 'react-native-navigation'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
-
-UIManager.setLayoutAnimationEnabledExperimental &&
-  UIManager.setLayoutAnimationEnabledExperimental(true)
 
 export default class EmployeeCard extends PureComponent {
   constructor(props) {
@@ -15,27 +12,8 @@ export default class EmployeeCard extends PureComponent {
       this.setState({ canRender: true })
     })
   }
-  componentDidMount() {
-    LayoutAnimation.configureNext({
-      update: {
-        duration: 80,
-        type: LayoutAnimation.Types.linear,
-        property: LayoutAnimation.Properties.opacity
-      }
-    })
-  }
-  componentWillUnmount() {
-    LayoutAnimation.configureNext({
-      update: {
-        duration: 80,
-        delay: 200,
-        type: LayoutAnimation.Types.linear,
-        property: LayoutAnimation.Properties.opacity
-      }
-    })
-  }
   render() {
-    const { name, phone, amount } = this.props.data[1]
+    const { name, amount } = this.props.data[1]
     return (
       <View style={styles.container} >
         <View style={styles.imageContainer}>

@@ -210,14 +210,12 @@ const styles = StyleSheet.create({
   },
   CheckBoxContainer: {
     paddingHorizontal: 5,
-    marginRight: 8,
     alignItems: 'center',
     justifyContent: 'center'
   },
   taskTitle: {
-    borderColor: '#121212',
-    borderWidth: 1,
-    alignSelf: 'center',
+    paddingBottom: 2,
+    textAlignVertical: 'center',
     fontSize: 18.5,
     color: '#f5f5f5',
     width: Dimensions.get('window').width - 115,

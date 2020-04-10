@@ -17,7 +17,7 @@ export default (state = INITIAL_STATE, action) => {
     case 'user_signedin':
       return { ...INITIAL_STATE, user: action.payload }
     case 'user_signedup':
-      return { ...INITIAL_STATE }
+      return { ...INITIAL_STATE, user: action.payload }
     case 'auth_error':
       return { ...INITIAL_STATE, error: action.payload }
     case 'reset_error':

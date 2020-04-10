@@ -8,14 +8,12 @@ import {
   TouchableOpacity,
   TextInput,
   Dimensions,
-  UIManager,
-  LayoutAnimation,
   FlatList,
-  Linking
+  Linking,
+  ScrollView
 } from 'react-native'
 import { connect } from 'react-redux'
 import { addTransaction, deleteAccount } from '../actions'
-import { Spinner } from 'native-base'
 import SpinnerSpinkit from 'react-native-spinkit'
 import { Navigation } from 'react-native-navigation'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
@@ -24,9 +22,6 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import Octicons from 'react-native-vector-icons/Octicons'
 import TransactionCard from '../components/TransactionCard'
-
-UIManager.setLayoutAnimationEnabledExperimental &&
-  UIManager.setLayoutAnimationEnabledExperimental(true)
 
 const { height, width } = Dimensions.get("window")
 
@@ -55,19 +50,10 @@ class MoneyDetailsScreen extends Component {
       newName += this.props.name[i] + ' '
     return newName.toUpperCase().trim()
   }
-  componentDidUpdate() {
-    LayoutAnimation.configureNext({
-      duration: 200,
-      update: {
-        type: LayoutAnimation.Types.easeInEaseOut,
-        property: LayoutAnimation.Properties.scaleXY
-      }
-    })
-  }
   render() {
     return (
       this.state.canRender ?
-        <View style={styles.container}>
+        <View style={styles.container} >
           <View style={[StyleSheet.absoluteFill, {
             backgroundColor: this.state.transConfirmationModalVisible || this.state.modalVisible ? 'rgba(0,0,0,0.2)' : 'rgba(0,0,0,0)',
             zIndex: this.state.transConfirmationModalVisible || this.state.modalVisible ? 1 : 0
@@ -81,9 +67,15 @@ class MoneyDetailsScreen extends Component {
               <Ionicons name="md-arrow-back" size={26} color="#fff" />
             </TouchableOpacity>
             <View style={styles.titleContainer}>
-              <Text numberOfLines={1} style={{ color: '#fff', fontSize: 25, fontFamily: 'SourceSansPro-SemiBold', textAlign: 'left' }}>
-                {this.props.name}
-              </Text>
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={{ alignItems: 'center', paddingRight: 7 }}
+              >
+                <Text numberOfLines={1} style={{ color: '#fff', fontSize: 25, fontFamily: 'SourceSansPro-SemiBold', textAlign: 'left' }}>
+                  {this.props.name}
+                </Text>
+              </ScrollView>
             </View>
             <TouchableOpacity
               disabled={!this.props.phone}
@@ -128,9 +120,16 @@ class MoneyDetailsScreen extends Component {
                 </View>
               </View>
               <View style={styles.amountContainer}>
-                <Text numberOfLines={1} style={styles.amountText}>
-                  {Math.abs(this.props.amount)}
-                </Text>
+                <ScrollView
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  style={{ marginHorizontal: 18 }}
+                  contentContainerStyle={{ alignItems: 'center' }}
+                >
+                  <Text numberOfLines={1} style={{ ...styles.amountText, borderWidth: 2, borderColor: '#121212' }}>
+                    {Math.abs(this.props.amount)}
+                  </Text>
+                </ScrollView>
               </View>
               <View style={styles.transNumberContainer}>
                 <Text style={{ fontSize: 10.5, fontFamily: 'SourceSansPro-SemiBold', color: '#9cafba' }}>
@@ -317,7 +316,7 @@ class MoneyDetailsScreen extends Component {
               </View>
             </Modal>
           </View>
-        </View >
+        </View>
         :
         <View style={{ flex: 1, backgroundColor: '#000', alignItems: 'center', justifyContent: 'center' }}>
           <SpinnerSpinkit color="#008ee0" size={38} type="ThreeBounce" />
@@ -329,13 +328,33 @@ class MoneyDetailsScreen extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000'
+    backgroundColor: '#000',
+    paddingHorizontal:
+      Dimensions.get('window').width > 800 ? 62
+        :
+        Dimensions.get('window').width > 700 ? 48
+          :
+          Dimensions.get('window').width > 600 ? 36
+            :
+            Dimensions.get('window').width > 500 ? 10
+              :
+              0
   },
   header: {
     height: 56,
     paddingHorizontal: 4,
     flexDirection: 'row',
     marginBottom: 2,
+    marginVertical:
+      Dimensions.get('window').width > 800 ? 20
+        :
+        Dimensions.get('window').width > 700 ? 12
+          :
+          Dimensions.get('window').width > 600 ? 8
+            :
+            Dimensions.get('window').width > 500 ? 6
+              :
+              0,
     backgroundColor: '#000'
   },
   backIconContainer: {
@@ -358,7 +377,7 @@ const styles = StyleSheet.create({
   },
   callIconContainer: {
     width: 48,
-    marginLeft: 10,
+    marginLeft: 6,
     justifyContent: 'center',
     alignItems: 'center'
   },
@@ -388,7 +407,6 @@ const styles = StyleSheet.create({
     height: height / 10
   },
   amountText: {
-    paddingHorizontal: width / 18,
     color: '#ffffff',
     fontSize: 50,
     fontFamily: 'SourceSansPro-Bold'
@@ -413,7 +431,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between'
   },
   transButtons: {
-    width: ((width - width / 11) / 2) - width / 26,
+    width: '46%',
     borderRadius: 8,
     justifyContent: 'center',
     alignItems: 'center',
@@ -474,6 +492,15 @@ const styles = StyleSheet.create({
   innerTransConfirmationModal: {
     height: height / 4,
     backgroundColor: '#232323',
+    marginHorizontal: Dimensions.get('window').width > 800 ? 72
+      :
+      Dimensions.get('window').width > 700 ? 56
+        :
+        Dimensions.get('window').width > 600 ? 42
+          :
+          Dimensions.get('window').width > 500 ? 14
+            :
+            0,
     borderTopLeftRadius: height / 48,
     borderTopRightRadius: height / 48,
     paddingHorizontal: width / 28

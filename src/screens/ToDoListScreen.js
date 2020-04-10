@@ -58,7 +58,7 @@ class ToDoListScreen extends Component {
   componentDidMount() {
     this.backButtonListner = BackHandler.addEventListener("hardwareBackPress", () => {
       const screen = this.activeScreenName
-      if (screen === 'todo' || screen === 'employees' || screen === 'money') {
+      if (screen === 'todo' || screen === 'employees' || screen === 'money' || screen === 'profile') {
         this.props.incrementExitCount()
         return true
       }
@@ -274,7 +274,7 @@ class ToDoListScreen extends Component {
           <TouchableOpacity
             disabled={this.hintOpacityValue === 1}
             activeOpacity={0.8}
-            style={{ width: 40, paddingLeft: 8, justifyContent: 'center' }}
+            style={{ width: 40, paddingLeft: 6, justifyContent: 'center' }}
             onPress={() => this.setState({ sortChoicesModalVisible: true })}
           >
             <MaterialCommunityIcons name="sort" color="#fff" size={28} />
@@ -288,7 +288,9 @@ class ToDoListScreen extends Component {
       <View style={[styles.undoView, {
         bottom: this.props.showUndoDelete ? 24.5 : -100
       }]}>
-        <Text style={{ fontSize: 15, color: '#fff', fontFamily: 'SourceSansPro-Regular' }}>1 deleted</Text>
+        <Text style={{ fontSize: 15, color: '#fff', fontFamily: 'SourceSansPro-Regular' }}>
+          1 deleted
+        </Text>
         <TouchableOpacity
           activeOpacity={0.8}
           style={{ alignItems: 'center', justifyContent: 'center', padding: 6, borderRadius: 6 }}
@@ -406,8 +408,17 @@ class ToDoListScreen extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 5,
-    backgroundColor: '#000'
+    backgroundColor: '#000',
+    paddingHorizontal:
+      Dimensions.get('window').width > 800 ? 62
+        :
+        Dimensions.get('window').width > 700 ? 48
+          :
+          Dimensions.get('window').width > 600 ? 36
+            :
+            Dimensions.get('window').width > 500 ? 10
+              :
+              0
   },
   loadingContainer: {
     width: 30,
@@ -420,12 +431,21 @@ const styles = StyleSheet.create({
   header: {
     height: 56,
     flexDirection: 'row',
-    backgroundColor: '#000'
+    backgroundColor: '#000',
+    marginVertical:
+      Dimensions.get('window').width > 800 ? 20
+        :
+        Dimensions.get('window').width > 700 ? 12
+          :
+          Dimensions.get('window').width > 600 ? 8
+            :
+            Dimensions.get('window').width > 500 ? 6
+              :
+              0
   },
   titleContainer: {
     flex: 1,
     paddingLeft: 12,
-    paddingTop: 8,
     justifyContent: 'center',
     backgroundColor: '#000'
   },
@@ -465,7 +485,7 @@ const styles = StyleSheet.create({
   },
   addButton: {
     position: 'absolute',
-    right: 9,
+    right: 14,
     bottom: 20,
     backgroundColor: '#008ee0',
     height: 55,
@@ -476,8 +496,26 @@ const styles = StyleSheet.create({
   },
   undoView: {
     height: 46,
-    left: 14,
-    right: 88,
+    left:
+      Dimensions.get('window').width > 800 ? 76
+        :
+        Dimensions.get('window').width > 700 ? 62
+          :
+          Dimensions.get('window').width > 600 ? 50
+            :
+            Dimensions.get('window').width > 500 ? 24
+              :
+              14,
+    right:
+      Dimensions.get('window').width > 800 ? 150
+        :
+        Dimensions.get('window').width > 700 ? 136
+          :
+          Dimensions.get('window').width > 600 ? 124
+            :
+            Dimensions.get('window').width > 500 ? 98
+              :
+              88,
     zIndex: 1,
     paddingHorizontal: 20,
     backgroundColor: '#272727',

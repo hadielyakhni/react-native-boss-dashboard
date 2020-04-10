@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
-import { Text, StyleSheet, View, Linking, Keyboard, InteractionManager, ActivityIndicator, Modal, TouchableOpacity } from 'react-native'
+import { Text, StyleSheet, View, ScrollView, Linking, Keyboard, InteractionManager, ActivityIndicator, Modal, TouchableOpacity, Dimensions } from 'react-native'
 import { connect } from 'react-redux'
 import { updateEmployeeInfo, deleteEmployee } from '../actions'
-import { Spinner } from 'native-base'
 import { Navigation } from 'react-native-navigation'
 import DateTimePicker from '@react-native-community/datetimepicker'
 import Ionicons from 'react-native-vector-icons/Ionicons'
@@ -72,16 +71,24 @@ class EmployeeDetailsScreen extends Component {
           </Modal>
           <View style={styles.header}>
             <TouchableOpacity
-              activeOpacity={0.85}
+              activeOpacity={0.8}
+              hitSlop={{ bottom: 10, top: 10, left: 10, right: 10 }}
               onPress={() => Navigation.pop(this.props.componentId)}
               style={styles.backIconContainer}
             >
               <Ionicons name="md-arrow-back" size={26} color="#fff" />
             </TouchableOpacity>
             <View style={styles.titleContainer}>
-              <Text numberOfLines={1} style={{ color: '#fff', fontSize: 25, fontFamily: 'SourceSansPro-SemiBold', textAlign: 'left' }}>
-                {this.props.data.name}
-              </Text>
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                style={{ marginRight: 15 }}
+                contentContainerStyle={{ alignItems: 'center' }}
+              >
+                <Text numberOfLines={1} style={{ color: '#fff', fontSize: 25, fontFamily: 'SourceSansPro-SemiBold', textAlign: 'left' }}>
+                  {this.props.data.name}
+                </Text>
+              </ScrollView>
             </View>
           </View>
           <View style={{ flex: 1, paddingHorizontal: 12 }}>
@@ -183,9 +190,9 @@ class EmployeeDetailsScreen extends Component {
               />
             }
           </View>
-          <View style={{ flex: 1, justifyContent: 'flex-end' }}>
+          <View style={{ flex: 1, justifyContent: 'flex-end', marginHorizontal: 8 }}>
             <MyButton
-              style={{ marginBottom: 10, height: 50 }}
+              style={{ height: 52 }}
               color='#008ee0'
               textStyle={{ fontSize: 20 }}
               onPress={() => {
@@ -194,7 +201,7 @@ class EmployeeDetailsScreen extends Component {
               }}
             >Save</MyButton>
             <MyButton
-              style={{ marginBottom: 20, height: 50 }}
+              style={{ marginBottom: 20, height: 52 }}
               color='#e65100'
               textStyle={{ fontSize: 20 }}
               onPress={() => this.setState({ modalVisible: true })}
@@ -212,12 +219,32 @@ class EmployeeDetailsScreen extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000'
+    backgroundColor: '#000',
+    paddingHorizontal:
+      Dimensions.get('window').width > 800 ? 62
+        :
+        Dimensions.get('window').width > 700 ? 48
+          :
+          Dimensions.get('window').width > 600 ? 36
+            :
+            Dimensions.get('window').width > 500 ? 10
+              :
+              0
   },
   header: {
     height: 56,
     flexDirection: 'row',
     backgroundColor: '#000',
+    marginVertical:
+      Dimensions.get('window').width > 800 ? 20
+        :
+        Dimensions.get('window').width > 700 ? 12
+          :
+          Dimensions.get('window').width > 600 ? 8
+            :
+            Dimensions.get('window').width > 500 ? 6
+              :
+              0,
     marginBottom: 15,
     paddingHorizontal: 4
   },

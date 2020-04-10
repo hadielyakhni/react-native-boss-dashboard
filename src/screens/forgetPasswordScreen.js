@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, Modal, View, TouchableOpacity, TextInput, KeyboardAvoidingView } from 'react-native'
+import { Text, Modal, View, TouchableOpacity, TextInput, KeyboardAvoidingView, Dimensions } from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import { Navigation } from 'react-native-navigation'
@@ -8,7 +8,7 @@ import { sendPasswordResetEmail, dsimissAuthError, hidePasswordResetSuccessModal
 import getAuthError from '../utils/getAuthError'
 
 class ForgetPasswordScreen extends Component {
-  state = { email: '' }
+  state = { email: this.props.email || '' }
   render() {
     return (
       <KeyboardAvoidingView behavior="padding" style={{
@@ -21,22 +21,38 @@ class ForgetPasswordScreen extends Component {
           height: 56,
           flexDirection: 'row',
           alignItems: 'center',
-          paddingLeft: 16
+          paddingHorizontal:
+            Dimensions.get('window').width > 800 ? 30
+              :
+              Dimensions.get('window').width > 700 ? 25
+                :
+                Dimensions.get('window').width > 600 ? 10
+                  :
+                  Dimensions.get('window').width > 500 ? 6.25
+                    :
+                    2
         }}>
-          <TouchableOpacity style={{ width: 20 }} onPress={() => Navigation.pop(this.props.componentId)}>
-            <Ionicons
-              name="ios-arrow-back"
-              color='#fff'
-              size={25}
-            />
+          <TouchableOpacity activeOpacity={0.8} style={{ flexDirection: 'row', alignItems: 'center' }} onPress={() => Navigation.pop(this.props.componentId)}>
+            <Ionicons name="ios-arrow-back" color='#fff' size={25} />
+            <Text style={{
+              marginLeft: Dimensions.get('window').width > 600 ? 14 : 10, color: '#fff', fontSize: 25, fontFamily: 'SourceSansPro-SemiBold'
+            }}>Back</Text>
           </TouchableOpacity>
-          <Text style={{ marginLeft: 10, color: '#fff', fontSize: 25, fontFamily: 'SourceSansPro-SemiBold' }}>Back</Text>
         </View>
         <View style={{
           backgroundColor: '#000',
           flex: 1,
-          paddingHorizontal: 16,
-          paddingTop: 52
+          paddingTop: 52,
+          paddingHorizontal:
+            Dimensions.get('window').width > 800 ? 120
+              :
+              Dimensions.get('window').width > 700 ? 100
+                :
+                Dimensions.get('window').width > 600 ? 40
+                  :
+                  Dimensions.get('window').width > 500 ? 25
+                    :
+                    8
         }}>
           <Text style={{ fontSize: 24, color: '#fff', fontFamily: 'SourceSansPro-Bold' }}>Forgot Password?</Text>
           <View style={{
@@ -50,7 +66,7 @@ class ForgetPasswordScreen extends Component {
           }}>
             <MaterialCommunityIcons style={{ paddingBottom: 2 }} name="email" color="#fff" size={24} />
             <TextInput
-              editable={!this.props.sendingPasswordResetEmail}
+              editable={!this.props.sendingPasswordResetEmail && !this.props.email}
               keyboardType="email-address"
               ref={ref => this.inputRef = ref}
               value={this.state.email}
@@ -102,13 +118,32 @@ class ForgetPasswordScreen extends Component {
             }
           </TouchableOpacity>
         </View>
-        <View style={{ padding: 15, backgroundColor: '#000', paddingBottom: 40 }}>
-          <Text style={{ color: '#d6af00', fontSize: 13, fontFamily: 'SourceSansPro-Regular' }}>
-            Don't reset your password if you signed in with FACEBOOK.
-            If you do, you will no longer be able to login with FACEBOOK,
-            and you should login with your EMAIL ADDRESS and the new PASSWORD!
-          </Text>
-        </View>
+        {
+          !this.props.email ?
+            <View style={{
+              padding: 15,
+              backgroundColor: '#000',
+              paddingBottom: 40,
+              paddingHorizontal:
+                Dimensions.get('window').width > 800 ? 120
+                  :
+                  Dimensions.get('window').width > 700 ? 100
+                    :
+                    Dimensions.get('window').width > 600 ? 40
+                      :
+                      Dimensions.get('window').width > 500 ? 25
+                        :
+                        8
+            }}>
+              <Text style={{ color: '#d6af00', fontSize: 13, fontFamily: 'SourceSansPro-Regular' }}>
+                Don't reset your password if you signed in with FACEBOOK.
+                If you do, you will no longer be able to login with FACEBOOK,
+                and you should login with your EMAIL ADDRESS and the new PASSWORD!
+              </Text>
+            </View>
+            :
+            null
+        }
         <Modal
           animationType="fade"
           transparent={true}
@@ -148,7 +183,7 @@ class ForgetPasswordScreen extends Component {
                 <Text style={{ color: '#eef', fontSize: 17, fontWeight: 'bold', textAlign: 'center', marginBottom: 2 }}>
                   Email was sent to
                 </Text>
-                <Text style={{ color: '#fff', fontSize: 17, fontWeight: 'bold' }}>
+                <Text style={{ textAlign: 'center', color: '#fff', fontSize: 17, fontWeight: 'bold' }}>
                   {this.state.email}
                 </Text>
                 <Text style={{

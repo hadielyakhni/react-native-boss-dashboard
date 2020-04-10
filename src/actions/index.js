@@ -19,7 +19,10 @@ export const userSignin = (email, password) =>
     dispatch({ type: 'auth_attempt_started' })
     firebase.auth().signInWithEmailAndPassword(email.trim(), password)
       .then(async user => {
-        await AsyncStorage.setItem('uid', user.user.uid)
+        const arr1 = ['uid', user.user.uid]
+        const arr2 = ['email', user.user.email]
+        const arr3 = ['provider', 'email']
+        await AsyncStorage.multiSet([arr1, arr2, arr3])
         if (!TASKS_SORT_BY && !TASKS_SORT_ORDER)
           dispatch(getTasksSortData(user.user.uid))
         if (!EMPLOYEES_SORT_BY && !EMPLOYEES_SORT_ORDER)
@@ -48,8 +51,11 @@ export const userSignup = (email, password) =>
     firebase.auth().createUserWithEmailAndPassword(email.trim(), password)
       .then(async user => {
         let uid = user.user.uid
+        const arr1 = ['uid', user.user.uid]
+        const arr2 = ['email', user.user.email]
+        const arr3 = ['provider', 'email']
         await Promise.all([
-          AsyncStorage.setItem('uid', uid),
+          AsyncStorage.multiSet([arr1, arr2, arr3]),
           firebase.database().ref(`users/${uid}/tasks/sortData`).set({ sortBy: 'time', sortOrder: 'asc' }),
           firebase.database().ref(`users/${uid}/employees/sortData`).set({ sortBy: 'default', sortOrder: 'asc' }),
           firebase.database().ref(`users/${uid}/money/sortData`).set({ sortBy: 'default', sortOrder: 'asc' })
@@ -83,10 +89,13 @@ export const userAuthenticateWithFacebook = () =>
         throw new Error('Something went wrong obtaining access token');
       const credential = firebase.auth.FacebookAuthProvider.credential(data.accessToken);
       const user = await firebase.auth().signInWithCredential(credential);
+      const arr1 = ['uid', user.user.uid]
+      const arr2 = ['email', user.user.email]
+      const arr3 = ['provider', 'facebook']
       if (user.additionalUserInfo.isNewUser) {
         let uid = user.user.uid
         await Promise.all([
-          await AsyncStorage.setItem('uid', uid),
+          AsyncStorage.multiSet([arr1, arr2, arr3]),
           firebase.database().ref(`users/${uid}/tasks/sortData`).set({ sortBy: 'time', sortOrder: 'asc' }),
           firebase.database().ref(`users/${uid}/employees/sortData`).set({ sortBy: 'default', sortOrder: 'asc' }),
           firebase.database().ref(`users/${uid}/money/sortData`).set({ sortBy: 'default', sortOrder: 'asc' })
@@ -97,7 +106,7 @@ export const userAuthenticateWithFacebook = () =>
       }
       else {
         let uid = user.user.uid
-        await AsyncStorage.setItem('uid', uid)
+        await AsyncStorage.multiSet([arr1, arr2, arr3])
         if (!TASKS_SORT_BY && !TASKS_SORT_ORDER)
           dispatch(getTasksSortData(uid))
         if (!EMPLOYEES_SORT_BY && !EMPLOYEES_SORT_ORDER)
@@ -131,10 +140,13 @@ export const userAuthenticateWithGoogle = () =>
       const { idToken } = await GoogleSignin.signIn()
       const googleCredential = firebase.auth.GoogleAuthProvider.credential(idToken)
       const user = await firebase.auth().signInWithCredential(googleCredential)
+      const arr1 = ['uid', user.user.uid]
+      const arr2 = ['email', user.user.email]
+      const arr3 = ['provider', 'google']
       if (user.additionalUserInfo.isNewUser) {
         let uid = user.user.uid
         await Promise.all([
-          await AsyncStorage.setItem('uid', uid),
+          await AsyncStorage.multiSet([arr1, arr2, arr3]),
           firebase.database().ref(`users/${uid}/tasks/sortData`).set({ sortBy: 'time', sortOrder: 'asc' }),
           firebase.database().ref(`users/${uid}/employees/sortData`).set({ sortBy: 'default', sortOrder: 'asc' }),
           firebase.database().ref(`users/${uid}/money/sortData`).set({ sortBy: 'default', sortOrder: 'asc' })
@@ -145,7 +157,7 @@ export const userAuthenticateWithGoogle = () =>
       }
       else {
         let uid = user.user.uid
-        await AsyncStorage.setItem('uid', uid)
+        await AsyncStorage.multiSet([arr1, arr2, arr3])
         if (!TASKS_SORT_BY && !TASKS_SORT_ORDER)
           dispatch(getTasksSortData(uid))
         if (!EMPLOYEES_SORT_BY && !EMPLOYEES_SORT_ORDER)

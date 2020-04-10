@@ -46,6 +46,7 @@ class AuthScreen extends Component {
     this.setState({ isKeyboardOpened: false })
   }
   onSign = () => {
+    Keyboard.dismiss()
     const { screen, email, password } = this.state
     if (screen === 'login')
       return this.props.userSignin(email, password)
@@ -74,7 +75,21 @@ class AuthScreen extends Component {
     return (
       <KeyboardAvoidingView behavior='padding' style={styles.container}>
         <View
-          style={{ flex: 1, justifyContent: 'center', paddingBottom: !this.state.isKeyboardOpened ? Dimensions.get('window').height / 27 : 100 }}
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            paddingBottom: !this.state.isKeyboardOpened ? Dimensions.get('window').height / 27 : 100,
+            paddingHorizontal:
+              Dimensions.get('window').width > 800 ? 160
+                :
+                Dimensions.get('window').width > 700 ? 125
+                  :
+                  Dimensions.get('window').width > 600 ? 70
+                    :
+                    Dimensions.get('window').width > 500 ? 50
+                      :
+                      0
+          }}
         >
           {
             this.state.isKeyboardOpened ?

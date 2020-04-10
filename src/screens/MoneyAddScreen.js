@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, StyleSheet, View, InteractionManager, ActivityIndicator, Modal, TouchableOpacity } from 'react-native'
+import { Text, StyleSheet, View, InteractionManager, ActivityIndicator, TouchableOpacity, Dimensions } from 'react-native'
 import { connect } from 'react-redux'
 import { addMoneyAccount, resetAccount } from '../actions'
 import { Spinner } from 'native-base'
@@ -29,7 +29,12 @@ class MoneyAddScreen extends Component {
       this.state.canRender ?
         <View style={styles.container}>
           <View style={styles.header}>
-            <TouchableOpacity activeOpacity={0.85} onPress={() => Navigation.pop(this.props.componentId)} style={styles.backIconContainer}>
+            <TouchableOpacity
+              activeOpacity={0.8}
+              hitSlop={{ bottom: 10, top: 10, left: 10, right: 10 }}
+              style={styles.backIconContainer}
+              onPress={() => Navigation.pop(this.props.componentId)}
+            >
               <Ionicons name="md-arrow-back" size={26} color="#fff" />
             </TouchableOpacity>
             <View style={styles.titleContainer}>
@@ -38,7 +43,7 @@ class MoneyAddScreen extends Component {
               </Text>
             </View>
           </View>
-          <View style={{ flex: 1, paddingHorizontal: 8 }}>
+          <View style={{ flex: 1, paddingHorizontal: 12 }}>
             <View style={styles.formContainer}>
               <MyInput
                 placeHolder="Name"
@@ -100,7 +105,7 @@ class MoneyAddScreen extends Component {
                 disabled={this.isAddDisabled()}
                 disabledColor='#355973'
                 color='#008ee0'
-                textStyle={{ fontSize: 20 }}
+                textStyle={{ fontSize: 19 }}
                 style={[styles.addButton, { marginBottom: 0 }]}
                 onPress={() => {
                   return this.props.addMoneyAccount(this.props.componentId, { name, phone, status, amount: amount || 0 })
@@ -121,7 +126,16 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#000',
-    paddingHorizontal: 4
+    paddingHorizontal:
+      Dimensions.get('window').width > 800 ? 62
+        :
+        Dimensions.get('window').width > 700 ? 48
+          :
+          Dimensions.get('window').width > 600 ? 36
+            :
+            Dimensions.get('window').width > 500 ? 10
+              :
+              0
   },
   formContainer: {
     flex: 1
@@ -130,7 +144,18 @@ const styles = StyleSheet.create({
     height: 56,
     flexDirection: 'row',
     backgroundColor: '#000',
-    marginBottom: 10
+    marginVertical:
+      Dimensions.get('window').width > 800 ? 20
+        :
+        Dimensions.get('window').width > 700 ? 12
+          :
+          Dimensions.get('window').width > 600 ? 8
+            :
+            Dimensions.get('window').width > 500 ? 6
+              :
+              0,
+    marginBottom: 10,
+    paddingHorizontal: 4
   },
   titleContainer: {
     flex: 1,

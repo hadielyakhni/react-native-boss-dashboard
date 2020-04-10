@@ -6,7 +6,8 @@ import {
   TouchableOpacity,
   FlatList,
   TextInput,
-  Animated
+  Animated,
+  Dimensions
 } from 'react-native'
 import { Navigation } from 'react-native-navigation'
 import { connect } from 'react-redux'
@@ -70,7 +71,7 @@ class EmployeesListScreen extends Component {
           <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
             <Animated.View style={{
               alignItems: 'center',
-              translateY: this.hintTranslateY,
+              transform: [{ translateY: this.hintTranslateY }],
               opacity: this.hintOpacity,
               marginBottom: 140
             }}>
@@ -190,7 +191,8 @@ class EmployeesListScreen extends Component {
         <Animated.View style={{ justifyContent: 'center', opacity: this.sortOpacity }}>
           <TouchableOpacity
             activeOpacity={0.8}
-            style={{ width: 40, paddingLeft: 4, justifyContent: 'center' }}
+            disabled={this.hintOpacity === 1}
+            style={{ width: 40, paddingLeft: 6, justifyContent: 'center' }}
             onPress={() => this.setState({ sortChoicesModalVisible: true })}
           >
             <MaterialCommunityIcons name="sort" color="#fff" size={28} />
@@ -224,55 +226,56 @@ class EmployeesListScreen extends Component {
     { this.checkActiveSortLabel() }
     return (
       <View style={styles.container}>
-        {this.checkExit()}
-        {this.renderUndoMessage()}
-        <SortChoicesModal
-          choices={this.sortChoices}
-          visible={this.state.sortChoicesModalVisible}
-          selectedChoice={this.activeSortLabel}
-          onSelect={this.onSelectSortChoice}
-          onCancel={this.closeSortChoicesModal}
-        />
-        <View style={styles.header}>
-          <View style={styles.titleContainer}>
-            <Text numberOfLines={1} style={{ color: '#fff', fontSize: 26, fontFamily: 'SourceSansPro-SemiBold' }}>
-              My Employees
+        <View style={{ flex: 1 }}>
+          {this.checkExit()}
+          {this.renderUndoMessage()}
+          <SortChoicesModal
+            choices={this.sortChoices}
+            visible={this.state.sortChoicesModalVisible}
+            selectedChoice={this.activeSortLabel}
+            onSelect={this.onSelectSortChoice}
+            onCancel={this.closeSortChoicesModal}
+          />
+          <View style={styles.header}>
+            <View style={styles.titleContainer}>
+              <Text numberOfLines={1} style={{ color: '#fff', fontSize: 26, fontFamily: 'SourceSansPro-SemiBold' }}>
+                My Employees
             </Text>
+            </View>
+            {this.renderSortButton()}
           </View>
-          {this.renderSortButton()}
-        </View>
-        <View style={styles.searchView}>
-          <Icon
-            name='md-search'
-            style={{ color: this.props.fetchingEmployees || !this.props.allEmployees.length ? '#777' : '#e3e3e3', fontSize: 26 }}
-          />
-          <TextInput
-            editable={this.props.fetchingEmployees || !this.props.allEmployees.length ? false : true}
-            value={this.state.searchWord}
-            style={styles.input}
-            placeholderTextColor='#777'
-            placeholder='Search employees'
-            onChangeText={this.changeSearchWord}
-          />
-        </View>
-        {this.renderScreen()}
-
-        <TouchableOpacity
-          activeOpacity={1}
-          style={styles.addButton}
-          onPress={() => {
-            Navigation.push(this.props.componentId, {
-              component: {
-                name: 'employeeAdd',
-                options: {
-                  topBar: { title: { text: 'Add Employee' } }
+          <View style={styles.searchView}>
+            <Icon
+              name='md-search'
+              style={{ color: this.props.fetchingEmployees || !this.props.allEmployees.length ? '#777' : '#e3e3e3', fontSize: 26 }}
+            />
+            <TextInput
+              editable={this.props.fetchingEmployees || !this.props.allEmployees.length ? false : true}
+              value={this.state.searchWord}
+              style={styles.input}
+              placeholderTextColor='#777'
+              placeholder='Search employees'
+              onChangeText={this.changeSearchWord}
+            />
+          </View>
+          {this.renderScreen()}
+          <TouchableOpacity
+            activeOpacity={1}
+            style={styles.addButton}
+            onPress={() => {
+              Navigation.push(this.props.componentId, {
+                component: {
+                  name: 'employeeAdd',
+                  options: {
+                    topBar: { title: { text: 'Add Employee' } }
+                  }
                 }
-              }
-            })
-          }}
-        >
-          <Icon name='ios-add' style={{ color: '#fff', fontSize: 38 }} />
-        </TouchableOpacity>
+              })
+            }}
+          >
+            <Icon name='ios-add' style={{ color: '#fff', fontSize: 38 }} />
+          </TouchableOpacity>
+        </View>
       </View >
     )
   }
@@ -282,13 +285,31 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#000',
-    paddingHorizontal: 5
+    paddingHorizontal:
+      Dimensions.get('window').width > 800 ? 62
+        :
+        Dimensions.get('window').width > 700 ? 48
+          :
+          Dimensions.get('window').width > 600 ? 36
+            :
+            Dimensions.get('window').width > 500 ? 10
+              :
+              0
   },
   header: {
     height: 56,
-    paddingTop: 8,
     flexDirection: 'row',
-    backgroundColor: '#000'
+    backgroundColor: '#000',
+    marginVertical:
+      Dimensions.get('window').width > 800 ? 20
+        :
+        Dimensions.get('window').width > 700 ? 12
+          :
+          Dimensions.get('window').width > 600 ? 8
+            :
+            Dimensions.get('window').width > 500 ? 6
+              :
+              0
   },
   titleContainer: {
     flex: 1,

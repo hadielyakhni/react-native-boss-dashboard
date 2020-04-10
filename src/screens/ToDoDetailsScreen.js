@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
-import { View, StyleSheet, TextInput, Dimensions, Modal, Text, TouchableOpacity } from 'react-native'
+import { View, StyleSheet, TextInput, Text, TouchableOpacity, Dimensions } from 'react-native'
 import { connect } from 'react-redux'
 import { updateTask, deleteTask } from '../actions'
-import { Spinner } from 'native-base'
 import { Navigation } from 'react-native-navigation'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import MyButton from '../components/MyButton'
@@ -18,7 +17,12 @@ class ToDoDetailsScreen extends Component {
     return (
       <View style={styles.container}>
         <View style={styles.header}>
-          <TouchableOpacity activeOpacity={0.85} onPress={() => Navigation.pop(this.props.componentId)} style={styles.backIconContainer}>
+          <TouchableOpacity
+            activeOpacity={0.8}
+            hitSlop={{ bottom: 10, top: 10, left: 10, right: 10 }}
+            style={styles.backIconContainer}
+            onPress={() => Navigation.pop(this.props.componentId)}
+          >
             <Ionicons name="md-arrow-back" size={26} color="#fff" />
           </TouchableOpacity>
           <View style={styles.titleContainer}>
@@ -57,25 +61,23 @@ class ToDoDetailsScreen extends Component {
           <View style={styles.buttonView}>
             <MyButton
               activeOpacity={0.9}
-              style={{ height: 55 }}
+              style={{ height: 52 }}
               textStyle={{ fontSize: 20 }}
               color='#008ee0'
               onPress={() => {
                 const { task, description, isDone } = this.state
                 this.props.updateTask(this.props.taskId, task, description, isDone, this.props.componentId)
               }}
-            >Save
-          </MyButton>
+            >Save</MyButton>
             <MyButton
               activeOpacity={0.9}
-              style={{ marginBottom: 20, height: 50 }}
+              style={{ marginBottom: 20, height: 52 }}
               color='#e65100'
               textStyle={{ fontSize: 20 }}
               onPress={() => {
                 this.props.deleteTask(this.props.taskId, 'todoDetails', this.props.componentId, this.taskData)
               }}
-            >Delete
-            </MyButton>
+            >Delete</MyButton>
           </View>
         </View>
       </View>
@@ -87,13 +89,33 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#000',
-    paddingHorizontal: 4
+    paddingHorizontal:
+      Dimensions.get('window').width > 800 ? 62
+        :
+        Dimensions.get('window').width > 700 ? 48
+          :
+          Dimensions.get('window').width > 600 ? 36
+            :
+            Dimensions.get('window').width > 500 ? 10
+              :
+              0
   },
   header: {
     height: 56,
     flexDirection: 'row',
     backgroundColor: '#000',
-    marginBottom: 15
+    marginVertical:
+      Dimensions.get('window').width > 800 ? 20
+        :
+        Dimensions.get('window').width > 700 ? 12
+          :
+          Dimensions.get('window').width > 600 ? 8
+            :
+            Dimensions.get('window').width > 500 ? 6
+              :
+              0,
+    marginBottom: 15,
+    paddingHorizontal: 4
   },
   titleContainer: {
     flex: 1,
@@ -118,7 +140,6 @@ const styles = StyleSheet.create({
     fontFamily: 'SourceSansPro-Regular'
   },
   buttonView: {
-    height: 150,
     justifyContent: 'space-evenly'
   },
   loadingModalContainer: {
