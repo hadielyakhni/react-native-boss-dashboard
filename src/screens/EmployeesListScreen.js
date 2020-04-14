@@ -318,6 +318,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#000'
   },
   addButton: {
+    elevation: 4,
     position: 'absolute',
     right: 14,
     bottom: 20,
@@ -347,6 +348,7 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
   searchView: {
+    marginHorizontal: 5,
     marginBottom: 20,
     marginTop: 10,
     paddingRight: 10,
@@ -414,7 +416,7 @@ const mapStateToProps = state => {
     sortOrder,
     fetchingEmployees: state.employees.fetchingEmployees,
     showUndoDelete: state.employees.showUndoDelete,
-    exitCount: state.exit.exitCount
+    exitCount: state.app.exitCount
   }
 }
 

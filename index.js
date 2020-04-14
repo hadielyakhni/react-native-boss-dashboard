@@ -10,7 +10,12 @@ Navigation.events().registerAppLaunchedListener(() => {
   Navigation.setRoot({
     root: {
       component: {
-        name: 'first'
+        name: 'first',
+        options: {
+          statusBar: {
+            // visible: false
+          }
+        }
       }
     }
   })

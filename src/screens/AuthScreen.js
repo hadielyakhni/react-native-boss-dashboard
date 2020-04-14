@@ -4,7 +4,6 @@ import {
   Text,
   StyleSheet,
   View,
-  Animated,
   Keyboard,
   Dimensions,
   Modal,
@@ -27,8 +26,8 @@ UIManager.setLayoutAnimationEnabledExperimental &&
   UIManager.setLayoutAnimationEnabledExperimental(true)
 
 class AuthScreen extends Component {
-  constructor() {
-    super()
+  constructor(props) {
+    super(props)
     this.keyboardDidShowListner = Keyboard.addListener('keyboardDidShow', this._keyboardDidShow)
     this.keyboardDidHideListner = Keyboard.addListener('keyboardDidHide', this._keyboardDidHide)
     this.state = {
@@ -71,9 +70,20 @@ class AuthScreen extends Component {
       </View>
     )
   }
+  useTheme(lightThemeColor, darkThemeColor) {
+    if (this.props.theme === 'light')
+      return lightThemeColor
+    return darkThemeColor
+  }
   render() {
     return (
-      <KeyboardAvoidingView behavior='padding' style={styles.container}>
+      <KeyboardAvoidingView
+        behavior='padding'
+        style={{
+          ...styles.container,
+          backgroundColor: this.useTheme('#fbfbfb', '#161616')
+        }}
+      >
         <View
           style={{
             flex: 1,
@@ -93,12 +103,17 @@ class AuthScreen extends Component {
         >
           {
             this.state.isKeyboardOpened ?
-              <Text style={{ fontSize: 26, color: '#fff', fontFamily: 'SourceSansPro-SemiBold', marginVertical: 12, alignSelf: 'center' }}>B.D</Text>
+              <Text style={{ fontSize: 26, color: this.useTheme('#303030', '#fff'), fontFamily: 'SourceSansPro-SemiBold', marginVertical: 12, alignSelf: 'center' }}>
+                B.D
+              </Text>
               :
-              <Text numberOfLines={1} style={styles.title}>Boss Dashboard</Text>
+              <Text numberOfLines={1} style={{ ...styles.title, color: this.useTheme('#303030', '#fbfbfb') }}>
+                Boss Dashboard
+              </Text>
           }
           <View style={{ paddingHorizontal: 33 }}>
             <MyInput
+              theme={this.props.theme}
               keyboardType='email-address'
               value={this.state.email}
               style={{ paddingHorizontal: 15 }}
@@ -107,14 +122,25 @@ class AuthScreen extends Component {
               isAutoCorrect={true}
               onChangeText={email => this.setState({ email })}
             />
-            <View style={[styles.inputContainer, this.props.inputContainerStyle]}>
+            <View style={[
+              styles.inputContainer,
+              {
+                backgroundColor: this.useTheme('#f6f6f6', '#444'),
+                borderWidth: this.useTheme(1, 0),
+                borderColor: '#ccc'
+              }
+
+            ]}>
               {this.props.leftIcon && <Icon name={this.props.leftIcon} style={[styles.iconLeft, this.props.leftIconStyle]} />}
               <TextInput
                 value={this.state.password}
                 secureTextEntry={this.state.isPasswordSecure}
-                style={styles.InputStyle}
+                style={{
+                  ...styles.InputStyle,
+                  color: this.useTheme('#303030', '#fbfbfb')
+                }}
                 placeholder="Password"
-                placeholderTextColor='rgba(255, 255, 255, 0.6)'
+                placeholderTextColor={this.useTheme('#999', 'rgba(255, 255, 255, 0.6)')}
                 autoCapitalize='none'
                 onChangeText={password => this.setState({ password })}
               />
@@ -131,7 +157,7 @@ class AuthScreen extends Component {
                       name={this.state.isPasswordSecure ? "visibility-off" : "visibility"}
                       style={{ paddingRight: 10 }}
                       size={21.5}
-                      color={this.state.isPasswordSecure ? "#bbb" : "#008ee0"}
+                      color={this.state.isPasswordSecure ? this.useTheme('#777', "#bbb") : "#008ee0"}
                     />
                   </TouchableOpacity>
                   :
@@ -140,22 +166,22 @@ class AuthScreen extends Component {
             </View>
             {this.renderSignButton()}
             <View style={{ flexDirection: 'row', marginBottom: 16, marginTop: 6, alignItems: 'center' }}>
-              <View style={{ height: 0, flex: 1, borderColor: '#fff', borderWidth: 0.3 }}></View>
+              <View style={{ height: 0, flex: 1, borderColor: this.useTheme('#303030', '#fbfbfb'), borderWidth: 0.3 }}></View>
               <Text
                 onPress={() => {
                   if (this.state.screen === 'login')
                     Navigation.push(this.props.componentId, { component: { name: 'forgetPassword' } })
                 }}
-                style={{ color: '#fff', fontSize: 13, fontFamily: 'SourceSansPro-SemiBold', marginHorizontal: 12 }}
+                style={{ color: this.useTheme('#303030', '#fbfbfb'), fontSize: 13, fontFamily: 'SourceSansPro-SemiBold', marginHorizontal: 12 }}
               >
                 {this.state.screen === 'login' ? "Forgot Password?" : "OR"}
               </Text>
-              <View style={{ height: 0, flex: 1, borderColor: '#fff', borderWidth: 0.3 }}></View>
+              <View style={{ height: 0, flex: 1, borderColor: this.useTheme('#303030', '#fbfbfb'), borderWidth: 0.3 }}></View>
             </View>
             <View>
               <MyButton
                 disabledColor='#9e4242'
-                disabled={this.props.googleButtonDisabled}
+                disabled={this.props.googleButtonDisabled || this.props.facebookButtonDisabled || this.props.loading}
                 onPress={() => {
                   Keyboard.dismiss()
                   this.props.userAuthenticateWithGoogle()
@@ -167,7 +193,7 @@ class AuthScreen extends Component {
               </MyButton>
               <MyButton
                 disabledColor='#355973'
-                disabled={this.props.facebookButtonDisabled}
+                disabled={this.props.facebookButtonDisabled || this.props.googleButtonDisabled || this.props.loading}
                 onPress={() => {
                   Keyboard.dismiss()
                   this.props.userAuthenticateWithFacebook()
@@ -179,7 +205,10 @@ class AuthScreen extends Component {
               </MyButton>
             </View>
           </View>
-          <View style={[styles.switchMethodeOption, { bottom: this.state.isKeyboardOpened ? 30 : 0 }]}>
+          <View style={[styles.switchMethodeOption, {
+            bottom: this.state.isKeyboardOpened ? 30 : 0,
+            borderTopColor: this.useTheme('rgba(0, 0, 0, 0.2)', 'rgba(255, 255, 255, 0.2)')
+          }]}>
             <TouchableOpacity
               activeOpacity={1}
               onPress={() => {
@@ -198,10 +227,16 @@ class AuthScreen extends Component {
               }}
               style={{ flexDirection: 'row', alignItems: 'center', flex: 1, height: 50, justifyContent: 'center' }}
             >
-              <Text style={styles.switchMethodeText}>
+              <Text style={{
+                ...styles.switchMethodeText,
+                color: this.useTheme('rgba(0, 0, 0, 0.6)', 'rgba(255, 255, 255, 0.6)')
+              }}>
                 {this.state.screen === 'login' ? "Don't have an account?" : "Already a member?"}
               </Text>
-              <Text style={styles.switchMethodeLink}>
+              <Text style={{
+                ...styles.switchMethodeLink,
+                color: this.useTheme('#303030', '#fbfbfb')
+              }}>
                 {this.state.screen === 'login' ? 'Sign up.' : 'Log in.'}
               </Text>
             </TouchableOpacity>
@@ -211,13 +246,24 @@ class AuthScreen extends Component {
           animationType="fade"
           transparent={true}
           visible={!!this.props.error}>
-          <View style={styles.errorModalContainer} >
-            <View style={styles.errorModal}>
-              <View style={styles.upperModalPart}>
-                <Text style={{ color: '#eef', fontSize: 21, fontFamily: 'SourceSansPro-Bold' }}>Error</Text>
+          <View style={{
+            ...styles.errorModalContainer,
+            backgroundColor: this.useTheme('rgba(0,0,0,0.1)', 'rgba(0,0,0,0.5)'),
+          }} >
+            <View style={{
+              ...styles.errorModal,
+              backgroundColor: this.useTheme('#fff', '#272727')
+            }}>
+              <View style={{
+                ...styles.upperModalPart,
+                borderBottomColor: this.useTheme('#eaeaea', '#363636')
+              }}>
+                <Text style={{ color: this.useTheme('#303030', '#eef'), fontSize: 21, fontFamily: 'SourceSansPro-Bold' }}>
+                  Error
+                </Text>
                 <Text style={{
                   textAlign: 'center',
-                  color: '#bbb',
+                  color: this.useTheme('#444', '#bbb'),
                   fontSize: 14.5,
                   fontFamily: 'SourceSansPro-Regular',
                   marginTop: 12
@@ -245,13 +291,11 @@ class AuthScreen extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000',
     justifyContent: 'center'
   },
   title: {
     textAlign: 'center',
     marginBottom: 25,
-    color: '#fff',
     fontSize: 44,
     alignSelf: 'center',
     fontFamily: 'SourceSansPro-SemiBold'
@@ -260,7 +304,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     height: 50,
     width: Dimensions.get('window').width,
-    borderTopColor: 'rgba(255, 255, 255, 0.2)',
     borderTopWidth: 1,
     flexDirection: 'row',
     justifyContent: 'center',
@@ -269,12 +312,10 @@ const styles = StyleSheet.create({
   switchMethodeText: {
     fontFamily: 'SourceSansPro-Regular',
     fontSize: 13.5,
-    color: 'rgba(255, 255, 255, 0.6)',
     marginRight: 4
   },
   switchMethodeLink: {
     fontFamily: 'SourceSansPro-SemiBold',
-    color: '#fff',
     fontSize: 14
   },
   loadingContainer: {
@@ -288,14 +329,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   errorModalContainer: {
-    backgroundColor: 'rgba(0,0,0,0.5)',
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center'
   },
   errorModal: {
     borderRadius: 6,
-    backgroundColor: '#272727',
     width: 250,
     paddingTop: 7,
     justifyContent: 'center'
@@ -305,8 +344,7 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     paddingHorizontal: 12,
     alignItems: 'center',
-    borderBottomWidth: 1,
-    borderBottomColor: '#363636'
+    borderBottomWidth: 1
   },
   lowerModalPart: {
     height: 42,
@@ -318,14 +356,12 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginVertical: 10,
     flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.22)',
+    alignItems: 'center'
   },
   InputStyle: {
     flex: 1,
     height: 45,
     borderRadius: 5,
-    color: '#fff',
     paddingHorizontal: 15,
     fontSize: 16.5,
     fontFamily: 'SourceSansPro-Regular'
@@ -352,7 +388,8 @@ const mapStateToProps = state => {
     error: state.auth.error,
     loading: state.auth.loading,
     facebookButtonDisabled: state.auth.facebookButtonDisabled,
-    googleButtonDisabled: state.auth.googleButtonDisabled
+    googleButtonDisabled: state.auth.googleButtonDisabled,
+    theme: state.app.theme
   }
 }
 

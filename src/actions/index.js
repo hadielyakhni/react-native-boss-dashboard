@@ -15,34 +15,34 @@ let
 
 // Auth Actions
 export const userSignin = (email, password) =>
-  dispatch => {
-    dispatch({ type: 'auth_attempt_started' })
-    firebase.auth().signInWithEmailAndPassword(email.trim(), password)
-      .then(async user => {
-        const arr1 = ['uid', user.user.uid]
-        const arr2 = ['email', user.user.email]
-        const arr3 = ['provider', 'email']
-        await AsyncStorage.multiSet([arr1, arr2, arr3])
-        if (!TASKS_SORT_BY && !TASKS_SORT_ORDER)
-          dispatch(getTasksSortData(user.user.uid))
-        if (!EMPLOYEES_SORT_BY && !EMPLOYEES_SORT_ORDER)
-          dispatch(getEmployeesSortData(user.user.uid))
-        if (!ACCOUNTS_SORT_BY && !ACCOUNTS_SORT_ORDER)
-          dispatch(getAccountsSortData(user.user.uid))
-        goToMain()
-        setTimeout(() => {
-          dispatch({
-            type: 'user_signedin',
-            payload: user
-          })
-        }, 100);
-      })
-      .catch(err => {
+  async dispatch => {
+    try {
+      dispatch({ type: 'auth_attempt_started' })
+      const user = await firebase.auth().signInWithEmailAndPassword(email.trim(), password)
+      const arr1 = ['uid', user.user.uid]
+      const arr2 = ['email', user.user.email]
+      const arr3 = ['provider', 'email']
+      await AsyncStorage.multiSet([arr1, arr2, arr3])
+      if (!TASKS_SORT_BY && !TASKS_SORT_ORDER)
+        dispatch(getTasksSortData(user.user.uid))
+      if (!EMPLOYEES_SORT_BY && !EMPLOYEES_SORT_ORDER)
+        dispatch(getEmployeesSortData(user.user.uid))
+      if (!ACCOUNTS_SORT_BY && !ACCOUNTS_SORT_ORDER)
+        dispatch(getAccountsSortData(user.user.uid))
+      goToMain()
+      setTimeout(() => {
         dispatch({
-          type: 'auth_error',
-          payload: err.toString()
+          type: 'user_signedin',
+          payload: user
         })
+      }, 100);
+    }
+    catch (err) {
+      dispatch({
+        type: 'auth_error',
+        payload: err.toString()
       })
+    }
   }
 
 export const userSignup = (email, password) =>
@@ -452,7 +452,7 @@ export const changeAccountsSortData = (sortBy, sortOrder) =>
   }
 
 
-//Exit action
+//App actions
 export const incrementExitCount = () =>
   dispatch => {
     dispatch({ type: 'increment_exit_count' })
@@ -464,3 +464,13 @@ export const incrementExitCount = () =>
 export const resetExitCount = () => ({
   type: 'reset_exit_count'
 })
+
+export const setTheme = (theme, isSystem) => {
+  return ({
+    type: 'change_theme',
+    payload: {
+      theme,
+      isSystem
+    }
+  })
+}

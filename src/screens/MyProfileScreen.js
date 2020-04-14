@@ -1,23 +1,26 @@
 import React, { Component } from 'react'
-import { Text, StyleSheet, View, TouchableOpacity, Linking, Modal, Dimensions, ScrollView } from 'react-native'
+import { Text, StyleSheet, View, TouchableOpacity, Linking, Modal, Dimensions, ScrollView, Button } from 'react-native'
 import { LoginManager } from 'react-native-fbsdk'
 import { GoogleSignin } from '@react-native-community/google-signin'
 import AsyncStorage from '@react-native-community/async-storage'
 import { Navigation } from 'react-native-navigation'
-import { goToAuth } from '../navigation/navigation'
+import { goToAuth, goToMain } from '../navigation/navigation'
 import { connect } from 'react-redux'
-import { incrementExitCount, resetExitCount } from '../actions'
+import { incrementExitCount, resetExitCount, setTheme } from '../actions'
 import { Spinner } from 'native-base'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import Entypo from 'react-native-vector-icons/Entypo'
+import ThemeChoicesModal from '../components/SortChoicesModal'
 
 class MyProfileScreen extends Component {
   constructor(props) {
     super(props)
-    this.state = { modalVisible: false, loggingout: false }
+    console.log(this.props.isSystemTheme)
+    this.state = { modalVisible: false, loggingout: false, themeChoicesModalVisible: false }
+    this.themeChoices = [{ id: '1', prop: 'system' }, { id: "2", prop: 'light' }, { id: '3', prop: 'dark' }]
     const storedData = ['uid', 'email', 'provider']
     AsyncStorage.multiGet(storedData).then(data => {
       this.setState({
@@ -49,9 +52,37 @@ class MyProfileScreen extends Component {
     else if (this.props.exitCount === 2)
       BackHandler.exitApp()
   }
+  closeThemeChoicesModal = () => {
+    this.setState({ themeChoicesModalVisible: false })
+  }
+  onSelectThemeChoice = async choice => {
+    await AsyncStorage.setItem('theme', choice)
+    this.setState({ themeChoicesModalVisible: false })
+    Navigation.setRoot({
+      root: {
+        component: {
+          name: 'first',
+          options: {
+            animations: {
+              setRoot: {
+                waitForRender: true
+              }
+            }
+          }
+        }
+      }
+    })
+  }
   render() {
     return (
       <View style={styles.container}>
+        <ThemeChoicesModal
+          choices={this.themeChoices}
+          visible={this.state.themeChoicesModalVisible}
+          selectedChoice={this.props.isSystemTheme ? 'system' : this.props.theme}
+          onSelect={this.onSelectThemeChoice}
+          onCancel={this.closeThemeChoicesModal}
+        />
         {this.checkExit()}
         <View style={[StyleSheet.absoluteFill, {
           backgroundColor: this.state.modalVisible ? 'rgba(0,0,0,0.2)' : 'rgba(0,0,0,1)',
@@ -79,7 +110,9 @@ class MyProfileScreen extends Component {
                   this.setState({ modalVisible: false, loggingout: true })
                   LoginManager.logOut()
                   GoogleSignin.signOut()
-                  AsyncStorage.clear()
+                  AsyncStorage.removeItem('uid')
+                  AsyncStorage.removeItem('email')
+                  AsyncStorage.removeItem('provider')
                   this.props.resetTasks()
                   this.props.resetEmployees()
                   this.props.resetAccounts()
@@ -200,6 +233,7 @@ class MyProfileScreen extends Component {
           <TouchableOpacity
             activeOpacity={0.9}
             style={{ marginBottom: 5 }}
+            onPress={() => this.setState({ themeChoicesModalVisible: true })}
           >
             <View style={{ backgroundColor: '#0b0b0b', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
               <View style={{ height: 56, flexDirection: 'row', paddingLeft: 15, alignItems: 'center' }}>
@@ -210,8 +244,13 @@ class MyProfileScreen extends Component {
               </View>
               <View style={{ flexDirection: 'row', alignItems: 'center', marginHorizontal: 7 }}>
                 <Text style={{ color: '#999', fontSize: 17, fontFamily: 'SourceSansPro-Regular', marginRight: 10 }}>
-                  System
-              </Text>
+                  {
+                    this.props.isSystemTheme ?
+                      "System - " + this.props.theme.charAt(0).toUpperCase() + this.props.theme.substring(1)
+                      :
+                      this.props.theme.charAt(0).toUpperCase() + this.props.theme.substring(1)
+                  }
+                </Text>
               </View>
             </View>
           </TouchableOpacity>
@@ -438,8 +477,10 @@ const styles = StyleSheet.create({
   }
 })
 
-const mapStateToProps = ({ exit }) => ({
-  exitCount: exit.exitCount
+const mapStateToProps = ({ app }) => ({
+  theme: app.theme,
+  isSystemTheme: app.isSystemTheme,
+  exitCount: app.exitCount
 })
 
 const mapDiaptchToProps = dispatch => ({
@@ -447,7 +488,8 @@ const mapDiaptchToProps = dispatch => ({
   resetEmployees: () => dispatch({ type: 'logout_employees_reset' }),
   resetAccounts: () => dispatch({ type: 'logout_accounts_reset' }),
   incrementExitCount: () => dispatch(incrementExitCount()),
-  resetExitCount: () => dispatch(resetExitCount())
+  resetExitCount: () => dispatch(resetExitCount()),
+  setTheme: choice => dispatch(setTheme(choice))
 })
 
 export default connect(mapStateToProps, mapDiaptchToProps)(MyProfileScreen)

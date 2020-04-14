@@ -52,26 +52,26 @@ class ToDoItem extends PureComponent {
   }
   renderLeftActions(progress, dragX) {
     const arrowTranslateX = dragX.interpolate({
-      inputRange: [0, 20, 125],
-      outputRange: [0, 0, 75],
+      inputRange: [0, 20, 200],
+      outputRange: [0, 0, 150],
       extrapolate: 'clamp'
     })
     const backgroundColorOpacity = dragX.interpolate({
-      inputRange: [0, 125],
+      inputRange: [0, 200],
       outputRange: [0.25, 1]
     })
     const arrowOpacity = dragX.interpolate({
-      inputRange: [0, 100, 125],
+      inputRange: [0, 160, 200],
       outputRange: [1, 0.75, 0],
       extrapolate: 'clamp'
     })
     const doneTranslateX = dragX.interpolate({
-      inputRange: [0, 125],
+      inputRange: [0, 200],
       outputRange: [10, 20],
       extrapolate: 'clamp'
     })
     const doneOpacity = dragX.interpolate({
-      inputRange: [0, 115, 125],
+      inputRange: [0, 185, 200],
       outputRange: [0, 0, 1]
     })
     return (
@@ -89,40 +89,17 @@ class ToDoItem extends PureComponent {
         null
     )
   }
-  renderRightActions(progress, dragX) {
-    const arrowTranslateX = dragX.interpolate({
-      inputRange: [-200, -23, 0],
-      outputRange: [-120, 0, 0],
-      extrapolate: 'clamp'
-    })
-    const backgroundColorOpacity = dragX.interpolate({
-      inputRange: [-200, 0],
-      outputRange: [1, 0.25]
-    })
-    const arrowOpacity = dragX.interpolate({
-      inputRange: [-200, -164, 0],
-      outputRange: [0, 0.75, 1],
-      extrapolate: 'clamp'
-    })
-    const deleteTranslateX = dragX.interpolate({
-      inputRange: [-200, 0],
-      outputRange: [-20, -10],
-      extrapolate: 'clamp'
-    })
-    const deleteOpacity = dragX.interpolate({
-      inputRange: [-200, -182, 0],
-      outputRange: [1, 0, 0]
-    })
+  renderRightActions() {
     return (
-      <Animated.View style={{ flexDirection: 'row', backgroundColor: '#e65100', flex: 1, opacity: backgroundColorOpacity, height: 40, alignItems: 'center', justifyContent: 'flex-end' }}>
-        <Animated.View style={{ position: 'absolute', opacity: arrowOpacity, transform: [{ translateX: arrowTranslateX }] }}>
-          <MaterialIcons name="chevron-left" color="#fff" size={25} />
-        </Animated.View>
-        <Animated.View style={{ opacity: deleteOpacity, transform: [{ translateX: deleteTranslateX }], flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
-          <Text style={{ fontFamily: 'SourceSansPro-SemiBold', color: '#fff', fontSize: 16, marginRight: 7 }}>Delete</Text>
-          <MaterialCommunityIcons name="trash-can-outline" color="#fff" size={25} />
-        </Animated.View>
-      </Animated.View>
+      <TouchableOpacity
+        activeOpacity={0.8}
+        onPress={this.onDelete.bind(this)}
+        style={{ borderRadius: 8, flexDirection: 'row', backgroundColor: '#ef2e2e', height: 40, alignItems: 'center', justifyContent: 'flex-end' }}
+      >
+        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', width: 50 }}>
+          <MaterialCommunityIcons name="trash-can-outline" color="#fff" size={24} />
+        </View>
+      </TouchableOpacity>
     )
   }
   render() {
@@ -132,14 +109,12 @@ class ToDoItem extends PureComponent {
         useNativeAnimations={true}
         containerStyle={{ marginVertical: 5, borderRadius: 8 }}
         renderLeftActions={this.renderLeftActions.bind(this)}
-        leftThreshold={125}
-        onSwipeableLeftOpen={this.onBoxPress.bind(this)}
+        leftThreshold={200}
+        onSwipeableLeftWillOpen={this.onBoxPress.bind(this)}
         renderRightActions={this.renderRightActions.bind(this)}
-        rightThreshold={200}
-        onSwipeableRightOpen={this.onDelete.bind(this)}
       >
         <TouchableOpacity
-          style={styles.container}
+          style={{ ...styles.container, backgroundColor: this.props.theme === 'light' ? '#f6f6f6' : '#242424' }}
           activeOpacity={1}
           onPress={() => {
             Navigation.push(this.props.componentId, {
@@ -179,7 +154,7 @@ class ToDoItem extends PureComponent {
               size={22}
               uncheckedColor='#aaa'
             />
-            <Text numberOfLines={1} style={styles.taskTitle}>
+            <Text numberOfLines={1} style={{ ...styles.taskTitle, color: this.props.theme === 'light' ? '#303030' : '#fbfbfb' }}>
               {this.props.data.task}
             </Text>
           </View>
@@ -196,17 +171,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: '#121212',
-    height: 40
+    height: 40,
+    // elevation: 2,
+    marginBottom: 2,
+    marginHorizontal: 5
   },
   firstContainer: {
     flexDirection: 'row',
+    elevation: 50,
     alignContent: 'center'
-  },
-  secondContainer: {
-    justifyContent: 'center',
-    paddingHorizontal: 8,
-    height: 33
   },
   CheckBoxContainer: {
     paddingHorizontal: 5,
@@ -217,18 +190,9 @@ const styles = StyleSheet.create({
     paddingBottom: 2,
     textAlignVertical: 'center',
     fontSize: 18.5,
-    color: '#f5f5f5',
     width: Dimensions.get('window').width - 115,
     textAlign: 'left',
     fontFamily: 'SourceSansPro-Regular'
-  },
-  dialogStyle: {
-    height: 220,
-    width: 375,
-    backgroundColor: '#121212',
-    justifyContent: 'space-between',
-    position: 'absolute',
-    top: 220
   }
 })
 

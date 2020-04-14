@@ -446,6 +446,7 @@ const styles = StyleSheet.create({
   },
   addButton: {
     position: 'absolute',
+    elevation: 4,
     right: 14,
     bottom: 20,
     backgroundColor: '#008ee0',
@@ -456,6 +457,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   searchView: {
+    marginHorizontal: 5,
     marginBottom: 2,
     marginTop: 10,
     paddingRight: 10,
@@ -484,7 +486,7 @@ const mapDispatchToProp = dispatch => ({
   restoreLastDeletedAccount: () => dispatch(restoreLastDeletedAccount())
 })
 
-const mapStateToProps = ({ money, exit }) => {
+const mapStateToProps = ({ money, app }) => {
   const { allAccounts: accounts, sortBy, sortOrder } = money
   let allAccounts
   if (accounts && sortBy && sortOrder) {
@@ -517,7 +519,7 @@ const mapStateToProps = ({ money, exit }) => {
     sortOrder,
     fetchingAccounts: money.fetchingAccounts,
     showUndoDelete: money.showUndoDelete,
-    exitCount: exit.exitCount
+    exitCount: app.exitCount
   }
 }
 

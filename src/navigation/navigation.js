@@ -63,13 +63,7 @@ export const goToMain = () => Promise.all([
             options: {
               bottomTab: {
                 icon: tasksIcon,
-                iconColor: '#c8d2da',
-                selectedIconColor: '#008ee0',
-                text: 'Tasks',
-                fontFamily: 'SourceSansPro-Regular',
-                selectedFontSize: 13.5,
-                fontSize: 11,
-                selectedTextColor: '#008ee0'
+                text: 'Tasks'
               },
               topBar: {
                 visible: false
@@ -89,13 +83,7 @@ export const goToMain = () => Promise.all([
             options: {
               bottomTab: {
                 icon: workIcon,
-                iconColor: '#c8d2da',
-                selectedIconColor: '#008ee0',
-                text: 'Employees',
-                fontFamily: 'SourceSansPro-Regular',
-                selectedFontSize: 13.5,
-                fontSize: 11,
-                selectedTextColor: '#008ee0'
+                text: 'Employees'
               },
               topBar: {
                 visible: false
@@ -115,13 +103,7 @@ export const goToMain = () => Promise.all([
             options: {
               bottomTab: {
                 icon: moneyIcon,
-                iconColor: '#c8d2da',
-                selectedIconColor: '#008ee0',
-                text: 'Wallet',
-                fontFamily: 'SourceSansPro-Regular',
-                selectedFontSize: 13.5,
-                fontSize: 11,
-                selectedTextColor: '#008ee0'
+                text: 'Wallet'
               },
               topBar: {
                 visible: false
@@ -141,13 +123,7 @@ export const goToMain = () => Promise.all([
             options: {
               bottomTab: {
                 icon: personIcon,
-                iconColor: '#c8d2da',
-                selectedIconColor: '#008ee0',
                 text: 'Settings',
-                fontFamily: 'SourceSansPro-Regular',
-                selectedFontSize: 13.5,
-                fontSize: 11,
-                selectedTextColor: '#008ee0'
               },
               topBar: {
                 visible: false
@@ -163,7 +139,6 @@ export const goToMain = () => Promise.all([
           }
         },
         bottomTabs: {
-          backgroundColor: '#000',
           preferLargeIcons: true,
           titleDisplayMode: 'alwaysShow'
         }

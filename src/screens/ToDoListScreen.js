@@ -116,6 +116,7 @@ class ToDoListScreen extends Component {
   rendertask({ item }) {
     return (
       <ToDoItem
+        theme={this.props.theme}
         componentId={this.props.componentId}
         taskId={item[0]}
         data={item[1]}
@@ -153,15 +154,15 @@ class ToDoListScreen extends Component {
                   <TouchableOpacity activeOpacity={1} onPress={this.handleUndoneOpacity.bind(this)}>
                     <View style={styles.separotorView}>
                       <View style={{ flexDirection: 'row' }}>
-                        <Text style={styles.separotorText}>
+                        <Text style={{ ...styles.separotorText, color: this.useTheme('#303030', '#fbfbfb') }}>
                           {'INCOMPLETED' + "  "}
                         </Text>
-                        <Text style={styles.SeparatorNumber}>
+                        <Text style={{ ...styles.SeparatorNumber, color: this.useTheme('#303030', '#fbfbfb') }}>
                           ({this.props.unDoneTasks.length})
                         </Text>
                       </View>
                       <Animated.View style={{ transform: [{ rotate: this.undoneArrowRotationAngle }] }}>
-                        <Ionicons name="ios-arrow-down" size={22} color="#eee" />
+                        <Ionicons name="ios-arrow-down" size={22} color={this.useTheme('#303030', '#fbfbfb')} />
                       </Animated.View>
                     </View>
                   </TouchableOpacity>
@@ -191,15 +192,15 @@ class ToDoListScreen extends Component {
                   <TouchableOpacity activeOpacity={1} onPress={this.handleDoneOpacity.bind(this)}>
                     <View style={styles.separotorView}>
                       <View style={{ flexDirection: 'row' }}>
-                        <Text style={styles.separotorText}>
+                        <Text style={{ ...styles.separotorText, color: this.useTheme('#303030', '#eee') }}>
                           {'COMPLETED' + "  "}
                         </Text>
-                        <Text style={styles.SeparatorNumber}>
+                        <Text style={{ ...styles.SeparatorNumber, color: this.useTheme('#303030', '#eee') }}>
                           ({this.props.doneTasks.length})
                         </Text>
                       </View>
                       <Animated.View style={{ transform: [{ rotate: this.doneArrowRotationAngle }] }}>
-                        <Ionicons name="ios-arrow-down" size={22} color="#eee" />
+                        <Ionicons name="ios-arrow-down" size={22} color={this.useTheme('#303030', '#eee')} />
                       </Animated.View>
                     </View>
                   </TouchableOpacity>
@@ -246,13 +247,13 @@ class ToDoListScreen extends Component {
               transform: [{ translateY: this.hintTranslateY }],
               marginBottom: 140
             }}>
-              <Text style={{ color: '#eee', fontFamily: 'SourceSansPro-SemiBold', fontSize: 17, marginBottom: 5 }}>Start organizing your life!</Text>
-              <Text style={{ color: '#eee', fontFamily: 'SourceSansPro-Regular', fontSize: 15 }}>Any thing to do?</Text>
+              <Text style={{ color: this.useTheme('#111', '#eee'), fontFamily: 'SourceSansPro-SemiBold', fontSize: 17, marginBottom: 5 }}>Start organizing your life!</Text>
+              <Text style={{ color: this.useTheme('#111', '#eee'), fontFamily: 'SourceSansPro-Regular', fontSize: 15 }}>Any thing to do?</Text>
             </Animated.View>
           </View>
         )
       }
-    return <ToDoLoadingContainer />
+    return <ToDoLoadingContainer theme={this.props.theme} />
   }
   closeSortChoicesModal = () => {
     this.setState({ sortChoicesModalVisible: false })
@@ -277,7 +278,7 @@ class ToDoListScreen extends Component {
             style={{ width: 40, paddingLeft: 6, justifyContent: 'center' }}
             onPress={() => this.setState({ sortChoicesModalVisible: true })}
           >
-            <MaterialCommunityIcons name="sort" color="#fff" size={28} />
+            <MaterialCommunityIcons name="sort" color={this.useTheme('#303030', "#fbfbfb")} size={28} />
           </TouchableOpacity>
         </Animated.View>
       )
@@ -288,7 +289,7 @@ class ToDoListScreen extends Component {
       <View style={[styles.undoView, {
         bottom: this.props.showUndoDelete ? 24.5 : -100
       }]}>
-        <Text style={{ fontSize: 15, color: '#fff', fontFamily: 'SourceSansPro-Regular' }}>
+        <Text style={{ fontSize: 15, color: this.useTheme('#303030', '#fbfbfb'), fontFamily: 'SourceSansPro-Regular' }}>
           1 deleted
         </Text>
         <TouchableOpacity
@@ -304,6 +305,11 @@ class ToDoListScreen extends Component {
         </TouchableOpacity>
       </View>
     )
+  }
+  useTheme(lightThemeColor, darkThemeColor) {
+    if (this.props.theme === 'light')
+      return lightThemeColor
+    return darkThemeColor
   }
   checkExit() {
     if (this.props.exitCount === 0)
@@ -321,7 +327,7 @@ class ToDoListScreen extends Component {
         justifyContent: 'center',
         alignSelf: 'center'
       }}>
-        <Text style={{ fontSize: 15, color: '#ffffff', fontFamily: 'SourceSansPro-Regular' }}>Press again to exit...</Text>
+        <Text style={{ fontSize: 15, color: this.useTheme('#222', '#fbfbfb'), fontFamily: 'SourceSansPro-Regular' }}>Press again to exit...</Text>
       </View>
     }
     else if (this.props.exitCount === 2)
@@ -329,7 +335,7 @@ class ToDoListScreen extends Component {
   }
   render() {
     return (
-      <View style={styles.container}>
+      <View style={{ ...styles.container, backgroundColor: this.useTheme('#fbfbfb', '#161616') }}>
         {this.renderUndoMessage()}
         {this.checkExit()}
         <SortChoicesModal
@@ -339,20 +345,20 @@ class ToDoListScreen extends Component {
           onSelect={this.onSelectSortChoice}
           onCancel={this.closeSortChoicesModal}
         />
-        <View style={styles.header}>
-          <View style={styles.titleContainer}>
-            <Text numberOfLines={1} style={{ color: '#fff', fontSize: 26, fontFamily: 'SourceSansPro-SemiBold' }}>
+        <View style={{ ...styles.header, backgroundColor: this.useTheme('#fbfbfb', '#161616') }}>
+          <View style={{ ...styles.titleContainer, backgroundColor: this.useTheme('#fbfbfb', '#161616') }}>
+            <Text numberOfLines={1} style={{ color: this.useTheme('#303030', '#fbfbfb'), fontSize: 26, fontFamily: 'SourceSansPro-SemiBold' }}>
               My Tasks
             </Text>
           </View>
           {this.renderSortButton()}
         </View>
-        <View style={styles.addView}>
+        <View style={{ ...styles.addView, backgroundColor: this.useTheme('#f6f6f6', '#242424') }}>
           <TextInput
             editable={this.props.fetchingTasks ? false : true}
             value={this.state.task}
-            style={styles.input}
-            placeholderTextColor='rgba(255, 255, 255, 0.7)'
+            style={{ ...styles.input, color: this.useTheme('#303030', '#fbfbfb') }}
+            placeholderTextColor={this.useTheme('#999', 'rgba(255, 255, 255, 0.6)')}
             placeholder='Quick Task'
             selectionColor='#008ee0'
             onChangeText={task => this.setState({ task })}
@@ -361,12 +367,17 @@ class ToDoListScreen extends Component {
           <TouchableOpacity
             disabled={!this.state.task.trim()}
             activeOpacity={0.85}
-            style={this.state.task.trim() ? styles.iconView : { ...styles.iconView, borderColor: 'grey' }}
+            style={
+              this.state.task.trim() ?
+                { ...styles.iconView, backgroundColor: this.useTheme('#161616', '#fbfbfb') } :
+                { ...styles.iconView, borderColor: this.useTheme('#aaa', '#777') }}
             onPress={this.onAdd.bind(this)}
           >
             <Icon
               name='md-add-circle'
-              style={this.state.task.trim() ? styles.addIcon : { ...styles.addIcon, color: 'grey' }}
+              style={this.state.task.trim() ?
+                { ...styles.addIcon, color: this.useTheme('#e3e3e3', '#242424') } :
+                { ...styles.addIcon, color: this.useTheme('#ccc', 'grey') }}
             />
           </TouchableOpacity>
         </View>
@@ -397,7 +408,7 @@ class ToDoListScreen extends Component {
               })
             )}
           >
-            <Icon name='ios-add' style={{ color: '#fff', fontSize: 38 }} />
+            <Icon name='ios-add' style={{ color: '#fbfbfb', fontSize: 38 }} />
           </TouchableOpacity>
         </View>
       </View>
@@ -408,7 +419,6 @@ class ToDoListScreen extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000',
     paddingHorizontal:
       Dimensions.get('window').width > 800 ? 62
         :
@@ -420,18 +430,9 @@ const styles = StyleSheet.create({
               :
               0
   },
-  loadingContainer: {
-    width: 30,
-    height: 30,
-    borderRadius: 15,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#555'
-  },
   header: {
     height: 56,
     flexDirection: 'row',
-    backgroundColor: '#000',
     marginVertical:
       Dimensions.get('window').width > 800 ? 20
         :
@@ -446,10 +447,10 @@ const styles = StyleSheet.create({
   titleContainer: {
     flex: 1,
     paddingLeft: 12,
-    justifyContent: 'center',
-    backgroundColor: '#000'
+    justifyContent: 'center'
   },
   addView: {
+    marginHorizontal: 5,
     marginBottom: 14,
     paddingHorizontal: 10,
     marginTop: 10,
@@ -457,8 +458,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: '#121212',
-    height: 46
+    height: 46,
+    elevation: 2
   },
   input: {
     marginRight: 10,
@@ -466,24 +467,21 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 17,
     fontFamily: 'SourceSansPro-Regular',
-    color: '#e3e3e3',
     alignItems: 'center'
   },
   addIcon: {
-    fontSize: 30,
-    color: '#e3e3e3'
+    fontSize: 30
   },
   iconView: {
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#000',
     borderWidth: 1,
-    borderColor: '#e3e3e3',
     height: 29,
     width: 29,
     borderRadius: 14.5
   },
   addButton: {
+    elevation: 4,
     position: 'absolute',
     right: 14,
     bottom: 20,
@@ -518,7 +516,6 @@ const styles = StyleSheet.create({
               88,
     zIndex: 1,
     paddingHorizontal: 20,
-    backgroundColor: '#272727',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -537,11 +534,9 @@ const styles = StyleSheet.create({
   },
   separotorText: {
     fontSize: 14.5,
-    color: '#eee',
     fontFamily: 'SourceSansPro-SemiBold'
   },
   SeparatorNumber: {
-    color: '#eee',
     fontFamily: 'SourceSansPro-SemiBold'
   }
 })
@@ -590,7 +585,8 @@ const mapStateToProps = (state) => {
     sortOrder,
     fetchingTasks: state.todo.fetchingTasks,
     showUndoDelete: state.todo.showUndoDelete,
-    exitCount: state.exit.exitCount
+    exitCount: state.app.exitCount,
+    theme: state.app.theme
   }
 }
 

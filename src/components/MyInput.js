@@ -24,13 +24,22 @@ export default class MyInput extends PureComponent {
       <View onTouchStart={this.props.onTouchStart || null} style={[styles.inputContainer, this.props.inputContainerStyle]}>
         {this.props.leftIcon && <Icon name={this.props.leftIcon} style={[styles.iconLeft, this.props.leftIconStyle]} />}
         <TextInput
+          theme={this.props.theme}
           editable={this.props.editable}
           value={this.props.value}
           secureTextEntry={this.props.isSecure}
           keyboardType={this.props.keyboardType}
-          style={[styles.InputStyle, this.props.style]}
+          style={[
+            styles.InputStyle,
+            this.props.style,
+            {
+              backgroundColor: this.props.theme === 'light' ? '#f6f6f6' : '#444',
+              color: this.props.theme === 'light' ? '#303030' : '#fbfbfb',
+              borderWidth: this.props.theme === 'light' ? 1 : 0,
+              borderColor: '#ccc'
+            }]}
           placeholder={this.props.placeHolder}
-          placeholderTextColor='#aaa'
+          placeholderTextColor={this.props.theme === 'light' ? '#999' : 'rgba(255, 255, 255, 0.6)'}
           autoCapitalize={this.props.autoCapitalize || 'none'}
           autoCorrect={this.props.isAutoCorrect}
           onChangeText={this.props.onChangeText}
@@ -46,15 +55,13 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginVertical: 10,
     flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.22)',
+    alignItems: 'center'
   },
   InputStyle: {
     flex: 1,
     height: 45,
     borderRadius: 5,
     fontSize: 16.5,
-    color: '#fff',
     paddingRight: 10,
     fontFamily: 'SourceSansPro-Regular'
   },
