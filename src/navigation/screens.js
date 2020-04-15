@@ -17,7 +17,7 @@ import {
   MoneyDetailsScreen,
   MoneyAddScreen,
   MoneyEditScreen,
-  MyProfileScreen,
+  SettingsScreen,
   ForgetPasswordScreen
 } from '../screens'
 
@@ -45,5 +45,5 @@ export default registerScreens = () => {
   Navigation.registerComponent('moneyAdd', () => ReduxProvider(MoneyAddScreen), () => MoneyAddScreen)
   Navigation.registerComponent('moneyDetails', () => ReduxProvider(MoneyDetailsScreen), () => MoneyDetailsScreen)
   Navigation.registerComponent('moneyEdit', () => ReduxProvider(MoneyEditScreen), () => MoneyEditScreen)
-  Navigation.registerComponent('profile', () => ReduxProvider(MyProfileScreen), () => MyProfileScreen)
+  Navigation.registerComponent('settings', () => ReduxProvider(SettingsScreen), () => SettingsScreen)
 }

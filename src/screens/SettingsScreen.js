@@ -15,7 +15,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import Entypo from 'react-native-vector-icons/Entypo'
 import ThemeChoicesModal from '../components/SortChoicesModal'
 
-class MyProfileScreen extends Component {
+class SettingsScreen extends Component {
   constructor(props) {
     super(props)
     console.log(this.props.isSystemTheme)
@@ -56,6 +56,32 @@ class MyProfileScreen extends Component {
     this.setState({ themeChoicesModalVisible: false })
   }
   onSelectThemeChoice = async choice => {
+    if (choice === 'system' && this.props.isSystemTheme) {
+      this.setState({ themeChoicesModalVisible: false })
+      return
+    }
+    if (choice === 'light' && this.props.theme === 'light' && !this.props.isSystemTheme) {
+      this.setState({ themeChoicesModalVisible: false })
+      return
+    }
+    if (choice === 'dark' && this.props.theme === 'dark' && !this.props.isSystemTheme) {
+      this.setState({ themeChoicesModalVisible: false })
+      return
+    }
+    if (choice === 'light' && this.props.theme === 'light' && this.props.isSystemTheme) {
+      AsyncStorage.setItem('theme', choice)
+      this.props.setTheme('light')
+      this.setState({ themeChoicesModalVisible: false })
+      return
+    }
+    if (choice === 'dark' && this.props.theme === 'dark' && this.props.isSystemTheme) {
+      AsyncStorage.setItem('theme', choice)
+      this.props.setTheme('dark')
+      this.setState({ themeChoicesModalVisible: false })
+      return
+    }
+    if (choice === 'dark')
+      Navigation.setDefaultOptions({ statusBar: { backgroundColor: '#161616' } })
     await AsyncStorage.setItem('theme', choice)
     this.setState({ themeChoicesModalVisible: false })
     Navigation.setRoot({
@@ -73,10 +99,19 @@ class MyProfileScreen extends Component {
       }
     })
   }
+  useTheme(lightThemeColor, darkThemeColor) {
+    if (this.props.theme === 'light')
+      return lightThemeColor
+    return darkThemeColor
+  }
   render() {
     return (
-      <View style={styles.container}>
+      <View style={{
+        ...styles.container,
+        backgroundColor: this.useTheme('#fbfbfb', '#161616')
+      }}>
         <ThemeChoicesModal
+          theme={this.props.theme}
           choices={this.themeChoices}
           visible={this.state.themeChoicesModalVisible}
           selectedChoice={this.props.isSystemTheme ? 'system' : this.props.theme}
@@ -84,11 +119,6 @@ class MyProfileScreen extends Component {
           onCancel={this.closeThemeChoicesModal}
         />
         {this.checkExit()}
-        <View style={[StyleSheet.absoluteFill, {
-          backgroundColor: this.state.modalVisible ? 'rgba(0,0,0,0.2)' : 'rgba(0,0,0,1)',
-          zIndex: this.state.modalVisible ? 1 : 0
-        }]}>
-        </View>
         <Modal
           animationType="fade"
           transparent={true}
@@ -97,11 +127,17 @@ class MyProfileScreen extends Component {
             this.setState({ modalVisible: false })
           }}>
           <View
-            style={{ flex: 1, justifyContent: 'center' }}
+            style={{ flex: 1, justifyContent: 'center', backgroundColor: this.useTheme('rgba(0,0,0,0.1)', 'rgba(0,0,0,0.5)') }}
           >
-            <View style={styles.modal}>
-              <View style={styles.upperModal}>
-                <Text style={{ color: '#fff', fontSize: 18, fontFamily: 'SourceSansPro-Regular' }}>
+            <View style={{
+              ...styles.modal,
+              backgroundColor: this.useTheme('#fbfbfb', '#222')
+            }}>
+              <View style={{
+                ...styles.upperModal,
+                backgroundColor: this.useTheme('#fbfbfb', '#222')
+              }}>
+                <Text style={{ color: this.useTheme('#303030', '#fbfbfb'), fontSize: 18, fontFamily: 'SourceSansPro-Regular' }}>
                   Log out of Boss Dashboard?
                 </Text>
               </View>
@@ -121,16 +157,23 @@ class MyProfileScreen extends Component {
                   }, 600);
                 }}
                 activeOpacity={0.6}
-                style={styles.centerModal}
+                style={{
+                  ...styles.centerModal,
+                  backgroundColor: this.useTheme('#fbfbfb', '#222'),
+                  borderColor: this.useTheme('#ddd', '#282828')
+                }}
               >
                 <Text style={{ color: '#008ee0', fontSize: 18, fontFamily: 'SourceSansPro-SemiBold' }}>Logout</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => this.setState({ modalVisible: false })}
                 activeOpacity={0.6}
-                style={styles.lowerModal}
+                style={{
+                  ...styles.lowerModal,
+                  backgroundColor: this.useTheme('#fbfbfb', '#222')
+                }}
               >
-                <Text style={{ color: '#fff', fontSize: 18, fontFamily: 'SourceSansPro-Regular' }}>Cancel</Text>
+                <Text style={{ color: this.useTheme('#303030', '#fbfbfb'), fontSize: 18, fontFamily: 'SourceSansPro-Regular' }}>Cancel</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -138,19 +181,32 @@ class MyProfileScreen extends Component {
         <Modal
           animationType="none"
           transparent={true}
-          visible={this.state.loggingout}>
-          <View style={styles.loadingModalContainer} >
-            <View style={styles.loadingModal}>
-              <Spinner color='#cccccc' size={26} style={{ marginRight: 15 }} />
-              <Text style={{ color: '#eeeeee', fontSize: 17, fontFamily: 'SourceSansPro-Regular' }}>
+          visible={this.state.loggingout}
+        >
+          <View style={{
+            ...styles.loadingModalContainer,
+            backgroundColor: this.useTheme('rgba(0,0,0,0.1)', 'rgba(0,0,0,0.5)')
+          }} >
+            <View style={{
+              ...styles.loadingModal,
+              backgroundColor: this.useTheme('#fbfbfb', '#222')
+            }}>
+              <Spinner color={this.useTheme('#303030', '#fbfbfb')} size={26} style={{ marginRight: 15 }} />
+              <Text style={{ color: this.useTheme('#303030', '#fbfbfb'), fontSize: 17, fontFamily: 'SourceSansPro-Regular' }}>
                 logging out...
               </Text>
             </View>
           </View>
         </Modal>
-        <View style={styles.header}>
-          <View style={styles.titleContainer}>
-            <Text numberOfLines={1} style={{ color: '#fff', fontSize: 26, fontFamily: 'SourceSansPro-SemiBold' }}>
+        <View style={{
+          ...styles.header,
+          backgroundColor: this.useTheme('#fbfbfb', '#161616')
+        }}>
+          <View style={{
+            ...styles.titleContainer,
+            backgroundColor: this.useTheme('#fbfbfb', '#161616')
+          }}>
+            <Text numberOfLines={1} style={{ color: this.useTheme('#303030', '#fbfbfb'), fontSize: 26, fontFamily: 'SourceSansPro-SemiBold' }}>
               Settings
             </Text>
           </View>
@@ -170,11 +226,16 @@ class MyProfileScreen extends Component {
                 })
             }}
           >
-            <View style={{ backgroundColor: '#0b0b0b', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+            <View style={{
+              backgroundColor: this.useTheme('#fbfbfb', '#161616'),
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between'
+            }}>
               <View style={{ height: 56, flexDirection: 'row', paddingLeft: 15, alignItems: 'center' }}>
                 {
                   this.state.provider === 'email' ?
-                    <MaterialIcons name="email" color="#fff" size={24.5} />
+                    <MaterialIcons name="email" color={this.useTheme('#303030', '#fbfbfb')} size={24.5} />
                     :
                     this.state.provider === 'facebook' ?
                       <FontAwesome name="facebook-square" color="#1d9de2" size={24.5} />
@@ -190,7 +251,7 @@ class MyProfileScreen extends Component {
                   style={{
                     paddingRight: 5,
                     width: Dimensions.get('window').width - 125,
-                    color: '#fff',
+                    color: this.useTheme('#303030', '#fbfbfb'),
                     fontSize: 19,
                     fontFamily: 'SourceSansPro-SemiBold',
                     marginLeft: 20
@@ -202,29 +263,40 @@ class MyProfileScreen extends Component {
               {
                 this.state.provider === 'email' ?
                   <View style={{ marginHorizontal: 7 }}>
-                    <MaterialIcons name="chevron-right" color="#fff" size={30} />
+                    <MaterialIcons name="chevron-right" color={this.useTheme('#303030', '#fbfbfb')} size={30} />
                   </View>
                   :
                   null
               }
             </View>
           </TouchableOpacity>
-          <Text style={{ marginLeft: 10, marginBottom: 6, marginTop: 24, color: '#5f5f5f', fontSize: 16, fontFamily: 'SourceSansPro-Regular' }}>
+          <Text style={{
+            marginLeft: 10,
+            marginBottom: 6,
+            marginTop: 24,
+            color: this.useTheme('#303030', '#707070'),
+            fontSize: 16,
+            fontFamily: 'SourceSansPro-Regular'
+          }}>
             Settings
           </Text>
           <TouchableOpacity
             activeOpacity={0.9}
-            style={{ marginBottom: 5 }}
           >
-            <View style={{ backgroundColor: '#0b0b0b', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+            <View style={{
+              backgroundColor: this.useTheme('#fbfbfb', '#161616'),
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between'
+            }}>
               <View style={{ height: 56, flexDirection: 'row', paddingLeft: 15, alignItems: 'center' }}>
-                <Entypo name="language" color="#fff" size={24.5} />
-                <Text style={{ marginLeft: 20, color: '#fff', fontSize: 19.5, fontFamily: 'SourceSansPro-SemiBold' }}>
+                <Entypo name="language" color={this.useTheme('#303030', '#fbfbfb')} size={24.5} />
+                <Text style={{ marginLeft: 20, color: this.useTheme('#303030', '#fbfbfb'), fontSize: 19.5, fontFamily: 'SourceSansPro-SemiBold' }}>
                   Language
               </Text>
               </View>
               <View style={{ flexDirection: 'row', alignItems: 'center', marginHorizontal: 7 }}>
-                <Text style={{ color: '#999', fontSize: 17, fontFamily: 'SourceSansPro-Regular', marginRight: 10 }}>
+                <Text style={{ color: this.useTheme('#666', '#999'), fontSize: 17, fontFamily: 'SourceSansPro-Regular', marginRight: 10 }}>
                   English
               </Text>
               </View>
@@ -232,18 +304,22 @@ class MyProfileScreen extends Component {
           </TouchableOpacity>
           <TouchableOpacity
             activeOpacity={0.9}
-            style={{ marginBottom: 5 }}
             onPress={() => this.setState({ themeChoicesModalVisible: true })}
           >
-            <View style={{ backgroundColor: '#0b0b0b', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+            <View style={{
+              backgroundColor: this.useTheme('#fbfbfb', '#161616'),
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between'
+            }}>
               <View style={{ height: 56, flexDirection: 'row', paddingLeft: 15, alignItems: 'center' }}>
-                <MaterialCommunityIcons name="theme-light-dark" color="#fff" size={24.5} />
-                <Text style={{ marginLeft: 20, color: '#fff', fontSize: 19.5, fontFamily: 'SourceSansPro-SemiBold' }}>
+                <MaterialCommunityIcons name="theme-light-dark" color={this.useTheme('#303030', '#fbfbfb')} size={24.5} />
+                <Text style={{ marginLeft: 20, color: this.useTheme('#303030', '#fbfbfb'), fontSize: 19.5, fontFamily: 'SourceSansPro-SemiBold' }}>
                   Theme
               </Text>
               </View>
               <View style={{ flexDirection: 'row', alignItems: 'center', marginHorizontal: 7 }}>
-                <Text style={{ color: '#999', fontSize: 17, fontFamily: 'SourceSansPro-Regular', marginRight: 10 }}>
+                <Text style={{ color: this.useTheme('#666', '#999'), fontSize: 17, fontFamily: 'SourceSansPro-Regular', marginRight: 10 }}>
                   {
                     this.props.isSystemTheme ?
                       "System - " + this.props.theme.charAt(0).toUpperCase() + this.props.theme.substring(1)
@@ -254,42 +330,57 @@ class MyProfileScreen extends Component {
               </View>
             </View>
           </TouchableOpacity>
-          <Text style={{ marginLeft: 10, marginBottom: 6, marginTop: 24, color: '#5f5f5f', fontSize: 16, fontFamily: 'SourceSansPro-Regular' }}>
+          <Text style={{
+            marginLeft: 10,
+            marginBottom: 6,
+            marginTop: 24,
+            color: this.useTheme('#303030', '#707070'),
+            fontSize: 16,
+            fontFamily: 'SourceSansPro-Regular'
+          }}>
             Developer
           </Text>
           <TouchableOpacity
             activeOpacity={0.9}
-            style={{ marginBottom: 5 }}
             onPress={() => Linking.openURL(`mailto:boss.dashboard@gmail.com`)}
           >
-            <View style={{ backgroundColor: '#0b0b0b', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+            <View style={{
+              backgroundColor: this.useTheme('#fbfbfb', '#161616'),
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between'
+            }}>
               <View style={{ height: 56, flexDirection: 'row', paddingLeft: 15, alignItems: 'center' }}>
-                <MaterialCommunityIcons name="help-circle-outline" color="#fff" size={25} />
-                <Text style={{ marginLeft: 20, color: '#fff', fontSize: 19.5, fontFamily: 'SourceSansPro-SemiBold' }}>
+                <MaterialCommunityIcons name="help-circle-outline" color={this.useTheme('#303030', '#fbfbfb')} size={25} />
+                <Text style={{ marginLeft: 20, color: this.useTheme('#303030', '#fbfbfb'), fontSize: 19.5, fontFamily: 'SourceSansPro-SemiBold' }}>
                   Help Center
               </Text>
               </View>
               <View style={{ flexDirection: 'row', alignItems: 'center', marginHorizontal: 7 }}>
                 <View style={{ marginHorizontal: 7 }}>
-                  <MaterialIcons name="chevron-right" color="#999" size={30} />
+                  <MaterialIcons name="chevron-right" color={this.useTheme('#666', '#999')} size={30} />
                 </View>
               </View>
             </View>
           </TouchableOpacity>
           <TouchableOpacity
             activeOpacity={0.9}
-            style={{ marginBottom: 5 }}
           >
-            <View style={{ backgroundColor: '#0b0b0b', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+            <View style={{
+              backgroundColor: this.useTheme('#fbfbfb', '#161616'),
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between'
+            }}>
               <View style={{ height: 56, flexDirection: 'row', paddingLeft: 15, alignItems: 'center' }}>
-                <MaterialCommunityIcons name="message-text" color="#fff" size={24.5} />
-                <Text style={{ marginLeft: 20, color: '#fff', fontSize: 19.5, fontFamily: 'SourceSansPro-SemiBold' }}>
+                <MaterialCommunityIcons name="message-text" color={this.useTheme('#303030', '#fbfbfb')} size={24.5} />
+                <Text style={{ marginLeft: 20, color: this.useTheme('#303030', '#fbfbfb'), fontSize: 19.5, fontFamily: 'SourceSansPro-SemiBold' }}>
                   Feedback
               </Text>
               </View>
               <View style={{ flexDirection: 'row', alignItems: 'center', marginHorizontal: 7 }}>
                 <View style={{ marginHorizontal: 7 }}>
-                  <MaterialIcons name="chevron-right" color="#999" size={30} />
+                  <MaterialIcons name="chevron-right" color={this.useTheme('#666', '#999')} size={30} />
                 </View>
               </View>
             </View>
@@ -297,62 +388,84 @@ class MyProfileScreen extends Component {
           <TouchableOpacity
             activeOpacity={0.9}
           >
-            <View style={{ backgroundColor: '#0b0b0b', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+            <View style={{
+              backgroundColor: this.useTheme('#fbfbfb', '#161616'),
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between'
+            }}>
               <View style={{ height: 56, flexDirection: 'row', paddingLeft: 15, alignItems: 'center' }}>
-                <MaterialCommunityIcons name="coffee-outline" color="#fff" size={25} />
-                <Text style={{ marginLeft: 20, color: '#fff', fontSize: 19.5, fontFamily: 'SourceSansPro-SemiBold' }}>
+                <MaterialCommunityIcons name="coffee-outline" color={this.useTheme('#303030', '#fbfbfb')} size={25} />
+                <Text style={{ marginLeft: 20, color: this.useTheme('#303030', '#fbfbfb'), fontSize: 19.5, fontFamily: 'SourceSansPro-SemiBold' }}>
                   Buy Me A Coffee
               </Text>
               </View>
               <View style={{ flexDirection: 'row', alignItems: 'center', marginHorizontal: 7 }}>
                 <View style={{ marginHorizontal: 7 }}>
-                  <MaterialIcons name="chevron-right" color="#999" size={30} />
+                  <MaterialIcons name="chevron-right" color={this.useTheme('#666', '#999')} size={30} />
                 </View>
               </View>
             </View>
           </TouchableOpacity>
-          <Text style={{ marginLeft: 10, marginBottom: 6, marginTop: 24, color: '#5f5f5f', fontSize: 16, fontFamily: 'SourceSansPro-Regular' }}>
+          <Text style={{
+            marginLeft: 10,
+            marginBottom: 6,
+            marginTop: 24,
+            color: this.useTheme('#303030', '#707070'),
+            fontSize: 16,
+            fontFamily: 'SourceSansPro-Regular'
+          }}>
             Privacy
           </Text>
           <TouchableOpacity
             activeOpacity={0.9}
-            style={{ marginBottom: 5 }}
           >
-            <View style={{ backgroundColor: '#0b0b0b', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+            <View style={{
+              backgroundColor: this.useTheme('#fbfbfb', '#161616'),
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between'
+            }}>
               <View style={{ height: 56, flexDirection: 'row', paddingLeft: 15, alignItems: 'center' }}>
-                <MaterialCommunityIcons name="lock-outline" color="#fff" size={25} />
-                <Text style={{ marginLeft: 20, color: '#fff', fontSize: 19.5, fontFamily: 'SourceSansPro-SemiBold' }}>
+                <MaterialCommunityIcons name="lock-outline" color={this.useTheme('#303030', '#fbfbfb')} size={25} />
+                <Text style={{ marginLeft: 20, color: this.useTheme('#303030', '#fbfbfb'), fontSize: 19.5, fontFamily: 'SourceSansPro-SemiBold' }}>
                   Privacy Policy
               </Text>
               </View>
               <View style={{ flexDirection: 'row', alignItems: 'center', marginHorizontal: 7 }}>
                 <View style={{ marginHorizontal: 7 }}>
-                  <MaterialIcons name="chevron-right" color="#999" size={30} />
+                  <MaterialIcons name="chevron-right" color={this.useTheme('#666', '#999')} size={30} />
                 </View>
               </View>
             </View>
           </TouchableOpacity>
           <TouchableOpacity
             activeOpacity={0.9}
-            style={{ marginBottom: 5 }}
           >
-            <View style={{ backgroundColor: '#0b0b0b', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+            <View style={{
+              backgroundColor: this.useTheme('#fbfbfb', '#161616'),
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between'
+            }}>
               <View style={{ height: 56, flexDirection: 'row', paddingLeft: 15, alignItems: 'center' }}>
-                <Ionicons name="md-paper" color="#fff" size={24} />
-                <Text style={{ marginLeft: 20, color: '#fff', fontSize: 19.5, fontFamily: 'SourceSansPro-SemiBold' }}>
+                <Ionicons name="md-paper" color={this.useTheme('#303030', '#fbfbfb')} size={24} />
+                <Text style={{ marginLeft: 20, color: this.useTheme('#303030', '#fbfbfb'), fontSize: 19.5, fontFamily: 'SourceSansPro-SemiBold' }}>
                   Terms Of Use
               </Text>
               </View>
               <View style={{ flexDirection: 'row', alignItems: 'center', marginHorizontal: 7 }}>
                 <View style={{ marginHorizontal: 7 }}>
-                  <MaterialIcons name="chevron-right" color="#999" size={30} />
+                  <MaterialIcons name="chevron-right" color={this.useTheme('#666', '#999')} size={30} />
                 </View>
               </View>
             </View>
           </TouchableOpacity>
           <TouchableOpacity
-            activeOpacity={0.9}
-            style={styles.logoutButton}
+            style={{
+              ...styles.logoutButton,
+              backgroundColor: this.useTheme('#fbfbfb', '#161616')
+            }}
             onPress={() => {
               this.setState({ modalVisible: true })
             }}
@@ -362,7 +475,7 @@ class MyProfileScreen extends Component {
           </Text>
           </TouchableOpacity>
         </ScrollView>
-      </View>
+      </View >
     )
   }
 }
@@ -370,7 +483,6 @@ class MyProfileScreen extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000',
     paddingHorizontal:
       Dimensions.get('window').width > 800 ? 62
         :
@@ -404,21 +516,17 @@ const styles = StyleSheet.create({
               :
               15,
     height: 56,
-    flexDirection: 'row',
-    backgroundColor: '#000'
+    flexDirection: 'row'
   },
   titleContainer: {
     flex: 1,
     paddingLeft: 12,
-    justifyContent: 'center',
-    backgroundColor: '#000'
+    justifyContent: 'center'
   },
   logoutButton: {
-    backgroundColor: '#0b0b0b',
     height: 56,
-    borderBottomWidth: 0.7,
     alignItems: 'center',
-    marginTop: 24,
+    marginTop: 36,
     marginBottom: 24,
     justifyContent: 'center'
   },
@@ -428,14 +536,12 @@ const styles = StyleSheet.create({
     fontFamily: 'SourceSansPro-SemiBold'
   },
   modal: {
-    backgroundColor: '#171717',
     height: 168,
     alignSelf: 'center',
     borderRadius: 4
   },
   upperModal: {
     height: 70,
-    backgroundColor: '#171717',
     borderTopLeftRadius: 4,
     borderTopRightRadius: 4,
     justifyContent: 'center',
@@ -444,31 +550,25 @@ const styles = StyleSheet.create({
   },
   centerModal: {
     height: 49,
-    backgroundColor: '#171717',
     justifyContent: 'center',
     alignItems: 'center',
     borderBottomWidth: 0.6,
-    borderBottomColor: '#282828',
-    borderTopWidth: 0.6,
-    borderTopColor: '#282828'
+    borderTopWidth: 0.6
   },
   lowerModal: {
     height: 49,
-    backgroundColor: '#171717',
     justifyContent: 'center',
     alignItems: 'center',
     borderBottomRightRadius: 4,
     borderBottomLeftRadius: 4
   },
   loadingModalContainer: {
-    backgroundColor: 'rgba(0,0,0,0.5)',
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center'
   },
   loadingModal: {
     borderRadius: 6,
-    backgroundColor: '#171717',
     width: 170,
     height: 55,
     flexDirection: 'row',
@@ -480,7 +580,8 @@ const styles = StyleSheet.create({
 const mapStateToProps = ({ app }) => ({
   theme: app.theme,
   isSystemTheme: app.isSystemTheme,
-  exitCount: app.exitCount
+  exitCount: app.exitCount,
+  theme: app.theme
 })
 
 const mapDiaptchToProps = dispatch => ({
@@ -492,4 +593,4 @@ const mapDiaptchToProps = dispatch => ({
   setTheme: choice => dispatch(setTheme(choice))
 })
 
-export default connect(mapStateToProps, mapDiaptchToProps)(MyProfileScreen)
+export default connect(mapStateToProps, mapDiaptchToProps)(SettingsScreen)

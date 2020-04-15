@@ -252,7 +252,7 @@ class AuthScreen extends Component {
           }} >
             <View style={{
               ...styles.errorModal,
-              backgroundColor: this.useTheme('#fff', '#272727')
+              backgroundColor: this.useTheme('#fbfbfb', '#303030')
             }}>
               <View style={{
                 ...styles.upperModalPart,

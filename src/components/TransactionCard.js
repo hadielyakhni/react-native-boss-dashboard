@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, Dimensions } from 'react-native'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 
-const TransactionCard = ({ data }) => {
+const TransactionCard = ({ data, theme }) => {
   const { transAmount, status, date } = data[1]
   const getDateFormatted = date => {
     const d = new Date(date)
@@ -11,19 +11,35 @@ const TransactionCard = ({ data }) => {
       d.getFullYear() + " " + ("0" + d.getHours()).slice(-2) + ":" + ("0" + d.getMinutes()).slice(-2);
   }
   return (
-    <View style={styles.container}>
+    <View style={{
+      ...styles.container,
+      backgroundColor: theme === 'light' ? '#f6f6f6' : '#242424',
+      borderTopWidth: theme === 'light' ? 0.7 : 0,
+      borderLeftWidth: theme === 'light' ? 1.05 : 0,
+      borderWidth: theme === 'light' ? 1.05 : 0,
+      borderBottomWidth: theme === 'light' ? 1.4 : 0,
+      borderColor: theme === 'light' ? '#eee' : null
+    }}>
       <View style={[styles.arrowIconContainer, {
-        backgroundColor: status === 'Sent' ? '#34282d' : '#2e3b47'
+        backgroundColor: status === 'Sent' ?
+          theme === 'light' ? '#eaeaea' : '#34282d'
+          :
+          theme === 'light' ? '#eaeaea' : '#2e3b47'
       }]}>
         <FontAwesome
           name={status === 'Sent' ? 'arrow-up' : 'arrow-down'}
           color={status === 'Sent' ? "#de3b5b" : "#008ee0"}
           size={22}
+          style={{ opacity: 0.75 }}
         />
       </View>
       <View style={styles.dataContainer}>
         <View style={styles.upperDataContainer}>
-          <Text style={{ fontSize: 20, color: '#f7f7f7', fontFamily: 'SourceSansPro-SemiBold' }}>
+          <Text style={{
+            fontSize: 20,
+            color: theme === 'light' ? '#303030' : '#fbfbfb',
+            fontFamily: 'SourceSansPro-SemiBold'
+          }}>
             {status}
           </Text>
           <Text ellipsizeMode="middle" numberOfLines={1} style={{
@@ -41,10 +57,16 @@ const TransactionCard = ({ data }) => {
           </View>
         </View>
         <View style={styles.lowerDataContainer}>
-          <Text style={styles.lowerDataContainerText}>
+          <Text style={{
+            ...styles.lowerDataContainerText,
+            color: theme === 'light' ? '#000' : '#aaa'
+          }}>
             {data[0]}
           </Text>
-          <Text style={styles.lowerDataContainerText}>
+          <Text style={{
+            ...styles.lowerDataContainerText,
+            color: theme === 'light' ? '#000' : '#aaa'
+          }}>
             {getDateFormatted(date)}
           </Text>
         </View>
@@ -58,7 +80,6 @@ export default TransactionCard
 const styles = StyleSheet.create({
   container: {
     height: 75,
-    backgroundColor: '#121212',
     marginVertical: 3,
     borderRadius: 5,
     flexDirection: 'row',
@@ -93,7 +114,6 @@ const styles = StyleSheet.create({
   },
   lowerDataContainerText: {
     fontSize: 13,
-    fontFamily: 'SourceSansPro-Light',
-    color: '#aaa'
+    fontFamily: 'SourceSansPro-Light'
   }
 })

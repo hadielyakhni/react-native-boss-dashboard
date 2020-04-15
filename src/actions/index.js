@@ -251,7 +251,6 @@ export const updateTask = (taskId, task, description, isDone, componentId) => {
     if (componentId) {
       firebase.database().ref(`users/${UID}/tasks/tasks/${taskId}`)
         .update({ task, description, isDone })
-      Navigation.pop(componentId)
     }
     else
       firebase.database().ref(`users/${UID}/tasks/tasks/${taskId}`)

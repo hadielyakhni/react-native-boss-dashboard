@@ -30,8 +30,20 @@ export default class EmployeeCard extends PureComponent {
     const { componentId, uid, data } = this.props
     const d = new Date(data.joinDate)
     return (
-      <View style={styles.container} >
-        <View style={styles.imageContainer}>
+      <View style={{
+        ...styles.container,
+        backgroundColor: this.props.theme === 'light' ? '#f6f6f6' : '#242424',
+        borderTopWidth: this.props.theme === 'light' ? 0.7 : 0,
+        borderLeftWidth: this.props.theme === 'light' ? 1.05 : 0,
+        borderWidth: this.props.theme === 'light' ? 1.05 : 0,
+        borderBottomWidth: this.props.theme === 'light' ? 1.4 : 0,
+        borderColor: this.props.theme === 'light' ? '#eee' : null
+      }} >
+        <View style={{
+          ...styles.imageContainer,
+          borderColor: '#fbfbfb',
+          opacity: this.props.theme === 'light' ? 0.86 : 1
+        }}>
           <Image source={require('../assets/person.png')} style={{ width: '100%', flex: 1 }} />
         </View>
         <TouchableOpacity
@@ -47,20 +59,26 @@ export default class EmployeeCard extends PureComponent {
           }}
         >
           <View style={{ flex: 1, height: 56, justifyContent: 'space-between', alignItems: 'flex-start' }}>
-            <Text numberOfLines={1} style={styles.name}>
+            <Text
+              numberOfLines={1}
+              style={{
+                ...styles.name,
+                color: this.props.theme === 'light' ? '#303030' : '#fbfbfb',
+                borderColor: this.props.theme === 'light' ? '#f6f6f6' : '#242424'
+              }}>
               {data.name}
             </Text>
             <View style={{ flexDirection: 'row', flex: 1 }}>
               <Text numberOfLines={1} style={{
                 fontFamily: 'SourceSansPro-Regular',
-                color: '#eee',
+                color: this.props.theme === 'light' ? '#303030' : '#fbfbfb',
                 fontSize: 17
               }}>
                 {data.role + " - "}
               </Text>
               <Text numberOfLines={1} style={{
                 fontFamily: 'SourceSansPro-Regular',
-                color: '#eee',
+                color: this.props.theme === 'light' ? '#303030' : '#fbfbfb',
                 fontSize: 17,
                 marginRight: Dimensions.get('window').width / 8
               }}>
@@ -68,7 +86,7 @@ export default class EmployeeCard extends PureComponent {
               </Text>
             </View>
           </View>
-          <Icon name='ios-arrow-forward' style={{ fontSize: 28, color: '#c5c5c5' }} />
+          <Icon name='ios-arrow-forward' style={{ fontSize: 28, color: this.props.theme === 'light' ? '#aaa' : '#c5c5c5', }} />
         </TouchableOpacity>
       </View>
     )
@@ -80,7 +98,6 @@ export default class EmployeeCard extends PureComponent {
 const styles = StyleSheet.create({
   container: {
     height: 80,
-    backgroundColor: '#121212',
     flexDirection: 'row',
     alignItems: 'center',
     marginHorizontal: 4,
@@ -93,7 +110,6 @@ const styles = StyleSheet.create({
     height: 56,
     width: 56,
     borderWidth: 1,
-    borderColor: '#fff',
     borderRadius: 28
   },
   infoContainer: {
@@ -105,10 +121,8 @@ const styles = StyleSheet.create({
     paddingRight: 10
   },
   name: {
-    borderColor: '#121212',
     borderWidth: 1,
     fontSize: 21,
-    color: '#fff',
     fontFamily: 'SourceSansPro-SemiBold',
     marginRight: Dimensions.get('window').width / 12,
     marginBottom: 3

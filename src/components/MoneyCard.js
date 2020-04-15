@@ -15,8 +15,20 @@ export default class EmployeeCard extends PureComponent {
   render() {
     const { name, amount } = this.props.data[1]
     return (
-      <View style={styles.container} >
-        <View style={styles.imageContainer}>
+      <View style={{
+        ...styles.container,
+        backgroundColor: this.props.theme === 'light' ? '#f6f6f6' : '#242424',
+        borderTopWidth: this.props.theme === 'light' ? 0.7 : 0,
+        borderLeftWidth: this.props.theme === 'light' ? 1.05 : 0,
+        borderWidth: this.props.theme === 'light' ? 1.05 : 0,
+        borderBottomWidth: this.props.theme === 'light' ? 1.4 : 0,
+        borderColor: this.props.theme === 'light' ? '#eee' : null
+      }} >
+        <View style={{
+          ...styles.imageContainer,
+          borderColor: '#fbfbfb',
+          opacity: this.props.theme === 'light' ? 0.86 : 1
+        }}>
           <Image source={require('../assets/person.png')} style={{ width: '100%', flex: 1 }} />
         </View>
         <TouchableOpacity
@@ -32,10 +44,20 @@ export default class EmployeeCard extends PureComponent {
           }}
         >
           <View style={{ flex: 1, height: 56, justifyContent: 'space-between', alignItems: 'flex-start' }}>
-            <Text numberOfLines={1} style={styles.name}>
+            <Text
+              numberOfLines={1}
+              style={{
+                ...styles.name,
+                color: this.props.theme === 'light' ? '#303030' : '#fbfbfb',
+                borderColor: this.props.theme === 'light' ? '#f6f6f6' : '#242424'
+              }}>
               {name}
             </Text>
-            <Text style={{ fontFamily: 'SourceSansPro-SemiBold', color: amount >= 0 ? '#008ee0' : '#de3b5b', fontSize: 18 }}>
+            <Text style={{
+              fontFamily: 'SourceSansPro-SemiBold',
+              color: amount >= 0 ? '#008ee0' : '#de3b5b',
+              fontSize: 18
+            }}>
               {Math.abs(amount) + ' '}
               <FontAwesome5 name="coins" color={amount >= 0 ? '#008ee0' : '#de3b5b'} size={11} />
             </Text>
@@ -50,7 +72,6 @@ export default class EmployeeCard extends PureComponent {
 const styles = StyleSheet.create({
   container: {
     height: 80,
-    backgroundColor: '#121212',
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 12,
@@ -62,7 +83,6 @@ const styles = StyleSheet.create({
     height: 56,
     width: 56,
     borderWidth: 1,
-    borderColor: '#fff',
     borderRadius: 28
   },
   infoContainer: {
@@ -74,10 +94,7 @@ const styles = StyleSheet.create({
     paddingRight: 10
   },
   name: {
-    borderColor: '#121212',
-    borderWidth: 1,
     fontSize: 21,
-    color: '#fff',
     fontFamily: 'SourceSansPro-SemiBold',
     marginRight: Dimensions.get('window').width / 12
   },

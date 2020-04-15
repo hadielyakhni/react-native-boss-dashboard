@@ -48,9 +48,9 @@ class ForgetPasswordScreen extends Component {
                     6
         }}>
           <TouchableOpacity activeOpacity={0.8} style={{ flexDirection: 'row', alignItems: 'center' }} onPress={() => Navigation.pop(this.props.componentId)}>
-            <Ionicons name="ios-arrow-back" color={this.useTheme('#222', '#fbfbfb')} size={25} />
+            <Ionicons name="ios-arrow-back" color={this.useTheme('#303030', '#fbfbfb')} size={25} />
             <Text style={{
-              marginLeft: Dimensions.get('window').width > 600 ? 14 : 10, color: this.useTheme('#222', '#fbfbfb'), fontSize: 25, fontFamily: 'SourceSansPro-SemiBold'
+              marginLeft: Dimensions.get('window').width > 600 ? 14 : 10, color: this.useTheme('#303030', '#fbfbfb'), fontSize: 25, fontFamily: 'SourceSansPro-SemiBold'
             }}>Back</Text>
           </TouchableOpacity>
         </View>
@@ -69,7 +69,7 @@ class ForgetPasswordScreen extends Component {
                     :
                     8
         }}>
-          <Text style={{ fontSize: 24, color: this.useTheme('#222', '#fbfbfb'), fontFamily: 'SourceSansPro-Bold' }}>Forgot Password?</Text>
+          <Text style={{ fontSize: 24, color: this.useTheme('#303030', '#fbfbfb'), fontFamily: 'SourceSansPro-Bold' }}>Forgot Password?</Text>
           <View style={{
             marginTop: 15,
             flexDirection: 'row',
@@ -79,7 +79,7 @@ class ForgetPasswordScreen extends Component {
             paddingHorizontal: 6,
             marginBottom: 52
           }}>
-            <MaterialCommunityIcons style={{ paddingBottom: 2 }} name="email" color={this.useTheme('#222', "#fbfbfb")} size={24} />
+            <MaterialCommunityIcons style={{ paddingBottom: 2 }} name="email" color={this.useTheme('#303030', "#fbfbfb")} size={24} />
             <TextInput
               editable={!this.props.sendingPasswordResetEmail && !this.props.email}
               keyboardType="email-address"
@@ -176,13 +176,13 @@ class ForgetPasswordScreen extends Component {
           }} >
             <View style={{
               ...styles.errorModal,
-              backgroundColor: this.useTheme('#fbfbfb', '#272727')
+              backgroundColor: this.useTheme('#fbfbfb', '#303030')
             }}>
               <View style={{
                 ...styles.upperModalPart,
                 borderBottomColor: this.useTheme('#eaeaea', '#363636')
               }}>
-                <Text style={{ color: this.useTheme('#222', '#eef'), fontSize: 21, fontFamily: 'SourceSansPro-Bold' }}>
+                <Text style={{ color: this.useTheme('#303030', '#eef'), fontSize: 21, fontFamily: 'SourceSansPro-Bold' }}>
                   Error
                 </Text>
                 <Text style={{
@@ -216,16 +216,16 @@ class ForgetPasswordScreen extends Component {
           }} >
             <View style={{
               ...styles.errorModal,
-              backgroundColor: this.useTheme('#fbfbfb', '#272727')
+              backgroundColor: this.useTheme('#fbfbfb', '#303030')
             }}>
               <View style={{
                 ...styles.upperModalPart,
                 borderBottomColor: this.useTheme('#eaeaea', '#363636')
               }}>
-                <Text style={{ color: this.useTheme('#222', '#eef'), fontSize: 17, fontWeight: 'bold', textAlign: 'center', marginBottom: 2 }}>
+                <Text style={{ color: this.useTheme('#303030', '#eef'), fontSize: 17, fontWeight: 'bold', textAlign: 'center', marginBottom: 2 }}>
                   Email was sent to
                 </Text>
-                <Text style={{ textAlign: 'center', color: this.useTheme('#222', '#fbfbfb'), fontSize: 17, fontWeight: 'bold' }}>
+                <Text style={{ textAlign: 'center', color: this.useTheme('#303030', '#fbfbfb'), fontSize: 17, fontWeight: 'bold' }}>
                   {this.state.email}
                 </Text>
                 <Text style={{

@@ -75,9 +75,9 @@ class EmployeesListScreen extends Component {
               opacity: this.hintOpacity,
               marginBottom: 140
             }}>
-              <Text style={{ color: '#eee', fontFamily: 'SourceSansPro-SemiBold', fontSize: 17, marginBottom: 2 }}>Easily check all</Text>
-              <Text style={{ color: '#eee', fontFamily: 'SourceSansPro-SemiBold', fontSize: 17, marginBottom: 5 }}>{''} your employees!</Text>
-              <Text style={{ color: '#eee', fontFamily: 'SourceSansPro-Regular', fontSize: 15 }}>Add them now.</Text>
+              <Text style={{ color: this.useTheme('#303030', '#fbfbfb'), fontFamily: 'SourceSansPro-SemiBold', fontSize: 17, marginBottom: 2 }}>Easily check all</Text>
+              <Text style={{ color: this.useTheme('#303030', '#fbfbfb'), fontFamily: 'SourceSansPro-SemiBold', fontSize: 17, marginBottom: 5 }}>{''} your employees!</Text>
+              <Text style={{ color: this.useTheme('#303030', '#fbfbfb'), fontFamily: 'SourceSansPro-Regular', fontSize: 15 }}>Add them now.</Text>
             </Animated.View>
           </View>
         )
@@ -97,7 +97,7 @@ class EmployeesListScreen extends Component {
       if (!matchedEmployees.length)
         return (
           <View style={{ flex: 1, justifyContent: 'flex-start', alignItems: 'center', paddingTop: 12 }}>
-            <Text style={{ color: '#ddd', fontFamily: 'SourceSansPro-Regular', fontSize: 17, marginBottom: 2 }}>
+            <Text style={{ color: this.useTheme('#303030', '#fbfbfb'), fontFamily: 'SourceSansPro-Regular', fontSize: 17, marginBottom: 2 }}>
               No matching employees found!
             </Text>
           </View>
@@ -105,11 +105,17 @@ class EmployeesListScreen extends Component {
       return (
         <Animated.View style={{ flex: 1, opacity: this.listOpacity }}>
           <FlatList
+            showsVerticalScrollIndicator={false}
             contentContainerStyle={{ paddingVertical: 15 }}
             data={matchedEmployees}
             keyExtractor={employee => employee[0]}
             renderItem={employee => (
-              <EmployeeCard componentId={this.props.componentId} uid={employee.item[0]} data={employee.item[1]} />
+              <EmployeeCard
+                componentId={this.props.componentId}
+                uid={employee.item[0]}
+                data={employee.item[1]}
+                theme={this.props.theme}
+              />
             )}
             getItemLayout={(data, index) => (
               { length: 92, offset: 92 * index, index }
@@ -118,7 +124,7 @@ class EmployeesListScreen extends Component {
         </Animated.View>
       )
     }
-    return <EmployeeLoadingContainer />
+    return <EmployeeLoadingContainer theme={this.props.theme} />
   }
   checkExit() {
     if (this.props.exitCount === 0)
@@ -195,7 +201,7 @@ class EmployeesListScreen extends Component {
             style={{ width: 40, paddingLeft: 6, justifyContent: 'center' }}
             onPress={() => this.setState({ sortChoicesModalVisible: true })}
           >
-            <MaterialCommunityIcons name="sort" color="#fff" size={28} />
+            <MaterialCommunityIcons name="sort" color={this.useTheme('#303030', '#fbfbfb')} size={28} />
           </TouchableOpacity>
         </Animated.View>
       )
@@ -205,9 +211,10 @@ class EmployeesListScreen extends Component {
   renderUndoMessage() {
     return (
       <View style={[styles.undoView, {
-        bottom: this.props.showUndoDelete ? 24.5 : -100
+        bottom: this.props.showUndoDelete ? 24.5 : -100,
+        backgroundColor: this.useTheme('#303030', '#fbfbfb')
       }]}>
-        <Text style={{ fontSize: 15, color: '#fff', fontFamily: 'SourceSansPro-Regular' }}>1 deleted</Text>
+        <Text style={{ fontSize: 15, color: this.useTheme('#fbfbfb', '#303030'), fontFamily: 'SourceSansPro-Regular' }}>1 deleted</Text>
         <TouchableOpacity
           activeOpacity={0.8}
           style={{ alignItems: 'center', justifyContent: 'center', padding: 6, borderRadius: 6 }}
@@ -222,38 +229,65 @@ class EmployeesListScreen extends Component {
       </View>
     )
   }
+  useTheme(lightThemeColor, darkThemeColor) {
+    if (this.props.theme === 'light')
+      return lightThemeColor
+    return darkThemeColor
+  }
   render() {
     { this.checkActiveSortLabel() }
     return (
-      <View style={styles.container}>
+      <View style={{
+        ...styles.container,
+        backgroundColor: this.useTheme('#fbfbfb', '#161616')
+      }}>
         <View style={{ flex: 1 }}>
           {this.checkExit()}
           {this.renderUndoMessage()}
           <SortChoicesModal
+            theme={this.props.theme}
             choices={this.sortChoices}
             visible={this.state.sortChoicesModalVisible}
             selectedChoice={this.activeSortLabel}
             onSelect={this.onSelectSortChoice}
             onCancel={this.closeSortChoicesModal}
           />
-          <View style={styles.header}>
-            <View style={styles.titleContainer}>
-              <Text numberOfLines={1} style={{ color: '#fff', fontSize: 26, fontFamily: 'SourceSansPro-SemiBold' }}>
+          <View style={{
+            ...styles.header,
+            backgroundColor: this.useTheme('#fbfbfb', '#161616')
+          }}>
+            <View style={{
+              ...styles.titleContainer,
+              backgroundColor: this.useTheme('#fbfbfb', '#161616')
+            }}>
+              <Text numberOfLines={1} style={{ color: this.useTheme('#303030', '#fbfbfb'), fontSize: 26, fontFamily: 'SourceSansPro-SemiBold' }}>
                 My Employees
             </Text>
             </View>
             {this.renderSortButton()}
           </View>
-          <View style={styles.searchView}>
+          <View style={{
+            ...styles.searchView,
+            backgroundColor: this.useTheme('#f6f6f6', '#242424')
+          }}>
             <Icon
               name='md-search'
-              style={{ color: this.props.fetchingEmployees || !this.props.allEmployees.length ? '#777' : '#e3e3e3', fontSize: 26 }}
+              style={{
+                color: this.props.fetchingEmployees || !this.props.allEmployees.length ?
+                  this.useTheme('#999', '#777')
+                  :
+                  this.useTheme('#606060', '#fbfbfb'),
+                fontSize: 26
+              }}
             />
             <TextInput
               editable={this.props.fetchingEmployees || !this.props.allEmployees.length ? false : true}
               value={this.state.searchWord}
-              style={styles.input}
-              placeholderTextColor='#777'
+              style={{
+                ...styles.input,
+                color: this.useTheme('#303030', '#fbfbfb')
+              }}
+              placeholderTextColor={this.useTheme('#999', 'rgba(255, 255, 255, 0.6)')}
               placeholder='Search employees'
               onChangeText={this.changeSearchWord}
             />
@@ -284,7 +318,6 @@ class EmployeesListScreen extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000',
     paddingHorizontal:
       Dimensions.get('window').width > 800 ? 62
         :
@@ -299,7 +332,6 @@ const styles = StyleSheet.create({
   header: {
     height: 56,
     flexDirection: 'row',
-    backgroundColor: '#000',
     marginVertical:
       Dimensions.get('window').width > 800 ? 20
         :
@@ -314,11 +346,9 @@ const styles = StyleSheet.create({
   titleContainer: {
     flex: 1,
     paddingLeft: 12,
-    justifyContent: 'center',
-    backgroundColor: '#000'
+    justifyContent: 'center'
   },
   addButton: {
-    elevation: 4,
     position: 'absolute',
     right: 14,
     bottom: 20,
@@ -327,7 +357,8 @@ const styles = StyleSheet.create({
     width: 55,
     borderRadius: 27.5,
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    elevation: 4
   },
   undoView: {
     height: 46,
@@ -335,17 +366,12 @@ const styles = StyleSheet.create({
     right: 88,
     zIndex: 1,
     paddingHorizontal: 20,
-    backgroundColor: '#272727',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     position: 'absolute',
     alignSelf: 'center',
     borderRadius: 6
-  },
-  addIcon: {
-    fontSize: 29,
-    color: '#fff',
   },
   searchView: {
     marginHorizontal: 5,
@@ -357,13 +383,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: '#121212',
-    height: 46
+    height: 46,
+    elevation: 2
   },
   input: {
     borderRadius: 10,
     flex: 1,
-    color: '#e3e3e3',
     alignItems: 'center',
     fontSize: 17,
     fontFamily: 'SourceSansPro-Regular',
@@ -416,7 +441,8 @@ const mapStateToProps = state => {
     sortOrder,
     fetchingEmployees: state.employees.fetchingEmployees,
     showUndoDelete: state.employees.showUndoDelete,
-    exitCount: state.app.exitCount
+    exitCount: state.app.exitCount,
+    theme: state.app.theme
   }
 }
 

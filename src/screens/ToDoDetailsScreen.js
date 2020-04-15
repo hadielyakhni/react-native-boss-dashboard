@@ -4,32 +4,76 @@ import { connect } from 'react-redux'
 import { updateTask, deleteTask } from '../actions'
 import { Navigation } from 'react-native-navigation'
 import Ionicons from 'react-native-vector-icons/Ionicons'
-import MyButton from '../components/MyButton'
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
 class ToDoDetailsScreen extends Component {
   constructor(props) {
     super(props)
+    this.timeout = 0
     const { task, description, isDone, date, customDate } = this.props
     this.state = { task, description, isDone }
     this.taskData = { task, description, isDone, date, customDate }
   }
+  useTheme(lightThemeColor, darkThemeColor) {
+    if (this.props.theme === 'light')
+      return lightThemeColor
+    return darkThemeColor
+  }
+  taskTextChange(task) {
+    this.setState({ task })
+    if (this.timeout)
+      clearTimeout(this.timeout);
+    this.timeout = setTimeout(() => {
+      const { task, description, isDone } = this.state
+      this.props.updateTask(this.props.taskId, task, description, isDone, this.props.componentId)
+    }, 300)
+  }
+  descriptionTextChange(description) {
+    this.setState({ description })
+    if (this.timeout)
+      clearTimeout(this.timeout);
+    this.timeout = setTimeout(() => {
+      const { task, description, isDone } = this.state
+      this.props.updateTask(this.props.taskId, task, description, isDone, this.props.componentId)
+    }, 300)
+  }
   render() {
     return (
-      <View style={styles.container}>
-        <View style={styles.header}>
+      <View
+        style={{
+          ...styles.container,
+          backgroundColor: this.useTheme('#fbfbfb', '#161616')
+        }}>
+        <View style={{
+          ...styles.header,
+          backgroundColor: this.useTheme('#fbfbfb', '#161616')
+        }}>
           <TouchableOpacity
             activeOpacity={0.8}
             hitSlop={{ bottom: 10, top: 10, left: 10, right: 10 }}
-            style={styles.backIconContainer}
+            style={{
+              ...styles.backIconContainer,
+              backgroundColor: this.useTheme('#fbfbfb', '#161616')
+            }}
             onPress={() => Navigation.pop(this.props.componentId)}
           >
-            <Ionicons name="md-arrow-back" size={26} color="#fff" />
+            <Ionicons name="md-arrow-back" size={26} color={this.useTheme('#303030', '#fbfbfb')} />
           </TouchableOpacity>
-          <View style={styles.titleContainer}>
-            <Text numberOfLines={1} style={{ color: '#fff', fontSize: 25, fontFamily: 'SourceSansPro-SemiBold' }}>
+          <View style={{
+            ...styles.titleContainer,
+            backgroundColor: this.useTheme('#fbfbfb', '#161616')
+          }}>
+            <Text numberOfLines={1} style={{ color: this.useTheme('#303030', '#fbfbfb'), fontSize: 25, fontFamily: 'SourceSansPro-SemiBold' }}>
               Task Details
             </Text>
           </View>
+          <TouchableOpacity
+            style={{ width: 40, height: 40, borderRadius: 20, alignItems: 'center', justifyContent: 'center' }}
+            activeOpacity={0.2}
+            onPress={() => this.props.deleteTask(this.props.taskId, 'todoDetails', this.props.componentId, this.taskData)}
+          >
+            <MaterialCommunityIcons name="trash-can-outline" color="#fbfbfb" size={24} />
+          </TouchableOpacity>
         </View>
         <View style={{ paddingHorizontal: 8, flex: 1 }}>
           <View>
@@ -37,47 +81,30 @@ class ToDoDetailsScreen extends Component {
               value={this.state.task}
               style={[styles.input, {
                 borderTopWidth: 0.5,
-                borderTopColor: '#575757',
+                borderTopColor: this.useTheme('#999', 'rgba(255,255,255,0.28)'),
                 borderBottomWidth: 0.5,
-                borderBottomColor: '#575757',
+                borderBottomColor: this.useTheme('#999', 'rgba(255,255,255,0.28)'),
+                color: this.useTheme('#303030', '#fbfbfb')
               }]}
               selectionColor='#008ee0'
               placeholder="What would you like to do?"
-              placeholderTextColor="#575755"
-              onChangeText={task => this.setState({ task })}
+              placeholderTextColor={this.useTheme('#999', 'rgba(255,255,255,0.28)')}
+              onChangeText={task => this.taskTextChange(task)}
             />
           </View>
           <View style={styles.descriptionContainer}>
             <TextInput
               multiline
               value={this.state.description}
-              style={[styles.input, { textAlignVertical: "top", flex: 1 }]}
+              style={[styles.input, {
+                color: this.useTheme('#303030', '#fbfbfb'),
+                textAlignVertical: "top", flex: 1
+              }]}
               selectionColor='#008ee0'
               placeholder="Description"
-              placeholderTextColor="#575757"
-              onChangeText={description => this.setState({ description })}
+              placeholderTextColor={this.useTheme('#999', 'rgba(255,255,255,0.28)')}
+              onChangeText={description => this.descriptionTextChange(description)}
             />
-          </View>
-          <View style={styles.buttonView}>
-            <MyButton
-              activeOpacity={0.9}
-              style={{ height: 52 }}
-              textStyle={{ fontSize: 20 }}
-              color='#008ee0'
-              onPress={() => {
-                const { task, description, isDone } = this.state
-                this.props.updateTask(this.props.taskId, task, description, isDone, this.props.componentId)
-              }}
-            >Save</MyButton>
-            <MyButton
-              activeOpacity={0.9}
-              style={{ marginBottom: 20, height: 52 }}
-              color='#e65100'
-              textStyle={{ fontSize: 20 }}
-              onPress={() => {
-                this.props.deleteTask(this.props.taskId, 'todoDetails', this.props.componentId, this.taskData)
-              }}
-            >Delete</MyButton>
           </View>
         </View>
       </View>
@@ -88,7 +115,6 @@ class ToDoDetailsScreen extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000',
     paddingHorizontal:
       Dimensions.get('window').width > 800 ? 62
         :
@@ -103,7 +129,6 @@ const styles = StyleSheet.create({
   header: {
     height: 56,
     flexDirection: 'row',
-    backgroundColor: '#000',
     marginVertical:
       Dimensions.get('window').width > 800 ? 20
         :
@@ -115,17 +140,16 @@ const styles = StyleSheet.create({
               :
               0,
     marginBottom: 15,
-    paddingHorizontal: 4
+    paddingHorizontal: 4,
+    alignItems: 'center'
   },
   titleContainer: {
     flex: 1,
     paddingLeft: 10,
     justifyContent: 'center',
-    backgroundColor: '#000'
   },
   backIconContainer: {
     width: 42,
-    backgroundColor: '#000',
     justifyContent: 'center',
     alignItems: 'center'
   },
@@ -133,30 +157,10 @@ const styles = StyleSheet.create({
     flex: 1
   },
   input: {
-    color: '#fff',
     paddingLeft: 10,
     paddingRight: 10,
     fontSize: 17.8,
     fontFamily: 'SourceSansPro-Regular'
-  },
-  buttonView: {
-    justifyContent: 'space-evenly'
-  },
-  loadingModalContainer: {
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  loadingModal: {
-    borderRadius: 6,
-    backgroundColor: '#171717',
-    width: 140,
-    height: 50,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 15
   }
 })
 
@@ -169,4 +173,7 @@ const mapActionsToProps = dispatch => {
   }
 }
 
-export default connect(null, mapActionsToProps)(ToDoDetailsScreen)
+export default connect(
+  ({ app }) => ({ theme: app.theme }),
+  mapActionsToProps
+)(ToDoDetailsScreen)

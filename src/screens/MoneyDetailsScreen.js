@@ -50,29 +50,46 @@ class MoneyDetailsScreen extends Component {
       newName += this.props.name[i] + ' '
     return newName.toUpperCase().trim()
   }
+  useTheme(lightThemeColor, darkThemeColor) {
+    if (this.props.theme === 'light')
+      return lightThemeColor
+    return darkThemeColor
+  }
   render() {
     return (
       this.state.canRender ?
-        <View style={styles.container} >
+        <View style={{
+          ...styles.container,
+          backgroundColor: this.useTheme('#fbfbfb', '#161616')
+        }} >
           <View style={[StyleSheet.absoluteFill, {
             backgroundColor: this.state.transConfirmationModalVisible || this.state.modalVisible ? 'rgba(0,0,0,0.2)' : 'rgba(0,0,0,0)',
             zIndex: this.state.transConfirmationModalVisible || this.state.modalVisible ? 1 : 0
           }]}></View>
-          <View style={styles.header}>
+          <View style={{
+            ...styles.header,
+            backgroundColor: this.useTheme('#fbfbfb', '#161616')
+          }}>
             <TouchableOpacity
               activeOpacity={0.85}
               onPress={() => Navigation.pop(this.props.componentId)}
-              style={styles.backIconContainer}
+              style={{
+                ...styles.backIconContainer,
+                backgroundColor: this.useTheme('#fbfbfb', '#161616')
+              }}
             >
-              <Ionicons name="md-arrow-back" size={26} color="#fff" />
+              <Ionicons name="md-arrow-back" size={26} color={this.useTheme('#303030', '#fbfbfb')} />
             </TouchableOpacity>
-            <View style={styles.titleContainer}>
+            <View style={{
+              ...styles.titleContainer,
+              backgroundColor: this.useTheme('#fbfbfb', '#161616')
+            }}>
               <ScrollView
                 horizontal
                 showsHorizontalScrollIndicator={false}
                 contentContainerStyle={{ alignItems: 'center', paddingRight: 7 }}
               >
-                <Text numberOfLines={1} style={{ color: '#fff', fontSize: 25, fontFamily: 'SourceSansPro-SemiBold', textAlign: 'left' }}>
+                <Text numberOfLines={1} style={{ color: this.useTheme('#303030', '#fbfbfb'), fontSize: 25, fontFamily: 'SourceSansPro-SemiBold', textAlign: 'left' }}>
                   {this.props.name}
                 </Text>
               </ScrollView>
@@ -83,11 +100,23 @@ class MoneyDetailsScreen extends Component {
               onPress={() => Linking.openURL(`tel:${this.props.phone}`)}
               style={styles.callIconContainer}
             >
-              <MaterialIcons name="perm-phone-msg" size={24} color={this.props.phone ? '#fff' : '#888'} />
+              <MaterialIcons
+                name="perm-phone-msg"
+                size={24}
+                color={
+                  this.props.phone ?
+                    this.useTheme('#303030', '#fbfbfb')
+                    :
+                    this.useTheme('#888', '#888')
+                }
+              />
             </TouchableOpacity>
             <TouchableOpacity
               activeOpacity={0.85}
-              style={styles.editIconContainer}
+              style={{
+                ...styles.editIconContainer,
+                backgroundColor: this.useTheme('#fbfbfb', '#161616')
+              }}
               onPress={() => Navigation.push(this.props.componentId, {
                 component: {
                   name: 'moneyEdit',
@@ -99,17 +128,36 @@ class MoneyDetailsScreen extends Component {
                 }
               })}
             >
-              <MaterialIcons name="mode-edit" size={24} color="#fff" />
+              <MaterialIcons name="mode-edit" size={24} color={this.useTheme('#303030', '#fbfbfb')} />
             </TouchableOpacity>
           </View>
-          <View style={{ flex: 1, paddingHorizontal: width / 22 }}>
-            <View style={styles.summaryContainer}>
+          <View style={{ flex: 1, paddingHorizontal: width / 32 }}>
+            <View style={{
+              ...styles.summaryContainer,
+              backgroundColor: this.props.theme === 'light' ? '#f6f6f6' : '#242424',
+              borderTopWidth: this.props.theme === 'light' ? 0.7 : 0,
+              borderLeftWidth: this.props.theme === 'light' ? 1.05 : 0,
+              borderWidth: this.props.theme === 'light' ? 1.05 : 0,
+              borderBottomWidth: this.props.theme === 'light' ? 1.4 : 0,
+              borderColor: this.props.theme === 'light' ? '#eee' : null
+            }}>
               <View style={styles.firstInnerContainer}>
-                <View style={styles.amountLabel}>
+                <View style={{
+                  ...styles.amountLabel,
+                  backgroundColor: this.useTheme('rgba(0,0,0,0.03)', 'rgba(255,255,255,0.1)')
+                }}>
                   <Text
                     ellipsizeMode={this.props.amount < 0 ? "tail" : "head"}
                     numberOfLines={1}
-                    style={{ textAlign: 'left', fontSize: 10, fontFamily: 'SourceSansPro-Bold', color: this.props.amount < 0 ? '#cdacaf' : '#9cafba' }}>
+                    style={{
+                      textAlign: 'left',
+                      fontSize: 10,
+                      fontFamily: 'SourceSansPro-Bold',
+                      color: this.props.amount < 0 ?
+                        this.useTheme('#cda2b1', '#cdacaf')
+                        :
+                        this.useTheme('#84989a', '#9cafba')
+                    }}>
                     {
                       this.props.amount < 0 ?
                         `${'Y O U  S H O U L D  P A Y  T O  ' + this.getName()}`
@@ -126,17 +174,27 @@ class MoneyDetailsScreen extends Component {
                   style={{ marginHorizontal: 18 }}
                   contentContainerStyle={{ alignItems: 'center' }}
                 >
-                  <Text numberOfLines={1} style={{ ...styles.amountText, borderWidth: 2, borderColor: '#121212' }}>
+                  <Text numberOfLines={1} style={{
+                    ...styles.amountText,
+                    borderWidth: 2,
+                    borderColor: this.useTheme('#f6f6f6', '#242424'),
+                    color: this.useTheme('#303030', '#fbfbfb')
+                  }}>
                     {Math.abs(this.props.amount)}
                   </Text>
                 </ScrollView>
               </View>
               <View style={styles.transNumberContainer}>
-                <Text style={{ fontSize: 10.5, fontFamily: 'SourceSansPro-SemiBold', color: '#9cafba' }}>
+                <Text style={{ fontSize: 10.5, fontFamily: 'SourceSansPro-SemiBold', color: this.useTheme('#84989a', '#9cafba') }}>
                   T O T A L  T R A N S A C T I O N S :  {this.props.transactions.length}
                 </Text>
               </View>
-              <View style={styles.currencyContainer}>
+              <View style={{
+                elevation: 1,
+                ...styles.currencyContainer,
+                backgroundColor: this.useTheme('#f6f6f6', '#242424'),
+                borderColor: this.useTheme('#f6f6f6', '#1e1e1e'),
+              }}>
                 <FontAwesome5 name="coins" color="#ffb13d" size={20} />
               </View>
               <TouchableOpacity
@@ -144,48 +202,68 @@ class MoneyDetailsScreen extends Component {
                 style={styles.trashButtonContainer}
                 onPress={() => this.setState({ modalVisible: true })}
               >
-                <Octicons name="trashcan" size={23} color='rgba(156, 175, 186, 0.7)' />
+                <Octicons name="trashcan" size={23} color={this.useTheme('#84989a', 'rgba(156, 175, 186, 0.7)')} />
               </TouchableOpacity>
             </View>
             <View style={styles.transButtonsContainer}>
               <TouchableOpacity
                 activeOpacity={0.85}
-                style={[styles.transButtons, { backgroundColor: '#121212' }]}
+                style={[styles.transButtons, {
+                  backgroundColor: this.props.theme === 'light' ? '#f6f6f6' : '#242424',
+                  borderTopWidth: this.props.theme === 'light' ? 0.7 : 0,
+                  borderLeftWidth: this.props.theme === 'light' ? 1.05 : 0,
+                  borderWidth: this.props.theme === 'light' ? 1.05 : 0,
+                  borderBottomWidth: this.props.theme === 'light' ? 1.4 : 0,
+                  borderColor: this.props.theme === 'light' ? '#eee' : null
+                }]}
                 onPress={() => {
                   this.flatListRef.scrollToOffset({ animated: true, offset: 0 });
                   this.setState({ transConfirmationModalVisible: true, transType: 'send' })
                 }}
               >
-                <View style={[styles.arrowIconContainer, { backgroundColor: '#34282d' }]}>
-                  <FontAwesome name="arrow-up" color="#de3b5b" size={24} />
+                <View style={[styles.arrowIconContainer, { backgroundColor: this.useTheme('#eaeaea', '#363536') }]}>
+                  <FontAwesome name="arrow-up" color="#de3b5b" size={24} style={{ opacity: 0.75 }} />
                 </View>
-                <Text style={{ marginLeft: 8, fontFamily: 'SourceSansPro-Bold', color: '#f7f7f7', fontSize: 23 }}>Send</Text>
+                <Text style={{ marginLeft: 8, fontFamily: 'SourceSansPro-Bold', color: this.useTheme('#303030', '#fbfbfb'), fontSize: 23 }}>Send</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 activeOpacity={0.85}
-                style={[styles.transButtons, { backgroundColor: '#121212' }]}
+                style={[styles.transButtons, {
+                  backgroundColor: this.props.theme === 'light' ? '#f6f6f6' : '#242424',
+                  borderTopWidth: this.props.theme === 'light' ? 0.7 : 0,
+                  borderLeftWidth: this.props.theme === 'light' ? 1.05 : 0,
+                  borderWidth: this.props.theme === 'light' ? 1.05 : 0,
+                  borderBottomWidth: this.props.theme === 'light' ? 1.4 : 0,
+                  borderColor: this.props.theme === 'light' ? '#eee' : null
+                }]}
                 onPress={() => {
                   this.flatListRef.scrollToOffset({ animated: true, offset: 0 });
                   this.setState({ transConfirmationModalVisible: true, transType: 'receive' })
                 }}
               >
-                <View style={[styles.arrowIconContainer, { backgroundColor: '#2e3b47' }]}>
-                  <FontAwesome name="arrow-down" color="#008ee0" size={24} />
+                <View style={[styles.arrowIconContainer, { backgroundColor: this.useTheme('#eaeaea', '#2e3b47') }]}>
+                  <FontAwesome name="arrow-down" color="#008ee0" size={24} style={{ opacity: 0.75 }} />
                 </View>
-                <Text style={{ marginLeft: 8, fontFamily: 'SourceSansPro-Bold', color: '#f7f7f7', fontSize: 23 }}>Receive</Text>
+                <Text style={{ marginLeft: 8, fontFamily: 'SourceSansPro-Bold', color: this.useTheme('#303030', '#fbfbfb'), fontSize: 23 }}>Receive</Text>
               </TouchableOpacity>
             </View>
             <View style={styles.transTextContainer}>
-              <Text style={styles.transText}>T R A N S A C T I O N S</Text>
+              <Text style={{
+                ...styles.transText,
+                color: this.useTheme('#84989a', '#9cafba')
+              }}>
+                T R A N S A C T I O N S
+              </Text>
             </View>
             <View style={styles.transListContainer}>
               <FlatList
+                showsVerticalScrollIndicator={false}
                 maxToRenderPerBatch={15}
                 ref={ref => this.flatListRef = ref}
                 contentContainerStyle={{ paddingBottom: 6 }}
                 data={this.props.transactions}
                 keyExtractor={transaction => transaction[0]}
-                renderItem={({ item }) => <TransactionCard data={item} />}
+                renderItem={({ item }) => <TransactionCard data={item} theme={this.props.theme} />}
                 getItemLayout={(data, index) => ({ length: 81, offset: 81 * index, index })}
               />
             </View>
@@ -195,13 +273,34 @@ class MoneyDetailsScreen extends Component {
               visible={this.state.modalVisible}
               onRequestClose={() => { this.setState({ modalVisible: false }) }}
             >
-              <View style={{ flex: 1, justifyContent: 'center' }}>
-                <View style={styles.modal}>
-                  <View style={styles.upperModal}>
-                    <Text style={{ fontFamily: 'SourceSansPro-Regular', marginBottom: 7, textAlign: 'center', color: '#eeeeee', fontSize: 18 }}>
+              <View style={{
+                flex: 1,
+                justifyContent: 'center',
+                backgroundColor: this.useTheme('rgba(0,0,0,0.1)', 'rgba(0,0,0,0.5)'),
+              }}>
+                <View style={{
+                  ...styles.modal,
+                  backgroundColor: this.useTheme('#fbfbfb', '#222')
+                }}>
+                  <View style={{
+                    ...styles.upperModal,
+                    backgroundColor: this.useTheme('#fbfbfb', '#222')
+                  }}>
+                    <Text style={{
+                      fontFamily: 'SourceSansPro-SemiBold',
+                      marginBottom: 7,
+                      textAlign: 'center',
+                      fontSize: 18,
+                      color: this.useTheme('#303030', '#fbfbfb')
+                    }}>
                       Delete this account?
                     </Text>
-                    <Text style={{ fontFamily: 'SourceSansPro-Regular', textAlign: 'center', color: '#eeeeee', fontSize: 18 }}>
+                    <Text style={{
+                      fontFamily: 'SourceSansPro-SemiBold',
+                      textAlign: 'center',
+                      color: this.useTheme('#444', '#fbfbfb'),
+                      fontSize: 16
+                    }}>
                       This action cannot be undo.
                     </Text>
                   </View>
@@ -211,19 +310,31 @@ class MoneyDetailsScreen extends Component {
                       onPress={() => {
                         this.setState({ modalVisible: false });
                       }}
-                      style={[styles.modalButton, { borderBottomLeftRadius: 4 }]}>
-                      <Text style={{ color: '#eeeeee', fontSize: 18, fontFamily: 'SourceSansPro-Regular' }}>
+                      style={[
+                        styles.modalButton,
+                        {
+                          borderBottomLeftRadius: 4,
+                          backgroundColor: this.useTheme('#fbfbfb', '#222'),
+                          borderTopColor: this.useTheme('#eaeaea', '#363636')
+                        }]}>
+                      <Text style={{ color: this.useTheme('#303030', '#eef'), fontSize: 18, fontFamily: 'SourceSansPro-Regular' }}>
                         Cancel
                       </Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                       activeOpacity={0.8}
                       onPress={() => {
-                        this.setState({ modalVisible: false });
+                        this.setState({ modalVisible: false })
                         this.props.deleteAccount(this.props.componentId, this.accountId, this.props.accountData)
                       }}
-                      style={[styles.modalButton, { borderBottomRightRadius: 4 }]}>
-                      <Text style={{ color: '#e65100', fontSize: 18, fontFamily: 'SourceSansPro-SemiBold' }}>Delete</Text>
+                      style={[
+                        styles.modalButton,
+                        {
+                          borderBottomRightRadius: 4,
+                          backgroundColor: this.useTheme('#fbfbfb', '#222'),
+                          borderTopColor: this.useTheme('#eaeaea', '#363636')
+                        }]}>
+                      <Text style={{ color: '#e65100', fontSize: 19, fontFamily: 'SourceSansPro-SemiBold' }}>Delete</Text>
                     </TouchableOpacity>
                   </View>
                 </View>
@@ -241,9 +352,12 @@ class MoneyDetailsScreen extends Component {
                   onPress={() => this.setState({ transConfirmationModalVisible: false, transAmount: '', transType: '' })}
                   style={{ flex: 1 }}
                 ></TouchableOpacity>
-                <View style={styles.innerTransConfirmationModal}>
+                <View style={{
+                  ...styles.innerTransConfirmationModal,
+                  backgroundColor: this.useTheme('#fbfbfb', '#1a1a1a')
+                }}>
                   <View style={styles.transInputContainer}>
-                    <Text numberOfLines={1} style={{ color: '#eee', fontFamily: 'SourceSansPro-Bold', fontSize: 22, paddingRight: 7 }}>
+                    <Text numberOfLines={1} style={{ color: this.useTheme('#303030', '#fbfbfb'), fontFamily: 'SourceSansPro-Bold', fontSize: 22, paddingRight: 7 }}>
                       {
                         this.state.transType === 'send' ?
                           "Sending to " + this.props.name + "..." :
@@ -254,9 +368,12 @@ class MoneyDetailsScreen extends Component {
                       <TextInput
                         value={this.state.transAmount}
                         ref={ref => this.transInputRef = ref}
-                        style={styles.amountInput}
+                        style={{
+                          ...styles.amountInput,
+                          color: this.useTheme('#303030', '#fbfbfb')
+                        }}
                         placeholder="Specify the amount"
-                        placeholderTextColor="#aaa"
+                        placeholderTextColor={this.useTheme('#999', 'rgba(255, 255, 255, 0.6)')}
                         keyboardType="decimal-pad"
                         onChangeText={transAmount => this.setState({ transAmount })}
                       />
@@ -265,18 +382,32 @@ class MoneyDetailsScreen extends Component {
                   <View style={styles.transConfirmationButtonsContainer}>
                     <TouchableOpacity
                       activeOpacity={0.85}
-                      style={[styles.transButtons, { backgroundColor: '#171717' }]}
+                      style={[styles.transButtons, {
+                        backgroundColor: this.props.theme === 'light' ? '#f6f6f6' : '#242424',
+                        borderTopWidth: this.props.theme === 'light' ? 0.7 : 0,
+                        borderLeftWidth: this.props.theme === 'light' ? 1.05 : 0,
+                        borderWidth: this.props.theme === 'light' ? 1.05 : 0,
+                        borderBottomWidth: this.props.theme === 'light' ? 1.4 : 0,
+                        borderColor: this.props.theme === 'light' ? '#eee' : null
+                      }]}
                       onPress={() => {
                         this.setState({ transConfirmationModalVisible: false, transAmount: '', transType: '' })
                       }}
                     >
-                      <Text style={{ marginLeft: 8, fontFamily: 'SourceSansPro-Bold', color: '#fff', fontSize: 22 }}>
+                      <Text style={{ marginLeft: 8, fontFamily: 'SourceSansPro-Bold', color: this.useTheme('#303030', '#fbfbfb'), fontSize: 22 }}>
                         Cancel
-                  </Text>
+                      </Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                       activeOpacity={0.85}
-                      style={[styles.transButtons, { backgroundColor: '#171717' }]}
+                      style={[styles.transButtons, {
+                        backgroundColor: this.props.theme === 'light' ? '#f6f6f6' : '#242424',
+                        borderTopWidth: this.props.theme === 'light' ? 0.7 : 0,
+                        borderLeftWidth: this.props.theme === 'light' ? 1.05 : 0,
+                        borderWidth: this.props.theme === 'light' ? 1.05 : 0,
+                        borderBottomWidth: this.props.theme === 'light' ? 1.4 : 0,
+                        borderColor: this.props.theme === 'light' ? '#eee' : null
+                      }]}
                       onPress={() => {
                         if (!this.state.transAmount)
                           this.transInputRef.focus()
@@ -294,18 +425,22 @@ class MoneyDetailsScreen extends Component {
                       <View style={[styles.arrowIconContainer, {
                         height: height / 24,
                         width: height / 24,
-                        backgroundColor: this.state.transType === 'send' ? '#34282d' : '#2e3b47'
+                        backgroundColor: this.state.transType === 'send' ?
+                          this.useTheme('#eaeaea', '#363536')
+                          :
+                          this.useTheme('#eaeaea', '#2e3b47')
                       }]}>
                         <FontAwesome
                           name={this.state.transType === 'send' ? "arrow-up" : "arrow-down"}
                           color={this.state.transType === 'send' ? "#de3b5b" : "#008ee0"}
                           size={22}
+                          style={{ opacity: 0.75 }}
                         />
                       </View>
                       <Text style={{
                         marginLeft: 8,
                         fontFamily: 'SourceSansPro-Bold',
-                        color: this.state.transType === 'send' ? '#de3b5b' : "#008ee0",
+                        color: this.useTheme('#303030', '#fbfbfb'),
                         fontSize: 22
                       }}>
                         {this.state.transType === 'send' ? "Send" : "Receive"}
@@ -318,7 +453,7 @@ class MoneyDetailsScreen extends Component {
           </View>
         </View>
         :
-        <View style={{ flex: 1, backgroundColor: '#000', alignItems: 'center', justifyContent: 'center' }}>
+        <View style={{ flex: 1, backgroundColor: this.useTheme('#fbfbfb', '#303030'), alignItems: 'center', justifyContent: 'center' }}>
           <SpinnerSpinkit color="#008ee0" size={38} type="ThreeBounce" />
         </View>
     )
@@ -328,7 +463,6 @@ class MoneyDetailsScreen extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000',
     paddingHorizontal:
       Dimensions.get('window').width > 800 ? 62
         :
@@ -354,12 +488,10 @@ const styles = StyleSheet.create({
             :
             Dimensions.get('window').width > 500 ? 6
               :
-              0,
-    backgroundColor: '#000'
+              0
   },
   backIconContainer: {
     width: 42,
-    backgroundColor: '#000',
     justifyContent: 'center',
     alignItems: 'center'
   },
@@ -367,13 +499,11 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingLeft: 10,
     justifyContent: 'center',
-    backgroundColor: '#000'
   },
   editIconContainer: {
     width: 48,
     justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#000'
+    alignItems: 'center'
   },
   callIconContainer: {
     width: 48,
@@ -383,9 +513,8 @@ const styles = StyleSheet.create({
   },
   summaryContainer: {
     height: height / 4.8,
-    marginTop: height / 40,
+    marginTop: height / 46,
     marginBottom: height / 36,
-    backgroundColor: '#121212',
     borderRadius: 8,
     alignItems: 'center'
   },
@@ -395,7 +524,6 @@ const styles = StyleSheet.create({
   },
   amountLabel: {
     paddingHorizontal: 10,
-    backgroundColor: 'rgba(255,255,255,0.1)',
     maxWidth: width / 1.68,
     height: 22,
     justifyContent: 'center',
@@ -407,7 +535,6 @@ const styles = StyleSheet.create({
     height: height / 10
   },
   amountText: {
-    color: '#ffffff',
     fontSize: 50,
     fontFamily: 'SourceSansPro-Bold'
   },
@@ -442,8 +569,7 @@ const styles = StyleSheet.create({
     top: -21,
     height: 42,
     width: 42,
-    backgroundColor: '#121212',
-    borderColor: '#000',
+
     borderWidth: 0.5,
     borderRadius: 10,
     justifyContent: 'center',
@@ -467,7 +593,6 @@ const styles = StyleSheet.create({
   },
   transText: {
     fontFamily: 'SourceSansPro-SemiBold',
-    color: '#9cafba',
     fontSize: 10.8
   },
   transListContainer: {
@@ -478,20 +603,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginLeft: 5
   },
-  backIcon: {
-    fontSize: 29,
-    color: '#fff',
-  },
-  buttonView: {
-    height: 150,
-    justifyContent: 'space-evenly'
-  },
   transConfirmationModal: {
     flex: 1
   },
   innerTransConfirmationModal: {
+    maxHeight: 300,
     height: height / 4,
-    backgroundColor: '#232323',
     marginHorizontal: Dimensions.get('window').width > 800 ? 72
       :
       Dimensions.get('window').width > 700 ? 56
@@ -507,25 +624,25 @@ const styles = StyleSheet.create({
   },
   transInputContainer: {
     justifyContent: 'space-evenly',
-    height: height / 8
+    height: height / 8,
+    paddingTop: 4
   },
   transConfirmationButtonsContainer: {
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingVertical: height / 40
+    paddingVertical: height / 40,
+    maxHeight: 110
   },
   amountInput: {
     backgroundColor: 'transparent',
     fontSize: 17,
     fontFamily: 'SourceSansPro-Regular',
-    color: '#fff',
     borderBottomWidth: 0.5,
     paddingBottom: 3,
     borderBottomColor: '#888'
   },
   modal: {
-    backgroundColor: '#171717',
     width: 250,
     height: 135,
     alignSelf: 'center',
@@ -533,7 +650,6 @@ const styles = StyleSheet.create({
   },
   upperModal: {
     height: 90,
-    backgroundColor: '#171717',
     borderTopLeftRadius: 4,
     borderTopRightRadius: 4,
     justifyContent: 'center'
@@ -541,27 +657,10 @@ const styles = StyleSheet.create({
   modalButton: {
     height: 45,
     width: 125,
-    backgroundColor: '#171717',
     justifyContent: 'center',
     alignItems: 'center',
-    borderTopWidth: 0.6,
+    borderTopWidth: 1.5,
     borderTopColor: '#282828'
-  },
-  loadingModalContainer: {
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  loadingModal: {
-    borderRadius: 6,
-    backgroundColor: '#171717',
-    width: 140,
-    height: 50,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 15
   }
 })
 
@@ -572,7 +671,7 @@ const mapDispatchToProps = dispatch => ({
   deleteAccount: (componentId, accountId, accountData) => dispatch(deleteAccount(componentId, accountId, accountData))
 })
 
-const mapStateToProps = ({ money }, ownProps) => {
+const mapStateToProps = ({ money, app }, ownProps) => {
   let accountData, transactions, amount, name, phone
   if (money.allAccounts && money.allAccounts[ownProps.accountId]) {
     name = money.allAccounts[ownProps.accountId].name
@@ -596,7 +695,8 @@ const mapStateToProps = ({ money }, ownProps) => {
     amount,
     name,
     phone,
-    transactions
+    transactions,
+    theme: app.theme
   }
 }
 

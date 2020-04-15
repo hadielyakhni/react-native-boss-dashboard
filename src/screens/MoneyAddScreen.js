@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
 import { Text, StyleSheet, View, InteractionManager, ActivityIndicator, TouchableOpacity, Dimensions } from 'react-native'
 import { connect } from 'react-redux'
-import { addMoneyAccount, resetAccount } from '../actions'
-import { Spinner } from 'native-base'
+import { addMoneyAccount } from '../actions'
 import MyButton from '../components/MyButton'
 import MyInput from '../components/MyInput'
 import { CheckBox } from 'react-native-elements'
@@ -23,22 +22,39 @@ class MoneyAddScreen extends Component {
       return true
     return false
   }
+  useTheme(lightThemeColor, darkThemeColor) {
+    if (this.props.theme === 'light')
+      return lightThemeColor
+    return darkThemeColor
+  }
   render() {
     const { name, phone, amount, status } = this.state
     return (
       this.state.canRender ?
-        <View style={styles.container}>
-          <View style={styles.header}>
+        <View style={{
+          ...styles.container,
+          backgroundColor: this.useTheme('#fbfbfb', '#161616')
+        }}>
+          <View style={{
+            ...styles.header,
+            backgroundColor: this.useTheme('#fbfbfb', '#161616')
+          }}>
             <TouchableOpacity
               activeOpacity={0.8}
               hitSlop={{ bottom: 10, top: 10, left: 10, right: 10 }}
-              style={styles.backIconContainer}
+              style={{
+                ...styles.backIconContainer,
+                backgroundColor: this.useTheme('#fbfbfb', '#161616')
+              }}
               onPress={() => Navigation.pop(this.props.componentId)}
             >
-              <Ionicons name="md-arrow-back" size={26} color="#fff" />
+              <Ionicons name="md-arrow-back" size={26} color={this.useTheme('#303030', '#fbfbfb')} />
             </TouchableOpacity>
-            <View style={styles.titleContainer}>
-              <Text numberOfLines={1} style={{ color: '#fff', fontSize: 25, fontFamily: 'SourceSansPro-SemiBold' }}>
+            <View style={{
+              ...styles.titleContainer,
+              backgroundColor: this.useTheme('#fbfbfb', '#161616')
+            }}>
+              <Text numberOfLines={1} style={{ color: this.useTheme('#303030', '#fbfbfb'), fontSize: 25, fontFamily: 'SourceSansPro-SemiBold' }}>
                 Add Account
               </Text>
             </View>
@@ -46,6 +62,7 @@ class MoneyAddScreen extends Component {
           <View style={{ flex: 1, paddingHorizontal: 12 }}>
             <View style={styles.formContainer}>
               <MyInput
+                theme={this.props.theme}
                 placeHolder="Name"
                 leftIcon='ios-person'
                 style={{ fontSize: 17, paddingRight: 15 }}
@@ -55,6 +72,7 @@ class MoneyAddScreen extends Component {
                 onChangeText={name => this.setState({ name })}
               />
               <MyInput
+                theme={this.props.theme}
                 placeHolder="How much money?"
                 leftIcon='ios-cash'
                 inputContainerStyle={{ marginTop: 10 }}
@@ -64,6 +82,7 @@ class MoneyAddScreen extends Component {
                 onChangeText={amount => this.setState({ amount })}
               />
               <MyInput
+                theme={this.props.theme}
                 keyboardType="number-pad"
                 placeHolder="Phone number (optional)"
                 inputContainerStyle={{ marginTop: 10 }}
@@ -78,12 +97,14 @@ class MoneyAddScreen extends Component {
                 style={{ flexDirection: 'row', alignItems: 'center', marginTop: 15, alignSelf: 'flex-start' }}>
                 <CheckBox
                   containerStyle={styles.checkBoxContainer}
-                  uncheckedColor="#aaa"
+                  uncheckedColor={this.useTheme('#999', '#ccc')}
                   checkedColor="#008ee0"
                   checked={status === 'ME'}
                   onPress={() => { this.setState({ status: 'ME' }) }}
                 />
-                <Text style={{ fontSize: 17, fontFamily: 'SourceSansPro-Bold', color: '#f7f7f7' }}>FOR ME</Text>
+                <Text style={{ fontSize: 17, fontFamily: 'SourceSansPro-Bold', color: this.useTheme('#555', '#f9f9f9') }}>
+                  FOR ME
+                </Text>
               </TouchableOpacity>
               <TouchableOpacity
                 activeOpacity={1}
@@ -92,12 +113,14 @@ class MoneyAddScreen extends Component {
               >
                 <CheckBox
                   containerStyle={styles.checkBoxContainer}
-                  uncheckedColor='#aaa'
+                  uncheckedColor={this.useTheme('#999', '#ccc')}
                   checkedColor='#de3b5b'
                   checked={status === 'HIM'}
                   onPress={() => { this.setState({ status: 'HIM' }) }}
                 />
-                <Text style={{ fontSize: 17, fontFamily: 'SourceSansPro-Bold', color: '#f7f7f7' }}>FOR HIM</Text>
+                <Text style={{ fontSize: 17, fontFamily: 'SourceSansPro-Bold', color: this.useTheme('#303030', '#fbfbfb') }}>
+                  FOR HIM
+                </Text>
               </TouchableOpacity>
             </View>
             <View style={styles.addButtonView}>
@@ -115,7 +138,7 @@ class MoneyAddScreen extends Component {
           </View>
         </View>
         :
-        <View style={{ flex: 1, backgroundColor: '#000', alignItems: 'center', justifyContent: 'center' }}>
+        <View style={{ flex: 1, backgroundColor: this.useTheme('#fbfbfb', '#161616'), alignItems: 'center', justifyContent: 'center' }}>
           <ActivityIndicator color="#008ee0" size={38} />
         </View>
     )
@@ -125,7 +148,6 @@ class MoneyAddScreen extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000',
     paddingHorizontal:
       Dimensions.get('window').width > 800 ? 62
         :
@@ -143,7 +165,6 @@ const styles = StyleSheet.create({
   header: {
     height: 56,
     flexDirection: 'row',
-    backgroundColor: '#000',
     marginVertical:
       Dimensions.get('window').width > 800 ? 20
         :
@@ -160,12 +181,10 @@ const styles = StyleSheet.create({
   titleContainer: {
     flex: 1,
     paddingLeft: 10,
-    justifyContent: 'center',
-    backgroundColor: '#000'
+    justifyContent: 'center'
   },
   backIconContainer: {
     width: 42,
-    backgroundColor: '#000',
     justifyContent: 'center',
     alignItems: 'center'
   },
@@ -184,22 +203,6 @@ const styles = StyleSheet.create({
   addButton: {
     borderRadius: 10,
     height: 56
-  },
-  loadingModalContainer: {
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  loadingModal: {
-    borderRadius: 6,
-    backgroundColor: '#171717',
-    width: 140,
-    height: 50,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 15
   }
 })
 
@@ -211,4 +214,7 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-export default connect(null, mapDispatchToProps)(MoneyAddScreen)
+export default connect(
+  ({ app }) => ({ theme: app.theme }),
+  mapDispatchToProps
+)(MoneyAddScreen)

@@ -116,7 +116,7 @@ export const goToMain = () => Promise.all([
             children: [
               {
                 component: {
-                  name: 'profile'
+                  name: 'settings'
                 }
               }
             ],

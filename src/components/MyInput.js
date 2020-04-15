@@ -21,7 +21,17 @@ export default class MyInput extends PureComponent {
   }
   render() {
     return (
-      <View onTouchStart={this.props.onTouchStart || null} style={[styles.inputContainer, this.props.inputContainerStyle]}>
+      <View
+        onTouchStart={this.props.onTouchStart || null}
+        style={[
+          styles.inputContainer,
+          this.props.inputContainerStyle,
+          {
+            backgroundColor: this.props.theme === 'light' ? '#f6f6f6' : '#444',
+            borderWidth: this.props.theme === 'light' ? 1 : 0,
+            borderColor: '#ccc'
+          }
+        ]}>
         {this.props.leftIcon && <Icon name={this.props.leftIcon} style={[styles.iconLeft, this.props.leftIconStyle]} />}
         <TextInput
           theme={this.props.theme}
@@ -32,12 +42,8 @@ export default class MyInput extends PureComponent {
           style={[
             styles.InputStyle,
             this.props.style,
-            {
-              backgroundColor: this.props.theme === 'light' ? '#f6f6f6' : '#444',
-              color: this.props.theme === 'light' ? '#303030' : '#fbfbfb',
-              borderWidth: this.props.theme === 'light' ? 1 : 0,
-              borderColor: '#ccc'
-            }]}
+            { color: this.props.theme === 'light' ? '#303030' : '#fbfbfb' }
+          ]}
           placeholder={this.props.placeHolder}
           placeholderTextColor={this.props.theme === 'light' ? '#999' : 'rgba(255, 255, 255, 0.6)'}
           autoCapitalize={this.props.autoCapitalize || 'none'}
@@ -77,6 +83,6 @@ const styles = StyleSheet.create({
   },
   iconRight: {
     paddingHorizontal: 10,
-    color: '#fff'
+    fontSize: 24
   }
 })

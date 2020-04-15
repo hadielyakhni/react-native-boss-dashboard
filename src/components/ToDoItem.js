@@ -97,7 +97,7 @@ class ToDoItem extends PureComponent {
         style={{ borderRadius: 8, flexDirection: 'row', backgroundColor: '#ef2e2e', height: 40, alignItems: 'center', justifyContent: 'flex-end' }}
       >
         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', width: 50 }}>
-          <MaterialCommunityIcons name="trash-can-outline" color="#fff" size={24} />
+          <MaterialCommunityIcons name="trash-can-outline" color="#fbfbfb" size={24} />
         </View>
       </TouchableOpacity>
     )
@@ -114,7 +114,15 @@ class ToDoItem extends PureComponent {
         renderRightActions={this.renderRightActions.bind(this)}
       >
         <TouchableOpacity
-          style={{ ...styles.container, backgroundColor: this.props.theme === 'light' ? '#f6f6f6' : '#242424' }}
+          style={{
+            ...styles.container,
+            backgroundColor: this.props.theme === 'light' ? '#f6f6f6' : '#242424',
+            borderTopWidth: this.props.theme === 'light' ? 0.7 : 0,
+            borderLeftWidth: this.props.theme === 'light' ? 1.05 : 0,
+            borderWidth: this.props.theme === 'light' ? 1.05 : 0,
+            borderBottomWidth: this.props.theme === 'light' ? 1.4 : 0,
+            borderColor: this.props.theme === 'light' ? '#eee' : null
+          }}
           activeOpacity={1}
           onPress={() => {
             Navigation.push(this.props.componentId, {
@@ -171,10 +179,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    height: 40,
-    // elevation: 2,
-    marginBottom: 2,
-    marginHorizontal: 5
+    height: 40
   },
   firstContainer: {
     flexDirection: 'row',

@@ -32,20 +32,37 @@ class ToDoAddScreen extends Component {
       return true
     return false
   }
+  useTheme(lightThemeColor, darkThemeColor) {
+    if (this.props.theme === 'light')
+      return lightThemeColor
+    return darkThemeColor
+  }
   render() {
     return (
-      <KeyboardAvoidingView behavior={"padding"} style={styles.container}>
-        <View style={styles.header}>
+      <KeyboardAvoidingView behavior={"padding"} style={{
+        ...styles.container,
+        backgroundColor: this.useTheme('#fbfbfb', '#161616')
+      }}>
+        <View style={{
+          ...styles.header,
+          backgroundColor: this.useTheme('#fbfbfb', '#161616')
+        }}>
           <TouchableOpacity
             activeOpacity={0.8}
             hitSlop={{ bottom: 10, top: 10, left: 10, right: 10 }}
-            style={styles.backIconContainer}
+            style={{
+              ...styles.backIconContainer,
+              backgroundColor: this.useTheme('#fbfbfb', '#161616')
+            }}
             onPress={() => Navigation.pop(this.props.componentId)}
           >
-            <Ionicons name="md-arrow-back" size={26} color="#fff" />
+            <Ionicons name="md-arrow-back" size={26} color={this.useTheme('#303030', '#fbfbfb')} />
           </TouchableOpacity>
-          <View style={styles.titleContainer}>
-            <Text numberOfLines={1} style={{ color: '#fff', fontSize: 25, fontFamily: 'SourceSansPro-SemiBold' }}>
+          <View style={{
+            ...styles.titleContainer,
+            backgroundColor: this.useTheme('#fbfbfb', '#161616')
+          }}>
+            <Text numberOfLines={1} style={{ color: this.useTheme('#303030', '#fbfbfb'), fontSize: 25, fontFamily: 'SourceSansPro-SemiBold' }}>
               Add Task
             </Text>
           </View>
@@ -56,13 +73,14 @@ class ToDoAddScreen extends Component {
               value={this.state.task}
               style={[styles.input, {
                 borderTopWidth: 0.5,
-                borderTopColor: '#575757',
+                borderTopColor: this.useTheme('#999', 'rgba(255,255,255,0.28)'),
                 borderBottomWidth: 0.5,
-                borderBottomColor: '#575757'
+                borderBottomColor: this.useTheme('#999', 'rgba(255,255,255,0.28)'),
+                color: this.useTheme('#303030', '#fbfbfb')
               }]}
               selectionColor='#008ee0'
               placeholder="What would you like to do?"
-              placeholderTextColor="#575755"
+              placeholderTextColor={this.useTheme('#999', 'rgba(255,255,255,0.28)')}
               onChangeText={task => this.setState({ task })}
               onSubmitEditing={() => this.secondTextInput.focus()}
               blurOnSubmit={false}
@@ -73,10 +91,14 @@ class ToDoAddScreen extends Component {
               multiline
               ref={input => this.secondTextInput = input}
               value={this.state.description}
-              style={[styles.input, { textAlignVertical: "top", flex: 1 }]}
+              style={[styles.input, {
+                color: this.useTheme('#303030', '#fbfbfb'),
+                textAlignVertical: "top",
+                flex: 1
+              }]}
               selectionColor='#008ee0'
               placeholder="Description"
-              placeholderTextColor="#575757"
+              placeholderTextColor={this.useTheme('#999', 'rgba(255,255,255,0.28)')}
               onChangeText={description => this.setState({ description })}
             />
           </View>
@@ -102,7 +124,6 @@ class ToDoAddScreen extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000',
     paddingHorizontal:
       Dimensions.get('window').width > 800 ? 62
         :
@@ -117,7 +138,6 @@ const styles = StyleSheet.create({
   header: {
     height: 56,
     flexDirection: 'row',
-    backgroundColor: '#000',
     marginVertical:
       Dimensions.get('window').width > 800 ? 20
         :
@@ -134,12 +154,10 @@ const styles = StyleSheet.create({
   titleContainer: {
     flex: 1,
     paddingLeft: 10,
-    justifyContent: 'center',
-    backgroundColor: '#000'
+    justifyContent: 'center'
   },
   backIconContainer: {
     width: 42,
-    backgroundColor: '#000',
     justifyContent: 'center',
     alignItems: 'center'
   },
@@ -147,7 +165,6 @@ const styles = StyleSheet.create({
     flex: 1
   },
   input: {
-    color: '#fff',
     paddingLeft: 10,
     paddingRight: 10,
     fontSize: 17.8,
@@ -168,4 +185,7 @@ const mapActionsToProps = dispatch => ({
     dispatch(addTask(task, description, fromWichScreen, componentId)))
 })
 
-export default connect(null, mapActionsToProps)(ToDoAddScreen)
+export default connect(
+  ({ app }) => ({ theme: app.theme }),
+  mapActionsToProps
+)(ToDoAddScreen)

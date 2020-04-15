@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Text, StyleSheet, View, TouchableOpacity, TextInput, FlatList, ScrollView, Dimensions, Animated, BackHandler } from 'react-native'
 import { Navigation } from 'react-native-navigation'
 import { connect } from 'react-redux'
-import { addTask, fetchTasks, changeTasksSortData, restoreLastDeletedTask, incrementExitCount, resetExitCount } from '../actions'
+import { addTask, fetchTasks, changeTasksSortData, restoreLastDeletedTask, incrementExitCount, resetExitCount, userAuthenticateWithFacebook } from '../actions'
 import { Icon } from 'native-base'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import Ionicons from 'react-native-vector-icons/Ionicons'
@@ -174,6 +174,7 @@ class ToDoListScreen extends Component {
                     })
                   }}>
                     <FlatList
+                      showsVerticalScrollIndicator={false}
                       initialNumToRender={200}
                       style={{ marginBottom: 10 }}
                       data={this.props.unDoneTasks}
@@ -212,6 +213,7 @@ class ToDoListScreen extends Component {
                     })
                   }}>
                     <FlatList
+                      showsVerticalScrollIndicator={false}
                       initialNumToRender={200}
                       style={{ marginBottom: 10 }}
                       data={this.props.doneTasks}
@@ -247,8 +249,8 @@ class ToDoListScreen extends Component {
               transform: [{ translateY: this.hintTranslateY }],
               marginBottom: 140
             }}>
-              <Text style={{ color: this.useTheme('#111', '#eee'), fontFamily: 'SourceSansPro-SemiBold', fontSize: 17, marginBottom: 5 }}>Start organizing your life!</Text>
-              <Text style={{ color: this.useTheme('#111', '#eee'), fontFamily: 'SourceSansPro-Regular', fontSize: 15 }}>Any thing to do?</Text>
+              <Text style={{ color: this.useTheme('#303030', '#fbfbfb'), fontFamily: 'SourceSansPro-SemiBold', fontSize: 17, marginBottom: 5 }}>Start organizing your life!</Text>
+              <Text style={{ color: this.useTheme('#303030', '#fbfbfb'), fontFamily: 'SourceSansPro-Regular', fontSize: 15 }}>Any thing to do?</Text>
             </Animated.View>
           </View>
         )
@@ -287,9 +289,10 @@ class ToDoListScreen extends Component {
   renderUndoMessage() {
     return (
       <View style={[styles.undoView, {
-        bottom: this.props.showUndoDelete ? 24.5 : -100
+        bottom: this.props.showUndoDelete ? 24.5 : -100,
+        backgroundColor: this.useTheme('#303030', '#fbfbfb')
       }]}>
-        <Text style={{ fontSize: 15, color: this.useTheme('#303030', '#fbfbfb'), fontFamily: 'SourceSansPro-Regular' }}>
+        <Text style={{ fontSize: 15, color: this.useTheme('#fbfbfb', '#303030'), fontFamily: 'SourceSansPro-Regular' }}>
           1 deleted
         </Text>
         <TouchableOpacity
@@ -327,7 +330,7 @@ class ToDoListScreen extends Component {
         justifyContent: 'center',
         alignSelf: 'center'
       }}>
-        <Text style={{ fontSize: 15, color: this.useTheme('#222', '#fbfbfb'), fontFamily: 'SourceSansPro-Regular' }}>Press again to exit...</Text>
+        <Text style={{ fontSize: 15, color: '#fbfbfb', fontFamily: 'SourceSansPro-Regular' }}>Press again to exit...</Text>
       </View>
     }
     else if (this.props.exitCount === 2)
@@ -339,6 +342,7 @@ class ToDoListScreen extends Component {
         {this.renderUndoMessage()}
         {this.checkExit()}
         <SortChoicesModal
+          theme={this.props.theme}
           choices={this.sortChoices}
           visible={this.state.sortChoicesModalVisible}
           selectedChoice={this.props.sortBy}
@@ -369,15 +373,25 @@ class ToDoListScreen extends Component {
             activeOpacity={0.85}
             style={
               this.state.task.trim() ?
-                { ...styles.iconView, backgroundColor: this.useTheme('#161616', '#fbfbfb') } :
-                { ...styles.iconView, borderColor: this.useTheme('#aaa', '#777') }}
+                {
+                  ...styles.iconView,
+                  backgroundColor: this.useTheme(null, null),
+                  borderColor: this.useTheme('#303030', '#fbfbfb')
+                }
+                :
+                {
+                  ...styles.iconView,
+                  backgroundColor: this.useTheme(null, null),
+                  borderColor: this.useTheme('#ddd', 'grey')
+                }
+            }
             onPress={this.onAdd.bind(this)}
           >
             <Icon
               name='md-add-circle'
               style={this.state.task.trim() ?
-                { ...styles.addIcon, color: this.useTheme('#e3e3e3', '#242424') } :
-                { ...styles.addIcon, color: this.useTheme('#ccc', 'grey') }}
+                { ...styles.addIcon, color: this.useTheme('#303030', '#fbfbfb') } :
+                { ...styles.addIcon, color: this.useTheme('#ddd', 'grey') }}
             />
           </TouchableOpacity>
         </View>

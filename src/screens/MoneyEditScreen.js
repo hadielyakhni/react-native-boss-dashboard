@@ -27,25 +27,52 @@ class MoneyEditScreen extends React.PureComponent {
   _keyboardDidHide = () => {
     this.setState({ isKeyboardOpened: false })
   }
+  useTheme(lightThemeColor, darkThemeColor) {
+    if (this.props.theme === 'light')
+      return lightThemeColor
+    return darkThemeColor
+  }
   render() {
     return (
-      <KeyboardAvoidingView behavior="padding" style={styles.container}>
-        <View style={styles.header}>
+      <KeyboardAvoidingView
+        behavior="padding"
+        style={{
+          ...styles.container,
+          backgroundColor: this.useTheme('#fbfbfb', '#161616')
+        }}>
+        <View style={{
+          ...styles.header,
+          backgroundColor: this.useTheme('#fbfbfb', '#161616')
+        }}>
           <TouchableOpacity
             activeOpacity={0.85}
             onPress={() => Navigation.pop(this.props.componentId)}
-            style={styles.backIconContainer}
+            style={{
+              ...styles.backIconContainer,
+              backgroundColor: this.useTheme('#fbfbfb', '#161616')
+            }}
           >
-            <Ionicons name="md-arrow-back" size={26} color="#fff" />
+            <Ionicons name="md-arrow-back" size={26} color={this.useTheme('#303030', '#fbfbfb')} />
           </TouchableOpacity>
-          <View style={styles.titleContainer}>
-            <Text numberOfLines={1} style={{ color: '#fff', fontSize: 25, fontFamily: 'SourceSansPro-SemiBold', textAlign: 'left' }}>
+          <View style={{
+            ...styles.titleContainer,
+            backgroundColor: this.useTheme('#fbfbfb', '#161616')
+          }}>
+            <Text
+              numberOfLines={1}
+              style={{
+                color: this.useTheme('#303030', '#fbfbfb'),
+                fontSize: 25,
+                fontFamily: 'SourceSansPro-SemiBold',
+                textAlign: 'left'
+              }}>
               Edit Info
-          </Text>
+            </Text>
           </View>
         </View>
         <View style={styles.mainContainer}>
           <MyInput
+            theme={this.props.theme}
             placeHolder="Name"
             leftIcon='ios-person'
             style={{ fontSize: 17, paddingRight: 15 }}
@@ -55,6 +82,7 @@ class MoneyEditScreen extends React.PureComponent {
             onChangeText={name => this.setState({ name })}
           />
           <MyInput
+            theme={this.props.theme}
             keyboardType="number-pad"
             placeHolder="Phone number (optional)"
             inputContainerStyle={{ marginTop: 10 }}
@@ -75,7 +103,11 @@ class MoneyEditScreen extends React.PureComponent {
             this.props.editAccountInfo(accountId, name.trim(), phone, componentId)
           }}
         >
-          <Text style={{ color: "#fff", fontSize: 20, fontFamily: 'SourceSansPro-SemiBold' }}>
+          <Text style={{
+            color: '#fbfbfb',
+            fontSize: 20,
+            fontFamily: 'SourceSansPro-SemiBold'
+          }}>
             Save
           </Text>
         </TouchableOpacity>
@@ -86,24 +118,20 @@ class MoneyEditScreen extends React.PureComponent {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#000',
     flex: 1
   },
   header: {
     paddingHorizontal: 4,
     height: 56,
     flexDirection: 'row',
-    backgroundColor: '#000'
   },
   titleContainer: {
     flex: 1,
     paddingLeft: 10,
     justifyContent: 'center',
-    backgroundColor: '#000'
   },
   backIconContainer: {
     width: 42,
-    backgroundColor: '#000',
     justifyContent: 'center',
     alignItems: 'center'
   },
@@ -125,4 +153,7 @@ const styles = StyleSheet.create({
   }
 })
 
-export default connect(null, { editAccountInfo })(MoneyEditScreen)
+export default connect(
+  ({ app }) => ({ theme: app.theme }),
+  { editAccountInfo }
+)(MoneyEditScreen)

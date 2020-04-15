@@ -10,7 +10,7 @@ import MyMoneyScreen from './MyMoneyScreen'
 import MoneyDetailsScreen from './MoneyDetailsScreen'
 import MoneyAddScreen from './MoneyAddScreen'
 import MoneyEditScreen from './MoneyEditScreen'
-import MyProfileScreen from './MyProfileScreen'
+import SettingsScreen from './SettingsScreen'
 import ForgetPasswordScreen from './ForgetPasswordScreen'
 export {
   FirstScreen,
@@ -25,6 +25,6 @@ export {
   MoneyAddScreen,
   MoneyDetailsScreen,
   MoneyEditScreen,
-  MyProfileScreen,
+  SettingsScreen,
   ForgetPasswordScreen
 }

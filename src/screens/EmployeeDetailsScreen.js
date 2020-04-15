@@ -6,7 +6,8 @@ import { Navigation } from 'react-native-navigation'
 import DateTimePicker from '@react-native-community/datetimepicker'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import MyInput from '../components/MyInput'
-import MyButton from '../components/MyButton'
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
 class EmployeeDetailsScreen extends Component {
   constructor(props) {
@@ -20,10 +21,18 @@ class EmployeeDetailsScreen extends Component {
       this.employeeData = this.props.data
     })
   }
+  useTheme(lightThemeColor, darkThemeColor) {
+    if (this.props.theme === 'light')
+      return lightThemeColor
+    return darkThemeColor
+  }
   render() {
     return (
       this.state.canRender ?
-        <View style={styles.container}>
+        <View style={{
+          ...styles.container,
+          backgroundColor: this.useTheme('#fbfbfb', '#161616')
+        }}>
           <Modal
             animationType="fade"
             transparent={true}
@@ -32,14 +41,35 @@ class EmployeeDetailsScreen extends Component {
               this.setState({ modalVisible: false })
             }}>
             <View
-              style={{ backgroundColor: 'rgba(0,0,0,0.5)', flex: 1, justifyContent: 'center' }}
+              style={{
+                backgroundColor: this.useTheme('rgba(0,0,0,0.1)', 'rgba(0,0,0,0.5)'),
+                flex: 1,
+                justifyContent: 'center'
+              }}
             >
-              <View style={styles.modal}>
-                <View style={styles.upperModal}>
-                  <Text style={{ marginBottom: 7, textAlign: 'center', color: '#eeeeee', fontSize: 18, fontFamily: 'SourceSansPro-Regular' }}>
+              <View style={{
+                ...styles.modal,
+                backgroundColor: this.useTheme('#fbfbfb', '#222')
+              }}>
+                <View style={{
+                  ...styles.upperModal,
+                  backgroundColor: this.useTheme('#fbfbfb', '#222')
+                }}>
+                  <Text style={{
+                    marginBottom: 7,
+                    textAlign: 'center',
+                    color: this.useTheme('#303030', '#fbfbfb'),
+                    fontSize: 18,
+                    fontFamily: 'SourceSansPro-SemiBold'
+                  }}>
                     Delete this employee?
                   </Text>
-                  <Text style={{ textAlign: 'center', color: '#eeeeee', fontSize: 18, fontFamily: 'SourceSansPro-Regular' }}>
+                  <Text style={{
+                    textAlign: 'center',
+                    color: this.useTheme('#444', '#fbfbfb'),
+                    fontSize: 16,
+                    fontFamily: 'SourceSansPro-SemiBold'
+                  }}>
                     This action cannot be undo.
                   </Text>
                 </View>
@@ -49,8 +79,14 @@ class EmployeeDetailsScreen extends Component {
                     onPress={() => {
                       this.setState({ modalVisible: false });
                     }}
-                    style={[styles.modalButton, { borderBottomLeftRadius: 4 }]}>
-                    <Text style={{ color: '#eeeeee', fontSize: 18, fontFamily: 'SourceSansPro-Regular' }}>
+                    style={[
+                      styles.modalButton,
+                      {
+                        borderBottomLeftRadius: 4,
+                        backgroundColor: this.useTheme('#fbfbfb', '#222'),
+                        borderTopColor: this.useTheme('#eaeaea', '#363636')
+                      }]}>
+                    <Text style={{ color: this.useTheme('#303030', '#eef'), fontSize: 18, fontFamily: 'SourceSansPro-Regular' }}>
                       Cancel
                     </Text>
                   </TouchableOpacity>
@@ -60,8 +96,14 @@ class EmployeeDetailsScreen extends Component {
                       this.setState({ modalVisible: false });
                       this.props.deleteEmployee(this.props.componentId, { uid: this.uid }, this.employeeData)
                     }}
-                    style={[styles.modalButton, { borderBottomRightRadius: 4 }]}>
-                    <Text style={{ color: '#e65100', fontSize: 18, fontFamily: 'SourceSansPro-SemiBold' }}>
+                    style={[
+                      styles.modalButton,
+                      {
+                        borderBottomRightRadius: 4,
+                        backgroundColor: this.useTheme('#fbfbfb', '#222'),
+                        borderTopColor: this.useTheme('#eaeaea', '#363636')
+                      }]}>
+                    <Text style={{ color: '#e65100', fontSize: 19, fontFamily: 'SourceSansPro-SemiBold' }}>
                       Delete
                     </Text>
                   </TouchableOpacity>
@@ -69,30 +111,47 @@ class EmployeeDetailsScreen extends Component {
               </View>
             </View>
           </Modal>
-          <View style={styles.header}>
+          <View style={{
+            ...styles.header,
+            backgroundColor: this.useTheme('#fbfbfb', '#161616')
+          }}>
             <TouchableOpacity
               activeOpacity={0.8}
               hitSlop={{ bottom: 10, top: 10, left: 10, right: 10 }}
+              style={{
+                ...styles.backIconContainer,
+                backgroundColor: this.useTheme('#fbfbfb', '#161616')
+              }}
               onPress={() => Navigation.pop(this.props.componentId)}
-              style={styles.backIconContainer}
             >
-              <Ionicons name="md-arrow-back" size={26} color="#fff" />
+              <Ionicons name="md-arrow-back" size={26} color={this.useTheme('#303030', '#fbfbfb')} />
             </TouchableOpacity>
-            <View style={styles.titleContainer}>
+            <View style={{
+              ...styles.titleContainer,
+              backgroundColor: this.useTheme('#fbfbfb', '#161616')
+            }}>
               <ScrollView
                 horizontal
                 showsHorizontalScrollIndicator={false}
                 style={{ marginRight: 15 }}
                 contentContainerStyle={{ alignItems: 'center' }}
               >
-                <Text numberOfLines={1} style={{ color: '#fff', fontSize: 25, fontFamily: 'SourceSansPro-SemiBold', textAlign: 'left' }}>
+                <Text numberOfLines={1} style={{ color: this.useTheme('#303030', '#fbfbfb'), fontSize: 25, fontFamily: 'SourceSansPro-SemiBold', textAlign: 'left' }}>
                   {this.props.data.name}
                 </Text>
               </ScrollView>
             </View>
+            <TouchableOpacity
+              style={{ width: 40, height: 40, borderRadius: 20, alignItems: 'center', justifyContent: 'center' }}
+              activeOpacity={0.2}
+              onPress={() => this.setState({ modalVisible: true })}
+            >
+              <MaterialCommunityIcons name="trash-can-outline" color="#fbfbfb" size={24} />
+            </TouchableOpacity>
           </View>
           <View style={{ flex: 1, paddingHorizontal: 12 }}>
             <MyInput
+              theme={this.props.theme}
               leftIcon='ios-person'
               inputContainerStyle={{ marginTop: 10, marginBottom: 8 }}
               value={this.state.name}
@@ -104,6 +163,7 @@ class EmployeeDetailsScreen extends Component {
               onChangeText={value => this.setState({ name: value })}
             />
             <MyInput
+              theme={this.props.theme}
               autoCapitalize="words"
               value={this.state.role}
               inputContainerStyle={{ marginVertical: 8 }}
@@ -115,6 +175,7 @@ class EmployeeDetailsScreen extends Component {
               onChangeText={value => this.setState({ role: value })}
             />
             <MyInput
+              theme={this.props.theme}
               keyboardType="decimal-pad"
               value={this.state.salary}
               inputContainerStyle={{ marginVertical: 8 }}
@@ -127,11 +188,17 @@ class EmployeeDetailsScreen extends Component {
             />
             <MyInput
               keyboardType="number-pad"
+              theme={this.props.theme}
               value={this.state.phone}
               inputContainerStyle={{ marginVertical: 8 }}
               leftIcon='ios-call'
               rightIcon='ios-arrow-forward'
-              rightIconStyle={{ color: this.state.phone ? '#c8c8c8' : '#777' }}
+              rightIconStyle={{
+                color: this.state.phone ?
+                  this.useTheme('#777', '#c8c8c8')
+                  :
+                  this.useTheme('#c8c8c8', '#777')
+              }}
               isRightIconDisabled={!this.state.phone}
               onRightIconPress={() => Linking.openURL(`tel:${this.state.phone}`)}
               style={{ fontSize: 16, paddingRight: 15 }}
@@ -146,16 +213,23 @@ class EmployeeDetailsScreen extends Component {
               value={this.state.email}
               leftIcon='ios-mail'
               rightIcon='ios-arrow-forward'
-              rightIconStyle={{ color: this.state.email ? '#c8c8c8' : '#777' }}
+              rightIconStyle={{
+                color: this.state.email ?
+                  this.useTheme('#777', '#c8c8c8')
+                  :
+                  this.useTheme('#c8c8c8', '#777')
+              }}
               isRightIconDisabled={!this.state.email}
               onRightIconPress={() => { Linking.openURL(`mailto:${this.state.email}`) }}
               style={{ fontSize: 16, paddingRight: 15 }}
               isSecure={false}
               placeHolder='Email'
               isAutoCorrect={false}
+              theme={this.props.theme}
               onChangeText={value => this.setState({ email: value })}
             />
             <MyInput
+              theme={this.props.theme}
               inputContainerStyle={{ marginVertical: 8 }}
               onTouchStart={() => {
                 Keyboard.dismiss()
@@ -190,26 +264,41 @@ class EmployeeDetailsScreen extends Component {
               />
             }
           </View>
-          <View style={{ flex: 1, justifyContent: 'flex-end', marginHorizontal: 8 }}>
-            <MyButton
-              style={{ height: 52 }}
-              color='#008ee0'
-              textStyle={{ fontSize: 20 }}
-              onPress={() => {
-                const { name, role, salary, phone, email, joinDate } = this.state
-                this.props.updateEmployeeInfo(this.props.componentId, { name, role, salary, phone, email, joinDate, uid: this.uid })
-              }}
-            >Save</MyButton>
-            <MyButton
-              style={{ marginBottom: 20, height: 52 }}
-              color='#e65100'
-              textStyle={{ fontSize: 20 }}
-              onPress={() => this.setState({ modalVisible: true })}
-            >Delete</MyButton>
-          </View>
+          <TouchableOpacity
+            activeOpacity={0.92}
+            style={{
+              elevation: 4,
+              backgroundColor: this.useTheme('#f6f6f6', '#222'),
+              height: 52,
+              marginBottom: this.state.isDone ? 20 : 24,
+              alignSelf: 'flex-end',
+              borderRadius: 26,
+              alignItems: 'center',
+              marginRight: 9,
+              justifyContent: 'center'
+            }}
+            onPress={() => {
+              const { name, role, salary, phone, email, joinDate } = this.state
+              this.props.updateEmployeeInfo(this.props.componentId, { name, role, salary, phone, email, joinDate, uid: this.uid })
+            }}
+          >
+            {
+              <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around', paddingHorizontal: 18 }}>
+                <MaterialIcons name="done" color="#008ee0" size={25} style={{ marginRight: 5 }} />
+                <Text style={{
+                  marginLeft: 5,
+                  fontFamily: 'SourceSansPro-SemiBold',
+                  color: '#008ee0',
+                  fontSize: 16.5
+                }}>
+                  Update
+                </Text>
+              </View>
+            }
+          </TouchableOpacity>
         </View>
         :
-        <View style={{ flex: 1, backgroundColor: '#000', alignItems: 'center', justifyContent: 'center' }}>
+        <View style={{ flex: 1, backgroundColor: this.useTheme('#fbfbfb', '#161616'), alignItems: 'center', justifyContent: 'center' }}>
           <ActivityIndicator color="#008ee0" size={38} />
         </View>
     )
@@ -219,7 +308,6 @@ class EmployeeDetailsScreen extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000',
     paddingHorizontal:
       Dimensions.get('window').width > 800 ? 62
         :
@@ -234,7 +322,6 @@ const styles = StyleSheet.create({
   header: {
     height: 56,
     flexDirection: 'row',
-    backgroundColor: '#000',
     marginVertical:
       Dimensions.get('window').width > 800 ? 20
         :
@@ -246,22 +333,20 @@ const styles = StyleSheet.create({
               :
               0,
     marginBottom: 15,
-    paddingHorizontal: 4
+    paddingHorizontal: 4,
+    alignItems: 'center'
   },
   titleContainer: {
     flex: 1,
     paddingLeft: 10,
-    justifyContent: 'center',
-    backgroundColor: '#000'
+    justifyContent: 'center'
   },
   backIconContainer: {
     width: 42,
-    backgroundColor: '#000',
     justifyContent: 'center',
     alignItems: 'center'
   },
   modal: {
-    backgroundColor: '#171717',
     width: 250,
     height: 135,
     alignSelf: 'center',
@@ -269,7 +354,6 @@ const styles = StyleSheet.create({
   },
   upperModal: {
     height: 90,
-    backgroundColor: '#171717',
     borderTopLeftRadius: 4,
     borderTopRightRadius: 4,
     justifyContent: 'center'
@@ -277,27 +361,9 @@ const styles = StyleSheet.create({
   modalButton: {
     height: 45,
     width: 125,
-    backgroundColor: '#171717',
     justifyContent: 'center',
     alignItems: 'center',
-    borderTopWidth: 0.6,
-    borderTopColor: '#282828'
-  },
-  loadingModalContainer: {
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  loadingModal: {
-    borderRadius: 6,
-    backgroundColor: '#171717',
-    width: 140,
-    height: 50,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 15
+    borderTopWidth: 1.5
   }
 })
 
@@ -306,4 +372,7 @@ const mapDispatchToProps = dispatch => ({
   deleteEmployee: (componentId, { uid }, employeeData) => dispatch(deleteEmployee(componentId, { uid }, employeeData))
 })
 
-export default connect(null, mapDispatchToProps)(EmployeeDetailsScreen)
+export default connect(
+  ({ app }) => ({ theme: app.theme }),
+  mapDispatchToProps
+)(EmployeeDetailsScreen)

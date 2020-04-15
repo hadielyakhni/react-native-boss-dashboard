@@ -2,14 +2,14 @@ import React from 'react'
 import { FlatList, View } from 'react-native'
 import EmployeeCardShimmer from './EmployeeCardShimmer'
 
-const EmployeeLoadingContainer = () => {
+const EmployeeLoadingContainer = ({ theme }) => {
   return (
     <View style={{ flex: 1 }}>
       <FlatList
         contentContainerStyle={{ paddingVertical: 15 }}
         data={['1', '2', '3', '4']}
         keyExtractor={dummy => dummy}
-        renderItem={() => <EmployeeCardShimmer />}
+        renderItem={() => <EmployeeCardShimmer theme={theme} />}
         getItemLayout={(data, index) => (
           { length: 92, offset: 92 * index, index }
         )}

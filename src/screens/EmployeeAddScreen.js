@@ -23,28 +23,46 @@ class EmployeeAddScreen extends Component {
       return true
     return false
   }
+  useTheme(lightThemeColor, darkThemeColor) {
+    if (this.props.theme === 'light')
+      return lightThemeColor
+    return darkThemeColor
+  }
   render() {
     return (
       this.state.canRender ?
-        <View style={styles.container}>
+        <View style={{
+          ...styles.container,
+          backgroundColor: this.useTheme('#fbfbfb', '#161616')
+        }}>
           <View style={{ flex: 1 }}>
-            <View style={styles.header}>
+            <View style={{
+              ...styles.header,
+              backgroundColor: this.useTheme('#fbfbfb', '#161616')
+            }}>
               <TouchableOpacity
                 activeOpacity={0.8}
                 hitSlop={{ bottom: 10, top: 10, left: 10, right: 10 }}
-                style={styles.backIconContainer}
+                style={{
+                  ...styles.backIconContainer,
+                  backgroundColor: this.useTheme('#fbfbfb', '#161616')
+                }}
                 onPress={() => Navigation.pop(this.props.componentId)}
               >
-                <Ionicons name="md-arrow-back" size={26} color="#fff" />
+                <Ionicons name="md-arrow-back" size={26} color={this.useTheme('#303030', '#fbfbfb')} />
               </TouchableOpacity>
-              <View style={styles.titleContainer}>
-                <Text numberOfLines={1} style={{ color: '#fff', fontSize: 25, fontFamily: 'SourceSansPro-SemiBold' }}>
+              <View style={{
+                ...styles.titleContainer,
+                backgroundColor: this.useTheme('#fbfbfb', '#161616')
+              }}>
+                <Text numberOfLines={1} style={{ color: this.useTheme('#303030', '#fbfbfb'), fontSize: 25, fontFamily: 'SourceSansPro-SemiBold' }}>
                   Add Empployee
               </Text>
               </View>
             </View>
             <View style={{ flex: 1, paddingHorizontal: 12, paddingTop: 5 }}>
               <MyInput
+                theme={this.props.theme}
                 value={this.state.name}
                 leftIcon='ios-person'
                 inputContainerStyle={{ marginTop: 10, marginBottom: 8 }}
@@ -57,6 +75,7 @@ class EmployeeAddScreen extends Component {
               />
               <this.separator />
               <MyInput
+                theme={this.props.theme}
                 autoCapitalize="words"
                 inputContainerStyle={{ marginVertical: 8 }}
                 value={this.state.role}
@@ -69,6 +88,7 @@ class EmployeeAddScreen extends Component {
               />
               <this.separator />
               <MyInput
+                theme={this.props.theme}
                 keyboardType="decimal-pad"
                 value={this.state.salary}
                 inputContainerStyle={{ marginVertical: 8 }}
@@ -81,6 +101,7 @@ class EmployeeAddScreen extends Component {
               />
               <this.separator />
               <MyInput
+                theme={this.props.theme}
                 keyboardType="number-pad"
                 value={this.state.phone}
                 leftIcon='ios-call'
@@ -93,6 +114,7 @@ class EmployeeAddScreen extends Component {
               />
               <this.separator />
               <MyInput
+                theme={this.props.theme}
                 keyboardType="email-address"
                 value={this.state.email}
                 leftIcon='ios-mail'
@@ -104,6 +126,7 @@ class EmployeeAddScreen extends Component {
                 onChangeText={value => this.setState({ email: value })}
               />
               <MyInput
+                theme={this.props.theme}
                 onTouchStart={() => {
                   Keyboard.dismiss()
                   this.setState({ showDatePicker: true })
@@ -159,7 +182,7 @@ class EmployeeAddScreen extends Component {
           </View>
         </View>
         :
-        <View style={{ flex: 1, backgroundColor: '#000', alignItems: 'center', justifyContent: 'center' }}>
+        <View style={{ flex: 1, backgroundColor: this.useTheme('#fbfbfb', '#161616'), alignItems: 'center', justifyContent: 'center' }}>
           <ActivityIndicator color="#008ee0" size={38} />
         </View>
     )
@@ -169,7 +192,6 @@ class EmployeeAddScreen extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000',
     paddingHorizontal:
       Dimensions.get('window').width > 800 ? 62
         :
@@ -184,7 +206,6 @@ const styles = StyleSheet.create({
   header: {
     height: 56,
     flexDirection: 'row',
-    backgroundColor: '#000',
     marginVertical:
       Dimensions.get('window').width > 800 ? 20
         :
@@ -202,29 +223,11 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingLeft: 10,
     justifyContent: 'center',
-    backgroundColor: '#000'
   },
   backIconContainer: {
     width: 42,
-    backgroundColor: '#000',
     justifyContent: 'center',
     alignItems: 'center'
-  },
-  loadingModalContainer: {
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  loadingModal: {
-    borderRadius: 6,
-    backgroundColor: '#171717',
-    width: 140,
-    height: 50,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 15
   }
 })
 
@@ -233,4 +236,7 @@ const mapActionsToProps = dispatch => ({
   resetEmployee: () => dispatch(resetEmployee())
 })
 
-export default connect(null, mapActionsToProps)(EmployeeAddScreen)
+export default connect(
+  ({ app }) => ({ theme: app.theme }),
+  mapActionsToProps
+)(EmployeeAddScreen)
