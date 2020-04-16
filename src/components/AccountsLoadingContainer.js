@@ -16,7 +16,7 @@ const AccountsLoadingContainer = ({ theme }) => {
               borderRadius: 6,
               fontSize: 22,
               width: 110,
-              backgroundColor: theme === 'light' ? '#ddd' : '#222'
+              backgroundColor: theme === 'light' ? '#e6e6e6' : '#222'
             }}>
             </Text>
           </Shimmer>
@@ -27,7 +27,7 @@ const AccountsLoadingContainer = ({ theme }) => {
               borderRadius: 6,
               fontSize: 22,
               width: 160,
-              backgroundColor: theme === 'light' ? '#ddd' : '#222'
+              backgroundColor: theme === 'light' ? '#e6e6e6' : '#222'
             }}>
             </Text>
           </Shimmer>

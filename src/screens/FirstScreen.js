@@ -58,10 +58,10 @@ class FirstScreen extends Component {
         selectedTextColor: '#008ee0',
       },
       bottomTabs: {
-        backgroundColor: themeToSet === 'light' ? '#fbfbfb' : '#161616'
+        backgroundColor: themeToSet === 'light' ? '#f9f9f9' : '#181818'
       },
       statusBar: {
-        backgroundColor: themeToSet === 'light' ? '#fbfbfb' : '#161616',
+        backgroundColor: themeToSet === 'light' ? '#f5f5f5' : '#161616',
         style: themeToSet === 'light' ? 'dark' : 'light'
       }
     })

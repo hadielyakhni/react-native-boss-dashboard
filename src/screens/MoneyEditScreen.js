@@ -5,7 +5,7 @@ import { editAccountInfo } from '../actions'
 import { Navigation } from 'react-native-navigation'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import MyInput from '../components/MyInput'
-
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 
 class MoneyEditScreen extends React.PureComponent {
   state = {
@@ -38,25 +38,25 @@ class MoneyEditScreen extends React.PureComponent {
         behavior="padding"
         style={{
           ...styles.container,
-          backgroundColor: this.useTheme('#fbfbfb', '#161616')
+          backgroundColor: this.useTheme('#f5f5f5', '#161616')
         }}>
         <View style={{
           ...styles.header,
-          backgroundColor: this.useTheme('#fbfbfb', '#161616')
+          backgroundColor: this.useTheme('#f5f5f5', '#161616')
         }}>
           <TouchableOpacity
             activeOpacity={0.85}
             onPress={() => Navigation.pop(this.props.componentId)}
             style={{
               ...styles.backIconContainer,
-              backgroundColor: this.useTheme('#fbfbfb', '#161616')
+              backgroundColor: this.useTheme('#f5f5f5', '#161616')
             }}
           >
             <Ionicons name="md-arrow-back" size={26} color={this.useTheme('#303030', '#fbfbfb')} />
           </TouchableOpacity>
           <View style={{
             ...styles.titleContainer,
-            backgroundColor: this.useTheme('#fbfbfb', '#161616')
+            backgroundColor: this.useTheme('#f5f5f5', '#161616')
           }}>
             <Text
               numberOfLines={1}
@@ -93,23 +93,35 @@ class MoneyEditScreen extends React.PureComponent {
           />
         </View>
         <TouchableOpacity
-          activeOpacity={0.8}
-          style={[styles.updateButton, {
-            marginBottom: this.state.isKeyboardOpened ? 60 : 25
-          }]}
+          activeOpacity={0.92}
+          style={{
+            elevation: 3,
+            backgroundColor: this.useTheme('#f5f5f5', '#222'),
+            height: 52,
+            marginBottom: this.state.isKeyboardOpened ? 60 : 25,
+            alignSelf: 'flex-end',
+            borderRadius: 26,
+            alignItems: 'center',
+            marginRight: 9,
+            justifyContent: 'center'
+          }}
           onPress={() => {
             const { accountId, componentId } = this.props
             const { name, phone } = this.state
             this.props.editAccountInfo(accountId, name.trim(), phone, componentId)
           }}
         >
-          <Text style={{
-            color: '#fbfbfb',
-            fontSize: 20,
-            fontFamily: 'SourceSansPro-SemiBold'
-          }}>
-            Save
-          </Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around', paddingHorizontal: 18 }}>
+            <MaterialIcons name="done" color="#008ee0" size={25} style={{ marginRight: 5 }} />
+            <Text style={{
+              marginLeft: 5,
+              fontFamily: 'SourceSansPro-SemiBold',
+              color: '#008ee0',
+              fontSize: 16.5
+            }}>
+              Update
+            </Text>
+          </View>
         </TouchableOpacity>
       </KeyboardAvoidingView>
     )

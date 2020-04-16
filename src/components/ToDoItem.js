@@ -78,11 +78,11 @@ class ToDoItem extends PureComponent {
       !this.props.data.isDone ?
         <Animated.View style={{ flexDirection: 'row', backgroundColor: '#008ee0', flex: 1, opacity: backgroundColorOpacity, height: 40, alignItems: 'center' }}>
           <Animated.View style={{ position: 'absolute', opacity: arrowOpacity, transform: [{ translateX: arrowTranslateX }] }}>
-            <MaterialIcons name="chevron-right" color="#fff" size={25} />
+            <MaterialIcons name="chevron-right" color="#f9f9f9" size={25} />
           </Animated.View>
           <Animated.View style={{ opacity: doneOpacity, transform: [{ translateX: doneTranslateX }], flexDirection: 'row', alignItems: 'center' }}>
-            <Text style={{ fontFamily: 'SourceSansPro-SemiBold', color: '#fff', fontSize: 16, marginRight: 7 }}>Done</Text>
-            <MaterialIcons name="done" color="#fff" size={25} />
+            <Text style={{ fontFamily: 'SourceSansPro-SemiBold', color: '#f9f9f9', fontSize: 16, marginRight: 7 }}>Done</Text>
+            <MaterialIcons name="done" color="#f9f9f9" size={25} />
           </Animated.View>
         </Animated.View>
         :
@@ -97,7 +97,7 @@ class ToDoItem extends PureComponent {
         style={{ borderRadius: 8, flexDirection: 'row', backgroundColor: '#ef2e2e', height: 40, alignItems: 'center', justifyContent: 'flex-end' }}
       >
         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', width: 50 }}>
-          <MaterialCommunityIcons name="trash-can-outline" color="#fbfbfb" size={24} />
+          <MaterialCommunityIcons name="trash-can-outline" color="#f9f9f9" size={24} />
         </View>
       </TouchableOpacity>
     )
@@ -116,7 +116,7 @@ class ToDoItem extends PureComponent {
         <TouchableOpacity
           style={{
             ...styles.container,
-            backgroundColor: this.props.theme === 'light' ? '#f6f6f6' : '#242424',
+            backgroundColor: this.props.theme === 'light' ? '#f9f9f9' : '#242424',
             borderTopWidth: this.props.theme === 'light' ? 0.7 : 0,
             borderLeftWidth: this.props.theme === 'light' ? 1.05 : 0,
             borderWidth: this.props.theme === 'light' ? 1.05 : 0,

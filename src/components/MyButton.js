@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
   },
   text: {
     marginHorizontal: 5,
-    color: '#fff',
+    color: '#f9f9f9',
     fontSize: 17.8,
     fontFamily: 'SourceSansPro-SemiBold'
   }

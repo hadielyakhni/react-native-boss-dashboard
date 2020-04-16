@@ -81,7 +81,7 @@ class AuthScreen extends Component {
         behavior='padding'
         style={{
           ...styles.container,
-          backgroundColor: this.useTheme('#fbfbfb', '#161616')
+          backgroundColor: this.useTheme('#f5f5f5', '#161616')
         }}
       >
         <View
@@ -125,9 +125,9 @@ class AuthScreen extends Component {
             <View style={[
               styles.inputContainer,
               {
-                backgroundColor: this.useTheme('#f6f6f6', '#444'),
-                borderWidth: this.useTheme(1, 0),
-                borderColor: '#ccc'
+                backgroundColor: this.useTheme('#f9f9f9', '#444'),
+                borderWidth: this.useTheme(0.8, 0),
+                borderColor: '#d8d8d8'
               }
 
             ]}>

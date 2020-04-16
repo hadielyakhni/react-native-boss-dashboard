@@ -8,7 +8,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { gestureHandlerRootHOC } from 'react-native-gesture-handler'
 import ToDoItem from '../components/ToDoItem'
-import SortChoicesModal from '../components/SortChoicesModal'
+import SortChoicesModal from '../components/ChoicesModal'
 import ToDoLoadingContainer from '../components/ToDoLoadingContainer'
 
 class ToDoListScreen extends Component {
@@ -87,7 +87,8 @@ class ToDoListScreen extends Component {
       toValue = 1
     Animated.timing(this.undoneListOpacity, {
       toValue,
-      duration: 300
+      duration: 300,
+      useNativeDriver: false
     }).start()
     setTimeout(() => {
       if (this.lastUndoneListArrowDiewction === 'up')
@@ -104,7 +105,8 @@ class ToDoListScreen extends Component {
       toValue = 1
     Animated.timing(this.doneListOpacity, {
       toValue,
-      duration: 300
+      duration: 300,
+      useNativeDriver: false
     }).start()
     setTimeout(() => {
       if (this.lastDoneListArrowDirection === 'up')
@@ -290,7 +292,7 @@ class ToDoListScreen extends Component {
     return (
       <View style={[styles.undoView, {
         bottom: this.props.showUndoDelete ? 24.5 : -100,
-        backgroundColor: this.useTheme('#303030', '#fbfbfb')
+        backgroundColor: this.useTheme('#303030', '#f5f5f5')
       }]}>
         <Text style={{ fontSize: 15, color: this.useTheme('#fbfbfb', '#303030'), fontFamily: 'SourceSansPro-Regular' }}>
           1 deleted
@@ -340,7 +342,7 @@ class ToDoListScreen extends Component {
     if (this.props.doneTasks.length && !!this.props.unDoneTasks.length && !this.dataAppearsAtLeastOnce)
       this.doneListOpacity.setValue(0)
     return (
-      <View style={{ ...styles.container, backgroundColor: this.useTheme('#fbfbfb', '#161616') }}>
+      <View style={{ ...styles.container, backgroundColor: this.useTheme('#f5f5f5', '#161616') }}>
         {this.renderUndoMessage()}
         {this.checkExit()}
         <SortChoicesModal
@@ -351,15 +353,15 @@ class ToDoListScreen extends Component {
           onSelect={this.onSelectSortChoice}
           onCancel={this.closeSortChoicesModal}
         />
-        <View style={{ ...styles.header, backgroundColor: this.useTheme('#fbfbfb', '#161616') }}>
-          <View style={{ ...styles.titleContainer, backgroundColor: this.useTheme('#fbfbfb', '#161616') }}>
+        <View style={{ ...styles.header, backgroundColor: this.useTheme('#f5f5f5', '#161616') }}>
+          <View style={{ ...styles.titleContainer, backgroundColor: this.useTheme('#f5f5f5', '#161616') }}>
             <Text numberOfLines={1} style={{ color: this.useTheme('#303030', '#fbfbfb'), fontSize: 26, fontFamily: 'SourceSansPro-SemiBold' }}>
               My Tasks
             </Text>
           </View>
           {this.renderSortButton()}
         </View>
-        <View style={{ ...styles.addView, backgroundColor: this.useTheme('#f6f6f6', '#242424') }}>
+        <View style={{ ...styles.addView, backgroundColor: this.useTheme('#f9f9f9', '#242424') }}>
           <TextInput
             editable={this.props.fetchingTasks ? false : true}
             value={this.state.task}
@@ -424,7 +426,7 @@ class ToDoListScreen extends Component {
               })
             )}
           >
-            <Icon name='ios-add' style={{ color: '#fbfbfb', fontSize: 38 }} />
+            <Icon name='ios-add' style={{ color: '#f5f5f5', fontSize: 38 }} />
           </TouchableOpacity>
         </View>
       </View>

@@ -9,7 +9,7 @@ const Choice = ({ isSelected, text, onSelect, theme }) => {
       onPress={() => onSelect(text)}
       style={{
         height: 44,
-        backgroundColor: theme === 'light' ? '#fbfbfb' : '#303030',
+        backgroundColor: theme === 'light' ? '#f5f5f5' : '#303030',
         flexDirection: 'row',
         alignItems: 'center'
       }}

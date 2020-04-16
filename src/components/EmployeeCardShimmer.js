@@ -8,12 +8,12 @@ export default class EmployeeCard extends PureComponent {
     return (
       <View style={{
         ...styles.container,
-        backgroundColor: theme === 'light' ? '#ddd' : '#222'
+        backgroundColor: theme === 'light' ? '#e6e6e6' : '#222'
       }} >
         <Shimmer >
           <View style={{
             ...styles.imageContainer,
-            backgroundColor: theme === 'light' ? '#bbb' : '#333'
+            backgroundColor: theme === 'light' ? '#ccc' : '#333'
           }}>
           </View>
         </Shimmer>
@@ -25,8 +25,8 @@ export default class EmployeeCard extends PureComponent {
             <Shimmer style={{ marginBottom: 4, height: 23 }}>
               <Text numberOfLines={1} style={{
                 ...styles.name,
-                borderColor: theme === 'light' ? '#bbb' : '#333',
-                backgroundColor: theme === 'light' ? '#bbb' : '#333'
+                borderColor: theme === 'light' ? '#ccc' : '#333',
+                backgroundColor: theme === 'light' ? '#ccc' : '#333'
               }}>
               </Text>
             </Shimmer>
@@ -34,8 +34,8 @@ export default class EmployeeCard extends PureComponent {
               <Shimmer style={{ height: 23 }}>
                 <Text numberOfLines={1} style={{
                   ...styles.roleText,
-                  borderColor: theme === 'light' ? '#bbb' : '#333',
-                  backgroundColor: theme === 'light' ? '#bbb' : '#333'
+                  borderColor: theme === 'light' ? '#ccc' : '#333',
+                  backgroundColor: theme === 'light' ? '#ccc' : '#333'
                 }}>
                 </Text>
               </Shimmer>

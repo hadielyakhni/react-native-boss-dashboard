@@ -32,7 +32,7 @@ export default class EmployeeCard extends PureComponent {
     return (
       <View style={{
         ...styles.container,
-        backgroundColor: this.props.theme === 'light' ? '#f6f6f6' : '#242424',
+        backgroundColor: this.props.theme === 'light' ? '#f9f9f9' : '#242424',
         borderTopWidth: this.props.theme === 'light' ? 0.7 : 0,
         borderLeftWidth: this.props.theme === 'light' ? 1.05 : 0,
         borderWidth: this.props.theme === 'light' ? 1.05 : 0,
@@ -64,7 +64,7 @@ export default class EmployeeCard extends PureComponent {
               style={{
                 ...styles.name,
                 color: this.props.theme === 'light' ? '#303030' : '#fbfbfb',
-                borderColor: this.props.theme === 'light' ? '#f6f6f6' : '#242424'
+                borderColor: this.props.theme === 'light' ? '#f9f9f9' : '#242424'
               }}>
               {data.name}
             </Text>

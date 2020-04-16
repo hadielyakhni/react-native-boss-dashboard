@@ -13,7 +13,7 @@ const TransactionCard = ({ data, theme }) => {
   return (
     <View style={{
       ...styles.container,
-      backgroundColor: theme === 'light' ? '#f6f6f6' : '#242424',
+      backgroundColor: theme === 'light' ? '#f9f9f9' : '#242424',
       borderTopWidth: theme === 'light' ? 0.7 : 0,
       borderLeftWidth: theme === 'light' ? 1.05 : 0,
       borderWidth: theme === 'light' ? 1.05 : 0,
@@ -22,9 +22,9 @@ const TransactionCard = ({ data, theme }) => {
     }}>
       <View style={[styles.arrowIconContainer, {
         backgroundColor: status === 'Sent' ?
-          theme === 'light' ? '#eaeaea' : '#34282d'
+          theme === 'light' ? '#f6f6f6' : '#34282d'
           :
-          theme === 'light' ? '#eaeaea' : '#2e3b47'
+          theme === 'light' ? '#f6f6f6' : '#2e3b47'
       }]}>
         <FontAwesome
           name={status === 'Sent' ? 'arrow-up' : 'arrow-down'}

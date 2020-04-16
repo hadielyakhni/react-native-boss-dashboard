@@ -27,9 +27,9 @@ export default class MyInput extends PureComponent {
           styles.inputContainer,
           this.props.inputContainerStyle,
           {
-            backgroundColor: this.props.theme === 'light' ? '#f6f6f6' : '#444',
-            borderWidth: this.props.theme === 'light' ? 1 : 0,
-            borderColor: '#ccc'
+            backgroundColor: this.props.theme === 'light' ? '#f9f9f9' : '#444',
+            borderWidth: this.props.theme === 'light' ? 0.8 : 0,
+            borderColor: '#d8d8d8'
           }
         ]}>
         {this.props.leftIcon && <Icon name={this.props.leftIcon} style={[styles.iconLeft, this.props.leftIconStyle]} />}

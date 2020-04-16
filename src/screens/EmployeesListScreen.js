@@ -16,7 +16,7 @@ import { Icon } from 'native-base'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import EmployeeCard from '../components/EmployeeCard'
 import EmployeeLoadingContainer from '../components/EmployeeLoadingContainer'
-import SortChoicesModal from '../components/SortChoicesModal'
+import SortChoicesModal from '../components/ChoicesModal'
 
 class EmployeesListScreen extends Component {
   constructor(props) {
@@ -212,7 +212,7 @@ class EmployeesListScreen extends Component {
     return (
       <View style={[styles.undoView, {
         bottom: this.props.showUndoDelete ? 24.5 : -100,
-        backgroundColor: this.useTheme('#303030', '#fbfbfb')
+        backgroundColor: this.useTheme('#303030', '#f5f5f5')
       }]}>
         <Text style={{ fontSize: 15, color: this.useTheme('#fbfbfb', '#303030'), fontFamily: 'SourceSansPro-Regular' }}>1 deleted</Text>
         <TouchableOpacity
@@ -239,7 +239,7 @@ class EmployeesListScreen extends Component {
     return (
       <View style={{
         ...styles.container,
-        backgroundColor: this.useTheme('#fbfbfb', '#161616')
+        backgroundColor: this.useTheme('#f5f5f5', '#161616')
       }}>
         <View style={{ flex: 1 }}>
           {this.checkExit()}
@@ -254,11 +254,11 @@ class EmployeesListScreen extends Component {
           />
           <View style={{
             ...styles.header,
-            backgroundColor: this.useTheme('#fbfbfb', '#161616')
+            backgroundColor: this.useTheme('#f5f5f5', '#161616')
           }}>
             <View style={{
               ...styles.titleContainer,
-              backgroundColor: this.useTheme('#fbfbfb', '#161616')
+              backgroundColor: this.useTheme('#f5f5f5', '#161616')
             }}>
               <Text numberOfLines={1} style={{ color: this.useTheme('#303030', '#fbfbfb'), fontSize: 26, fontFamily: 'SourceSansPro-SemiBold' }}>
                 My Employees
@@ -268,7 +268,7 @@ class EmployeesListScreen extends Component {
           </View>
           <View style={{
             ...styles.searchView,
-            backgroundColor: this.useTheme('#f6f6f6', '#242424')
+            backgroundColor: this.useTheme('#f9f9f9', '#242424')
           }}>
             <Icon
               name='md-search'
@@ -307,7 +307,7 @@ class EmployeesListScreen extends Component {
               })
             }}
           >
-            <Icon name='ios-add' style={{ color: '#fff', fontSize: 38 }} />
+            <Icon name='ios-add' style={{ color: '#f5f5f5', fontSize: 38 }} />
           </TouchableOpacity>
         </View>
       </View >

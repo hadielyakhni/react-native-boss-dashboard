@@ -11,49 +11,49 @@ const ToDoLoadingContainer = ({ theme }) => {
       <Shimmer animationOpacity={0.85} style={{ marginTop: -4, marginBottom: 8, width: '30%' }}>
         <Text numberOfLines={1} style={{
           ...styles.separator,
-          backgroundColor: theme === 'light' ? '#ddd' : '#222'
+          backgroundColor: theme === 'light' ? '#e6e6e6' : '#222'
         }}>
         </Text>
       </Shimmer>
       <Shimmer animationOpacity={0.85} style={{ marginVertical: 5 }}>
         <Text numberOfLines={1} style={{
           ...styles.item,
-          backgroundColor: theme === 'light' ? '#ddd' : '#222'
+          backgroundColor: theme === 'light' ? '#e6e6e6' : '#222'
         }}>
         </Text>
       </Shimmer>
       <Shimmer animationOpacity={0.85} style={{ marginVertical: 5 }}>
         <Text numberOfLines={1} style={{
           ...styles.item,
-          backgroundColor: theme === 'light' ? '#ddd' : '#222'
+          backgroundColor: theme === 'light' ? '#e6e6e6' : '#222'
         }}>
         </Text>
       </Shimmer>
       <Shimmer animationOpacity={0.85} style={{ marginTop: 5, marginBottom: 8 }}>
         <Text numberOfLines={1} style={{
           ...styles.item,
-          backgroundColor: theme === 'light' ? '#ddd' : '#222'
+          backgroundColor: theme === 'light' ? '#e6e6e6' : '#222'
         }}>
         </Text>
       </Shimmer>
       <Shimmer animationOpacity={0.85} style={{ marginTop: 15, marginBottom: 8, width: '30%' }}>
         <Text numberOfLines={1} style={{
           ...styles.separator,
-          backgroundColor: theme === 'light' ? '#ddd' : '#222'
+          backgroundColor: theme === 'light' ? '#e6e6e6' : '#222'
         }}>
         </Text>
       </Shimmer>
       <Shimmer animationOpacity={0.85} style={{ marginVertical: 5 }}>
         <Text numberOfLines={1} style={{
           ...styles.item,
-          backgroundColor: theme === 'light' ? '#ddd' : '#222'
+          backgroundColor: theme === 'light' ? '#e6e6e6' : '#222'
         }}>
         </Text>
       </Shimmer>
       <Shimmer animationOpacity={0.85} style={{ marginVertical: 5 }}>
         <Text numberOfLines={1} style={{
           ...styles.item,
-          backgroundColor: theme === 'light' ? '#ddd' : '#222'
+          backgroundColor: theme === 'light' ? '#e6e6e6' : '#222'
         }}>
         </Text>
       </Shimmer>

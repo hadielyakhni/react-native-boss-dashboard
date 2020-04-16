@@ -31,7 +31,7 @@ class EmployeeDetailsScreen extends Component {
       this.state.canRender ?
         <View style={{
           ...styles.container,
-          backgroundColor: this.useTheme('#fbfbfb', '#161616')
+          backgroundColor: this.useTheme('#f5f5f5', '#161616')
         }}>
           <Modal
             animationType="fade"
@@ -49,11 +49,11 @@ class EmployeeDetailsScreen extends Component {
             >
               <View style={{
                 ...styles.modal,
-                backgroundColor: this.useTheme('#fbfbfb', '#222')
+                backgroundColor: this.useTheme('#f5f5f5', '#222')
               }}>
                 <View style={{
                   ...styles.upperModal,
-                  backgroundColor: this.useTheme('#fbfbfb', '#222')
+                  backgroundColor: this.useTheme('#f5f5f5', '#222')
                 }}>
                   <Text style={{
                     marginBottom: 7,
@@ -83,7 +83,7 @@ class EmployeeDetailsScreen extends Component {
                       styles.modalButton,
                       {
                         borderBottomLeftRadius: 4,
-                        backgroundColor: this.useTheme('#fbfbfb', '#222'),
+                        backgroundColor: this.useTheme('#f5f5f5', '#222'),
                         borderTopColor: this.useTheme('#eaeaea', '#363636')
                       }]}>
                     <Text style={{ color: this.useTheme('#303030', '#eef'), fontSize: 18, fontFamily: 'SourceSansPro-Regular' }}>
@@ -100,7 +100,7 @@ class EmployeeDetailsScreen extends Component {
                       styles.modalButton,
                       {
                         borderBottomRightRadius: 4,
-                        backgroundColor: this.useTheme('#fbfbfb', '#222'),
+                        backgroundColor: this.useTheme('#f5f5f5', '#222'),
                         borderTopColor: this.useTheme('#eaeaea', '#363636')
                       }]}>
                     <Text style={{ color: '#e65100', fontSize: 19, fontFamily: 'SourceSansPro-SemiBold' }}>
@@ -113,14 +113,14 @@ class EmployeeDetailsScreen extends Component {
           </Modal>
           <View style={{
             ...styles.header,
-            backgroundColor: this.useTheme('#fbfbfb', '#161616')
+            backgroundColor: this.useTheme('#f5f5f5', '#161616')
           }}>
             <TouchableOpacity
               activeOpacity={0.8}
               hitSlop={{ bottom: 10, top: 10, left: 10, right: 10 }}
               style={{
                 ...styles.backIconContainer,
-                backgroundColor: this.useTheme('#fbfbfb', '#161616')
+                backgroundColor: this.useTheme('#f5f5f5', '#161616')
               }}
               onPress={() => Navigation.pop(this.props.componentId)}
             >
@@ -128,7 +128,7 @@ class EmployeeDetailsScreen extends Component {
             </TouchableOpacity>
             <View style={{
               ...styles.titleContainer,
-              backgroundColor: this.useTheme('#fbfbfb', '#161616')
+              backgroundColor: this.useTheme('#f5f5f5', '#161616')
             }}>
               <ScrollView
                 horizontal
@@ -146,7 +146,7 @@ class EmployeeDetailsScreen extends Component {
               activeOpacity={0.2}
               onPress={() => this.setState({ modalVisible: true })}
             >
-              <MaterialCommunityIcons name="trash-can-outline" color="#fbfbfb" size={24} />
+              <MaterialCommunityIcons name="trash-can-outline" color={this.useTheme('#303030', '#fbfbfb')} size={24} />
             </TouchableOpacity>
           </View>
           <View style={{ flex: 1, paddingHorizontal: 12 }}>
@@ -267,10 +267,10 @@ class EmployeeDetailsScreen extends Component {
           <TouchableOpacity
             activeOpacity={0.92}
             style={{
-              elevation: 4,
-              backgroundColor: this.useTheme('#f6f6f6', '#222'),
+              elevation: 3,
+              backgroundColor: this.useTheme('#f5f5f5', '#222'),
               height: 52,
-              marginBottom: this.state.isDone ? 20 : 24,
+              marginBottom: 24,
               alignSelf: 'flex-end',
               borderRadius: 26,
               alignItems: 'center',
@@ -282,23 +282,21 @@ class EmployeeDetailsScreen extends Component {
               this.props.updateEmployeeInfo(this.props.componentId, { name, role, salary, phone, email, joinDate, uid: this.uid })
             }}
           >
-            {
-              <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around', paddingHorizontal: 18 }}>
-                <MaterialIcons name="done" color="#008ee0" size={25} style={{ marginRight: 5 }} />
-                <Text style={{
-                  marginLeft: 5,
-                  fontFamily: 'SourceSansPro-SemiBold',
-                  color: '#008ee0',
-                  fontSize: 16.5
-                }}>
-                  Update
-                </Text>
-              </View>
-            }
+            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around', paddingHorizontal: 18 }}>
+              <MaterialIcons name="done" color="#008ee0" size={25} style={{ marginRight: 5 }} />
+              <Text style={{
+                marginLeft: 5,
+                fontFamily: 'SourceSansPro-SemiBold',
+                color: '#008ee0',
+                fontSize: 16.5
+              }}>
+                Update
+              </Text>
+            </View>
           </TouchableOpacity>
         </View>
         :
-        <View style={{ flex: 1, backgroundColor: this.useTheme('#fbfbfb', '#161616'), alignItems: 'center', justifyContent: 'center' }}>
+        <View style={{ flex: 1, backgroundColor: this.useTheme('#f5f5f5', '#161616'), alignItems: 'center', justifyContent: 'center' }}>
           <ActivityIndicator color="#008ee0" size={38} />
         </View>
     )

@@ -5,6 +5,7 @@ import { updateTask, deleteTask } from '../actions'
 import { Navigation } from 'react-native-navigation'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 
 class ToDoDetailsScreen extends Component {
   constructor(props) {
@@ -25,7 +26,7 @@ class ToDoDetailsScreen extends Component {
       clearTimeout(this.timeout);
     this.timeout = setTimeout(() => {
       const { task, description, isDone } = this.state
-      this.props.updateTask(this.props.taskId, task, description, isDone, this.props.componentId)
+      this.props.updateTask(this.props.taskId, task, description, isDone, this.props.componentId, true)
     }, 300)
   }
   descriptionTextChange(description) {
@@ -34,7 +35,7 @@ class ToDoDetailsScreen extends Component {
       clearTimeout(this.timeout);
     this.timeout = setTimeout(() => {
       const { task, description, isDone } = this.state
-      this.props.updateTask(this.props.taskId, task, description, isDone, this.props.componentId)
+      this.props.updateTask(this.props.taskId, task, description, isDone, this.props.componentId, true)
     }, 300)
   }
   render() {
@@ -42,18 +43,18 @@ class ToDoDetailsScreen extends Component {
       <View
         style={{
           ...styles.container,
-          backgroundColor: this.useTheme('#fbfbfb', '#161616')
+          backgroundColor: this.useTheme('#f5f5f5', '#161616')
         }}>
         <View style={{
           ...styles.header,
-          backgroundColor: this.useTheme('#fbfbfb', '#161616')
+          backgroundColor: this.useTheme('#f5f5f5', '#161616')
         }}>
           <TouchableOpacity
             activeOpacity={0.8}
             hitSlop={{ bottom: 10, top: 10, left: 10, right: 10 }}
             style={{
               ...styles.backIconContainer,
-              backgroundColor: this.useTheme('#fbfbfb', '#161616')
+              backgroundColor: this.useTheme('#f5f5f5', '#161616')
             }}
             onPress={() => Navigation.pop(this.props.componentId)}
           >
@@ -61,7 +62,7 @@ class ToDoDetailsScreen extends Component {
           </TouchableOpacity>
           <View style={{
             ...styles.titleContainer,
-            backgroundColor: this.useTheme('#fbfbfb', '#161616')
+            backgroundColor: this.useTheme('#f5f5f5', '#161616')
           }}>
             <Text numberOfLines={1} style={{ color: this.useTheme('#303030', '#fbfbfb'), fontSize: 25, fontFamily: 'SourceSansPro-SemiBold' }}>
               Task Details
@@ -72,7 +73,7 @@ class ToDoDetailsScreen extends Component {
             activeOpacity={0.2}
             onPress={() => this.props.deleteTask(this.props.taskId, 'todoDetails', this.props.componentId, this.taskData)}
           >
-            <MaterialCommunityIcons name="trash-can-outline" color="#fbfbfb" size={24} />
+            <MaterialCommunityIcons name="trash-can-outline" color={this.useTheme('#303030', '#fbfbfb')} size={24} />
           </TouchableOpacity>
         </View>
         <View style={{ paddingHorizontal: 8, flex: 1 }}>
@@ -107,6 +108,55 @@ class ToDoDetailsScreen extends Component {
             />
           </View>
         </View>
+        <TouchableOpacity
+          activeOpacity={0.92}
+          style={{
+            elevation: 3,
+            backgroundColor: this.useTheme('#f5f5f5', '#222'),
+            height: 52,
+            marginBottom: 24,
+            alignSelf: 'flex-end',
+            borderRadius: 26,
+            alignItems: 'center',
+            marginRight: 9,
+            justifyContent: 'center'
+          }}
+          onPress={() => {
+            this.props.updateTask(this.props.taskId, null, null, this.state.isDone, this.props.componentId)
+            Navigation.pop(this.props.componentId, {
+              animations: {
+                pop: {
+                  content: {
+                    translationY: {
+                      from: 0,
+                      to: Dimensions.get('window').height,
+                      duration: 200
+                    }
+                  }
+                }
+              }
+            })
+          }}
+        >
+          {
+            !this.state.isDone ?
+              <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around', paddingHorizontal: 18 }}>
+                <MaterialIcons name="done" color="#008ee0" size={25} style={{ marginRight: 5 }} />
+                <Text style={{
+                  marginLeft: 5,
+                  fontFamily: 'SourceSansPro-SemiBold',
+                  color: '#008ee0',
+                  fontSize: 16
+                }}>
+                  Mark  complete
+                </Text>
+              </View>
+              :
+              <View style={{ paddingHorizontal: 18 }}>
+                <MaterialCommunityIcons name="undo-variant" color="#008ee0" size={25} />
+              </View>
+          }
+        </TouchableOpacity>
       </View>
     )
   }
@@ -166,8 +216,8 @@ const styles = StyleSheet.create({
 
 const mapActionsToProps = dispatch => {
   return {
-    updateTask: (taskId, task, description, isDone, componentId) =>
-      dispatch(updateTask(taskId, task, description, isDone, componentId)),
+    updateTask: (taskId, task, description, isDone, componentId, isAuto) =>
+      dispatch(updateTask(taskId, task, description, isDone, componentId, isAuto)),
     deleteTask: (taskId, fromWichScreen, componentId, taskData) =>
       dispatch(deleteTask(taskId, fromWichScreen, componentId, taskData))
   }

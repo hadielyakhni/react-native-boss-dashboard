@@ -250,17 +250,27 @@ export const addTask = (task, description, fromWichScreen, componentId) => {
   return dispatch => {
     dispatch({ type: 'add_pressed' })
     firebase.database().ref(`users/${UID}/tasks/tasks`)
-      .push({ task: task.trim(), description: description.trim(), isDone: false, date: Date.now(), customDate: Date.now() })
+      .push({
+        task: task.trim(),
+        description: description.trim()
+        , isDone: false,
+        date: Date.now(),
+        customDate: Date.now()
+      })
     if (fromWichScreen === 'todoAdd')
       Navigation.pop(componentId)
   }
 }
 
-export const updateTask = (taskId, task, description, isDone, componentId) => {
+export const updateTask = (taskId, task, description, isDone, componentId, isAuto) => {
   return () => {
-    if (componentId) {
+    if (componentId && isAuto) {
       firebase.database().ref(`users/${UID}/tasks/tasks/${taskId}`)
-        .update({ task, description, isDone })
+        .update({ task: task.trim(), description: description.trim(), isDone })
+    }
+    else if (componentId) {
+      firebase.database().ref(`users/${UID}/tasks/tasks/${taskId}`)
+        .update({ isDone: !isDone })
     }
     else
       firebase.database().ref(`users/${UID}/tasks/tasks/${taskId}`)
@@ -312,7 +322,14 @@ export const getEmployeesSortData = uid => dispatch => {
 export const addEmployee = (componentId, { name, role, salary, phone, email, joinDate }) => {
   return dispatch => {
     firebase.database().ref(`/users/${UID}/employees/employees`)
-      .push({ name, role, salary, phone, email, joinDate })
+      .push({
+        name: name.trim(),
+        role: role.trim(),
+        salary,
+        phone,
+        email: email.trim(),
+        joinDate
+      })
     Navigation.pop(componentId)
   }
 }
@@ -334,7 +351,14 @@ export const fetchEmployees = () => {
 export const updateEmployeeInfo = (componentId, { name, role, salary, phone, email, joinDate, uid }) => {
   return () => {
     firebase.database().ref(`users/${UID}/employees/employees/${uid}`)
-      .set({ name, role, salary, phone, email, joinDate })
+      .set({
+        name: name.trim(),
+        role: role.trim(),
+        salary,
+        phone,
+        email: email.trim(),
+        joinDate
+      })
     Navigation.pop(componentId)
   }
 }
@@ -430,7 +454,7 @@ export const addTransaction = (oldAmount, transAmount, status, accountId) => {
 
 export const editAccountInfo = (accountId, name, phone, componentId) =>
   () => {
-    firebase.database().ref(`users/${UID}/money/accounts/${accountId}`).update({ name, phone })
+    firebase.database().ref(`users/${UID}/money/accounts/${accountId}`).update({ name: name.trim(), phone })
     Navigation.pop(componentId)
   }
 

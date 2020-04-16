@@ -13,7 +13,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import Entypo from 'react-native-vector-icons/Entypo'
-import ThemeChoicesModal from '../components/SortChoicesModal'
+import ThemeChoicesModal from '../components/ChoicesModal'
 
 class SettingsScreen extends Component {
   constructor(props) {
@@ -107,7 +107,7 @@ class SettingsScreen extends Component {
     return (
       <View style={{
         ...styles.container,
-        backgroundColor: this.useTheme('#fbfbfb', '#161616')
+        backgroundColor: this.useTheme('#f5f5f5', '#161616')
       }}>
         <ThemeChoicesModal
           theme={this.props.theme}
@@ -199,11 +199,11 @@ class SettingsScreen extends Component {
         </Modal>
         <View style={{
           ...styles.header,
-          backgroundColor: this.useTheme('#fbfbfb', '#161616')
+          backgroundColor: this.useTheme('#f5f5f5', '#161616')
         }}>
           <View style={{
             ...styles.titleContainer,
-            backgroundColor: this.useTheme('#fbfbfb', '#161616')
+            backgroundColor: this.useTheme('#f5f5f5', '#161616')
           }}>
             <Text numberOfLines={1} style={{ color: this.useTheme('#303030', '#fbfbfb'), fontSize: 26, fontFamily: 'SourceSansPro-SemiBold' }}>
               Settings
@@ -226,7 +226,7 @@ class SettingsScreen extends Component {
             }}
           >
             <View style={{
-              backgroundColor: this.useTheme('#fbfbfb', '#161616'),
+              backgroundColor: this.useTheme('#f5f5f5', '#161616'),
               flexDirection: 'row',
               alignItems: 'center',
               justifyContent: 'space-between'
@@ -289,7 +289,7 @@ class SettingsScreen extends Component {
             activeOpacity={0.9}
           >
             <View style={{
-              backgroundColor: this.useTheme('#fbfbfb', '#161616'),
+              backgroundColor: this.useTheme('#f5f5f5', '#161616'),
               flexDirection: 'row',
               alignItems: 'center',
               justifyContent: 'space-between'
@@ -312,7 +312,7 @@ class SettingsScreen extends Component {
             onPress={() => this.setState({ themeChoicesModalVisible: true })}
           >
             <View style={{
-              backgroundColor: this.useTheme('#fbfbfb', '#161616'),
+              backgroundColor: this.useTheme('#f5f5f5', '#161616'),
               flexDirection: 'row',
               alignItems: 'center',
               justifyContent: 'space-between'
@@ -350,7 +350,7 @@ class SettingsScreen extends Component {
             onPress={() => Linking.openURL(`mailto:boss.dashboard@gmail.com`)}
           >
             <View style={{
-              backgroundColor: this.useTheme('#fbfbfb', '#161616'),
+              backgroundColor: this.useTheme('#f5f5f5', '#161616'),
               flexDirection: 'row',
               alignItems: 'center',
               justifyContent: 'space-between'
@@ -372,7 +372,7 @@ class SettingsScreen extends Component {
             activeOpacity={0.9}
           >
             <View style={{
-              backgroundColor: this.useTheme('#fbfbfb', '#161616'),
+              backgroundColor: this.useTheme('#f5f5f5', '#161616'),
               flexDirection: 'row',
               alignItems: 'center',
               justifyContent: 'space-between'
@@ -394,7 +394,7 @@ class SettingsScreen extends Component {
             activeOpacity={0.9}
           >
             <View style={{
-              backgroundColor: this.useTheme('#fbfbfb', '#161616'),
+              backgroundColor: this.useTheme('#f5f5f5', '#161616'),
               flexDirection: 'row',
               alignItems: 'center',
               justifyContent: 'space-between'
@@ -426,7 +426,7 @@ class SettingsScreen extends Component {
             activeOpacity={0.9}
           >
             <View style={{
-              backgroundColor: this.useTheme('#fbfbfb', '#161616'),
+              backgroundColor: this.useTheme('#f5f5f5', '#161616'),
               flexDirection: 'row',
               alignItems: 'center',
               justifyContent: 'space-between'
@@ -448,7 +448,7 @@ class SettingsScreen extends Component {
             activeOpacity={0.9}
           >
             <View style={{
-              backgroundColor: this.useTheme('#fbfbfb', '#161616'),
+              backgroundColor: this.useTheme('#f5f5f5', '#161616'),
               flexDirection: 'row',
               alignItems: 'center',
               justifyContent: 'space-between'
@@ -469,7 +469,7 @@ class SettingsScreen extends Component {
           <TouchableOpacity
             style={{
               ...styles.logoutButton,
-              backgroundColor: this.useTheme('#fbfbfb', '#161616')
+              backgroundColor: this.useTheme('#f5f5f5', '#161616')
             }}
             onPress={() => {
               this.setState({ modalVisible: true })

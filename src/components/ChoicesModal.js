@@ -2,7 +2,7 @@ import React from 'react'
 import { StyleSheet, Text, View, Modal, TouchableOpacity, FlatList } from 'react-native'
 import Choice from './Choice'
 
-const SortChoicesModal = ({ visible, choices, selectedChoice, onSelect, onCancel, theme }) => {
+const ChoicesModal = ({ visible, choices, selectedChoice, onSelect, onCancel, theme }) => {
   return (
     <Modal
       animationType="fade"
@@ -25,7 +25,7 @@ const SortChoicesModal = ({ visible, choices, selectedChoice, onSelect, onCancel
         }}>
         <View style={{
           width: 365,
-          backgroundColor: theme === 'light' ? '#fbfbfb' : '#303030',
+          backgroundColor: theme === 'light' ? '#f5f5f5' : '#303030',
           borderRadius: 8,
           padding: 24
         }}>
@@ -39,7 +39,7 @@ const SortChoicesModal = ({ visible, choices, selectedChoice, onSelect, onCancel
           <View style={{
             paddingTop: 18,
             marginBottom: 10,
-            backgroundColor: theme === 'light' ? '#fbfbfb' : '#303030'
+            backgroundColor: theme === 'light' ? '#f5f5f5' : '#303030'
           }}>
             <FlatList
               data={choices}
@@ -60,4 +60,4 @@ const SortChoicesModal = ({ visible, choices, selectedChoice, onSelect, onCancel
   )
 }
 
-export default React.memo(SortChoicesModal)
+export default React.memo(ChoicesModal)

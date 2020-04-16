@@ -18,7 +18,7 @@ class ForgetPasswordScreen extends Component {
     return (
       <KeyboardAvoidingView behavior="padding" style={{
         flex: 1,
-        backgroundColor: this.useTheme('#fbfbfb', '#161616'),
+        backgroundColor: this.useTheme('#f5f5f5', '#161616'),
         justifyContent: 'flex-start',
         paddingHorizontal:
           Dimensions.get('window').width > 800 ? 30
@@ -32,7 +32,7 @@ class ForgetPasswordScreen extends Component {
                   7
       }}>
         <View style={{
-          backgroundColor: this.useTheme('#fbfbfb', '#161616'),
+          backgroundColor: this.useTheme('#f5f5f5', '#161616'),
           height: 56,
           flexDirection: 'row',
           alignItems: 'center',
@@ -55,7 +55,7 @@ class ForgetPasswordScreen extends Component {
           </TouchableOpacity>
         </View>
         <View style={{
-          backgroundColor: this.useTheme('#fbfbfb', '#161616'),
+          backgroundColor: this.useTheme('#f5f5f5', '#161616'),
           flex: 1,
           paddingTop: 52,
           paddingHorizontal:
@@ -104,7 +104,7 @@ class ForgetPasswordScreen extends Component {
             activeOpacity={0.9}
             style={{
               height: 60,
-              backgroundColor: this.useTheme('#f7f7f7', '#212121'),
+              backgroundColor: this.useTheme('#f4f4f4', '#212121'),
               elevation: 5,
               borderRadius: 24,
               alignItems: 'center',
@@ -145,7 +145,7 @@ class ForgetPasswordScreen extends Component {
           !this.props.email ?
             <View style={{
               padding: 15,
-              backgroundColor: this.useTheme('#fbfbfb', '#161616'),
+              backgroundColor: this.useTheme('#f5f5f5', '#161616'),
               paddingBottom: 40,
               paddingHorizontal:
                 Dimensions.get('window').width > 800 ? 120

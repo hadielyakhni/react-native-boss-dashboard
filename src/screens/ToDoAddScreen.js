@@ -41,18 +41,18 @@ class ToDoAddScreen extends Component {
     return (
       <KeyboardAvoidingView behavior={"padding"} style={{
         ...styles.container,
-        backgroundColor: this.useTheme('#fbfbfb', '#161616')
+        backgroundColor: this.useTheme('#f5f5f5', '#161616')
       }}>
         <View style={{
           ...styles.header,
-          backgroundColor: this.useTheme('#fbfbfb', '#161616')
+          backgroundColor: this.useTheme('#f5f5f5', '#161616')
         }}>
           <TouchableOpacity
             activeOpacity={0.8}
             hitSlop={{ bottom: 10, top: 10, left: 10, right: 10 }}
             style={{
               ...styles.backIconContainer,
-              backgroundColor: this.useTheme('#fbfbfb', '#161616')
+              backgroundColor: this.useTheme('#f5f5f5', '#161616')
             }}
             onPress={() => Navigation.pop(this.props.componentId)}
           >
@@ -60,7 +60,7 @@ class ToDoAddScreen extends Component {
           </TouchableOpacity>
           <View style={{
             ...styles.titleContainer,
-            backgroundColor: this.useTheme('#fbfbfb', '#161616')
+            backgroundColor: this.useTheme('#f5f5f5', '#161616')
           }}>
             <Text numberOfLines={1} style={{ color: this.useTheme('#303030', '#fbfbfb'), fontSize: 25, fontFamily: 'SourceSansPro-SemiBold' }}>
               Add Task
