@@ -20,7 +20,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
-import Octicons from 'react-native-vector-icons/Octicons'
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import TransactionCard from '../components/TransactionCard'
 
 const { height, width } = Dimensions.get("window")
@@ -202,7 +202,7 @@ class MoneyDetailsScreen extends Component {
                 style={styles.trashButtonContainer}
                 onPress={() => this.setState({ modalVisible: true })}
               >
-                <Octicons name="trashcan" size={23} color={this.useTheme('#84989a', 'rgba(156, 175, 186, 0.7)')} />
+                <MaterialCommunityIcons name="trash-can-outline" size={24.5} color={this.useTheme('#84989a', 'rgba(156, 175, 186, 0.7)')} />
               </TouchableOpacity>
             </View>
             <View style={styles.transButtonsContainer}>

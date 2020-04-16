@@ -81,6 +81,7 @@ class ForgetPasswordScreen extends Component {
           }}>
             <MaterialCommunityIcons style={{ paddingBottom: 2 }} name="email" color={this.useTheme('#303030', "#fbfbfb")} size={24} />
             <TextInput
+              autoCapitalize="none"
               editable={!this.props.sendingPasswordResetEmail && !this.props.email}
               keyboardType="email-address"
               ref={ref => this.inputRef = ref}

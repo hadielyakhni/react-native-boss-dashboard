@@ -18,15 +18,14 @@ import ThemeChoicesModal from '../components/SortChoicesModal'
 class SettingsScreen extends Component {
   constructor(props) {
     super(props)
-    console.log(this.props.isSystemTheme)
-    this.state = { modalVisible: false, loggingout: false, themeChoicesModalVisible: false }
+    this.state = { modalVisible: false, loggingout: false, themeChoicesModalVisible: false, providers: [] }
     this.themeChoices = [{ id: '1', prop: 'system' }, { id: "2", prop: 'light' }, { id: '3', prop: 'dark' }]
-    const storedData = ['uid', 'email', 'provider']
+    const storedData = ['uid', 'email', 'providers']
     AsyncStorage.multiGet(storedData).then(data => {
       this.setState({
         uid: data[0][1],
         email: data[1][1],
-        provider: data[2][1]
+        providers: JSON.parse(data[2][1])
       })
     })
   }
@@ -148,7 +147,7 @@ class SettingsScreen extends Component {
                   GoogleSignin.signOut()
                   AsyncStorage.removeItem('uid')
                   AsyncStorage.removeItem('email')
-                  AsyncStorage.removeItem('provider')
+                  AsyncStorage.removeItem('providers')
                   this.props.resetTasks()
                   this.props.resetEmployees()
                   this.props.resetAccounts()
@@ -213,9 +212,9 @@ class SettingsScreen extends Component {
         </View>
         <ScrollView showsVerticalScrollIndicator={false}>
           <TouchableOpacity
-            activeOpacity={this.state.provider === 'email' ? 0.9 : 1}
+            activeOpacity={(this.state.providers.includes('password')) ? 0.9 : 1}
             onPress={() => {
-              if (this.state.provider === 'email')
+              if (this.state.providers.includes('password'))
                 Navigation.push(this.props.componentId, {
                   component: {
                     name: 'forgetPassword',
@@ -232,41 +231,47 @@ class SettingsScreen extends Component {
               alignItems: 'center',
               justifyContent: 'space-between'
             }}>
-              <View style={{ height: 56, flexDirection: 'row', paddingLeft: 15, alignItems: 'center' }}>
-                {
-                  this.state.provider === 'email' ?
-                    <MaterialIcons name="email" color={this.useTheme('#303030', '#fbfbfb')} size={24.5} />
-                    :
-                    this.state.provider === 'facebook' ?
-                      <FontAwesome name="facebook-square" color="#1d9de2" size={24.5} />
-                      :
-                      this.state.provider === 'google' ?
-                        <FontAwesome name="google" color="#E53935" size={24.5} />
-                        :
-                        null
+              <View style={{ height: 56, flexDirection: 'row', alignItems: 'center' }}>
+                {this.state.providers.includes('password') &&
+                  < MaterialIcons
+                    name="email"
+                    color={this.useTheme('#303030', '#fbfbfb')}
+                    size={24.5}
+                    style={{
+                      marginHorizontal: this.state.providers.includes('google.com') ? 12 : 15
+                    }}
+                  />
+                }
+                {this.state.providers.includes('facebook.com') &&
+                  <FontAwesome name="facebook-square" color="#1d9de2" size={24.5} style={{ marginHorizontal: 15 }} />
+                }
+                {this.state.providers.includes('google.com') &&
+                  <FontAwesome
+                    name="google"
+                    color="#E53935"
+                    size={24}
+                    style={{
+                      marginLeft: this.state.providers.includes('password') ? 0 : 15,
+                      marginRight: 15
+                    }} />
                 }
                 <Text
                   numberOfLines={1}
                   ellipsizeMode="middle"
                   style={{
-                    paddingRight: 5,
                     width: Dimensions.get('window').width - 125,
                     color: this.useTheme('#303030', '#fbfbfb'),
                     fontSize: 19,
-                    fontFamily: 'SourceSansPro-SemiBold',
-                    marginLeft: 20
+                    fontFamily: 'SourceSansPro-SemiBold'
                   }}
                 >
                   {this.state.email}
                 </Text>
               </View>
-              {
-                this.state.provider === 'email' ?
-                  <View style={{ marginHorizontal: 7 }}>
-                    <MaterialIcons name="chevron-right" color={this.useTheme('#303030', '#fbfbfb')} size={30} />
-                  </View>
-                  :
-                  null
+              {this.state.providers.includes('password') &&
+                <View style={{ marginRight: 15 }}>
+                  <MaterialIcons name="chevron-right" color={this.useTheme('#303030', '#fbfbfb')} size={30} />
+                </View>
               }
             </View>
           </TouchableOpacity>

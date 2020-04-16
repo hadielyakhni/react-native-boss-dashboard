@@ -42,10 +42,10 @@ class ToDoListScreen extends Component {
       inputRange: [0, 1],
       outputRange: [0, 3.14]
     })
-    this.doneListOpacityValue = 0
-    this.doneListOpacity = new Animated.Value(0)
+    this.doneListOpacityValue = this.props.unDoneTasks.length ? 0 : 1
+    this.doneListOpacity = new Animated.Value(this.props.unDoneTasks.length ? 0 : 1)
     this.doneListOpacity.addListener(({ value }) => this.doneListOpacityValue = value)
-    this.lastDoneListArrowDiewction = 'down'
+    this.lastDoneListArrowDirection = 'down'
     this.doneArrowRotationAngle = this.doneListOpacity.interpolate({
       inputRange: [0, 1],
       outputRange: [0, 3.14]
@@ -98,19 +98,19 @@ class ToDoListScreen extends Component {
   }
   handleDoneOpacity() {
     let toValue
-    if (this.doneListOpacityValue === 1 || (this.lastDoneListArrowDiewction === 'down' && this.doneListOpacityValue !== 0))
+    if (this.doneListOpacityValue === 1 || (this.lastDoneListArrowDirection === 'down' && this.doneListOpacityValue !== 0))
       toValue = 0
-    if (this.doneListOpacityValue === 0 || (this.lastDoneListArrowDiewction === 'up' && this.doneListOpacityValue !== 1))
+    if (this.doneListOpacityValue === 0 || (this.lastDoneListArrowDirection === 'up' && this.doneListOpacityValue !== 1))
       toValue = 1
     Animated.timing(this.doneListOpacity, {
       toValue,
       duration: 300
     }).start()
     setTimeout(() => {
-      if (this.lastDoneListArrowDiewction === 'up')
-        this.lastDoneListArrowDiewction = 'down'
+      if (this.lastDoneListArrowDirection === 'up')
+        this.lastDoneListArrowDirection = 'down'
       else
-        this.lastDoneListArrowDiewction = 'up'
+        this.lastDoneListArrowDirection = 'up'
     }, 300)
   }
   rendertask({ item }) {
@@ -337,6 +337,8 @@ class ToDoListScreen extends Component {
       BackHandler.exitApp()
   }
   render() {
+    if (this.props.doneTasks.length && !!this.props.unDoneTasks.length && !this.dataAppearsAtLeastOnce)
+      this.doneListOpacity.setValue(0)
     return (
       <View style={{ ...styles.container, backgroundColor: this.useTheme('#fbfbfb', '#161616') }}>
         {this.renderUndoMessage()}
