@@ -1,7 +1,8 @@
 const INITIAL_STATE = {
   exitCount: 0,
   theme: '',
-  isSystemTheme: false
+  isSystemTheme: false,
+  activeScreenName: ''
 }
 
 export default (state = INITIAL_STATE, action) => {
@@ -12,6 +13,8 @@ export default (state = INITIAL_STATE, action) => {
       return { ...state, exitCount: state.exitCount + 1 }
     case 'reset_exit_count':
       return { ...state, exitCount: 0 }
+    case 'set_active_screen_name':
+      return { ...state, activeScreenName: action.payload }
     default:
       return state
   }

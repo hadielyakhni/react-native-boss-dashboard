@@ -114,6 +114,7 @@ class ToDoItem extends PureComponent {
         renderRightActions={this.renderRightActions.bind(this)}
       >
         <TouchableOpacity
+          disabled={this.props.activeScreenName === 'todoDetails'}
           style={{
             ...styles.container,
             backgroundColor: this.props.theme === 'light' ? '#f9f9f9' : '#242424',
@@ -135,20 +136,6 @@ class ToDoItem extends PureComponent {
                   isDone,
                   date,
                   customDate
-                },
-                options: {
-                  animations: {
-                    push: {
-                      content: {
-                        waitForRender: true,
-                        translationX: {
-                          from: Dimensions.get('window').width,
-                          to: 0,
-                          duration: 250
-                        }
-                      }
-                    }
-                  }
                 }
               }
             })
@@ -206,4 +193,6 @@ const mapDispatchToProps = dispatch => ({
   updateTask: (taskId, task, description, isDone) => dispatch(updateTask(taskId, task, description, isDone))
 })
 
-export default connect(null, mapDispatchToProps)(gestureHandlerRootHOC(ToDoItem)) 
+export default connect(({ app }) =>
+  ({ activeScreenName: app.activeScreenName }),
+  mapDispatchToProps)(gestureHandlerRootHOC(ToDoItem)) 

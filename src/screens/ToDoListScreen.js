@@ -2,7 +2,15 @@ import React, { Component } from 'react'
 import { Text, StyleSheet, View, TouchableOpacity, TextInput, FlatList, ScrollView, Dimensions, Animated, BackHandler } from 'react-native'
 import { Navigation } from 'react-native-navigation'
 import { connect } from 'react-redux'
-import { addTask, fetchTasks, changeTasksSortData, restoreLastDeletedTask, incrementExitCount, resetExitCount, userAuthenticateWithFacebook } from '../actions'
+import {
+  addTask,
+  fetchTasks,
+  changeTasksSortData,
+  restoreLastDeletedTask,
+  incrementExitCount,
+  resetExitCount,
+  setActiveScreenName
+} from '../actions'
 import { Icon } from 'native-base'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import Ionicons from 'react-native-vector-icons/Ionicons'
@@ -15,10 +23,11 @@ class ToDoListScreen extends Component {
   constructor(props) {
     super(props)
     this.navigationListner = Navigation.events().registerComponentDidAppearListener(data => {
+      this.props.setActiveScreenName(data.componentName)
       this.activeScreenName = data.componentName
     })
     this.props.fetchTasks()
-    this.state = { task: '', sortChoicesModalVisible: false, clickCount: 0 }
+    this.state = { task: '', sortChoicesModalVisible: false, clickCount: 0, isAddButtonDisabled: false }
     this.dataAppearsAtLeastOnce = false
     this.sortChoices = [{ id: '1', prop: 'time' }, { id: "2", prop: 'title' }]
     this.hintOpacityValue = 0
@@ -152,7 +161,7 @@ class ToDoListScreen extends Component {
           <ScrollView>
             {
               this.props.unDoneTasks.length ?
-                <Animated.View style={{ opacity: this.undoneOpacity }}>
+                <Animated.View style={{ marginTop: 3, opacity: this.undoneOpacity }}>
                   <TouchableOpacity activeOpacity={1} onPress={this.handleUndoneOpacity.bind(this)}>
                     <View style={styles.separotorView}>
                       <View style={{ flexDirection: 'row' }}>
@@ -191,7 +200,7 @@ class ToDoListScreen extends Component {
             }
             {
               this.props.doneTasks.length ?
-                <Animated.View style={{ marginTop: 6, opacity: this.doneOpacity }}>
+                <Animated.View style={{ marginTop: 3, opacity: this.doneOpacity }}>
                   <TouchableOpacity activeOpacity={1} onPress={this.handleDoneOpacity.bind(this)}>
                     <View style={styles.separotorView}>
                       <View style={{ flexDirection: 'row' }}>
@@ -402,9 +411,14 @@ class ToDoListScreen extends Component {
         <View style={{ paddingHorizontal: 6, flex: 1 }}>
           {this.renderScreen()}
           <TouchableOpacity
+            disabled={this.state.isAddButtonDisabled}
             activeOpacity={1}
             style={styles.addButton}
-            onPress={() => (
+            onPress={() => {
+              this.setState({ isAddButtonDisabled: true })
+              setTimeout(() => {
+                this.setState({ isAddButtonDisabled: false })
+              }, 300);
               Navigation.push(this.props.componentId, {
                 component: {
                   name: 'todoAdd',
@@ -424,7 +438,7 @@ class ToDoListScreen extends Component {
                   }
                 }
               })
-            )}
+            }}
           >
             <Icon name='ios-add' style={{ color: '#f5f5f5', fontSize: 38 }} />
           </TouchableOpacity>
@@ -565,7 +579,8 @@ const mapActionsToProps = dispatch => ({
   changeTasksSortData: (sortBy, sortOrder) => dispatch(changeTasksSortData(sortBy, sortOrder)),
   restoreLastDeletedTask: () => dispatch(restoreLastDeletedTask()),
   incrementExitCount: () => dispatch(incrementExitCount()),
-  resetExitCount: () => dispatch(resetExitCount())
+  resetExitCount: () => dispatch(resetExitCount()),
+  setActiveScreenName: screenName => dispatch(setActiveScreenName(screenName))
 })
 
 const mapStateToProps = (state) => {

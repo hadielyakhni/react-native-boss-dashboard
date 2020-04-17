@@ -123,19 +123,7 @@ class ToDoDetailsScreen extends Component {
           }}
           onPress={() => {
             this.props.updateTask(this.props.taskId, null, null, this.state.isDone, this.props.componentId)
-            Navigation.pop(this.props.componentId, {
-              animations: {
-                pop: {
-                  content: {
-                    translationY: {
-                      from: 0,
-                      to: Dimensions.get('window').height,
-                      duration: 200
-                    }
-                  }
-                }
-              }
-            })
+            Navigation.pop(this.props.componentId)
           }}
         >
           {

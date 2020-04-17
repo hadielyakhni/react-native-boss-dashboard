@@ -507,3 +507,10 @@ export const setTheme = (theme, isSystem) => {
     }
   })
 }
+
+export const setActiveScreenName = screenName => {
+  return ({
+    type: 'set_active_screen_name',
+    payload: screenName
+  })
+}

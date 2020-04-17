@@ -13,12 +13,19 @@ class MoneyAddScreen extends Component {
     super(props)
     this.state = { canRender: false }
     InteractionManager.runAfterInteractions(() => {
-      this.setState({ canRender: true, name: '', phone: '', amount: '', status: 'ME' })
+      this.setState({
+        canRender: true,
+        name: '',
+        phone: '',
+        amount: '',
+        status: 'ME',
+        isAddButtonDisabled: false
+      })
     })
   }
   isAddDisabled() {
     const { name, amount } = this.state
-    if (!name || !amount)
+    if (!name || !amount || this.state.isAddButtonDisabled)
       return true
     return false
   }
@@ -131,6 +138,10 @@ class MoneyAddScreen extends Component {
                 textStyle={{ fontSize: 19 }}
                 style={[styles.addButton, { marginBottom: 0 }]}
                 onPress={() => {
+                  this.setState({ isAddButtonDisabled: true })
+                  setTimeout(() => {
+                    this.setState({ isAddButtonDisabled: false })
+                  }, 300);
                   return this.props.addMoneyAccount(this.props.componentId, { name, phone, status, amount: amount || 0 })
                 }}
               >Add</MyButton>

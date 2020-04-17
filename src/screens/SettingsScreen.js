@@ -18,7 +18,13 @@ import ThemeChoicesModal from '../components/ChoicesModal'
 class SettingsScreen extends Component {
   constructor(props) {
     super(props)
-    this.state = { modalVisible: false, loggingout: false, themeChoicesModalVisible: false, providers: [] }
+    this.state = {
+      modalVisible: false,
+      loggingout: false,
+      themeChoicesModalVisible: false,
+      providers: [],
+      isChangePasswordButtonDisabled: false
+    }
     this.themeChoices = [{ id: '1', prop: 'system' }, { id: "2", prop: 'light' }, { id: '3', prop: 'dark' }]
     const storedData = ['uid', 'email', 'providers']
     AsyncStorage.multiGet(storedData).then(data => {
@@ -212,8 +218,13 @@ class SettingsScreen extends Component {
         </View>
         <ScrollView showsVerticalScrollIndicator={false}>
           <TouchableOpacity
+            disabled={this.state.isChangePasswordButtonDisabled}
             activeOpacity={(this.state.providers.includes('password')) ? 0.9 : 1}
             onPress={() => {
+              this.setState({ isChangePasswordButtonDisabled: true })
+              setTimeout(() => {
+                this.setState({ isChangePasswordButtonDisabled: false })
+              }, 300);
               if (this.state.providers.includes('password'))
                 Navigation.push(this.props.componentId, {
                   component: {

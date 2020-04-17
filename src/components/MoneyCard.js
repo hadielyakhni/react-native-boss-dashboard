@@ -2,9 +2,10 @@ import React, { PureComponent } from 'react'
 import { Text, View, StyleSheet, TouchableOpacity, Image, InteractionManager, Dimensions } from 'react-native'
 import { Icon } from 'native-base'
 import { Navigation } from 'react-native-navigation'
+import { connect } from 'react-redux'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 
-export default class EmployeeCard extends PureComponent {
+class AccountCard extends PureComponent {
   constructor(props) {
     super(props)
     this.state = { canRender: false }
@@ -32,6 +33,7 @@ export default class EmployeeCard extends PureComponent {
           <Image source={require('../assets/person.png')} style={{ width: '100%', flex: 1 }} />
         </View>
         <TouchableOpacity
+          disabled={this.props.activeScreenName === 'moneyDetails'}
           activeOpacity={1}
           style={styles.infoContainer}
           onPress={() => {
@@ -102,3 +104,7 @@ const styles = StyleSheet.create({
     fontSize: 16
   }
 })
+
+export default connect(({ app }) => ({
+  activeScreenName: app.activeScreenName
+}))(AccountCard)

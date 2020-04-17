@@ -2,11 +2,12 @@ import React, { PureComponent } from 'react'
 import { Image, View, Text, StyleSheet, TouchableOpacity, Dimensions, UIManager, LayoutAnimation } from 'react-native'
 import { Icon } from 'native-base'
 import { Navigation } from 'react-native-navigation'
+import { connect } from 'react-redux'
 
 UIManager.setLayoutAnimationEnabledExperimental &&
   UIManager.setLayoutAnimationEnabledExperimental(true)
 
-export default class EmployeeCard extends PureComponent {
+class EmployeeCard extends PureComponent {
   componentDidMount() {
     LayoutAnimation.configureNext({
       update: {
@@ -47,8 +48,9 @@ export default class EmployeeCard extends PureComponent {
           <Image source={require('../assets/person.png')} style={{ width: '100%', flex: 1 }} />
         </View>
         <TouchableOpacity
+          disabled={this.props.activeScreenName === 'employeeDetails'}
           activeOpacity={1}
-          style={styles.infoContainer}
+          style={{ ...styles.infoContainer }}
           onPress={() => {
             Navigation.push(componentId, {
               component: {
@@ -93,8 +95,6 @@ export default class EmployeeCard extends PureComponent {
   }
 }
 
-
-
 const styles = StyleSheet.create({
   container: {
     height: 80,
@@ -128,3 +128,7 @@ const styles = StyleSheet.create({
     marginBottom: 3
   }
 })
+
+export default connect(({ app }) => ({
+  activeScreenName: app.activeScreenName
+}))(EmployeeCard)

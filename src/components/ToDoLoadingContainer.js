@@ -6,7 +6,7 @@ const ToDoLoadingContainer = ({ theme }) => {
   return (
     <View style={{
       marginBottom: 8,
-      marginTop: 12
+      marginTop: 15
     }}>
       <Shimmer animationOpacity={0.85} style={{ marginTop: -4, marginBottom: 8, width: '30%' }}>
         <Text numberOfLines={1} style={{

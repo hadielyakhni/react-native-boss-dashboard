@@ -10,7 +10,8 @@ class ToDoAddScreen extends Component {
   state = {
     task: '',
     description: '',
-    isKeyboardOpened: false
+    isKeyboardOpened: false,
+    isAddButtonDisabled: false
   }
   componentDidMount() {
     this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this._keyboardDidShow);
@@ -28,7 +29,7 @@ class ToDoAddScreen extends Component {
   }
   isAddDisabled() {
     const { task } = this.state
-    if (!task)
+    if (!task || this.state.isAddButtonDisabled)
       return true
     return false
   }
@@ -110,6 +111,10 @@ class ToDoAddScreen extends Component {
               textStyle={{ fontSize: 19 }}
               color='#008ee0'
               onPress={() => {
+                this.setState({ isAddButtonDisabled: true })
+                setTimeout(() => {
+                  this.setState({ isAddButtonDisabled: false })
+                }, 300);
                 const { task, description } = this.state
                 this.props.addTask(task, description, 'todoAdd', this.props.componentId)
               }}

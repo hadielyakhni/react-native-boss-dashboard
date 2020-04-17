@@ -33,7 +33,7 @@ class EmployeesListScreen extends Component {
       { id: "7", prop: "join Date - Newest to Oldest" }
     ]
     this.activeSortLabel = ''
-    this.state = { searchWord: '', sortChoicesModalVisible: false }
+    this.state = { searchWord: '', sortChoicesModalVisible: false, isAddButtonDisabled: false }
     this.hintOpacityValue = 0
     this.hintOpacity = new Animated.Value(0)
     this.hintOpacity.addListener(({ value }) => this.hintOpacityValue = value)
@@ -294,9 +294,14 @@ class EmployeesListScreen extends Component {
           </View>
           {this.renderScreen()}
           <TouchableOpacity
+            disabled={this.state.isAddButtonDisabled}
             activeOpacity={1}
             style={styles.addButton}
             onPress={() => {
+              this.setState({ isAddButtonDisabled: true })
+              setTimeout(() => {
+                this.setState({ isAddButtonDisabled: false })
+              }, 300);
               Navigation.push(this.props.componentId, {
                 component: {
                   name: 'employeeAdd',

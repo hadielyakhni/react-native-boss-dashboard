@@ -14,12 +14,22 @@ class EmployeeAddScreen extends Component {
     this.state = { canRender: false }
     InteractionManager.runAfterInteractions(() => {
       this.separator = () => <View style={{ marginVertical: 2 }}></View>
-      this.setState({ canRender: true, name: '', role: '', salary: '', phone: '', email: '', showDatePicker: false, joinDate: '' })
+      this.setState({
+        canRender: true,
+        name: '',
+        role: '',
+        salary: '',
+        phone: '',
+        email: '',
+        showDatePicker: false,
+        joinDate: '',
+        isAddButtonDisabled: false
+      })
     })
   }
   isAddDisabled() {
     const { name, role, salary } = this.state
-    if (!name || !role || !salary)
+    if (!name || !role || !salary || this.state.isAddButtonDisabled)
       return true
     return false
   }
@@ -174,6 +184,10 @@ class EmployeeAddScreen extends Component {
                 color='#008ee0'
                 textStyle={{ fontSize: 19 }}
                 onPress={() => {
+                  this.setState({ isAddButtonDisabled: true })
+                  setTimeout(() => {
+                    this.setState({ isAddButtonDisabled: false })
+                  }, 300);
                   const { name, role, salary, phone, email, joinDate } = this.state
                   this.props.addEmployee(this.props.componentId, { name, role, salary, phone, email, joinDate: joinDate || Date.now() })
                 }}
