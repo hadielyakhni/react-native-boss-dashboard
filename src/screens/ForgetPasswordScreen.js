@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, Modal, View, TouchableOpacity, TextInput, KeyboardAvoidingView, Dimensions } from 'react-native'
+import { Text, Modal, View, StyleSheet, TouchableOpacity, TextInput, KeyboardAvoidingView, Dimensions } from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import { Navigation } from 'react-native-navigation'
@@ -168,13 +168,18 @@ class ForgetPasswordScreen extends Component {
             null
         }
         <Modal
+          onRequestClose={this.props.dsimissAuthError}
           animationType="fade"
           transparent={true}
           visible={!!this.props.error}>
-          <View style={{
-            ...styles.errorModalContainer,
-            backgroundColor: this.useTheme('rgba(0,0,0,0.1)', 'rgba(0,0,0,0.5)')
-          }} >
+          <View style={styles.errorModalContainer} >
+            <TouchableOpacity
+              activeOpacity={1}
+              onPress={this.props.dsimissAuthError}
+              style={[StyleSheet.absoluteFill, {
+                backgroundColor: this.props.theme === 'light' ? 'rgba(0,0,0,0.1)' : 'rgba(0,0,0,0.5)',
+                zIndex: 0
+              }]}></TouchableOpacity>
             <View style={{
               ...styles.errorModal,
               backgroundColor: this.useTheme('#fbfbfb', '#303030')
@@ -197,7 +202,7 @@ class ForgetPasswordScreen extends Component {
               <TouchableOpacity
                 activeOpacity={0.78}
                 style={styles.lowerModalPart}
-                onPress={() => this.props.dsimissAuthError()}
+                onPress={this.props.dsimissAuthError}
               >
                 <Text style={{ color: '#008ee0', fontSize: 17, fontFamily: 'SourceSansPro-Regular' }}>
                   Dismiss
@@ -207,14 +212,19 @@ class ForgetPasswordScreen extends Component {
           </View>
         </Modal>
         <Modal
+          onRequestClose={this.props.hidePasswordResetSuccessModal}
           animationType="fade"
           transparent={true}
           visible={this.props.showPasswordResetSuccess}
         >
-          <View style={{
-            ...styles.errorModalContainer,
-            backgroundColor: this.useTheme('rgba(0,0,0,0.1)', 'rgba(0,0,0,0.5)')
-          }} >
+          <View style={styles.errorModalContainer}>
+            <TouchableOpacity
+              activeOpacity={1}
+              onPress={this.props.hidePasswordResetSuccessModal}
+              style={[StyleSheet.absoluteFill, {
+                backgroundColor: this.props.theme === 'light' ? 'rgba(0,0,0,0.1)' : 'rgba(0,0,0,0.5)',
+                zIndex: 0
+              }]}></TouchableOpacity>
             <View style={{
               ...styles.errorModal,
               backgroundColor: this.useTheme('#fbfbfb', '#303030')
@@ -239,7 +249,7 @@ class ForgetPasswordScreen extends Component {
               <TouchableOpacity
                 activeOpacity={0.78}
                 style={styles.lowerModalPart}
-                onPress={() => this.props.hidePasswordResetSuccessModal()}
+                onPress={this.props.hidePasswordResetSuccessModal}
               >
                 <Text style={{ color: '#07a238', fontSize: 16 }}>OK</Text>
               </TouchableOpacity>

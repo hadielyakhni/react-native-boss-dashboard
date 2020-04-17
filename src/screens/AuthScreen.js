@@ -243,13 +243,19 @@ class AuthScreen extends Component {
           </View>
         </View>
         <Modal
+          onRequestClose={this.props.dsimissAuthError}
           animationType="fade"
           transparent={true}
-          visible={!!this.props.error}>
-          <View style={{
-            ...styles.errorModalContainer,
-            backgroundColor: this.useTheme('rgba(0,0,0,0.1)', 'rgba(0,0,0,0.5)'),
-          }} >
+          visible={!!this.props.error}
+        >
+          <View style={styles.errorModalContainer} >
+            <TouchableOpacity
+              activeOpacity={1}
+              onPress={this.props.dsimissAuthError}
+              style={[StyleSheet.absoluteFill, {
+                backgroundColor: this.props.theme === 'light' ? 'rgba(0,0,0,0.1)' : 'rgba(0,0,0,0.5)',
+                zIndex: 0
+              }]}></TouchableOpacity>
             <View style={{
               ...styles.errorModal,
               backgroundColor: this.useTheme('#fbfbfb', '#303030')
@@ -274,7 +280,7 @@ class AuthScreen extends Component {
               <TouchableOpacity
                 activeOpacity={0.78}
                 style={styles.lowerModalPart}
-                onPress={() => this.props.dsimissAuthError()}
+                onPress={this.props.dsimissAuthError}
               >
                 <Text style={{ color: '#008ee0', fontSize: 17, fontFamily: 'SourceSansPro-Regular' }}>
                   Dismiss

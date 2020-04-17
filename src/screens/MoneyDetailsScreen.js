@@ -279,11 +279,14 @@ class MoneyDetailsScreen extends Component {
               visible={this.state.modalVisible}
               onRequestClose={() => { this.setState({ modalVisible: false }) }}
             >
-              <View style={{
-                flex: 1,
-                justifyContent: 'center',
-                backgroundColor: this.useTheme('rgba(0,0,0,0.1)', 'rgba(0,0,0,0.5)'),
-              }}>
+              <View style={{ flex: 1, justifyContent: 'center' }}>
+                <TouchableOpacity
+                  activeOpacity={1}
+                  onPress={() => this.setState({ modalVisible: false })}
+                  style={[StyleSheet.absoluteFill, {
+                    backgroundColor: this.props.theme === 'light' ? 'rgba(0,0,0,0.1)' : 'rgba(0,0,0,0.5)',
+                    zIndex: 0
+                  }]}></TouchableOpacity>
                 <View style={{
                   ...styles.modal,
                   backgroundColor: this.useTheme('#f5f5f5', '#222')
@@ -313,9 +316,7 @@ class MoneyDetailsScreen extends Component {
                   <View style={{ flexDirection: 'row' }}>
                     <TouchableOpacity
                       activeOpacity={0.8}
-                      onPress={() => {
-                        this.setState({ modalVisible: false });
-                      }}
+                      onPress={() => this.setState({ modalVisible: false })}
                       style={[
                         styles.modalButton,
                         {

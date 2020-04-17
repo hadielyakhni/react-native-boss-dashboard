@@ -5,13 +5,14 @@ import Choice from './Choice'
 const ChoicesModal = ({ visible, choices, selectedChoice, onSelect, onCancel, theme }) => {
   return (
     <Modal
+      onRequestClose={onCancel}
       animationType="fade"
       visible={visible}
       transparent
     >
       <TouchableOpacity
         activeOpacity={1}
-        onPress={() => onCancel()}
+        onPress={onCancel}
         style={[StyleSheet.absoluteFill, {
           backgroundColor: theme === 'light' ? 'rgba(0,0,0,0.1)' : 'rgba(0,0,0,0.5)',
           zIndex: 0
