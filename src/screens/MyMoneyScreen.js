@@ -35,7 +35,7 @@ class MyMoneyScreen extends Component {
       { id: "7", prop: "last transaction - Newest to Oldest" }
     ]
     this.activeSortLabel = ''
-    this.state = { searchWord: '', sortChoicesModalVisible: false, isAddButtonDisabled: false }
+    this.state = { searchWord: '', sortChoicesModalVisible: false, isAddButtonDisabled: false, sortRequestedNow: false }
     this.hintOpacityValue = 0
     this.hintOpacity = new Animated.Value(0)
     this.hintOpacity.addListener(({ value }) => this.hintOpacityValue = value)
@@ -178,7 +178,12 @@ class MyMoneyScreen extends Component {
                     contentContainerStyle={{ marginVertical: 5, borderRadius: 10 }}
                     data={pAccounts}
                     keyExtractor={account => account[0]}
-                    renderItem={account => <MoneyCard theme={this.props.theme} componentId={this.props.componentId} data={account.item} />}
+                    renderItem={account => <MoneyCard
+                      theme={this.props.theme}
+                      componentId={this.props.componentId}
+                      data={account.item}
+                      sortRequestedNow={this.state.sortRequestedNow}
+                    />}
                     getItemLayout={(data, index) => (
                       { length: 92, offset: 92 * index, index }
                     )}
@@ -227,7 +232,12 @@ class MyMoneyScreen extends Component {
                     contentContainerStyle={{ marginVertical: 5, borderRadius: 10 }}
                     data={nAccounts}
                     keyExtractor={account => account[0]}
-                    renderItem={account => <MoneyCard theme={this.props.theme} componentId={this.props.componentId} data={account.item} />}
+                    renderItem={account => <MoneyCard
+                      theme={this.props.theme}
+                      componentId={this.props.componentId}
+                      data={account.item}
+                      sortRequestedNow={this.state.sortRequestedNow}
+                    />}
                     getItemLayout={(data, index) => (
                       { length: 92, offset: 92 * index, index }
                     )}
@@ -246,7 +256,7 @@ class MyMoneyScreen extends Component {
     this.setState({ sortChoicesModalVisible: false })
   }
   onSelectSortChoice = choice => {
-    this.setState({ sortChoicesModalVisible: false })
+    this.setState({ sortChoicesModalVisible: false, sortRequestedNow: true })
     switch (choice) {
       case 'default':
         this.props.changeAccountsSortData('default', 'asc')
@@ -267,6 +277,9 @@ class MyMoneyScreen extends Component {
         this.props.changeAccountsSortData('lastTransaction', 'desc')
         break
     }
+    setTimeout(() => {
+      this.setState({ sortRequestedNow: false })
+    }, 500);
   }
   checkActiveSortLabel() {
     if (this.props.sortBy === 'default' && this.props.sortOrder === 'asc')

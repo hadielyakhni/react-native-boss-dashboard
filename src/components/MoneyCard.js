@@ -1,9 +1,12 @@
 import React, { PureComponent } from 'react'
-import { Text, View, StyleSheet, TouchableOpacity, Image, InteractionManager, Dimensions } from 'react-native'
+import { Text, View, StyleSheet, TouchableOpacity, Image, InteractionManager, Dimensions, LayoutAnimation, UIManager } from 'react-native'
 import { Icon } from 'native-base'
 import { Navigation } from 'react-native-navigation'
 import { connect } from 'react-redux'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
+
+UIManager.setLayoutAnimationEnabledExperimental &&
+  UIManager.setLayoutAnimationEnabledExperimental(true)
 
 class AccountCard extends PureComponent {
   constructor(props) {
@@ -14,6 +17,16 @@ class AccountCard extends PureComponent {
     })
   }
   render() {
+    console.log(this.props.sortRequestedNow)
+    if (this.props.activeScreenName === 'money' && !this.props.sortRequestedNow) {
+      LayoutAnimation.configureNext({
+        update: {
+          duration: 180,
+          type: LayoutAnimation.Types.linear,
+          property: LayoutAnimation.Properties.opacity
+        }
+      })
+    }
     const { name, amount } = this.props.data[1]
     return (
       <View style={{

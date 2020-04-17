@@ -16,19 +16,12 @@ let
 //Helper functions
 //Auth Helpers
 async function saveUserDataToAsyncStorage(user) {
-  console.log('1')
   const arr1 = ['uid', user.user.uid]
-  console.log('2')
   const arr2 = ['email', user.user.email]
-  console.log('3')
   const providersIds = []
-  console.log('4')
   user.user._user.providerData.forEach(provider => providersIds.push(provider.providerId))
-  console.log('5')
   const arr3 = ['providers', JSON.stringify(providersIds)]
-  console.log('6')
   await AsyncStorage.multiSet([arr1, arr2, arr3])
-  console.log('7')
 }
 
 // Auth Actions
@@ -37,20 +30,14 @@ export const userSignin = (email, password) =>
     try {
       dispatch({ type: 'auth_attempt_started' })
       const user = await firebase.auth().signInWithEmailAndPassword(email.trim(), password)
-      console.log('0')
       saveUserDataToAsyncStorage(user)
-      console.log('8')
       if (!TASKS_SORT_BY && !TASKS_SORT_ORDER)
         dispatch(getTasksSortData(user.user.uid))
-      console.log('9')
       if (!EMPLOYEES_SORT_BY && !EMPLOYEES_SORT_ORDER)
         dispatch(getEmployeesSortData(user.user.uid))
-      console.log('10')
       if (!ACCOUNTS_SORT_BY && !ACCOUNTS_SORT_ORDER)
         dispatch(getAccountsSortData(user.user.uid))
-      console.log('11')
       goToMain()
-      console.log('12')
       setTimeout(() => {
         dispatch({
           type: 'user_signedin',

@@ -1,32 +1,11 @@
-import React, { PureComponent } from 'react'
-import { Image, View, Text, StyleSheet, TouchableOpacity, Dimensions, UIManager, LayoutAnimation } from 'react-native'
+import React, { PureComponent, Component } from 'react'
+import { Image, View, Text, StyleSheet, TouchableOpacity, Dimensions } from 'react-native'
 import { Icon } from 'native-base'
 import { Navigation } from 'react-native-navigation'
 import { connect } from 'react-redux'
 
-UIManager.setLayoutAnimationEnabledExperimental &&
-  UIManager.setLayoutAnimationEnabledExperimental(true)
 
-class EmployeeCard extends PureComponent {
-  componentDidMount() {
-    LayoutAnimation.configureNext({
-      update: {
-        duration: 80,
-        type: LayoutAnimation.Types.linear,
-        property: LayoutAnimation.Properties.opacity
-      }
-    })
-  }
-  componentWillUnmount() {
-    LayoutAnimation.configureNext({
-      update: {
-        duration: 80,
-        delay: 200,
-        type: LayoutAnimation.Types.linear,
-        property: LayoutAnimation.Properties.opacity
-      }
-    })
-  }
+class EmployeeCard extends Component {
   render() {
     const { componentId, uid, data } = this.props
     const d = new Date(data.joinDate)
@@ -129,6 +108,9 @@ const styles = StyleSheet.create({
   }
 })
 
-export default connect(({ app }) => ({
-  activeScreenName: app.activeScreenName
-}))(EmployeeCard)
+export default connect(({ app }) => {
+  console.log('in map state')
+  return {
+    activeScreenName: app.activeScreenName
+  }
+})(EmployeeCard)

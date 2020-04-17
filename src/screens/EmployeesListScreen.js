@@ -109,14 +109,16 @@ class EmployeesListScreen extends Component {
             contentContainerStyle={{ paddingVertical: 15 }}
             data={matchedEmployees}
             keyExtractor={employee => employee[0]}
-            renderItem={employee => (
-              <EmployeeCard
-                componentId={this.props.componentId}
-                uid={employee.item[0]}
-                data={employee.item[1]}
-                theme={this.props.theme}
-              />
-            )}
+            renderItem={employee => {
+              return (
+                <EmployeeCard
+                  componentId={this.props.componentId}
+                  uid={employee.item[0]}
+                  data={employee.item[1]}
+                  theme={this.props.theme}
+                />
+              )
+            }}
             getItemLayout={(data, index) => (
               { length: 92, offset: 92 * index, index }
             )}
@@ -315,7 +317,7 @@ class EmployeesListScreen extends Component {
             <Icon name='ios-add' style={{ color: '#f5f5f5', fontSize: 38 }} />
           </TouchableOpacity>
         </View>
-      </View >
+      </View>
     )
   }
 }

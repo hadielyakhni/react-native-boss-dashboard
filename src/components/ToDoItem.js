@@ -26,7 +26,7 @@ class ToDoItem extends PureComponent {
   componentDidMount() {
     LayoutAnimation.configureNext({
       update: {
-        duration: 200,
+        duration: 180,
         type: LayoutAnimation.Types.linear,
         property: LayoutAnimation.Properties.opacity
       }
@@ -36,7 +36,7 @@ class ToDoItem extends PureComponent {
     LayoutAnimation.configureNext({
       update: {
         duration: 80,
-        delay: 120,
+        delay: 180,
         type: LayoutAnimation.Types.linear,
         property: LayoutAnimation.Properties.opacity
       }
@@ -103,7 +103,6 @@ class ToDoItem extends PureComponent {
     )
   }
   render() {
-    console.log(this.props.activeScreenName)
     const { task, description, isDone, date, customDate } = this.props.data
     return (
       <Swipeable
