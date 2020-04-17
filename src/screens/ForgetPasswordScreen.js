@@ -20,6 +20,7 @@ class ForgetPasswordScreen extends Component {
         flex: 1,
         backgroundColor: this.useTheme('#f5f5f5', '#161616'),
         justifyContent: 'flex-start',
+        paddingVertical: 3,
         paddingHorizontal:
           Dimensions.get('window').width > 800 ? 30
             :
@@ -105,7 +106,7 @@ class ForgetPasswordScreen extends Component {
             style={{
               height: 60,
               backgroundColor: this.useTheme('#f4f4f4', '#212121'),
-              elevation: 5,
+              elevation: 2.4,
               borderRadius: 24,
               alignItems: 'center',
               justifyContent: 'center'

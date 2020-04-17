@@ -63,7 +63,8 @@ export const goToMain = () => Promise.all([
             options: {
               bottomTab: {
                 icon: tasksIcon,
-                text: 'Tasks'
+                text: 'Tasks',
+                selectTabOnPress: false
               },
               topBar: {
                 visible: false
@@ -83,7 +84,8 @@ export const goToMain = () => Promise.all([
             options: {
               bottomTab: {
                 icon: workIcon,
-                text: 'Employees'
+                text: 'Employees',
+                selectTabOnPress: false
               },
               topBar: {
                 visible: false
@@ -103,7 +105,8 @@ export const goToMain = () => Promise.all([
             options: {
               bottomTab: {
                 icon: moneyIcon,
-                text: 'Wallet'
+                text: 'Wallet',
+                selectTabOnPress: false
               },
               topBar: {
                 visible: false
@@ -140,9 +143,10 @@ export const goToMain = () => Promise.all([
         },
         bottomTabs: {
           preferLargeIcons: true,
-          titleDisplayMode: 'alwaysShow'
+          titleDisplayMode: 'alwaysHide',
+          tabsAttachMode: 'afterInitialTab'
         }
-      },
+      }
     }
   }
 }))

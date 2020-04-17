@@ -412,7 +412,7 @@ class MyMoneyScreen extends Component {
               this.setState({ isAddButtonDisabled: true })
               setTimeout(() => {
                 this.setState({ isAddButtonDisabled: false })
-              }, 300);
+              }, 180);
               Navigation.push(this.props.componentId, {
                 component: {
                   name: 'moneyAdd'
@@ -454,7 +454,7 @@ const styles = StyleSheet.create({
             :
             Dimensions.get('window').width > 500 ? 6
               :
-              0
+              2
   },
   titleContainer: {
     flex: 1,

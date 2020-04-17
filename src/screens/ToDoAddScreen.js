@@ -152,7 +152,7 @@ const styles = StyleSheet.create({
             :
             Dimensions.get('window').width > 500 ? 6
               :
-              0,
+              2,
     marginBottom: 15,
     paddingHorizontal: 4
   },

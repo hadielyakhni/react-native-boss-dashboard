@@ -220,6 +220,8 @@ const styles = StyleSheet.create({
   header: {
     height: 56,
     flexDirection: 'row',
+    marginBottom: 10,
+    paddingHorizontal: 4,
     marginVertical:
       Dimensions.get('window').width > 800 ? 20
         :
@@ -229,9 +231,7 @@ const styles = StyleSheet.create({
             :
             Dimensions.get('window').width > 500 ? 6
               :
-              0,
-    marginBottom: 10,
-    paddingHorizontal: 4
+              2
   },
   titleContainer: {
     flex: 1,

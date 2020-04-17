@@ -22,9 +22,32 @@ import ToDoLoadingContainer from '../components/ToDoLoadingContainer'
 class ToDoListScreen extends Component {
   constructor(props) {
     super(props)
-    this.navigationListner = Navigation.events().registerComponentDidAppearListener(data => {
+    this.activeScreenTabIndex = 0
+    this.navigationListner1 = Navigation.events().registerComponentDidAppearListener(data => {
       this.props.setActiveScreenName(data.componentName)
       this.activeScreenName = data.componentName
+      this.activeScreenId = data.componentId
+    })
+    this.navigationListner2 = Navigation.events().registerBottomTabPressedListener(e => {
+      if (e.tabIndex !== this.activeScreenTabIndex)
+        Navigation.mergeOptions(this.props.componentId, { bottomTabs: { currentTabIndex: e.tabIndex } })
+      else if (
+        this.activeScreenName !== 'todo'
+        &&
+        this.activeScreenName !== 'employees'
+        &&
+        this.activeScreenName !== 'money'
+        &&
+        this.activeScreenName !== 'settings'
+      ) {
+        Navigation.popToRoot(this.activeScreenId)
+        const screenName = this.activeScreenTabIndex === 0 ?
+          'todo' : this.activeScreenTabIndex === 1 ?
+            'employees' : this.activeScreenTabIndex === 2 ?
+              'money' : 'settings'
+        this.props.setActiveScreenName(screenName)
+      }
+      this.activeScreenTabIndex = e.tabIndex
     })
     this.props.fetchTasks()
     this.state = { task: '', sortChoicesModalVisible: false, clickCount: 0, isAddButtonDisabled: false }
@@ -74,7 +97,8 @@ class ToDoListScreen extends Component {
     })
   }
   componentWillUnmount() {
-    this.navigationListner.remove()
+    this.navigationListner1.remove()
+    this.navigationListner2.remove()
     this.hintOpacity.removeAllListeners()
     this.undoneOpacity.removeAllListeners()
     this.doneOpacity.removeAllListeners()
@@ -418,7 +442,7 @@ class ToDoListScreen extends Component {
               this.setState({ isAddButtonDisabled: true })
               setTimeout(() => {
                 this.setState({ isAddButtonDisabled: false })
-              }, 300);
+              }, 180);
               Navigation.push(this.props.componentId, {
                 component: {
                   name: 'todoAdd',
@@ -474,7 +498,7 @@ const styles = StyleSheet.create({
             :
             Dimensions.get('window').width > 500 ? 6
               :
-              0
+              2
   },
   titleContainer: {
     flex: 1,

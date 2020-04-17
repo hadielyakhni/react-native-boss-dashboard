@@ -495,7 +495,7 @@ const styles = StyleSheet.create({
             :
             Dimensions.get('window').width > 500 ? 6
               :
-              0
+              2
   },
   backIconContainer: {
     width: 42,

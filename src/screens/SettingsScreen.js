@@ -159,7 +159,7 @@ class SettingsScreen extends Component {
                   this.props.resetAccounts()
                   setTimeout(() => {
                     goToAuth()
-                  }, 600);
+                  }, 400);
                 }}
                 activeOpacity={0.6}
                 style={{
@@ -224,7 +224,7 @@ class SettingsScreen extends Component {
               this.setState({ isChangePasswordButtonDisabled: true })
               setTimeout(() => {
                 this.setState({ isChangePasswordButtonDisabled: false })
-              }, 300);
+              }, 180);
               if (this.state.providers.includes('password'))
                 Navigation.push(this.props.componentId, {
                   component: {

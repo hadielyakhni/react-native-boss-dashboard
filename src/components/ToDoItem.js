@@ -103,6 +103,7 @@ class ToDoItem extends PureComponent {
     )
   }
   render() {
+    console.log(this.props.activeScreenName)
     const { task, description, isDone, date, customDate } = this.props.data
     return (
       <Swipeable

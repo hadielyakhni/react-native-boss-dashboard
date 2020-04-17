@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, Text, View, TouchableOpacity, Keyboard, KeyboardAvoidingView } from 'react-native'
+import { StyleSheet, Text, View, TouchableOpacity, Dimensions, Keyboard, KeyboardAvoidingView } from 'react-native'
 import { connect } from 'react-redux'
 import { editAccountInfo } from '../actions'
 import { Navigation } from 'react-native-navigation'
@@ -130,12 +130,33 @@ class MoneyEditScreen extends React.PureComponent {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
+    paddingHorizontal:
+      Dimensions.get('window').width > 800 ? 62
+        :
+        Dimensions.get('window').width > 700 ? 48
+          :
+          Dimensions.get('window').width > 600 ? 36
+            :
+            Dimensions.get('window').width > 500 ? 10
+              :
+              0
   },
   header: {
-    paddingHorizontal: 4,
     height: 56,
     flexDirection: 'row',
+    marginBottom: 10,
+    paddingHorizontal: 4,
+    marginVertical:
+      Dimensions.get('window').width > 800 ? 20
+        :
+        Dimensions.get('window').width > 700 ? 12
+          :
+          Dimensions.get('window').width > 600 ? 8
+            :
+            Dimensions.get('window').width > 500 ? 6
+              :
+              2
   },
   titleContainer: {
     flex: 1,

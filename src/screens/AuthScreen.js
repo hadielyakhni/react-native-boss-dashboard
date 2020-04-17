@@ -19,6 +19,7 @@ import MyButton from '../components/MyButton'
 import { userSignin, userSignup, userAuthenticateWithFacebook, userAuthenticateWithGoogle, dsimissAuthError } from '../actions'
 import getAuthError from '../utils/getAuthError'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
+import { Icon } from 'native-base'
 import { Navigation } from 'react-native-navigation'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 
@@ -113,31 +114,39 @@ class AuthScreen extends Component {
           }
           <View style={{ paddingHorizontal: 33 }}>
             <MyInput
+              leftIcon='ios-mail'
+              leftIconStyle={{ paddingLeft: 14, paddingRight: 11 }}
               theme={this.props.theme}
               keyboardType='email-address'
               value={this.state.email}
-              style={{ paddingHorizontal: 15 }}
+              style={{ paddingRight: 15 }}
               isSecure={false}
               placeHolder='Email'
               isAutoCorrect={true}
               onChangeText={email => this.setState({ email })}
             />
-            <View style={[
-              styles.inputContainer,
-              {
-                backgroundColor: this.useTheme('#f9f9f9', '#444'),
-                borderWidth: this.useTheme(0.8, 0),
-                borderColor: '#d8d8d8'
-              }
-
+            <View style={[styles.inputContainer, {
+              backgroundColor: this.useTheme('#f9f9f9', '#444'),
+              borderWidth: this.useTheme(0.8, 0),
+              borderColor: '#d8d8d8'
+            }
             ]}>
-              {this.props.leftIcon && <Icon name={this.props.leftIcon} style={[styles.iconLeft, this.props.leftIconStyle]} />}
+              <Icon
+                name="ios-lock"
+                style={{
+                  paddingLeft: 17,
+                  paddingRight: 13,
+                  fontSize: 24,
+                  color: '#008ee0'
+                }}
+              />
               <TextInput
                 value={this.state.password}
                 secureTextEntry={this.state.isPasswordSecure}
                 style={{
                   ...styles.InputStyle,
-                  color: this.useTheme('#303030', '#fbfbfb')
+                  color: this.useTheme('#303030', '#fbfbfb'),
+                  paddingRight: 15
                 }}
                 placeholder="Password"
                 placeholderTextColor={this.useTheme('#999', 'rgba(255, 255, 255, 0.6)')}
@@ -368,7 +377,6 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 45,
     borderRadius: 5,
-    paddingHorizontal: 15,
     fontSize: 16.5,
     fontFamily: 'SourceSansPro-Regular'
   },
