@@ -1,12 +1,22 @@
 import React, { Component } from 'react'
-import { Text, StyleSheet, View, InteractionManager, ActivityIndicator, TouchableOpacity, Dimensions } from 'react-native'
+import {
+  Text,
+  StyleSheet,
+  View,
+  InteractionManager,
+  ActivityIndicator,
+  TouchableOpacity,
+  Dimensions,
+  KeyboardAvoidingView,
+  Keyboard
+} from 'react-native'
 import { connect } from 'react-redux'
 import { addMoneyAccount } from '../actions'
-import MyButton from '../components/MyButton'
 import MyInput from '../components/MyInput'
 import { CheckBox } from 'react-native-elements'
 import { Navigation } from 'react-native-navigation'
 import Ionicons from 'react-native-vector-icons/Ionicons'
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 
 class MoneyAddScreen extends Component {
   constructor(props) {
@@ -19,9 +29,24 @@ class MoneyAddScreen extends Component {
         phone: '',
         amount: '',
         status: 'ME',
-        isAddButtonDisabled: false
+        isAddButtonDisabled: false,
+        isKeyboardOpened: false
       })
     })
+  }
+  componentDidMount() {
+    this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this._keyboardDidShow);
+    this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this._keyboardDidHide);
+  }
+  componentWillUnmount() {
+    this.keyboardDidShowListener.remove();
+    this.keyboardDidHideListener.remove();
+  }
+  _keyboardDidShow = () => {
+    this.setState({ isKeyboardOpened: true })
+  }
+  _keyboardDidHide = () => {
+    this.setState({ isKeyboardOpened: false })
   }
   isAddDisabled() {
     const { name, amount } = this.state
@@ -38,7 +63,7 @@ class MoneyAddScreen extends Component {
     const { name, phone, amount, status } = this.state
     return (
       this.state.canRender ?
-        <View style={{
+        <KeyboardAvoidingView behavior="padding" style={{
           ...styles.container,
           backgroundColor: this.useTheme('#f5f5f5', '#161616')
         }}>
@@ -130,24 +155,44 @@ class MoneyAddScreen extends Component {
                 </Text>
               </TouchableOpacity>
             </View>
-            <View style={styles.addButtonView}>
-              <MyButton
-                disabled={this.isAddDisabled()}
-                disabledColor='#355973'
-                color='#008ee0'
-                textStyle={{ fontSize: 19 }}
-                style={[styles.addButton, { marginBottom: 0 }]}
-                onPress={() => {
-                  this.setState({ isAddButtonDisabled: true })
-                  setTimeout(() => {
-                    this.setState({ isAddButtonDisabled: false })
-                  }, 300);
-                  return this.props.addMoneyAccount(this.props.componentId, { name, phone, status, amount: amount || 0 })
-                }}
-              >Add</MyButton>
-            </View>
+            <TouchableOpacity
+              activeOpacity={0.92}
+              disabled={this.isAddDisabled()}
+              style={{
+                elevation: this.isAddDisabled() ? 2 : 4,
+                backgroundColor: this.useTheme('#f5f5f5', '#222'),
+                height: 52,
+                marginBottom: this.state.isKeyboardOpened ? 44 : 24,
+                alignSelf: 'flex-end',
+                borderRadius: 26,
+                alignItems: 'center',
+                marginRight: 4,
+                justifyContent: 'center'
+              }}
+              onPress={() => {
+                this.setState({ isAddButtonDisabled: true })
+                setTimeout(() => {
+                  this.setState({ isAddButtonDisabled: false })
+                }, 300);
+                return this.props.addMoneyAccount(this.props.componentId, { name, phone, status, amount: amount || 0 })
+              }}
+            >
+              {
+                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around', paddingHorizontal: 16 }}>
+                  <MaterialIcons name="done" color={this.isAddDisabled() ? this.useTheme('#afb8cb', '#777') : '#008ee0'} size={25} />
+                  <Text style={{
+                    marginLeft: 5,
+                    fontFamily: 'SourceSansPro-SemiBold',
+                    color: this.isAddDisabled() ? this.useTheme('#afb8cb', '#777') : '#008ee0',
+                    fontSize: 16.5
+                  }}>
+                    Add
+                </Text>
+                </View>
+              }
+            </TouchableOpacity>
           </View>
-        </View>
+        </KeyboardAvoidingView>
         :
         <View style={{ flex: 1, backgroundColor: this.useTheme('#f5f5f5', '#161616'), alignItems: 'center', justifyContent: 'center' }}>
           <ActivityIndicator color="#008ee0" size={38} />

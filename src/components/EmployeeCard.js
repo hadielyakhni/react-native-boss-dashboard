@@ -109,7 +109,6 @@ const styles = StyleSheet.create({
 })
 
 export default connect(({ app }) => {
-  console.log('in map state')
   return {
     activeScreenName: app.activeScreenName
   }

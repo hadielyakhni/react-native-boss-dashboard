@@ -4,6 +4,8 @@ import { connect } from 'react-redux'
 import { addTask } from '../actions'
 import { Navigation } from 'react-native-navigation'
 import Ionicons from 'react-native-vector-icons/Ionicons'
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
+import MaterialIcons from "react-native-vector-icons/MaterialIcons"
 import MyButton from '../components/MyButton'
 
 class ToDoAddScreen extends Component {
@@ -73,10 +75,9 @@ class ToDoAddScreen extends Component {
             <TextInput
               value={this.state.task}
               style={[styles.input, {
-                borderTopWidth: 0.5,
-                borderTopColor: this.useTheme('#999', 'rgba(255,255,255,0.28)'),
-                borderBottomWidth: 0.5,
-                borderBottomColor: this.useTheme('#999', 'rgba(255,255,255,0.28)'),
+                borderTopWidth: 0.9,
+                borderColor: this.useTheme('#999', 'rgba(255,255,255,0.1)'),
+                borderBottomWidth: 0.9,
                 color: this.useTheme('#303030', '#fbfbfb')
               }]}
               selectionColor='#008ee0'
@@ -103,25 +104,45 @@ class ToDoAddScreen extends Component {
               onChangeText={description => this.setState({ description })}
             />
           </View>
-          <View style={styles.addButtonView}>
-            <MyButton
-              disabled={this.isAddDisabled()}
-              disabledColor='#355973'
-              style={[styles.addButton, { marginBottom: this.state.isKeyboardOpened ? 40 : 0 }]}
-              textStyle={{ fontSize: 19 }}
-              color='#008ee0'
-              onPress={() => {
-                this.setState({ isAddButtonDisabled: true })
-                setTimeout(() => {
-                  this.setState({ isAddButtonDisabled: false })
-                }, 300);
-                const { task, description } = this.state
-                this.props.addTask(task, description, 'todoAdd', this.props.componentId)
-              }}
-            >Add</MyButton>
-          </View>
+          <TouchableOpacity
+            activeOpacity={0.92}
+            disabled={this.isAddDisabled()}
+            style={{
+              elevation: this.isAddDisabled() ? 2 : 4,
+              backgroundColor: this.useTheme('#f5f5f5', '#222'),
+              height: 52,
+              marginBottom: this.state.isKeyboardOpened ? 44 : 24,
+              alignSelf: 'flex-end',
+              borderRadius: 26,
+              alignItems: 'center',
+              marginRight: 4,
+              justifyContent: 'center'
+            }}
+            onPress={() => {
+              this.setState({ isAddButtonDisabled: true })
+              setTimeout(() => {
+                this.setState({ isAddButtonDisabled: false })
+              }, 300);
+              const { task, description } = this.state
+              this.props.addTask(task, description, 'todoAdd', this.props.componentId)
+            }}
+          >
+            {
+              <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around', paddingHorizontal: 16 }}>
+                <MaterialIcons name="done" color={this.isAddDisabled() ? this.useTheme('#afb8cb', '#777') : '#008ee0'} size={25} />
+                <Text style={{
+                  marginLeft: 5,
+                  fontFamily: 'SourceSansPro-SemiBold',
+                  color: this.isAddDisabled() ? this.useTheme('#afb8cb', '#777') : '#008ee0',
+                  fontSize: 16.5
+                }}>
+                  Add
+                </Text>
+              </View>
+            }
+          </TouchableOpacity>
         </View>
-      </KeyboardAvoidingView>
+      </KeyboardAvoidingView >
     )
   }
 }

@@ -17,7 +17,6 @@ class AccountCard extends PureComponent {
     })
   }
   render() {
-    console.log(this.props.sortRequestedNow)
     if (this.props.activeScreenName === 'money' && !this.props.sortRequestedNow) {
       LayoutAnimation.configureNext({
         update: {
