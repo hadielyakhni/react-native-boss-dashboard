@@ -24,12 +24,29 @@ async function saveUserDataToAsyncStorage(user) {
   await AsyncStorage.multiSet([arr1, arr2, arr3])
 }
 
+const promiseTimeout = function (ms, promise) {
+  let id
+  let timeout = new Promise((resolve, reject) => {
+    id = setTimeout(() => {
+      clearTimeout(id)
+      reject('Time out error! Check your internet connection and try again later.')
+    }, ms)
+  })
+  return Promise.race([
+    promise,
+    timeout
+  ]).then(result => {
+    clearTimeout(id)
+    return result
+  })
+}
+
 // Auth Actions
 export const userSignin = (email, password) =>
   async dispatch => {
     try {
       dispatch({ type: 'auth_attempt_started' })
-      const user = await firebase.auth().signInWithEmailAndPassword(email.trim(), password)
+      const user = await promiseTimeout(5000, firebase.auth().signInWithEmailAndPassword(email.trim(), password))
       saveUserDataToAsyncStorage(user)
       if (!TASKS_SORT_BY && !TASKS_SORT_ORDER)
         dispatch(getTasksSortData(user.user.uid))
@@ -56,7 +73,7 @@ export const userSignin = (email, password) =>
 export const userSignup = (email, password) =>
   dispatch => {
     dispatch({ type: 'auth_attempt_started' })
-    firebase.auth().createUserWithEmailAndPassword(email.trim(), password)
+    promiseTimeout(5000, firebase.auth().createUserWithEmailAndPassword(email.trim(), password))
       .then(async user => {
         let uid = user.user.uid
         saveUserDataToAsyncStorage(user)
@@ -88,7 +105,8 @@ export const userAuthenticateWithFacebook = () =>
   async dispatch => {
     try {
       dispatch({ type: 'disable_facebook_button' })
-      await LoginManager.logInWithPermissions(['public_profile', 'email']);
+      await LoginManager.logInWithPermissions(['public_profile', 'email'])
+      alert('sdjkfhksd')
       const data = await AccessToken.getCurrentAccessToken();
       if (!data)
         throw new Error('Something went wrong obtaining access token');

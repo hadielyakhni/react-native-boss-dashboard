@@ -3,7 +3,36 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import Fontisto from 'react-native-vector-icons/Fontisto'
 import { Dimensions } from 'react-native'
 
-export const goToAuth = () => Navigation.setRoot({
+export const goToWalkThrough = () => Navigation.setRoot({
+  root: {
+    stack: {
+      children: [
+        {
+          component: {
+            name: 'walkthrough'
+          }
+        }
+      ],
+      options: {
+        topBar: {
+          visible: false
+        },
+        animations: {
+          setRoot: {
+            waitForRender: true,
+            translationX: {
+              from: Dimensions.get('window').width,
+              to: 0,
+              duration: 150
+            }
+          }
+        }
+      }
+    }
+  }
+})
+
+export const goToAuth = isFromWalkThrough => Navigation.setRoot({
   root: {
     stack: {
       children: [
@@ -20,20 +49,10 @@ export const goToAuth = () => Navigation.setRoot({
         animations: {
           setRoot: {
             waitForRender: true,
-            translationY: {
-              from: -Dimensions.get('window').height,
+            translationX: {
+              from: Dimensions.get('window').width,
               to: 0,
-              duration: 0
-            }
-          },
-          push: {
-            waitForRender: true,
-            content: {
-              translationY: {
-                from: Dimensions.get('window').height,
-                to: 0,
-                duration: 200
-              }
+              duration: isFromWalkThrough ? 150 : 0
             }
           }
         }

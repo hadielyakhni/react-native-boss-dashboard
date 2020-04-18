@@ -5,6 +5,7 @@ import { Provider } from 'react-redux'
 import ReduxThunk from 'redux-thunk'
 import reducers from '../reducers'
 import {
+  WalkThrough,
   FirstScreen,
   AuthScreen,
   ToDoListScreen,
@@ -32,6 +33,7 @@ function ReduxProvider(Component) {
 }
 
 export default registerScreens = () => {
+  Navigation.registerComponent('walkthrough', () => WalkThrough)
   Navigation.registerComponent('first', () => ReduxProvider(FirstScreen), () => FirstScreen)
   Navigation.registerComponent('auth', () => ReduxProvider(AuthScreen), () => AuthScreen)
   Navigation.registerComponent('forgetPassword', () => ReduxProvider(ForgetPasswordScreen), () => ForgetPasswordScreen)

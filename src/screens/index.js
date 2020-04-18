@@ -1,5 +1,6 @@
-import AuthScreen from './AuthScreen'
 import FirstScreen from './FirstScreen'
+import WalkThrough from './WalkThrough'
+import AuthScreen from './AuthScreen'
 import ToDoListScreen from './ToDoListScreen'
 import ToDoAddScreen from './ToDoAddScreen'
 import ToDoDetailsScreen from './ToDoDetailsScreen'
@@ -14,6 +15,7 @@ import SettingsScreen from './SettingsScreen'
 import ForgetPasswordScreen from './ForgetPasswordScreen'
 export {
   FirstScreen,
+  WalkThrough,
   AuthScreen,
   ToDoListScreen,
   ToDoAddScreen,

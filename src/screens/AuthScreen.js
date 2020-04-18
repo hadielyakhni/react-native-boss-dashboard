@@ -29,6 +29,12 @@ UIManager.setLayoutAnimationEnabledExperimental &&
 class AuthScreen extends Component {
   constructor(props) {
     super(props)
+    Navigation.mergeOptions(this.props.componentId, {
+      statusBar: {
+        backgroundColor: 'rgba(255, 0, 0, 0)',
+        drawBehind: true
+      }
+    })
     this.keyboardDidShowListner = Keyboard.addListener('keyboardDidShow', this._keyboardDidShow)
     this.keyboardDidHideListner = Keyboard.addListener('keyboardDidHide', this._keyboardDidHide)
     this.state = {

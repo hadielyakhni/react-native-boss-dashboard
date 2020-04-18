@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
-import { StyleSheet, View, StatusBar } from 'react-native'
+import { StyleSheet, View, Text } from 'react-native'
 import AsyncStorage from '@react-native-community/async-storage'
-import { goToAuth, goToMain } from '../navigation/navigation'
+import { goToAuth, goToMain, goToWalkThrough } from '../navigation/navigation'
 import { connect } from 'react-redux'
 import { getTasksSortData, getEmployeesSortData, getAccountsSortData, setTheme } from '../actions'
 import { GoogleSignin } from '@react-native-community/google-signin'
@@ -15,6 +15,13 @@ GoogleSignin.configure({
 
 class FirstScreen extends Component {
   componentDidMount() {
+    Navigation.mergeOptions(this.props.componentId, {
+      statusBar: {
+        backgroundColor: '#46acc8',
+        drawBehind: true,
+        style: "light"
+      }
+    })
     this.configureTheme()
     this.tryAutomaticSignIn()
   }
@@ -67,19 +74,29 @@ class FirstScreen extends Component {
     })
   }
   tryAutomaticSignIn = async () => {
-    const uid = await AsyncStorage.getItem('uid')
-    if (uid) {
-      this.props.getTasksSortData(uid)
-      this.props.getEmployeesSortData(uid)
-      this.props.getAccountsSortData(uid)
-      goToMain()
+    const isAppOpenedForTheFirstTime = true
+    if (isAppOpenedForTheFirstTime) {
+      setTimeout(() => {
+        goToWalkThrough()
+      }, 250);
     }
-    else
-      goToAuth()
+    else {
+      const uid = await AsyncStorage.getItem('uid')
+      if (uid) {
+        this.props.getTasksSortData(uid)
+        this.props.getEmployeesSortData(uid)
+        this.props.getAccountsSortData(uid)
+        goToMain()
+      }
+      else
+        goToAuth()
+    }
   }
   render() {
     return (
       <View style={styles.container}>
+        <Text style={{ color: '#f9f9f9', fontFamily: 'SourceSansPro-Bold', fontSize: 28 }}>BOSS</Text>
+        <Text style={{ color: '#f9f9f9', fontFamily: 'SourceSansPro-Bold', fontSize: 28 }}>DASHBOARD</Text>
       </View>
     )
   }
@@ -88,7 +105,7 @@ class FirstScreen extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000',
+    backgroundColor: '#46acc8',
     alignItems: 'center',
     justifyContent: 'center'
   }
