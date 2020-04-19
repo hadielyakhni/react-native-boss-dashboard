@@ -77,7 +77,7 @@ class FirstScreen extends Component {
     const isAppOpenedForTheFirstTime = true
     if (isAppOpenedForTheFirstTime) {
       setTimeout(() => {
-        goToWalkThrough()
+        goToWalkThrough(Appearance.getColorScheme())
       }, 250);
     }
     else {

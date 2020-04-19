@@ -3,13 +3,16 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import Fontisto from 'react-native-vector-icons/Fontisto'
 import { Dimensions } from 'react-native'
 
-export const goToWalkThrough = () => Navigation.setRoot({
+export const goToWalkThrough = systemTheme => Navigation.setRoot({
   root: {
     stack: {
       children: [
         {
           component: {
-            name: 'walkthrough'
+            name: 'walkthrough',
+            passProps: {
+              systemTheme
+            }
           }
         }
       ],
@@ -20,10 +23,10 @@ export const goToWalkThrough = () => Navigation.setRoot({
         animations: {
           setRoot: {
             waitForRender: true,
-            translationX: {
-              from: Dimensions.get('window').width,
-              to: 0,
-              duration: 150
+            alpha: {
+              from: 0,
+              to: 1,
+              duration: 300
             }
           }
         }

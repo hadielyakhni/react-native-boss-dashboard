@@ -106,7 +106,6 @@ export const userAuthenticateWithFacebook = () =>
     try {
       dispatch({ type: 'disable_facebook_button' })
       await LoginManager.logInWithPermissions(['public_profile', 'email'])
-      alert('sdjkfhksd')
       const data = await AccessToken.getCurrentAccessToken();
       if (!data)
         throw new Error('Something went wrong obtaining access token');

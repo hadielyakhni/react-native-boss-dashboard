@@ -110,7 +110,7 @@ class AuthScreen extends Component {
         >
           {
             this.state.isKeyboardOpened ?
-              <Text style={{ fontSize: 26, color: this.useTheme('#303030', '#fff'), fontFamily: 'SourceSansPro-SemiBold', marginVertical: 12, alignSelf: 'center' }}>
+              <Text style={{ fontSize: 26, color: this.useTheme('#303030', '#fbfbfb'), fontFamily: 'SourceSansPro-SemiBold', marginVertical: 12, alignSelf: 'center' }}>
                 B.D
               </Text>
               :
