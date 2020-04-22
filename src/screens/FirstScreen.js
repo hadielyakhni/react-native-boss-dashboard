@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { StyleSheet, View, Text } from 'react-native'
+import { StyleSheet, View, Image } from 'react-native'
 import AsyncStorage from '@react-native-community/async-storage'
 import { goToAuth, goToMain, goToWalkThrough } from '../navigation/navigation'
 import { connect } from 'react-redux'
@@ -8,6 +8,7 @@ import { GoogleSignin } from '@react-native-community/google-signin'
 import { Appearance } from 'react-native-appearance'
 import { Navigation } from 'react-native-navigation'
 import Keys from '../keys/google'
+import SplashScreen from 'react-native-splash-screen'
 
 GoogleSignin.configure({
   webClientId: Keys.webClientId
@@ -17,9 +18,9 @@ class FirstScreen extends Component {
   componentDidMount() {
     Navigation.mergeOptions(this.props.componentId, {
       statusBar: {
-        backgroundColor: '#46acc8',
-        drawBehind: true,
-        style: "light"
+        backgroundColor: '#008ee0',
+        style: "light",
+        drawBehind: true
       }
     })
     this.configureTheme()
@@ -74,11 +75,10 @@ class FirstScreen extends Component {
     })
   }
   tryAutomaticSignIn = async () => {
-    const isAppOpenedForTheFirstTime = true
-    if (isAppOpenedForTheFirstTime) {
-      setTimeout(() => {
-        goToWalkThrough(Appearance.getColorScheme())
-      }, 250);
+    const isOpenedBefore = await AsyncStorage.getItem('isOpenedBefore')
+    if (!isOpenedBefore) {
+      AsyncStorage.setItem('isOpenedBefore', "true")
+      goToWalkThrough(Appearance.getColorScheme())
     }
     else {
       const uid = await AsyncStorage.getItem('uid')
@@ -95,8 +95,6 @@ class FirstScreen extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text style={{ color: '#f9f9f9', fontFamily: 'SourceSansPro-Bold', fontSize: 28 }}>BOSS</Text>
-        <Text style={{ color: '#f9f9f9', fontFamily: 'SourceSansPro-Bold', fontSize: 28 }}>DASHBOARD</Text>
       </View>
     )
   }
@@ -105,7 +103,7 @@ class FirstScreen extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#46acc8',
+    backgroundColor: '#008ee0',
     alignItems: 'center',
     justifyContent: 'center'
   }

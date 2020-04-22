@@ -4,11 +4,11 @@
   "private": true,
   "scripts": {
     "android": "npx react-native run-android",
+    "android:buildRelease": "cd android && gradlew clean && gradlew bundleRelease -x bundleReleaseJsAndAssets",
     "android:release": "npx react-native run-android --variant=release",
     "ios": "react-native run-ios",
     "start": "npx react-native start",
-    "lint": "eslint .",
-    "postinstall": "node ./android/fixAndroid/android-release-fix.js"
+    "lint": "eslint ."
   },
   "dependencies": {
     "@react-native-community/async-storage": "^1.8.1",
@@ -34,7 +34,6 @@
     "react-native-spinkit": "^1.5.0",
     "react-native-splash-screen": "^3.2.0",
     "react-native-svg": "^12.1.0",
-    "react-native-svg-transformer": "^0.14.3",
     "react-native-vector-icons": "^6.6.0",
     "react-redux": "^7.2.0",
     "redux": "^4.0.5",

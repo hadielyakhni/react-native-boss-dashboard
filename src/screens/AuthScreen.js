@@ -22,6 +22,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import { Icon } from 'native-base'
 import { Navigation } from 'react-native-navigation'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
+import SplashScreen from 'react-native-splash-screen'
 
 UIManager.setLayoutAnimationEnabledExperimental &&
   UIManager.setLayoutAnimationEnabledExperimental(true)
@@ -29,12 +30,10 @@ UIManager.setLayoutAnimationEnabledExperimental &&
 class AuthScreen extends Component {
   constructor(props) {
     super(props)
-    Navigation.mergeOptions(this.props.componentId, {
-      statusBar: {
-        backgroundColor: 'rgba(255, 0, 0, 0)',
-        drawBehind: true
-      }
-    })
+    if (!this.props.isFromWalkThroughScreen)
+      setTimeout(() => {
+        SplashScreen.hide()
+      }, 50)
     this.keyboardDidShowListner = Keyboard.addListener('keyboardDidShow', this._keyboardDidShow)
     this.keyboardDidHideListner = Keyboard.addListener('keyboardDidHide', this._keyboardDidHide)
     this.state = {
@@ -312,7 +311,8 @@ class AuthScreen extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center'
+    justifyContent: 'center',
+    // paddingTop: 66
   },
   title: {
     textAlign: 'center',

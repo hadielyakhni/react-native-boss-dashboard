@@ -13,6 +13,13 @@ let
   TASKS_SORT_BY, TASKS_SORT_ORDER, EMPLOYEES_SORT_BY, EMPLOYEES_SORT_ORDER, ACCOUNTS_SORT_BY, ACCOUNTS_SORT_ORDER,
   LAST_DELETED_TASK, LAST_TASK_DELETE_DATE, LAST_DELETED_EMPLOYEE, LAST_EMPLOYEE_DELETE_DATE, LAST_DELETED_ACCOUNT, LAST_ACCOUNT_DELETE_DATE
 
+const DEFAULT_TASKS = [
+  { task: 'Click me to view details', description: 'I am the description, feel free to edit me!', isDone: false, date: Date.now() },
+  { task: 'Swipe left to delete', description: '', isDone: false, date: Date.now() + 10 },
+  { task: 'Swipe right to mark complete', description: '', isDone: false, date: Date.now() + 20 },
+  { task: 'I am a completed task!', description: '', isDone: true, date: Date.now() + 30 }
+]
+
 //Helper functions
 //Auth Helpers
 async function saveUserDataToAsyncStorage(user) {
@@ -41,6 +48,22 @@ const promiseTimeout = function (ms, promise) {
   })
 }
 
+const addDefaultDataForNewUser = uid => {
+  return Promise.all([
+    firebase.database().ref(`users/${uid}/tasks/sortData`).set({ sortBy: 'time', sortOrder: 'asc' }),
+    firebase.database().ref(`users/${uid}/employees/sortData`).set({ sortBy: 'default', sortOrder: 'asc' }),
+    firebase.database().ref(`users/${uid}/money/sortData`).set({ sortBy: 'default', sortOrder: 'asc' }),
+    ...DEFAULT_TASKS.map(task =>
+      firebase.database().ref(`users/${uid}/tasks/tasks`).push({
+        task: task.task,
+        description: task.description,
+        isDone: task.isDone,
+        date: task.date
+      })
+    )
+  ])
+}
+
 // Auth Actions
 export const userSignin = (email, password) =>
   async dispatch => {
@@ -54,7 +77,7 @@ export const userSignin = (email, password) =>
         dispatch(getEmployeesSortData(user.user.uid))
       if (!ACCOUNTS_SORT_BY && !ACCOUNTS_SORT_ORDER)
         dispatch(getAccountsSortData(user.user.uid))
-      goToMain()
+      goToMain('fromAuth')
       setTimeout(() => {
         dispatch({
           type: 'user_signedin',
@@ -77,15 +100,11 @@ export const userSignup = (email, password) =>
       .then(async user => {
         let uid = user.user.uid
         saveUserDataToAsyncStorage(user)
-        await Promise.all([
-          firebase.database().ref(`users/${uid}/tasks/sortData`).set({ sortBy: 'time', sortOrder: 'asc' }),
-          firebase.database().ref(`users/${uid}/employees/sortData`).set({ sortBy: 'default', sortOrder: 'asc' }),
-          firebase.database().ref(`users/${uid}/money/sortData`).set({ sortBy: 'default', sortOrder: 'asc' })
-        ])
+        await addDefaultDataForNewUser(uid)
         dispatch(getTasksSortData(uid))
         dispatch(getEmployeesSortData(uid))
         dispatch(getAccountsSortData(uid))
-        goToMain()
+        goToMain('fromAuth')
         setTimeout(() => {
           dispatch({
             type: 'user_signedup',
@@ -114,11 +133,7 @@ export const userAuthenticateWithFacebook = () =>
       saveUserDataToAsyncStorage(user)
       if (user.additionalUserInfo.isNewUser) {
         let uid = user.user.uid
-        await Promise.all([
-          firebase.database().ref(`users/${uid}/tasks/sortData`).set({ sortBy: 'time', sortOrder: 'asc' }),
-          firebase.database().ref(`users/${uid}/employees/sortData`).set({ sortBy: 'default', sortOrder: 'asc' }),
-          firebase.database().ref(`users/${uid}/money/sortData`).set({ sortBy: 'default', sortOrder: 'asc' })
-        ])
+        await addDefaultDataForNewUser(uid)
         dispatch(getTasksSortData(uid))
         dispatch(getEmployeesSortData(uid))
         dispatch(getAccountsSortData(uid))
@@ -132,7 +147,7 @@ export const userAuthenticateWithFacebook = () =>
         if (!ACCOUNTS_SORT_BY && !ACCOUNTS_SORT_ORDER)
           dispatch(getAccountsSortData(uid))
       }
-      goToMain()
+      goToMain('fromAuth')
       setTimeout(() => {
         dispatch({
           type: 'user_signedin',
@@ -161,11 +176,7 @@ export const userAuthenticateWithGoogle = () =>
       saveUserDataToAsyncStorage(user)
       if (user.additionalUserInfo.isNewUser) {
         let uid = user.user.uid
-        await Promise.all([
-          firebase.database().ref(`users/${uid}/tasks/sortData`).set({ sortBy: 'time', sortOrder: 'asc' }),
-          firebase.database().ref(`users/${uid}/employees/sortData`).set({ sortBy: 'default', sortOrder: 'asc' }),
-          firebase.database().ref(`users/${uid}/money/sortData`).set({ sortBy: 'default', sortOrder: 'asc' })
-        ])
+        await addDefaultDataForNewUser(uid)
         dispatch(getTasksSortData(uid))
         dispatch(getEmployeesSortData(uid))
         dispatch(getAccountsSortData(uid))
@@ -179,7 +190,7 @@ export const userAuthenticateWithGoogle = () =>
         if (!ACCOUNTS_SORT_BY && !ACCOUNTS_SORT_ORDER)
           dispatch(getAccountsSortData(uid))
       }
-      goToMain()
+      goToMain('fromAuth')
       setTimeout(() => {
         dispatch({
           type: 'user_signedin',
@@ -258,8 +269,7 @@ export const addTask = (task, description, fromWichScreen, componentId) => {
         task: task.trim(),
         description: description.trim()
         , isDone: false,
-        date: Date.now(),
-        customDate: Date.now()
+        date: Date.now()
       })
     if (fromWichScreen === 'todoAdd')
       Navigation.pop(componentId)

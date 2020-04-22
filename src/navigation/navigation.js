@@ -19,23 +19,13 @@ export const goToWalkThrough = systemTheme => Navigation.setRoot({
       options: {
         topBar: {
           visible: false
-        },
-        animations: {
-          setRoot: {
-            waitForRender: true,
-            alpha: {
-              from: 0,
-              to: 1,
-              duration: 300
-            }
-          }
         }
       }
     }
   }
 })
 
-export const goToAuth = isFromWalkThrough => Navigation.setRoot({
+export const goToAuth = () => Navigation.setRoot({
   root: {
     stack: {
       children: [
@@ -46,25 +36,28 @@ export const goToAuth = isFromWalkThrough => Navigation.setRoot({
         }
       ],
       options: {
-        topBar: {
-          visible: false
-        },
         animations: {
           setRoot: {
             waitForRender: true,
-            translationX: {
-              from: Dimensions.get('window').width,
-              to: 0,
-              duration: isFromWalkThrough ? 150 : 0
+            alpha: {
+              from: 0,
+              to: 1,
+              duration: 200
             }
           }
+        },
+        passProps: {
+          isFromWalkThrough: true
+        },
+        topBar: {
+          visible: false
         }
       }
     }
   }
 })
 
-export const goToMain = () => Promise.all([
+export const goToMain = isFromAuth => Promise.all([
   FontAwesome5.getImageSource('tasks', 25),
   FontAwesome5.getImageSource('user-tie', 25),
   Fontisto.getImageSource('wallet', 25),
@@ -78,7 +71,10 @@ export const goToMain = () => Promise.all([
             children: [
               {
                 component: {
-                  name: 'todo'
+                  name: 'todo',
+                  passProps: {
+                    isFromAuth
+                  }
                 }
               }
             ],
@@ -165,8 +161,7 @@ export const goToMain = () => Promise.all([
         },
         bottomTabs: {
           preferLargeIcons: true,
-          titleDisplayMode: 'alwaysHide',
-          tabsAttachMode: 'afterInitialTab'
+          titleDisplayMode: 'alwaysHide'
         }
       }
     }

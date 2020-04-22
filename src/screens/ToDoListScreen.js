@@ -18,10 +18,20 @@ import { gestureHandlerRootHOC } from 'react-native-gesture-handler'
 import ToDoItem from '../components/ToDoItem'
 import SortChoicesModal from '../components/ChoicesModal'
 import ToDoLoadingContainer from '../components/ToDoLoadingContainer'
+import SplashScreen from 'react-native-splash-screen'
 
 class ToDoListScreen extends Component {
   constructor(props) {
     super(props)
+    if (!this.props.isFromAuth) {
+      setTimeout(() => {
+        SplashScreen.hide()
+        setTimeout(() => {
+          this.setState({ canRender: true })
+        }, 1);
+      }, 50)
+    }
+    this.state = { task: '', sortChoicesModalVisible: false, clickCount: 0, isAddButtonDisabled: false, canRender: !!props.isFromAuth }
     this.activeScreenTabIndex = 0
     this.navigationListner1 = Navigation.events().registerComponentDidAppearListener(data => {
       this.props.setActiveScreenName(data.componentName)
@@ -50,7 +60,6 @@ class ToDoListScreen extends Component {
       this.activeScreenTabIndex = e.tabIndex
     })
     this.props.fetchTasks()
-    this.state = { task: '', sortChoicesModalVisible: false, clickCount: 0, isAddButtonDisabled: false }
     this.dataAppearsAtLeastOnce = false
     this.sortChoices = [{ id: '1', prop: 'time' }, { id: "2", prop: 'title' }]
     this.hintOpacityValue = 0
@@ -159,7 +168,8 @@ class ToDoListScreen extends Component {
     )
   }
   renderScreen() {
-    if (!this.props.fetchingTasks)
+    console.log(this.props.fetchingTasks, this.state.canRender)
+    if (!this.props.fetchingTasks && this.state.canRender)
       if (!!this.props.unDoneTasks.length || !!this.props.doneTasks.length) {
         if (!this.dataAppearsAtLeastOnce)
           this.dataAppearsAtLeastOnce = true

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, StyleSheet, View, TouchableOpacity, Linking, Modal, Dimensions, ScrollView, Button } from 'react-native'
+import { Text, StyleSheet, View, TouchableOpacity, Linking, Modal, Dimensions, ScrollView, NativeModules } from 'react-native'
 import { LoginManager } from 'react-native-fbsdk'
 import { GoogleSignin } from '@react-native-community/google-signin'
 import AsyncStorage from '@react-native-community/async-storage'
@@ -8,12 +8,15 @@ import { goToAuth, goToMain } from '../navigation/navigation'
 import { connect } from 'react-redux'
 import { incrementExitCount, resetExitCount, setTheme } from '../actions'
 import { Spinner } from 'native-base'
+import SplashScreen from 'react-native-splash-screen'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import Entypo from 'react-native-vector-icons/Entypo'
 import ThemeChoicesModal from '../components/ChoicesModal'
+
+const NativeSplashScreen = NativeModules.NativeSplashScreen
 
 class SettingsScreen extends Component {
   constructor(props) {
@@ -89,10 +92,18 @@ class SettingsScreen extends Component {
       Navigation.setDefaultOptions({ statusBar: { backgroundColor: '#161616' } })
     await AsyncStorage.setItem('theme', choice)
     this.setState({ themeChoicesModalVisible: false })
+    // SplashScreen.show()
+    NativeSplashScreen.show()
+    // setTimeout(() => {
+    // SplashScreen.hide()
+    // }, 1500);
     Navigation.setRoot({
       root: {
         component: {
           name: 'first',
+          passProps: {
+            isFromSettings: true
+          },
           options: {
             animations: {
               setRoot: {
@@ -131,9 +142,16 @@ class SettingsScreen extends Component {
           onRequestClose={() => {
             this.setState({ modalVisible: false })
           }}>
-          <View
-            style={{ flex: 1, justifyContent: 'center', backgroundColor: this.useTheme('rgba(0,0,0,0.1)', 'rgba(0,0,0,0.5)') }}
-          >
+          <View style={{ flex: 1, justifyContent: 'center' }}>
+            <TouchableOpacity
+              activeOpacity={1}
+              onPress={() => {
+                this.setState({ modalVisible: false })
+              }}
+              style={[StyleSheet.absoluteFill, {
+                backgroundColor: this.props.theme === 'light' ? 'rgba(0,0,0,0.1)' : 'rgba(0,0,0,0.5)',
+                zIndex: 0
+              }]}></TouchableOpacity>
             <View style={{
               ...styles.modal,
               backgroundColor: this.useTheme('#fbfbfb', '#222')
@@ -144,7 +162,7 @@ class SettingsScreen extends Component {
               }}>
                 <Text style={{ color: this.useTheme('#303030', '#fbfbfb'), fontSize: 18, fontFamily: 'SourceSansPro-Regular' }}>
                   Log out of Boss Dashboard?
-                </Text>
+              </Text>
               </View>
               <TouchableOpacity
                 onPress={() => {
@@ -159,7 +177,7 @@ class SettingsScreen extends Component {
                   this.props.resetAccounts()
                   setTimeout(() => {
                     goToAuth()
-                  }, 400);
+                  }, 750);
                 }}
                 activeOpacity={0.6}
                 style={{

@@ -11,9 +11,9 @@ class ToDoDetailsScreen extends Component {
   constructor(props) {
     super(props)
     this.timeout = 0
-    const { task, description, isDone, date, customDate } = this.props
+    const { task, description, isDone, date } = this.props
     this.state = { task, description, isDone }
-    this.taskData = { task, description, isDone, date, customDate }
+    this.taskData = { task, description, isDone, date }
   }
   useTheme(lightThemeColor, darkThemeColor) {
     if (this.props.theme === 'light')

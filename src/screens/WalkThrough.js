@@ -4,12 +4,13 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import AppIntroSlider from 'react-native-app-intro-slider'
 import { goToAuth } from '../navigation/navigation'
 import { Navigation } from 'react-native-navigation';
+import SplashScreen from 'react-native-splash-screen'
 
 const SLIDES = [
   {
     key: '0',
     title: 'Welcome!',
-    text: 'Boss Dashboard provides you with 3 utility tools to improve your production and manage your buisiness!',
+    text: 'Boss Dashboard provides you with 3 utility tools to improve your production and manage your business!',
     imageURI: "welcome_min"
   },
   {
@@ -34,6 +35,7 @@ const SLIDES = [
 
 export default class WalkThrough extends React.Component {
   componentDidMount() {
+    SplashScreen.hide()
     Navigation.mergeOptions(this.props.componentId, {
       statusBar: {
         backgroundColor: 'rgba(255, 0, 0, 0)',
@@ -64,7 +66,6 @@ export default class WalkThrough extends React.Component {
           justifyContent: 'center'
         }}>
           <Image
-            fadeDuration={200}
             source={{ uri: item.imageURI }}
             style={{
               height: item.key === "1" ?
