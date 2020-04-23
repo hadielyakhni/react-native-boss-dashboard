@@ -50,7 +50,7 @@ const promiseTimeout = function (ms, promise) {
 
 const addDefaultDataForNewUser = uid => {
   return Promise.all([
-    firebase.database().ref(`users/${uid}/tasks/sortData`).set({ sortBy: 'time', sortOrder: 'asc' }),
+    firebase.database().ref(`users/${uid}/tasks/sortData`).set({ sortBy: 'time', sortOrder: 'desc' }),
     firebase.database().ref(`users/${uid}/employees/sortData`).set({ sortBy: 'default', sortOrder: 'asc' }),
     firebase.database().ref(`users/${uid}/money/sortData`).set({ sortBy: 'default', sortOrder: 'asc' }),
     ...DEFAULT_TASKS.map(task =>

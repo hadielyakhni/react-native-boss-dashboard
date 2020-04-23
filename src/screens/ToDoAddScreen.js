@@ -4,9 +4,7 @@ import { connect } from 'react-redux'
 import { addTask } from '../actions'
 import { Navigation } from 'react-native-navigation'
 import Ionicons from 'react-native-vector-icons/Ionicons'
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import MaterialIcons from "react-native-vector-icons/MaterialIcons"
-import MyButton from '../components/MyButton'
 
 class ToDoAddScreen extends Component {
   state = {

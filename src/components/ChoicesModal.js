@@ -2,7 +2,7 @@ import React from 'react'
 import { StyleSheet, Text, View, Modal, TouchableOpacity, FlatList } from 'react-native'
 import Choice from './Choice'
 
-const ChoicesModal = ({ visible, choices, selectedChoice, onSelect, onCancel, theme }) => {
+const ChoicesModal = ({ visible, label, choices, selectedChoice, onSelect, onCancel, theme }) => {
   return (
     <Modal
       onRequestClose={onCancel}
@@ -35,7 +35,7 @@ const ChoicesModal = ({ visible, choices, selectedChoice, onSelect, onCancel, th
             fontSize: 24,
             fontFamily: 'SourceSansPro-SemiBold'
           }}>
-            Sort By
+            {label}
           </Text>
           <View style={{
             paddingTop: 18,

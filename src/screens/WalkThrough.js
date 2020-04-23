@@ -3,7 +3,8 @@ import { Text, View, StyleSheet, Image, Dimensions } from 'react-native'
 import Icon from 'react-native-vector-icons/Ionicons';
 import AppIntroSlider from 'react-native-app-intro-slider'
 import { goToAuth } from '../navigation/navigation'
-import { Navigation } from 'react-native-navigation';
+import { Navigation } from 'react-native-navigation'
+import AsyncStorage from '@react-native-community/async-storage'
 import SplashScreen from 'react-native-splash-screen'
 
 const SLIDES = [
@@ -35,7 +36,9 @@ const SLIDES = [
 
 export default class WalkThrough extends React.Component {
   componentDidMount() {
-    SplashScreen.hide()
+    setTimeout(() => {
+      SplashScreen.hide()
+    }, 250);
     Navigation.mergeOptions(this.props.componentId, {
       statusBar: {
         backgroundColor: 'rgba(255, 0, 0, 0)',
@@ -142,8 +145,14 @@ export default class WalkThrough extends React.Component {
         renderDoneButton={this.renderDoneButton}
         renderNextButton={this.renderNextButton}
         onSlideChange={this.onSlideChange}
-        onDone={() => goToAuth(true)}
-        onSkip={() => goToAuth(true)}
+        onDone={() => {
+          goToAuth()
+          AsyncStorage.setItem('isOpenedBefore', "true")
+        }}
+        onSkip={() => {
+          goToAuth()
+          AsyncStorage.setItem('isOpenedBefore', "true")
+        }}
         showSkipButton
         renderSkipButton={this.renderSkipButton}
         activeDotStyle={{ backgroundColor: this.useTheme('#303030', '#fbfbfb') }}

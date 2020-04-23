@@ -77,7 +77,6 @@ class FirstScreen extends Component {
   tryAutomaticSignIn = async () => {
     const isOpenedBefore = await AsyncStorage.getItem('isOpenedBefore')
     if (!isOpenedBefore) {
-      AsyncStorage.setItem('isOpenedBefore', "true")
       goToWalkThrough(Appearance.getColorScheme())
     }
     else {

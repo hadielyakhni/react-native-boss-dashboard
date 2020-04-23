@@ -161,6 +161,7 @@ class EmployeeDetailsScreen extends Component {
               isAutoCorrect={false}
               onChangeText={value => this.setState({ name: value })}
             />
+            <this.separator />
             <MyInput
               theme={this.props.theme}
               autoCapitalize="words"
@@ -173,6 +174,7 @@ class EmployeeDetailsScreen extends Component {
               isAutoCorrect={false}
               onChangeText={value => this.setState({ role: value })}
             />
+            <this.separator />
             <MyInput
               theme={this.props.theme}
               keyboardType="decimal-pad"
@@ -185,6 +187,7 @@ class EmployeeDetailsScreen extends Component {
               isAutoCorrect={false}
               onChangeText={value => this.setState({ salary: value })}
             />
+            <this.separator />
             <MyInput
               keyboardType="number-pad"
               theme={this.props.theme}
@@ -206,6 +209,7 @@ class EmployeeDetailsScreen extends Component {
               isAutoCorrect={false}
               onChangeText={value => this.setState({ phone: value })}
             />
+            <this.separator />
             <MyInput
               keyboardType="email-address"
               inputContainerStyle={{ marginVertical: 8 }}
@@ -227,6 +231,7 @@ class EmployeeDetailsScreen extends Component {
               theme={this.props.theme}
               onChangeText={value => this.setState({ email: value })}
             />
+            <this.separator />
             <MyInput
               theme={this.props.theme}
               inputContainerStyle={{ marginVertical: 8 }}

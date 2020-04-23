@@ -248,6 +248,7 @@ class EmployeesListScreen extends Component {
           {this.renderUndoMessage()}
           <SortChoicesModal
             theme={this.props.theme}
+            label="Sort By"
             choices={this.sortChoices}
             visible={this.state.sortChoicesModalVisible}
             selectedChoice={this.activeSortLabel}

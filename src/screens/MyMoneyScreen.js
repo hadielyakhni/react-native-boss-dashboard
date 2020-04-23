@@ -23,7 +23,6 @@ import AccountsLoadingContainer from '../components/AccountsLoadingContainer'
 class MyMoneyScreen extends Component {
   constructor(props) {
     super(props)
-    this.ref = React.createRef()
     this.props.fetchAccounts()
     this.dataAppearsAtLeastOnce = false
     this.sortChoices = [
@@ -359,7 +358,7 @@ class MyMoneyScreen extends Component {
     return darkThemeColor
   }
   render() {
-    { this.checkActiveSortLabel() }
+    this.checkActiveSortLabel()
     return (
       <View style={{
         ...styles.container,
@@ -370,6 +369,7 @@ class MyMoneyScreen extends Component {
           {this.checkExit()}
           <SortChoicesModal
             theme={this.props.theme}
+            label="Sort By"
             choices={this.sortChoices}
             visible={this.state.sortChoicesModalVisible}
             selectedChoice={this.activeSortLabel}

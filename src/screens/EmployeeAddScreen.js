@@ -135,6 +135,7 @@ class EmployeeAddScreen extends Component {
                 isAutoCorrect={false}
                 onChangeText={value => this.setState({ email: value })}
               />
+              <this.separator />
               <MyInput
                 theme={this.props.theme}
                 onTouchStart={() => {

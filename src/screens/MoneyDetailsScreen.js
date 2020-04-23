@@ -10,7 +10,9 @@ import {
   Dimensions,
   FlatList,
   Linking,
-  ScrollView
+  ScrollView,
+  UIManager,
+  LayoutAnimation
 } from 'react-native'
 import { connect } from 'react-redux'
 import { addTransaction, deleteAccount } from '../actions'
@@ -22,12 +24,22 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import TransactionCard from '../components/TransactionCard'
+import { Transition, Transitioning } from 'react-native-reanimated'
 
 const { height, width } = Dimensions.get("window")
+
+UIManager.setLayoutAnimationEnabledExperimental &&
+  UIManager.setLayoutAnimationEnabledExperimental(true)
 
 class MoneyDetailsScreen extends Component {
   constructor(props) {
     super(props)
+    this.ref = React.createRef()
+    this.transition = (
+      <Transition.Together>
+        <Transition.Change />
+      </Transition.Together>
+    )
     InteractionManager.runAfterInteractions(() => {
       this.setState({ canRender: true })
     })
@@ -42,6 +54,9 @@ class MoneyDetailsScreen extends Component {
       transType: '',
       transAmount: ''
     }
+  }
+  componentDidUpdate() {
+    this.ref.current.animateNextTransition()
   }
   getName() {
     let name = this.props.name.split(' ')[0]
@@ -58,7 +73,7 @@ class MoneyDetailsScreen extends Component {
   render() {
     return (
       this.state.canRender ?
-        <View style={{
+        <Transitioning.View ref={this.ref} transition={this.transition} style={{
           ...styles.container,
           backgroundColor: this.useTheme('#f5f5f5', '#161616')
         }} >
@@ -458,7 +473,7 @@ class MoneyDetailsScreen extends Component {
               </View>
             </Modal>
           </View>
-        </View>
+        </Transitioning.View>
         :
         <View style={{ flex: 1, backgroundColor: this.useTheme('#fbfbfb', '#303030'), alignItems: 'center', justifyContent: 'center' }}>
           <SpinnerSpinkit color="#008ee0" size={38} type="ThreeBounce" />
@@ -471,13 +486,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal:
-      Dimensions.get('window').width > 800 ? 62
+      width > 800 ? 62
         :
-        Dimensions.get('window').width > 700 ? 48
+        width > 700 ? 48
           :
-          Dimensions.get('window').width > 600 ? 36
+          width > 600 ? 36
             :
-            Dimensions.get('window').width > 500 ? 10
+            width > 500 ? 10
               :
               0
   },
@@ -487,13 +502,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginBottom: 2,
     marginVertical:
-      Dimensions.get('window').width > 800 ? 20
+      width > 800 ? 20
         :
-        Dimensions.get('window').width > 700 ? 12
+        width > 700 ? 12
           :
-          Dimensions.get('window').width > 600 ? 8
+          width > 600 ? 8
             :
-            Dimensions.get('window').width > 500 ? 6
+            width > 500 ? 6
               :
               2
   },
@@ -615,13 +630,13 @@ const styles = StyleSheet.create({
   innerTransConfirmationModal: {
     maxHeight: 300,
     height: height / 4,
-    marginHorizontal: Dimensions.get('window').width > 800 ? 72
+    marginHorizontal: width > 800 ? 72
       :
-      Dimensions.get('window').width > 700 ? 56
+      width > 700 ? 56
         :
-        Dimensions.get('window').width > 600 ? 42
+        width > 600 ? 42
           :
-          Dimensions.get('window').width > 500 ? 14
+          width > 500 ? 14
             :
             0,
     borderTopLeftRadius: height / 48,

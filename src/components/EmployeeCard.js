@@ -1,11 +1,32 @@
-import React, { PureComponent, Component } from 'react'
-import { Image, View, Text, StyleSheet, TouchableOpacity, Dimensions } from 'react-native'
+import React, { Component } from 'react'
+import { Image, View, Text, StyleSheet, TouchableOpacity, Dimensions, LayoutAnimation, UIManager } from 'react-native'
 import { Icon } from 'native-base'
 import { Navigation } from 'react-native-navigation'
 import { connect } from 'react-redux'
 
+UIManager.setLayoutAnimationEnabledExperimental &&
+  UIManager.setLayoutAnimationEnabledExperimental(true)
 
 class EmployeeCard extends Component {
+  componentDidMount() {
+    LayoutAnimation.configureNext({
+      update: {
+        duration: 180,
+        type: LayoutAnimation.Types.linear,
+        property: LayoutAnimation.Properties.opacity
+      }
+    })
+  }
+  componentWillUnmount() {
+    LayoutAnimation.configureNext({
+      update: {
+        duration: 80,
+        delay: 180,
+        type: LayoutAnimation.Types.linear,
+        property: LayoutAnimation.Properties.opacity
+      }
+    })
+  }
   render() {
     const { componentId, uid, data } = this.props
     const d = new Date(data.joinDate)

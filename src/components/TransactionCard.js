@@ -3,19 +3,7 @@ import { StyleSheet, Text, View, Dimensions, LayoutAnimation, UIManager } from '
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 
-UIManager.setLayoutAnimationEnabledExperimental &&
-  UIManager.setLayoutAnimationEnabledExperimental(true)
-
 const TransactionCard = ({ data, theme }) => {
-  useEffect(() => {
-    LayoutAnimation.configureNext({
-      update: {
-        duration: 180,
-        type: LayoutAnimation.Types.linear,
-        property: LayoutAnimation.Properties.opacity
-      }
-    })
-  }, [])
   const { transAmount, status, date } = data[1]
   const getDateFormatted = date => {
     const d = new Date(date)

@@ -168,7 +168,6 @@ class ToDoListScreen extends Component {
     )
   }
   renderScreen() {
-    console.log(this.props.fetchingTasks, this.state.canRender)
     if (!this.props.fetchingTasks && this.state.canRender)
       if (!!this.props.unDoneTasks.length || !!this.props.doneTasks.length) {
         if (!this.dataAppearsAtLeastOnce)
@@ -390,6 +389,7 @@ class ToDoListScreen extends Component {
         {this.checkExit()}
         <SortChoicesModal
           theme={this.props.theme}
+          label="Sort By"
           choices={this.sortChoices}
           visible={this.state.sortChoicesModalVisible}
           selectedChoice={this.props.sortBy}

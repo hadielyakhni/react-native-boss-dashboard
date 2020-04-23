@@ -8,7 +8,6 @@ import { goToAuth, goToMain } from '../navigation/navigation'
 import { connect } from 'react-redux'
 import { incrementExitCount, resetExitCount, setTheme } from '../actions'
 import { Spinner } from 'native-base'
-import SplashScreen from 'react-native-splash-screen'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
@@ -92,11 +91,7 @@ class SettingsScreen extends Component {
       Navigation.setDefaultOptions({ statusBar: { backgroundColor: '#161616' } })
     await AsyncStorage.setItem('theme', choice)
     this.setState({ themeChoicesModalVisible: false })
-    // SplashScreen.show()
     NativeSplashScreen.show()
-    // setTimeout(() => {
-    // SplashScreen.hide()
-    // }, 1500);
     Navigation.setRoot({
       root: {
         component: {
@@ -128,6 +123,7 @@ class SettingsScreen extends Component {
       }}>
         <ThemeChoicesModal
           theme={this.props.theme}
+          label="Theme"
           choices={this.themeChoices}
           visible={this.state.themeChoicesModalVisible}
           selectedChoice={this.props.isSystemTheme ? 'system' : this.props.theme}
