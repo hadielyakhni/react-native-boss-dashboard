@@ -3,7 +3,6 @@ import { Navigation } from 'react-native-navigation'
 import registerScreens from './src/navigation/screens'
 
 firebase.database().setPersistenceEnabled(true)
-
 registerScreens()
 
 Navigation.events().registerAppLaunchedListener(() => {
@@ -15,4 +14,3 @@ Navigation.events().registerAppLaunchedListener(() => {
     }
   })
 })
-

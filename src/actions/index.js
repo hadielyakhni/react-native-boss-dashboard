@@ -86,6 +86,7 @@ export const userSignin = (email, password) =>
       }, 100);
     }
     catch (err) {
+      console.log(err)
       dispatch({
         type: 'auth_error',
         payload: err.toString()
@@ -480,9 +481,9 @@ export const deleteAccount = (componentId, accountId, accountData) => {
     Navigation.pop(componentId)
     dispatch({ type: 'show_undo_account_message' })
     setTimeout(() => {
-      if (Date.now() - LAST_ACCOUNT_DELETE_DATE >= 2500)
+      if (Date.now() - LAST_ACCOUNT_DELETE_DATE >= 4000)
         dispatch({ type: 'hide_undo_account_message' })
-    }, 2500);
+    }, 4000);
   }
 }
 

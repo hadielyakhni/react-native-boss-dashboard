@@ -19,6 +19,8 @@ import ToDoItem from '../components/ToDoItem'
 import SortChoicesModal from '../components/ChoicesModal'
 import ToDoLoadingContainer from '../components/ToDoLoadingContainer'
 import SplashScreen from 'react-native-splash-screen'
+import { translate, isRTL } from '../utils/i18n'
+import getNumber from '../utils/getNumber'
 
 class ToDoListScreen extends Component {
   constructor(props) {
@@ -99,7 +101,7 @@ class ToDoListScreen extends Component {
   componentDidMount() {
     this.backButtonListner = BackHandler.addEventListener("hardwareBackPress", () => {
       const screen = this.activeScreenName
-      if (screen === 'todo' || screen === 'employees' || screen === 'money' || screen === 'profile') {
+      if (screen === 'todo' || screen === 'employees' || screen === 'money' || screen === 'settings') {
         this.props.incrementExitCount()
         return true
       }
@@ -199,10 +201,10 @@ class ToDoListScreen extends Component {
                     <View style={styles.separotorView}>
                       <View style={{ flexDirection: 'row' }}>
                         <Text style={{ ...styles.separotorText, color: this.useTheme('#303030', '#fbfbfb') }}>
-                          {'INCOMPLETED' + "  "}
+                          {translate('main.todoList.incompleted') + "  "}
                         </Text>
                         <Text style={{ ...styles.SeparatorNumber, color: this.useTheme('#303030', '#fbfbfb') }}>
-                          ({this.props.unDoneTasks.length})
+                          ({getNumber(this.props.unDoneTasks.length.toString())})
                         </Text>
                       </View>
                       <Animated.View style={{ transform: [{ rotate: this.undoneArrowRotationAngle }] }}>
@@ -238,10 +240,10 @@ class ToDoListScreen extends Component {
                     <View style={styles.separotorView}>
                       <View style={{ flexDirection: 'row' }}>
                         <Text style={{ ...styles.separotorText, color: this.useTheme('#303030', '#eee') }}>
-                          {'COMPLETED' + "  "}
+                          {translate('main.todoList.completed') + "  "}
                         </Text>
                         <Text style={{ ...styles.SeparatorNumber, color: this.useTheme('#303030', '#eee') }}>
-                          ({this.props.doneTasks.length})
+                          ({getNumber(this.props.doneTasks.length.toString())})
                         </Text>
                       </View>
                       <Animated.View style={{ transform: [{ rotate: this.doneArrowRotationAngle }] }}>
@@ -293,8 +295,12 @@ class ToDoListScreen extends Component {
               transform: [{ translateY: this.hintTranslateY }],
               marginBottom: 140
             }}>
-              <Text style={{ color: this.useTheme('#303030', '#fbfbfb'), fontFamily: 'SourceSansPro-SemiBold', fontSize: 17, marginBottom: 5 }}>Start organizing your life!</Text>
-              <Text style={{ color: this.useTheme('#303030', '#fbfbfb'), fontFamily: 'SourceSansPro-Regular', fontSize: 15 }}>Any thing to do?</Text>
+              <Text style={{ color: this.useTheme('#303030', '#fbfbfb'), fontFamily: 'SourceSansPro-SemiBold', fontSize: 17, marginBottom: 5 }}>
+                {translate('main.todoList.hint1')}
+              </Text>
+              <Text style={{ color: this.useTheme('#303030', '#fbfbfb'), fontFamily: 'SourceSansPro-Regular', fontSize: 15 }}>
+                {translate('main.todoList.hint2')}
+              </Text>
             </Animated.View>
           </View>
         )
@@ -321,7 +327,7 @@ class ToDoListScreen extends Component {
           <TouchableOpacity
             disabled={this.hintOpacityValue === 1}
             activeOpacity={0.8}
-            style={{ width: 40, paddingLeft: 6, justifyContent: 'center' }}
+            style={{ width: 40, paddingHorizontal: 6, justifyContent: 'center' }}
             onPress={() => this.setState({ sortChoicesModalVisible: true })}
           >
             <MaterialCommunityIcons name="sort" color={this.useTheme('#303030', "#fbfbfb")} size={28} />
@@ -337,7 +343,7 @@ class ToDoListScreen extends Component {
         backgroundColor: this.useTheme('#303030', '#f5f5f5')
       }]}>
         <Text style={{ fontSize: 15, color: this.useTheme('#fbfbfb', '#303030'), fontFamily: 'SourceSansPro-Regular' }}>
-          1 deleted
+          1 {translate('components.undoModal.deleted')}
         </Text>
         <TouchableOpacity
           activeOpacity={0.8}
@@ -347,7 +353,7 @@ class ToDoListScreen extends Component {
           }}
         >
           <Text style={{ fontSize: 17, fontFamily: 'SourceSansPro-SemiBold', color: '#008ee0' }}>
-            Undo
+            {translate('components.undoModal.undo')}
           </Text>
         </TouchableOpacity>
       </View>
@@ -363,9 +369,10 @@ class ToDoListScreen extends Component {
       return null
     if (this.props.exitCount === 1) {
       return <View style={{
+        opacity: 0.9,
+        paddingHorizontal: 20,
         borderRadius: 16,
         height: 38,
-        width: 190,
         backgroundColor: '#555',
         position: 'absolute',
         zIndex: 1,
@@ -374,7 +381,7 @@ class ToDoListScreen extends Component {
         justifyContent: 'center',
         alignSelf: 'center'
       }}>
-        <Text style={{ fontSize: 15, color: '#fbfbfb', fontFamily: 'SourceSansPro-Regular' }}>Press again to exit...</Text>
+        <Text style={{ fontSize: 15, color: '#fbfbfb', fontFamily: 'SourceSansPro-Regular' }}>{translate('components.confirmExitModal.message')}</Text>
       </View>
     }
     else if (this.props.exitCount === 2)
@@ -399,7 +406,7 @@ class ToDoListScreen extends Component {
         <View style={{ ...styles.header, backgroundColor: this.useTheme('#f5f5f5', '#161616') }}>
           <View style={{ ...styles.titleContainer, backgroundColor: this.useTheme('#f5f5f5', '#161616') }}>
             <Text numberOfLines={1} style={{ color: this.useTheme('#303030', '#fbfbfb'), fontSize: 26, fontFamily: 'SourceSansPro-SemiBold' }}>
-              My Tasks
+              {translate('main.todoList.title')}
             </Text>
           </View>
           {this.renderSortButton()}
@@ -408,9 +415,9 @@ class ToDoListScreen extends Component {
           <TextInput
             editable={this.props.fetchingTasks ? false : true}
             value={this.state.task}
-            style={{ ...styles.input, color: this.useTheme('#303030', '#fbfbfb') }}
+            style={{ ...styles.input, textAlign: isRTL() ? 'right' : 'left', color: this.useTheme('#303030', '#fbfbfb') }}
             placeholderTextColor={this.useTheme('#999', 'rgba(255, 255, 255, 0.6)')}
-            placeholder='Quick Task'
+            placeholder={translate('main.todoList.placeholder')}
             selectionColor='#008ee0'
             onChangeText={task => this.setState({ task })}
             onSubmitEditing={this.onAdd.bind(this)}
@@ -499,6 +506,7 @@ const styles = StyleSheet.create({
   header: {
     height: 56,
     flexDirection: 'row',
+    justifyContent: 'space-between',
     marginVertical:
       Dimensions.get('window').width > 800 ? 20
         :
@@ -511,8 +519,8 @@ const styles = StyleSheet.create({
               2
   },
   titleContainer: {
-    flex: 1,
-    paddingLeft: 12,
+    width: 300,
+    paddingHorizontal: 12,
     justifyContent: 'center'
   },
   addView: {

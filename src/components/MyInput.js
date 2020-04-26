@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react'
 import { TextInput, View, StyleSheet, TouchableOpacity } from 'react-native'
 import { Icon } from 'native-base'
+import { isRTL } from '../utils/i18n'
 
 export default class MyInput extends PureComponent {
   renderButton() {
@@ -42,7 +43,8 @@ export default class MyInput extends PureComponent {
           style={[
             styles.InputStyle,
             this.props.style,
-            { color: this.props.theme === 'light' ? '#303030' : '#fbfbfb' }
+
+            { textAlign: isRTL() ? 'right' : 'left', color: this.props.theme === 'light' ? '#303030' : '#fbfbfb' }
           ]}
           placeholder={this.props.placeHolder}
           placeholderTextColor={this.props.theme === 'light' ? '#999' : 'rgba(255, 255, 255, 0.6)'}

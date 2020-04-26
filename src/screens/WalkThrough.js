@@ -1,44 +1,49 @@
 import React from 'react'
-import { Text, View, StyleSheet, Image, Dimensions } from 'react-native'
+import { Text, View, StyleSheet, Image, Dimensions, I18nManager } from 'react-native'
 import Icon from 'react-native-vector-icons/Ionicons';
 import AppIntroSlider from 'react-native-app-intro-slider'
 import { goToAuth } from '../navigation/navigation'
 import { Navigation } from 'react-native-navigation'
 import AsyncStorage from '@react-native-community/async-storage'
 import SplashScreen from 'react-native-splash-screen'
-
-const SLIDES = [
-  {
-    key: '0',
-    title: 'Welcome!',
-    text: 'Boss Dashboard provides you with 3 utility tools to improve your production and manage your business!',
-    imageURI: "welcome_min"
-  },
-  {
-    key: '1',
-    title: 'Todo List',
-    text: 'Simple Todo list and note taker to help you achieve more.',
-    imageURI: "todo_min"
-  },
-  {
-    key: '2',
-    title: 'Employees',
-    text: 'Easily manage all your employees and contact them from one place.',
-    imageURI: "employees_min"
-  },
-  {
-    key: '3',
-    title: 'Transactions',
-    text: 'Quickly reach and manage all people you have money with them and vise versa.',
-    imageURI: "money_min"
-  }
-]
+import { translate, isRTL } from '../utils/i18n'
+import i18n from 'i18n-js'
 
 export default class WalkThrough extends React.Component {
+  constructor() {
+    super()
+    this.SLIDES = [
+      {
+        key: '0',
+        title: translate('walkthrough.intro.title'),
+        text: translate('walkthrough.intro.text'),
+        imageURI: "welcome_min"
+      },
+      {
+        key: '1',
+        title: i18n.t('walkthrough.todoList.title'),
+        text: i18n.t('walkthrough.todoList.text'),
+        imageURI: "todo_min"
+      },
+      {
+        key: '2',
+        title: i18n.t('walkthrough.employees.title'),
+        text: i18n.t('walkthrough.employees.text'),
+        imageURI: "employees_min"
+      },
+      {
+        key: '3',
+        title: i18n.t('walkthrough.money.title'),
+        text: i18n.t('walkthrough.money.text'),
+        imageURI: "money_min"
+      }
+    ]
+  }
   componentDidMount() {
+    // I18nManager.allowRTL(true)
     setTimeout(() => {
       SplashScreen.hide()
-    }, 250);
+    }, 125);
     Navigation.mergeOptions(this.props.componentId, {
       statusBar: {
         backgroundColor: 'rgba(255, 0, 0, 0)',
@@ -91,8 +96,7 @@ export default class WalkThrough extends React.Component {
             ...styles.text,
             fontSize: 20,
             color: this.useTheme('#303030', '#fbfbfb'),
-            width: item.key !== "0" ? Dimensions.get('window').width / 1.5 : Dimensions.get('window').width / 1.2,
-            lineHeight: item.key !== "0" ? 20 : 27
+            width: item.key !== "0" ? Dimensions.get('window').width / 1.5 : Dimensions.get('window').width / 1.2
           }}>
             {item.text}
           </Text>
@@ -107,7 +111,7 @@ export default class WalkThrough extends React.Component {
         backgroundColor: this.useTheme('rgba(0, 0, 0, .2)', 'rgba(255,255,255,.1)')
       }}>
         <Icon
-          name="md-arrow-round-forward"
+          name={!isRTL() ? "md-arrow-round-forward" : "md-arrow-round-back"}
           color="#fbfbfb"
           size={24}
         />
@@ -132,7 +136,7 @@ export default class WalkThrough extends React.Component {
     return (
       <View style={{ marginTop: 10.5, alignItems: 'flex-end', marginLeft: 4 }}>
         <Text style={{ fontFamily: 'SourceSansPro-SemiBold', fontSize: 19, color: this.useTheme('#303030', '#fbfbfb') }}>
-          Skip
+          {translate('walkthrough.skip')}
         </Text>
       </View>
     )
@@ -140,16 +144,17 @@ export default class WalkThrough extends React.Component {
   render() {
     return (
       <AppIntroSlider
-        data={SLIDES}
+        data={this.SLIDES}
         renderItem={this.renderItem}
         renderDoneButton={this.renderDoneButton}
         renderNextButton={this.renderNextButton}
-        onSlideChange={this.onSlideChange}
         onDone={() => {
+          // I18nManager.allowRTL(false)
           goToAuth()
           AsyncStorage.setItem('isOpenedBefore', "true")
         }}
         onSkip={() => {
+          // I18nManager.allowRTL(false)
           goToAuth()
           AsyncStorage.setItem('isOpenedBefore', "true")
         }}

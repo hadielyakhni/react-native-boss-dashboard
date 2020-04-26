@@ -4,7 +4,8 @@ import { Icon } from 'native-base'
 import { Navigation } from 'react-native-navigation'
 import { connect } from 'react-redux'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
-
+import { isRTL } from '../utils/i18n'
+import getNumber from '../utils/getNumber'
 
 UIManager.setLayoutAnimationEnabledExperimental &&
   UIManager.setLayoutAnimationEnabledExperimental(true)
@@ -31,8 +32,8 @@ class AccountCard extends PureComponent {
     if (this.props.activeScreenName === 'money')
       LayoutAnimation.configureNext({
         update: {
-          duration: 80,
-          delay: 180,
+          duration: 140,
+          delay: 120,
           type: LayoutAnimation.Types.linear,
           property: LayoutAnimation.Properties.opacity
         }
@@ -85,11 +86,11 @@ class AccountCard extends PureComponent {
               color: amount >= 0 ? '#008ee0' : '#de3b5b',
               fontSize: 18
             }}>
-              {Math.abs(amount) + ' '}
+              {getNumber(parseFloat(Math.abs(amount).toFixed(12)).toString()) + ' '}
               <FontAwesome5 name="coins" color={amount >= 0 ? '#008ee0' : '#de3b5b'} size={11} />
             </Text>
           </View>
-          <Icon name='ios-arrow-forward' style={{ fontSize: 28, color: '#c5c5c5' }} />
+          <Icon name={isRTL() ? 'ios-arrow-back' : 'ios-arrow-forward'} style={{ fontSize: 28, color: '#c5c5c5' }} />
         </TouchableOpacity>
       </View>
     )

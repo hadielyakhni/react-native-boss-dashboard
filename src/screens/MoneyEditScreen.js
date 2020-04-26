@@ -6,6 +6,7 @@ import { Navigation } from 'react-native-navigation'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import MyInput from '../components/MyInput'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
+import { translate, isRTL } from '../utils/i18n'
 
 class MoneyEditScreen extends React.PureComponent {
   state = {
@@ -52,7 +53,7 @@ class MoneyEditScreen extends React.PureComponent {
               backgroundColor: this.useTheme('#f5f5f5', '#161616')
             }}
           >
-            <Ionicons name="md-arrow-back" size={26} color={this.useTheme('#303030', '#fbfbfb')} />
+            <Ionicons name={isRTL() ? "md-arrow-forward" : "md-arrow-back"} size={26} color={this.useTheme('#303030', '#fbfbfb')} />
           </TouchableOpacity>
           <View style={{
             ...styles.titleContainer,
@@ -63,17 +64,16 @@ class MoneyEditScreen extends React.PureComponent {
               style={{
                 color: this.useTheme('#303030', '#fbfbfb'),
                 fontSize: 25,
-                fontFamily: 'SourceSansPro-SemiBold',
-                textAlign: 'left'
+                fontFamily: 'SourceSansPro-SemiBold'
               }}>
-              Edit Info
+              {translate('main.moneyEdit.title')}
             </Text>
           </View>
         </View>
         <View style={styles.mainContainer}>
           <MyInput
             theme={this.props.theme}
-            placeHolder="Name"
+            placeHolder={translate('main.moneyEdit.name')}
             leftIcon='ios-person'
             style={{ fontSize: 17, paddingRight: 15 }}
             inputContainerStyle={{ marginTop: 15 }}
@@ -84,7 +84,7 @@ class MoneyEditScreen extends React.PureComponent {
           <MyInput
             theme={this.props.theme}
             keyboardType="number-pad"
-            placeHolder="Phone number (optional)"
+            placeHolder={translate('main.moneyEdit.phone')}
             inputContainerStyle={{ marginTop: 10 }}
             leftIcon='ios-call'
             style={{ fontSize: 17, paddingRight: 15 }}
@@ -119,7 +119,7 @@ class MoneyEditScreen extends React.PureComponent {
               color: '#008ee0',
               fontSize: 16.5
             }}>
-              Update
+              {translate('main.moneyEdit.update')}
             </Text>
           </View>
         </TouchableOpacity>
@@ -160,7 +160,7 @@ const styles = StyleSheet.create({
   },
   titleContainer: {
     flex: 1,
-    paddingLeft: 10,
+    paddingHorizontal: 10,
     justifyContent: 'center',
   },
   backIconContainer: {

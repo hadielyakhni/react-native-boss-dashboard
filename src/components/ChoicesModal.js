@@ -1,6 +1,7 @@
 import React from 'react'
 import { StyleSheet, Text, View, Modal, TouchableOpacity, FlatList } from 'react-native'
 import Choice from './Choice'
+import { translate } from '../utils/i18n'
 
 const ChoicesModal = ({ visible, label, choices, selectedChoice, onSelect, onCancel, theme }) => {
   return (
@@ -35,7 +36,10 @@ const ChoicesModal = ({ visible, label, choices, selectedChoice, onSelect, onCan
             fontSize: 24,
             fontFamily: 'SourceSansPro-SemiBold'
           }}>
-            {label}
+            {label === 'Sort By' ? translate('components.choicesModal.sortModal.title')
+              : label === 'Theme' ? translate('components.choicesModal.themesModal.title')
+                : translate('components.choicesModal.languagesModal.title')
+            }
           </Text>
           <View style={{
             paddingTop: 18,

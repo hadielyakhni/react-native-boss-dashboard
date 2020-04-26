@@ -1,0 +1,228 @@
+{
+  "walkthrough": {
+    "intro": {
+      "title": "Bienvenue!",
+      "text": "Boss Dashboard vous offre 3 utilitaire outils pour améliorer votre production et de la gestion de votre entreprise!"
+    },
+    "todoList": {
+      "title": "Tâches Liste",
+      "text": "Simple liste de choses à faire et preneur de notes pour vous aider à obtenir plus."
+    },
+    "employees": {
+      "title": "Les employés",
+      "text": "Gérer facilement l'ensemble de vos salariés et de communiquer avec eux à partir d'un seul endroit."
+    },
+    "money": {
+      "title": "Les Transactions",
+      "text": "Atteindre rapidement et de gérer tous les gens que vous avez de l'argent avec eux et vice versa."
+    },
+    "skip": "Sauter"
+  },
+  "auth": {
+    "auth": {
+      "email": "E-mail",
+      "password": "Mot de passe",
+      "login": "Journal En",
+      "signup": "Inscrivez",
+      "forgotPassword": "Mot De Passe Oublié?",
+      "or": "OU",
+      "googleBtnText": "Continuer Avec Google",
+      "facebookBtnText": "Continuer Avec Facebook",
+      "alreadyMember": "Déjà membre?",
+      "dontHaveAccount": "N'avez pas de compte?"
+    },
+    "forgetPassword": {
+      "back": "Retour",
+      "forgotPassword": "Mot De Passe Oublié?",
+      "placeholder": "Entrez votre e-Mail",
+      "sendEmail": "Envoyer un Email",
+      "warning": "Ne pas réinitialiser votre mot de passe si vous vous êtes connecté à FACEBOOK. Si vous le faites, vous ne serez plus en mesure de se connecter avec FACEBOOK, et vous devez vous connecter avec votre ADRESSE EMAIL et un nouveau MOT de passe!"
+    }
+  },
+  "main": {
+    "todoList": {
+      "title": "Mes tâches",
+      "placeholder": "Accès Rapide à la Tâche",
+      "hint1": "Commencer l'organisation de votre vie!",
+      "hint2": "Quelques choses a faire?",
+      "incompleted": "INCOMPLÈTES",
+      "completed": "COMPLÈTES"
+    },
+    "todoAdd": {
+      "title": "Ajouter Une Tâche",
+      "placeholder1": "Que voudriez-vous faire?",
+      "placeholder2": "Détails",
+      "add": "Ajouter"
+    },
+    "todoDetails": {
+      "title": "Les Détails De La Tâche",
+      "markComplete": "Marque complète",
+      "placeholder1": "Que voudriez-vous faire?",
+      "placeholder2": "Détails"
+    },
+    "employeesList": {
+      "title": "Mes Employés",
+      "placeholder": "Recherche employés",
+      "hint1": "Vérifier facilement touts",
+      "hint2": "vos employés!",
+      "hint3": "Ajoutez-les maintenant."
+    },
+    "employeeAdd": {
+      "title": "Ajouter Employé",
+      "name": "Nom",
+      "role": "Rôle",
+      "salary": "Salaire",
+      "phone": "Téléphone (facultatif)",
+      "email": "E-mail (facultatif)",
+      "joinedSince": "Rejoint depuis",
+      "today": "Aujourd'hui",
+      "add": "Ajouter"
+    },
+    "employeeDetails": {
+      "name": "Nom",
+      "role": "Rôle",
+      "salary": "Salaire",
+      "phone": "Téléphone",
+      "email": "E-mail",
+      "joinedSince": "Rejoint depuis",
+      "update": "Mise à jour"
+    },
+    "moneyList": {
+      "placeholder": "Rechercher comptes",
+      "title": "Mon Porte-Monnaie",
+      "iHave": "J' AI",
+      "iShouldPay": "JE DEVRAIS PAYER",
+      "with": "avec",
+      "for": "à",
+      "people": "gens",
+      "person": "personne",
+      "hint1": "Avez-vous de l'argent avec les autres",
+      "hint2": "et / ou vise versa?",
+      "hint3": "Ajoutez des comptes facilement et",
+      "hint4": "gérez toutes vos transactions."
+    },
+    "moneyAdd": {
+      "title": "Ajouter Un Compte",
+      "field1": "Nom",
+      "field2": "Combien d'argent?",
+      "field3": "Numéro de téléphone (facultatif)",
+      "forMe": "POUR MOI",
+      "forHim": "POUR LUI",
+      "add": "Ajouter"
+    },
+    "moneyDetails": {
+      "shouldPayForMe": "D E V R A I T  P A Y E R  P O U R  M O I",
+      "shouldPayToHim": "J E  D E V R A I S  P A Y E R  P O U R",
+      "totalTransactions": "T O T A L  D E S  T R A N S A C T I O N S",
+      "transactions": "T R A N S A C T I O N S",
+      "send": "Envoyer",
+      "receive": "Recevoir",
+      "sendingTo": "L'envoi de",
+      "receivingFrom": "La réception de",
+      "placeholder": "Préciser le montant",
+      "cancel": "Annuler"
+    },
+    "moneyEdit": {
+      "title": "Modifier Les Informations",
+      "name": "Nom",
+      "phone": "Numéro de téléphone (facultatif)",
+      "update": "Mise à jour"
+    },
+    "settings": {
+      "title": "Paramètres",
+      "settings": "Paramètres",
+      "developer": "Développeur",
+      "privacy": "Confidentialité",
+      "language": "Langue",
+      "theme": "Thème",
+      "helpCenter": "Centre D'Aide",
+      "feedback": "Commentaires",
+      "buyMeACoffee": "M'acheter un café",
+      "privacyPolicy": "Politique De Confidentialité",
+      "termsOfUse": "Conditions D'Utilisation",
+      "logout": "SE DÉCONNECTER"
+    }
+  },
+  "components": {
+    "todoCard": [],
+    "employeeCard": {
+      "since": "sine"
+    },
+    "moneyCard": [],
+    "transactionCard": {
+      "sent": "Envoyé",
+      "received": "Reçu"
+    },
+    "errorModal": {
+      "error": "Erreur",
+      "dismiss": "Rejeter",
+      "err1": "La connexion n'est pas disponible. Vérifiez votre connexion internet et réessayer!",
+      "err2": "Veuillez entrer une adresse email valide!",
+      "err3": "Le mot de passe doit être au moins 6 caractères!",
+      "err4": "E-mail non valide ou le mot de passe! Essayez à nouveau ou cliquez sur le lien Mot de passe Oublié pour réinitialiser votre mot de passe.",
+      "err5": "Aucun utilisateur trouvé avec cette adresse email.",
+      "err6": "Un compte avec la même adresse email existe déjà, mais avec une autre signin méthode!",
+      "err7": "L'adresse email est déjà utilisé par un autre compte! Vous pouvez cliquer sur le lien Mot de passe Oublié réinitialiser votre mot de passe.",
+      "err8": "Nous avons bloqué toutes les demandes de ce dispositif en raison d'une activité inhabituelle. Essayez de nouveau plus tard.",
+      "err9": "Erreur de temporisation! Vérifiez votre connexion internet et réessayer plus tard.",
+      "err10": "Erreur s'est produite!"
+    },
+    "successModal": {
+      "message1": "E-mail a été envoyé à",
+      "message2": "Veuillez vérifier votre boîte de réception..",
+      "ok": "Ok"
+    },
+    "logOutModal": {
+      "message": "Déconnexion de Boss Dashboard?",
+      "logout": "Déconnexion",
+      "cancel": "Annuler"
+    },
+    "loggingOutModal": {
+      "message": "la déconnexion..."
+    },
+    "choicesModal": {
+      "sortModal": {
+        "title": "Trier Par",
+        "options": {
+          "default": "Par défaut",
+          "time": "Le temps",
+          "title": "Titre",
+          "name": "Nom",
+          "role": "Rôle",
+          "salaryLowToHigh": "Salaire - Faible à Élevé",
+          "salaryHighToLow": "Salaire - Élevé à Faible",
+          "joinDateOldestToNewest": "Date d'inscription - Ancienne à Récente",
+          "joinDateNewestToOldest": "Date d'inscription - Récente à Ancienne",
+          "amountLowToHigh": "Montant - Faible à Élevé",
+          "amountHighToLow": "Montant - Élevé à Faible",
+          "lastTransactionOldestToNewest": "Dernière Transaction - Ancienne à Récente",
+          "lastTransactionNewestToOldest": "Dernière Transaction - Récente à Ancienne"
+        }
+      },
+      "themesModal": {
+        "title": "Thème",
+        "options": {
+          "system": "Système",
+          "light": "Lumière",
+          "dark": "Sombre"
+        }
+      },
+      "languagesModal": {
+        "title": "Langue",
+        "options": {
+          "system": "Système",
+          "english": "Anglais",
+          "french": "Français",
+          "arabic": "Arabe"
+        }
+      }
+    },
+    "undoModal": {
+      "undo": "Annuler",
+      "deleted": "Supprimé"
+    },
+    "confirmExitModal": {
+      "message": "Appuyez à nouveau pour quitter.."
+    }
+  }
+}

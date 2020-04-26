@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { StyleSheet, View, Image } from 'react-native'
+import { StyleSheet, View, I18nManager } from 'react-native'
 import AsyncStorage from '@react-native-community/async-storage'
 import { goToAuth, goToMain, goToWalkThrough } from '../navigation/navigation'
 import { connect } from 'react-redux'
@@ -8,14 +8,15 @@ import { GoogleSignin } from '@react-native-community/google-signin'
 import { Appearance } from 'react-native-appearance'
 import { Navigation } from 'react-native-navigation'
 import Keys from '../keys/google'
-import SplashScreen from 'react-native-splash-screen'
+import { setI18nConfig } from '../utils/i18n'
 
 GoogleSignin.configure({
   webClientId: Keys.webClientId
 });
 
 class FirstScreen extends Component {
-  componentDidMount() {
+  async componentDidMount() {
+    // I18nManager.allowRTL(false)
     Navigation.mergeOptions(this.props.componentId, {
       statusBar: {
         backgroundColor: '#008ee0',
@@ -23,7 +24,8 @@ class FirstScreen extends Component {
         drawBehind: true
       }
     })
-    this.configureTheme()
+    await this.configureTheme()
+    await this.configureLanguage()
     this.tryAutomaticSignIn()
   }
   async configureTheme() {
@@ -74,11 +76,17 @@ class FirstScreen extends Component {
       }
     })
   }
+  async configureLanguage() {
+    const [language, isRTL] = await AsyncStorage.multiGet(['language', 'isRTL'])
+    if (language)
+      await setI18nConfig(language[1], JSON.parse(isRTL[1]))
+    else
+      await setI18nConfig()
+  }
   tryAutomaticSignIn = async () => {
     const isOpenedBefore = await AsyncStorage.getItem('isOpenedBefore')
-    if (!isOpenedBefore) {
+    if (!isOpenedBefore)
       goToWalkThrough(Appearance.getColorScheme())
-    }
     else {
       const uid = await AsyncStorage.getItem('uid')
       if (uid) {

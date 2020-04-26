@@ -17,6 +17,7 @@ import { CheckBox } from 'react-native-elements'
 import { Navigation } from 'react-native-navigation'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
+import { translate, isRTL } from '../utils/i18n'
 
 class MoneyAddScreen extends Component {
   constructor(props) {
@@ -80,14 +81,14 @@ class MoneyAddScreen extends Component {
               }}
               onPress={() => Navigation.pop(this.props.componentId)}
             >
-              <Ionicons name="md-arrow-back" size={26} color={this.useTheme('#303030', '#fbfbfb')} />
+              <Ionicons name={isRTL() ? "md-arrow-forward" : "md-arrow-back"} size={26} color={this.useTheme('#303030', '#fbfbfb')} />
             </TouchableOpacity>
             <View style={{
               ...styles.titleContainer,
               backgroundColor: this.useTheme('#f5f5f5', '#161616')
             }}>
               <Text numberOfLines={1} style={{ color: this.useTheme('#303030', '#fbfbfb'), fontSize: 25, fontFamily: 'SourceSansPro-SemiBold' }}>
-                Add Account
+                {translate('main.moneyAdd.title')}
               </Text>
             </View>
           </View>
@@ -95,7 +96,7 @@ class MoneyAddScreen extends Component {
             <View style={styles.formContainer}>
               <MyInput
                 theme={this.props.theme}
-                placeHolder="Name"
+                placeHolder={translate('main.moneyAdd.field1')}
                 leftIcon='ios-person'
                 style={{ fontSize: 17, paddingRight: 15 }}
                 inputContainerStyle={{ marginTop: 15 }}
@@ -105,7 +106,7 @@ class MoneyAddScreen extends Component {
               />
               <MyInput
                 theme={this.props.theme}
-                placeHolder="How much money?"
+                placeHolder={translate('main.moneyAdd.field2')}
                 leftIcon='ios-cash'
                 inputContainerStyle={{ marginTop: 10 }}
                 style={{ fontSize: 17, paddingRight: 15 }}
@@ -116,7 +117,7 @@ class MoneyAddScreen extends Component {
               <MyInput
                 theme={this.props.theme}
                 keyboardType="number-pad"
-                placeHolder="Phone number (optional)"
+                placeHolder={translate('main.moneyAdd.field3')}
                 inputContainerStyle={{ marginTop: 10 }}
                 leftIcon='ios-call'
                 style={{ fontSize: 17, paddingRight: 15 }}
@@ -135,7 +136,7 @@ class MoneyAddScreen extends Component {
                   onPress={() => { this.setState({ status: 'ME' }) }}
                 />
                 <Text style={{ fontSize: 17, fontFamily: 'SourceSansPro-Bold', color: this.useTheme('#555', '#f9f9f9') }}>
-                  FOR ME
+                  {translate('main.moneyAdd.forMe')}
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
@@ -151,7 +152,7 @@ class MoneyAddScreen extends Component {
                   onPress={() => { this.setState({ status: 'HIM' }) }}
                 />
                 <Text style={{ fontSize: 17, fontFamily: 'SourceSansPro-Bold', color: this.useTheme('#303030', '#fbfbfb') }}>
-                  FOR HIM
+                  {translate('main.moneyAdd.forHim')}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -186,8 +187,8 @@ class MoneyAddScreen extends Component {
                     color: this.isAddDisabled() ? this.useTheme('#afb8cb', '#777') : '#008ee0',
                     fontSize: 16.5
                   }}>
-                    Add
-                </Text>
+                    {translate('main.moneyAdd.add')}
+                  </Text>
                 </View>
               }
             </TouchableOpacity>

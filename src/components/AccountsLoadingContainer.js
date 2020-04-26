@@ -2,6 +2,7 @@ import React from 'react'
 import { View, Text } from 'react-native'
 import Shimmer from 'react-native-shimmer'
 import EmployeeCardShimmer from './EmployeeCardShimmer'
+import { isRTL } from '../utils/i18n'
 
 const AccountsLoadingContainer = ({ theme }) => {
   return (
@@ -11,7 +12,7 @@ const AccountsLoadingContainer = ({ theme }) => {
     }}>
       <View style={{ paddingHorizontal: 8, marginBottom: 5, marginTop: 8 }}>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-          <Shimmer>
+          <Shimmer direction={!isRTL() ? 'right' : 'left'}>
             <Text style={{
               borderRadius: 6,
               fontSize: 22,
@@ -22,7 +23,7 @@ const AccountsLoadingContainer = ({ theme }) => {
           </Shimmer>
         </View>
         <View style={{ flexDirection: 'row', marginTop: 12, marginBottom: 18 }}>
-          <Shimmer>
+          <Shimmer direction={!isRTL() ? 'right' : 'left'}>
             <Text style={{
               borderRadius: 6,
               fontSize: 22,

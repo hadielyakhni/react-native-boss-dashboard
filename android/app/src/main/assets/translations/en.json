@@ -1,0 +1,228 @@
+{
+  "walkthrough": {
+    "intro": {
+      "title": "Welcome!",
+      "text": "Boss Dashboard provides you with 3 utility tools to improve your production and manage your business!"
+    },
+    "todoList": {
+      "title": "Todo List",
+      "text": "Simple Todo list and note taker to help you achieve more."
+    },
+    "employees": {
+      "title": "Employees",
+      "text": "Easily manage all your employees and contact them from one place."
+    },
+    "money": {
+      "title": "Transactions",
+      "text": "Quickly reach and manage all people you have money with them and vise versa."
+    },
+    "skip": "Skip"
+  },
+  "auth": {
+    "auth": {
+      "email": "Email",
+      "password": "Password",
+      "login": "Log In",
+      "signup": "Sign Up",
+      "forgotPassword": "Forgot Password?",
+      "or": "OR",
+      "googleBtnText": "Continue With Google",
+      "facebookBtnText": "Continue With Facebook",
+      "alreadyMember": "Already a member?",
+      "dontHaveAccount": "Don't have an account?"
+    },
+    "forgetPassword": {
+      "back": "Back",
+      "forgotPassword": "Forgot Password?",
+      "placeholder": "Enter your Email",
+      "sendEmail": "Send Email",
+      "warning": "Don't reset your password if you signed in with FACEBOOK. If you do, you will no longer be able to login with FACEBOOK, and you should login with your EMAIL ADDRESS and the new PASSWORD!"
+    }
+  },
+  "main": {
+    "todoList": {
+      "title": "My tasks",
+      "placeholder": "Quick Task",
+      "hint1": "Start organizing your life!",
+      "hint2": "Anything to do?",
+      "incompleted": "INCOMPLETED",
+      "completed": "COMPLETED"
+    },
+    "todoAdd": {
+      "title": "Add Task",
+      "placeholder1": "What would you want to do?",
+      "placeholder2": "Details",
+      "add": "Add"
+    },
+    "todoDetails": {
+      "title": "Task Details",
+      "placeholder1": "What would you want to do?",
+      "placeholder2": "Details",
+      "markComplete": "Mark complete"
+    },
+    "employeesList": {
+      "title": "My Employees",
+      "placeholder": "Search employees",
+      "hint1": "Easily check all",
+      "hint2": "your employees!",
+      "hint3": "Add them now."
+    },
+    "employeeAdd": {
+      "title": "Add Employee",
+      "name": "Name",
+      "role": "Role",
+      "salary": "Salary",
+      "phone": "Phone (optional)",
+      "email": "Email (optional)",
+      "joinedSince": "Joined since",
+      "today": "Today",
+      "add": "Add"
+    },
+    "employeeDetails": {
+      "name": "Name",
+      "role": "Role",
+      "salary": "Salary",
+      "phone": "Phone",
+      "email": "Email",
+      "joinedSince": "Joined since",
+      "update": "Update"
+    },
+    "moneyList": {
+      "placeholder": "Search accounts",
+      "title": "My Wallet",
+      "iHave": "I HAVE",
+      "iShouldPay": "I SHOULD PAY",
+      "with": "with",
+      "for": "for",
+      "people": "people",
+      "person": "person",
+      "hint1": "Do you have money with others",
+      "hint2": "and/or visversa?",
+      "hint3": "Add accounts easily and",
+      "hint4": "manage all your transactions."
+    },
+    "moneyAdd": {
+      "title": "Add Account",
+      "field1": "Name",
+      "field2": "How much money?",
+      "field3": "Phone number (optional)",
+      "forMe": "FOR ME",
+      "forHim": "FOR HIM",
+      "add": "Add"
+    },
+    "moneyDetails": {
+      "shouldPayForMe": "S H O U L D  P A Y  F O R  M E",
+      "shouldPayToHim": "I  S H O U L D  P A Y  F O R",
+      "totalTransactions": "T O T A L  T R A N S A C T I O N S",
+      "transactions": "T R A N S A C T I O N S",
+      "send": "Send",
+      "receive": "Receive",
+      "sendingTo": "Sending to",
+      "receivingFrom": "Receiving from",
+      "placeholder": "Specify the amount",
+      "cancel": "Cancel"
+    },
+    "moneyEdit": {
+      "title": "Edit Info",
+      "name": "Name",
+      "phone": "Phone number (optional)",
+      "update": "Update"
+    },
+    "settings": {
+      "title": "Settings",
+      "settings": "Settings",
+      "developer": "Developer",
+      "privacy": "Privacy",
+      "language": "Language",
+      "theme": "Theme",
+      "helpCenter": "Help Center",
+      "feedback": "Feedback",
+      "buyMeACoffee": "Buy me a coffee",
+      "privacyPolicy": "Privacy Policy",
+      "termsOfUse": "Terms Of Use",
+      "logout": "LOGOUT"
+    }
+  },
+  "components": {
+    "todoCard": {},
+    "employeeCard": {
+      "since": "since"
+    },
+    "moneyCard": {},
+    "transactionCard": {
+      "sent": "Sent",
+      "received": "Received"
+    },
+    "errorModal": {
+      "error": "Error",
+      "dismiss": "Dismiss",
+      "err1": "Connection not available. Check your internet connection and try again!",
+      "err2": "Please enter a valid email!",
+      "err3": "Password should at least be 6 characters!",
+      "err4": "Invalid email or password! Try again or click on Forgot Password link to reset your password.",
+      "err5": "No user found with this email address.",
+      "err6": "An account with the same email address already exists but with another signin method!",
+      "err7": "The email address is already in use by another account! You can click on the Forgot Password link to reset your password.",
+      "err8": "We have blocked all requests from this device due to unusual activity. Try again later.",
+      "err9": "Time out error! Check your internet connection and try again later.",
+      "err10": "Error occured!"
+    },
+    "successModal": {
+      "message1": "Email was sent to",
+      "message2": "Please check your inbox..",
+      "ok": "Ok"
+    },
+    "logOutModal": {
+      "message": "Log out of Boss Dashboard?",
+      "logout": "Logout",
+      "cancel": "Cancel"
+    },
+    "loggingOutModal": {
+      "message": "logging out..."
+    },
+    "choicesModal": {
+      "sortModal": {
+        "title": "Sort By",
+        "options": {
+          "default": "Default",
+          "time": "Time",
+          "title": "Title",
+          "name": "Name",
+          "role": "Role",
+          "salaryLowToHigh": "Salary - Low to High",
+          "salaryHighToLow": "Salary - High to Low",
+          "joinDateOldestToNewest": "Join Date - Oldest to Newest",
+          "joinDateNewestToOldest": "Join Date - Newest to Oldest",
+          "amountLowToHigh": "Amount - Low to High",
+          "amountHighToLow": "Amount - High to Low",
+          "lastTransactionOldestToNewest": "Last Transaction - Oldest to Newest",
+          "lastTransactionNewestToOldest": "Last Transaction - Newest to Oldest"
+        }
+      },
+      "themesModal": {
+        "title": "Theme",
+        "options": {
+          "system": "System",
+          "light": "Light",
+          "dark": "Dark"
+        }
+      },
+      "languagesModal": {
+        "title": "Language",
+        "options": {
+          "system": "System",
+          "english": "English",
+          "french": "French",
+          "arabic": "Arabic"
+        }
+      }
+    },
+    "undoModal": {
+      "undo": "Undo",
+      "deleted": "Deleted"
+    },
+    "confirmExitModal": {
+      "message": "Press again to exit.."
+    }
+  }
+}

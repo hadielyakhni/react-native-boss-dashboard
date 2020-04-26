@@ -3,6 +3,8 @@ import { Image, View, Text, StyleSheet, TouchableOpacity, Dimensions, LayoutAnim
 import { Icon } from 'native-base'
 import { Navigation } from 'react-native-navigation'
 import { connect } from 'react-redux'
+import { isRTL, translate } from '../utils/i18n'
+import getNumber from '../utils/getNumber'
 
 UIManager.setLayoutAnimationEnabledExperimental &&
   UIManager.setLayoutAnimationEnabledExperimental(true)
@@ -21,7 +23,7 @@ class EmployeeCard extends Component {
     LayoutAnimation.configureNext({
       update: {
         duration: 80,
-        delay: 180,
+        delay: 120,
         type: LayoutAnimation.Types.linear,
         property: LayoutAnimation.Properties.opacity
       }
@@ -76,7 +78,7 @@ class EmployeeCard extends Component {
                 color: this.props.theme === 'light' ? '#303030' : '#fbfbfb',
                 fontSize: 17
               }}>
-                {data.role + " - "}
+                {(data.role).slice(0, 15) + "..  "}
               </Text>
               <Text numberOfLines={1} style={{
                 fontFamily: 'SourceSansPro-Regular',
@@ -84,11 +86,11 @@ class EmployeeCard extends Component {
                 fontSize: 17,
                 marginRight: Dimensions.get('window').width / 8
               }}>
-                since {("0" + d.getDate()).slice(-2) + "-" + ("0" + (d.getMonth() + 1)).slice(-2) + "-" + d.getFullYear()}
+                {' ' + translate('components.employeeCard.since')}  {getNumber(("0" + d.getDate()).slice(-2) + "-" + ("0" + (d.getMonth() + 1)).slice(-2) + "-" + d.getFullYear())}
               </Text>
             </View>
           </View>
-          <Icon name='ios-arrow-forward' style={{ fontSize: 28, color: this.props.theme === 'light' ? '#aaa' : '#c5c5c5', }} />
+          <Icon name={isRTL() ? 'ios-arrow-back' : 'ios-arrow-forward'} style={{ fontSize: 28, color: this.props.theme === 'light' ? '#aaa' : '#c5c5c5', }} />
         </TouchableOpacity>
       </View>
     )

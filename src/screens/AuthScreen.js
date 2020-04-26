@@ -13,6 +13,7 @@ import {
   UIManager,
   TextInput
 } from 'react-native'
+import { translate, isRTL } from '../utils/i18n'
 import { Spinner } from 'native-base'
 import MyInput from '../components/MyInput'
 import MyButton from '../components/MyButton'
@@ -67,7 +68,7 @@ class AuthScreen extends Component {
           disabled={!this.state.email || !this.state.password}
           onPress={this.onSign.bind(this)}
         >
-          {this.state.screen === 'login' ? 'Log In' : 'Sign Up'}
+          {this.state.screen === 'login' ? translate('auth.auth.login') : translate('auth.auth.signup')}
         </MyButton>
       )
     return (
@@ -126,7 +127,7 @@ class AuthScreen extends Component {
               value={this.state.email}
               style={{ paddingRight: 15 }}
               isSecure={false}
-              placeHolder='Email'
+              placeHolder={translate('auth.auth.email')}
               isAutoCorrect={true}
               onChangeText={email => this.setState({ email })}
             />
@@ -151,9 +152,10 @@ class AuthScreen extends Component {
                 style={{
                   ...styles.InputStyle,
                   color: this.useTheme('#303030', '#fbfbfb'),
-                  paddingRight: 15
+                  paddingRight: 15,
+                  textAlign: isRTL() ? 'right' : 'left'
                 }}
-                placeholder="Password"
+                placeholder={translate('auth.auth.password')}
                 placeholderTextColor={this.useTheme('#999', 'rgba(255, 255, 255, 0.6)')}
                 autoCapitalize='none'
                 onChangeText={password => this.setState({ password })}
@@ -169,7 +171,7 @@ class AuthScreen extends Component {
                   >
                     <MaterialIcons
                       name={this.state.isPasswordSecure ? "visibility-off" : "visibility"}
-                      style={{ paddingRight: 10 }}
+                      style={{ paddingHorizontal: 10 }}
                       size={21.5}
                       color={this.state.isPasswordSecure ? this.useTheme('#777', "#bbb") : "#008ee0"}
                     />
@@ -188,7 +190,7 @@ class AuthScreen extends Component {
                 }}
                 style={{ color: this.useTheme('#303030', '#fbfbfb'), fontSize: 13, fontFamily: 'SourceSansPro-SemiBold', marginHorizontal: 12 }}
               >
-                {this.state.screen === 'login' ? "Forgot Password?" : "OR"}
+                {this.state.screen === 'login' ? translate('auth.auth.forgotPassword') : translate('auth.auth.or')}
               </Text>
               <View style={{ height: 0, flex: 1, borderColor: this.useTheme('#303030', '#fbfbfb'), borderWidth: 0.3 }}></View>
             </View>
@@ -203,7 +205,7 @@ class AuthScreen extends Component {
                 color='#E53935'
               >
                 <FontAwesome size={22} name="google" color="#fff" />
-                {""}   Continue With Google
+                {""}   {translate('auth.auth.googleBtnText')}
               </MyButton>
               <MyButton
                 disabledColor='#355973'
@@ -215,7 +217,7 @@ class AuthScreen extends Component {
                 color='#008ee0'
               >
                 <FontAwesome size={22} name="facebook-square" color="#fff" />
-                {""}   Continue With Facebook
+                {""}   {translate('auth.auth.facebookBtnText')}
               </MyButton>
             </View>
           </View>
@@ -245,13 +247,17 @@ class AuthScreen extends Component {
                 ...styles.switchMethodeText,
                 color: this.useTheme('rgba(0, 0, 0, 0.6)', 'rgba(255, 255, 255, 0.6)')
               }}>
-                {this.state.screen === 'login' ? "Don't have an account?" : "Already a member?"}
+                {this.state.screen === 'login' ?
+                  translate('auth.auth.dontHaveAccount') :
+                  translate('auth.auth.alreadyMember')}
               </Text>
               <Text style={{
                 ...styles.switchMethodeLink,
                 color: this.useTheme('#303030', '#fbfbfb')
               }}>
-                {this.state.screen === 'login' ? 'Sign up.' : 'Log in.'}
+                {this.state.screen === 'login' ?
+                  translate('auth.auth.signup') + '.' :
+                  translate('auth.auth.login') + '.'}
               </Text>
             </TouchableOpacity>
           </View>
@@ -279,7 +285,7 @@ class AuthScreen extends Component {
                 borderBottomColor: this.useTheme('#eaeaea', '#363636')
               }}>
                 <Text style={{ color: this.useTheme('#303030', '#eef'), fontSize: 21, fontFamily: 'SourceSansPro-Bold' }}>
-                  Error
+                  {translate('components.errorModal.error')}
                 </Text>
                 <Text style={{
                   textAlign: 'center',
@@ -288,7 +294,7 @@ class AuthScreen extends Component {
                   fontFamily: 'SourceSansPro-Regular',
                   marginTop: 12
                 }}>
-                  {getAuthError(this.props.error)}
+                  {translate('components.errorModal.' + getAuthError(this.props.error))}
                 </Text>
               </View>
               <TouchableOpacity
@@ -297,7 +303,7 @@ class AuthScreen extends Component {
                 onPress={this.props.dsimissAuthError}
               >
                 <Text style={{ color: '#008ee0', fontSize: 17, fontFamily: 'SourceSansPro-Regular' }}>
-                  Dismiss
+                  {translate('components.errorModal.dismiss')}
                 </Text>
               </TouchableOpacity>
             </View>

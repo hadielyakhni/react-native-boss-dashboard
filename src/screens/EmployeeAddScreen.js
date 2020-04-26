@@ -7,6 +7,8 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import MyInput from '../components/MyInput'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import DateTimePicker from '@react-native-community/datetimepicker'
+import { translate, isRTL } from '../utils/i18n'
+import getNumber from '../utils/getNumber'
 
 class EmployeeAddScreen extends Component {
   constructor(props) {
@@ -59,15 +61,15 @@ class EmployeeAddScreen extends Component {
                 }}
                 onPress={() => Navigation.pop(this.props.componentId)}
               >
-                <Ionicons name="md-arrow-back" size={26} color={this.useTheme('#303030', '#fbfbfb')} />
+                <Ionicons name={isRTL() ? "md-arrow-forward" : "md-arrow-back"} size={26} color={this.useTheme('#303030', '#fbfbfb')} />
               </TouchableOpacity>
               <View style={{
                 ...styles.titleContainer,
                 backgroundColor: this.useTheme('#f5f5f5', '#161616')
               }}>
                 <Text numberOfLines={1} style={{ color: this.useTheme('#303030', '#fbfbfb'), fontSize: 25, fontFamily: 'SourceSansPro-SemiBold' }}>
-                  Add Empployee
-              </Text>
+                  {translate('main.employeeAdd.title')}
+                </Text>
               </View>
             </View>
             <View style={{ flex: 1, paddingHorizontal: 12, paddingTop: 5 }}>
@@ -78,7 +80,7 @@ class EmployeeAddScreen extends Component {
                 inputContainerStyle={{ marginTop: 10, marginBottom: 8 }}
                 style={{ fontSize: 17, paddingRight: 15 }}
                 isSecure={false}
-                placeHolder='Name'
+                placeHolder={translate('main.employeeAdd.name')}
                 autoCapitalize="words"
                 isAutoCorrect={false}
                 onChangeText={value => this.setState({ name: value })}
@@ -92,7 +94,7 @@ class EmployeeAddScreen extends Component {
                 leftIcon='ios-briefcase'
                 style={{ fontSize: 17, paddingRight: 15 }}
                 isSecure={false}
-                placeHolder='Role'
+                placeHolder={translate('main.employeeAdd.role')}
                 isAutoCorrect={false}
                 onChangeText={value => this.setState({ role: value })}
               />
@@ -105,7 +107,7 @@ class EmployeeAddScreen extends Component {
                 leftIcon='ios-cash'
                 style={{ fontSize: 17, paddingRight: 15 }}
                 isSecure={false}
-                placeHolder='Salary'
+                placeHolder={translate('main.employeeAdd.salary')}
                 isAutoCorrect={false}
                 onChangeText={value => this.setState({ salary: value })}
               />
@@ -118,7 +120,7 @@ class EmployeeAddScreen extends Component {
                 inputContainerStyle={{ marginVertical: 8 }}
                 style={{ fontSize: 16, paddingRight: 15 }}
                 isSecure={false}
-                placeHolder='Phone (optional)'
+                placeHolder={translate('main.employeeAdd.phone')}
                 isAutoCorrect={false}
                 onChangeText={value => this.setState({ phone: value })}
               />
@@ -131,7 +133,7 @@ class EmployeeAddScreen extends Component {
                 inputContainerStyle={{ marginVertical: 8 }}
                 style={{ fontSize: 16, paddingRight: 15 }}
                 isSecure={false}
-                placeHolder='Email (optional)'
+                placeHolder={translate('main.employeeAdd.email')}
                 isAutoCorrect={false}
                 onChangeText={value => this.setState({ email: value })}
               />
@@ -143,10 +145,18 @@ class EmployeeAddScreen extends Component {
                   this.setState({ showDatePicker: true })
                 }}
                 editable={false}
-                placeHolder={'Joined since :  ' + ("0" + new Date(Date.now()).getDate()).slice(-2) + "-" + ("0" + (new Date(Date.now()).getMonth() + 1)).slice(-2) + "-" + new Date(Date.now()).getFullYear() + " - Today"}
+                placeHolder={
+                  translate('main.employeeAdd.joinedSince')
+                  + ' :  ' +
+                  getNumber(("0" + new Date(Date.now()).getDate()).slice(-2)
+                    + " - " + ("0" + (new Date(Date.now()).getMonth() + 1)).slice(-2)
+                    + " - " + new Date(Date.now()).getFullYear())
+                  + " - "
+                  + translate('main.employeeAdd.today')
+                }
                 value={
                   this.state.joinDate ?
-                    'Joined since :  ' + ("0" + new Date(this.state.joinDate).getDate()).slice(-2) + "-" + ("0" + (new Date(this.state.joinDate).getMonth() + 1)).slice(-2) + "-" + new Date(this.state.joinDate).getFullYear()
+                    translate('main.employeeAdd.joinedSince') + ' :  ' + ("0" + new Date(this.state.joinDate).getDate()).slice(-2) + "-" + ("0" + (new Date(this.state.joinDate).getMonth() + 1)).slice(-2) + "-" + new Date(this.state.joinDate).getFullYear()
                     :
                     this.state.joinDate
                 }
@@ -209,8 +219,8 @@ class EmployeeAddScreen extends Component {
                     color: this.isAddDisabled() ? this.useTheme('#afb8cb', '#777') : '#008ee0',
                     fontSize: 16.5
                   }}>
-                    Add
-                </Text>
+                    {translate('main.employeeAdd.add')}
+                  </Text>
                 </View>
               }
             </TouchableOpacity>

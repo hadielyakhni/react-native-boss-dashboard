@@ -2,12 +2,14 @@ import React, { useEffect } from 'react'
 import { StyleSheet, Text, View, Dimensions, LayoutAnimation, UIManager } from 'react-native'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
+import { translate } from '../utils/i18n'
+import getNumber from '../utils/getNumber'
 
 const TransactionCard = ({ data, theme }) => {
   const { transAmount, status, date } = data[1]
   const getDateFormatted = date => {
     const d = new Date(date)
-    return ("0" + d.getDate()).slice(-2) + "-" + ("0" + (d.getMonth() + 1)).slice(-2) + "-" +
+    return ("0" + d.getDate()).slice(-2) + " - " + ("0" + (d.getMonth() + 1)).slice(-2) + " - " +
       d.getFullYear() + " " + ("0" + d.getHours()).slice(-2) + ":" + ("0" + d.getMinutes()).slice(-2);
   }
   return (
@@ -40,7 +42,7 @@ const TransactionCard = ({ data, theme }) => {
             color: theme === 'light' ? '#303030' : '#fbfbfb',
             fontFamily: 'SourceSansPro-SemiBold'
           }}>
-            {status}
+            {translate('components.transactionCard.' + status.toLowerCase())}
           </Text>
           <Text ellipsizeMode="middle" numberOfLines={1} style={{
             flex: 1,
@@ -50,7 +52,7 @@ const TransactionCard = ({ data, theme }) => {
             fontFamily: 'SourceSansPro-Bold',
             color: status === 'Sent' ? "#de3b5b" : "#008ee0"
           }}>
-            {transAmount + " "}
+            {" " + getNumber(transAmount.toString()) + " "}
           </Text>
           <View style={{ justifyContent: 'flex-end', marginLeft: 2 }}>
             <FontAwesome5 name="coins" color={status === 'Sent' ? "#de3b5b" : "#008ee0"} size={13} />
@@ -67,7 +69,8 @@ const TransactionCard = ({ data, theme }) => {
             ...styles.lowerDataContainerText,
             color: theme === 'light' ? '#000' : '#aaa'
           }}>
-            {getDateFormatted(date)}
+            <Text style={{ fontSize: 0 }}>dsf</Text>
+            {getNumber(getDateFormatted(date))}
           </Text>
         </View>
       </View>

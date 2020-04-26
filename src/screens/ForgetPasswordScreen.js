@@ -6,6 +6,7 @@ import { Navigation } from 'react-native-navigation'
 import { connect } from 'react-redux'
 import { sendPasswordResetEmail, dsimissAuthError, hidePasswordResetSuccessModal } from '../actions'
 import getAuthError from '../utils/getAuthError'
+import { translate, isRTL } from '../utils/i18n'
 
 class ForgetPasswordScreen extends Component {
   state = { email: this.props.email || '' }
@@ -49,10 +50,10 @@ class ForgetPasswordScreen extends Component {
                     6
         }}>
           <TouchableOpacity activeOpacity={0.8} style={{ flexDirection: 'row', alignItems: 'center' }} onPress={() => Navigation.pop(this.props.componentId)}>
-            <Ionicons name="ios-arrow-back" color={this.useTheme('#303030', '#fbfbfb')} size={25} />
+            <Ionicons name={isRTL() ? "ios-arrow-forward" : "ios-arrow-back"} color={this.useTheme('#303030', '#fbfbfb')} size={25} />
             <Text style={{
-              marginLeft: Dimensions.get('window').width > 600 ? 14 : 10, color: this.useTheme('#303030', '#fbfbfb'), fontSize: 25, fontFamily: 'SourceSansPro-SemiBold'
-            }}>Back</Text>
+              marginHorizontal: Dimensions.get('window').width > 600 ? 14 : 10, color: this.useTheme('#303030', '#fbfbfb'), fontSize: 25, fontFamily: 'SourceSansPro-SemiBold'
+            }}>{translate('auth.forgetPassword.back')}</Text>
           </TouchableOpacity>
         </View>
         <View style={{
@@ -70,7 +71,9 @@ class ForgetPasswordScreen extends Component {
                     :
                     8
         }}>
-          <Text style={{ fontSize: 24, color: this.useTheme('#303030', '#fbfbfb'), fontFamily: 'SourceSansPro-Bold' }}>Forgot Password?</Text>
+          <Text style={{ fontSize: 24, color: this.useTheme('#303030', '#fbfbfb'), fontFamily: 'SourceSansPro-Bold' }}>
+            {translate('auth.forgetPassword.forgotPassword')}
+          </Text>
           <View style={{
             marginTop: 15,
             flexDirection: 'row',
@@ -88,9 +91,10 @@ class ForgetPasswordScreen extends Component {
               ref={ref => this.inputRef = ref}
               value={this.state.email}
               onChangeText={email => this.setState({ email })}
-              placeholder="Enter your Email"
+              placeholder={translate('auth.forgetPassword.placeholder')}
               placeholderTextColor={this.useTheme('#999', 'rgba(255, 255, 255, 0.6)')}
               style={{
+                textAlign: isRTL() ? 'right' : 'left',
                 alignSelf: 'center',
                 flex: 1,
                 color: this.useTheme('#303030', '#fbfbfb'),
@@ -137,7 +141,7 @@ class ForgetPasswordScreen extends Component {
                   fontSize: 22,
                   fontFamily: 'SourceSansPro-SemiBold'
                 }}>
-                  Send Email
+                  {translate('auth.forgetPassword.sendEmail')}
                 </Text>
             }
           </TouchableOpacity>
@@ -160,9 +164,7 @@ class ForgetPasswordScreen extends Component {
                         8
             }}>
               <Text style={{ color: this.useTheme('#dd8913', '#d6af00'), fontSize: 13, fontFamily: 'SourceSansPro-Regular' }}>
-                Don't reset your password if you signed in with FACEBOOK.
-                If you do, you will no longer be able to login with FACEBOOK,
-                and you should login with your EMAIL ADDRESS and the new PASSWORD!
+                {translate('auth.forgetPassword.warning')}
               </Text>
             </View>
             :
@@ -172,7 +174,8 @@ class ForgetPasswordScreen extends Component {
           onRequestClose={this.props.dsimissAuthError}
           animationType="fade"
           transparent={true}
-          visible={!!this.props.error}>
+          visible={!!this.props.error}
+        >
           <View style={styles.errorModalContainer} >
             <TouchableOpacity
               activeOpacity={1}
@@ -190,7 +193,7 @@ class ForgetPasswordScreen extends Component {
                 borderBottomColor: this.useTheme('#eaeaea', '#363636')
               }}>
                 <Text style={{ color: this.useTheme('#303030', '#eef'), fontSize: 21, fontFamily: 'SourceSansPro-Bold' }}>
-                  Error
+                  {translate('components.errorModal.error')}
                 </Text>
                 <Text style={{
                   textAlign: 'center',
@@ -198,7 +201,9 @@ class ForgetPasswordScreen extends Component {
                   fontSize: 14.5,
                   fontFamily: 'SourceSansPro-Regular',
                   marginTop: 12
-                }}>{getAuthError(this.props.error, true)}</Text>
+                }}>
+                  {translate('components.errorModal.' + getAuthError(this.props.error))}
+                </Text>
               </View>
               <TouchableOpacity
                 activeOpacity={0.78}
@@ -206,7 +211,7 @@ class ForgetPasswordScreen extends Component {
                 onPress={this.props.dsimissAuthError}
               >
                 <Text style={{ color: '#008ee0', fontSize: 17, fontFamily: 'SourceSansPro-Regular' }}>
-                  Dismiss
+                  {translate('components.errorModal.dismiss')}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -235,7 +240,7 @@ class ForgetPasswordScreen extends Component {
                 borderBottomColor: this.useTheme('#eaeaea', '#363636')
               }}>
                 <Text style={{ color: this.useTheme('#303030', '#eef'), fontSize: 17, fontWeight: 'bold', textAlign: 'center', marginBottom: 2 }}>
-                  Email was sent to
+                  {translate('components.successModal.message1')}
                 </Text>
                 <Text style={{ textAlign: 'center', color: this.useTheme('#303030', '#fbfbfb'), fontSize: 17, fontWeight: 'bold' }}>
                   {this.state.email}
@@ -245,14 +250,16 @@ class ForgetPasswordScreen extends Component {
                   color: this.useTheme('#494949', '#bbb'),
                   fontSize: 13,
                   marginTop: 12
-                }}>Please check your inbox..</Text>
+                }}>{translate('components.successModal.message2')}</Text>
               </View>
               <TouchableOpacity
                 activeOpacity={0.78}
                 style={styles.lowerModalPart}
                 onPress={this.props.hidePasswordResetSuccessModal}
               >
-                <Text style={{ color: '#07a238', fontSize: 16 }}>OK</Text>
+                <Text style={{ color: '#07a238', fontSize: 16 }}>
+                  {translate('components.successModal.ok')}
+                </Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -275,9 +282,9 @@ const styles = {
     justifyContent: 'center'
   },
   upperModalPart: {
-    paddingHorizontal: 12,
     paddingBottom: 20,
-    paddingTop: 14,
+    paddingTop: 10,
+    paddingHorizontal: 12,
     alignItems: 'center',
     borderBottomWidth: 1
   },

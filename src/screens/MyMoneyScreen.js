@@ -19,6 +19,8 @@ import MoneyCard from '../components/MoneyCard'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import SortChoicesModal from '../components/ChoicesModal'
 import AccountsLoadingContainer from '../components/AccountsLoadingContainer'
+import { translate, isRTL } from '../utils/i18n'
+import getNumber from '../utils/getNumber'
 
 class MyMoneyScreen extends Component {
   constructor(props) {
@@ -82,10 +84,10 @@ class MyMoneyScreen extends Component {
               opacity: this.hintOpacity,
               marginBottom: 140
             }}>
-              <Text style={{ color: this.useTheme('#303030', '#fbfbfb'), fontFamily: 'SourceSansPro-SemiBold', fontSize: 17, marginBottom: 2 }}>Do you have money with others</Text>
-              <Text style={{ color: this.useTheme('#303030', '#fbfbfb'), fontFamily: 'SourceSansPro-SemiBold', fontSize: 17, marginBottom: 5 }}>{''}and/or visversa?</Text>
-              <Text style={{ color: this.useTheme('#303030', '#fbfbfb'), fontFamily: 'SourceSansPro-Regular', fontSize: 15 }}>Add accounts now and easily</Text>
-              <Text style={{ color: this.useTheme('#303030', '#fbfbfb'), fontFamily: 'SourceSansPro-Regular', fontSize: 15, marginTop: 3 }}>{' '}manage all your transactions.</Text>
+              <Text style={{ color: this.useTheme('#303030', '#fbfbfb'), fontFamily: 'SourceSansPro-SemiBold', fontSize: 17, marginBottom: 2 }}>{translate('main.moneyList.hint1')}</Text>
+              <Text style={{ color: this.useTheme('#303030', '#fbfbfb'), fontFamily: 'SourceSansPro-SemiBold', fontSize: 17, marginBottom: 5 }}>{''}{translate('main.moneyList.hint2')}</Text>
+              <Text style={{ color: this.useTheme('#303030', '#fbfbfb'), fontFamily: 'SourceSansPro-Regular', fontSize: 15 }}>{translate('main.moneyList.hint3')}</Text>
+              <Text style={{ color: this.useTheme('#303030', '#fbfbfb'), fontFamily: 'SourceSansPro-Regular', fontSize: 15, marginTop: 3 }}>{' '}{translate('main.moneyList.hint4')}</Text>
             </Animated.View>
           </View>
         )
@@ -143,7 +145,7 @@ class MyMoneyScreen extends Component {
                   <View style={{ paddingHorizontal: 14, marginBottom: 5 }}>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                       <Text style={{ color: this.useTheme('#303030', '#fbfbfb'), fontSize: 24, fontFamily: 'SourceSansPro-Bold' }}>
-                        I HAVE
+                        {translate('main.moneyList.iHave')}
                       </Text>
                       <ScrollView
                         horizontal
@@ -159,7 +161,8 @@ class MyMoneyScreen extends Component {
                           numberOfLines={1}
                           style={{ color: '#008ee0', fontSize: 24, fontFamily: 'SourceSansPro-Bold' }}
                         >
-                          {pTotal + ' '}
+                          {getNumber(parseFloat(pTotal.toFixed(12)).toString()) + ' '}
+                          <Text style={{ opacity: 0, fontSize: 0 }}>fff</Text>
                         </Text>
                       </ScrollView>
                       <View style={{ justifyContent: 'center' }}>
@@ -168,7 +171,7 @@ class MyMoneyScreen extends Component {
                     </View>
                     <View style={{ flexDirection: 'row', marginTop: 4, marginBottom: 10 }}>
                       <Text style={{ color: this.useTheme('#555', '#ddd'), fontSize: 18, fontFamily: 'SourceSansPro-Regular' }}>
-                        with {pAccounts.length} {pAccounts.length === 1 ? 'person' : 'people'}
+                        {translate('main.moneyList.with')} {getNumber(pAccounts.length.toString())} {pAccounts.length === 1 ? translate('main.moneyList.person') : translate('main.moneyList.people')}
                       </Text>
                     </View>
                   </View>
@@ -197,7 +200,7 @@ class MyMoneyScreen extends Component {
                   <View style={{ paddingHorizontal: 14, marginBottom: 5 }}>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                       <Text style={{ color: this.useTheme('#303030', '#fbfbfb'), fontSize: 24, fontFamily: 'SourceSansPro-Bold' }}>
-                        I SHOULD PAY
+                        {translate('main.moneyList.iShouldPay')}
                       </Text>
                       <ScrollView
                         horizontal
@@ -213,7 +216,8 @@ class MyMoneyScreen extends Component {
                           numberOfLines={1}
                           style={{ color: '#de3b5b', fontSize: 24, fontFamily: 'SourceSansPro-Bold' }}
                         >
-                          {nTotal + ' '}
+                          {getNumber(parseFloat(nTotal.toFixed(12)).toString()) + ' '}
+                          <Text style={{ opacity: 0, fontSize: 0 }}>fff</Text>
                         </Text>
                       </ScrollView>
                       <View style={{ justifyContent: 'center', marginLeft: 2 }}>
@@ -222,7 +226,7 @@ class MyMoneyScreen extends Component {
                     </View>
                     <View style={{ flexDirection: 'row', marginTop: 4, marginBottom: 10 }}>
                       <Text style={{ color: this.useTheme('#555', '#ddd'), fontSize: 18, fontFamily: 'SourceSansPro-Regular' }}>
-                        for {nAccounts.length} {nAccounts.length === 1 ? 'person' : 'people'}
+                        {translate('main.moneyList.for')} {getNumber(nAccounts.length.toString())} {nAccounts.length === 1 ? translate('main.moneyList.person') : translate('main.moneyList.people')}
                       </Text>
                     </View>
                   </View>
@@ -301,7 +305,7 @@ class MyMoneyScreen extends Component {
           <TouchableOpacity
             activeOpacity={0.8}
             disabled={this.hintOpacity === 1}
-            style={{ width: 40, paddingLeft: 6, justifyContent: 'center' }}
+            style={{ width: 40, paddingHorizontal: 6, justifyContent: 'center' }}
             onPress={() => this.setState({ sortChoicesModalVisible: true })}
           >
             <MaterialCommunityIcons name="sort" color={this.useTheme('#303030', '#fbfbfb')} size={28} />
@@ -316,9 +320,10 @@ class MyMoneyScreen extends Component {
       return null
     if (this.props.exitCount === 1) {
       return <View style={{
+        opacity: 0.9,
+        paddingHorizontal: 20,
         borderRadius: 16,
         height: 38,
-        width: 190,
         backgroundColor: '#555',
         zIndex: 1,
         position: 'absolute',
@@ -327,7 +332,7 @@ class MyMoneyScreen extends Component {
         justifyContent: 'center',
         alignSelf: 'center'
       }}>
-        <Text style={{ fontSize: 15, color: '#ffffff', fontFamily: 'SourceSansPro-Regular' }}>Press again to exit...</Text>
+        <Text style={{ fontSize: 15, color: '#ffffff', fontFamily: 'SourceSansPro-Regular' }}>{translate('components.confirmExitModal.message')}</Text>
       </View>
     }
   }
@@ -337,7 +342,7 @@ class MyMoneyScreen extends Component {
         bottom: this.props.showUndoDelete ? 24.5 : -100,
         backgroundColor: this.useTheme('#303030', '#f5f5f5')
       }]}>
-        <Text style={{ fontSize: 15, color: this.useTheme('#fbfbfb', '#303030'), fontFamily: 'SourceSansPro-Regular' }}>1 deleted</Text>
+        <Text style={{ fontSize: 15, color: this.useTheme('#fbfbfb', '#303030'), fontFamily: 'SourceSansPro-Regular' }}>1 {translate('components.undoModal.deleted')}</Text>
         <TouchableOpacity
           activeOpacity={0.8}
           style={{ alignItems: 'center', justifyContent: 'center', padding: 6, borderRadius: 6 }}
@@ -346,7 +351,7 @@ class MyMoneyScreen extends Component {
           }}
         >
           <Text style={{ fontSize: 17, fontFamily: 'SourceSansPro-SemiBold', color: '#008ee0' }}>
-            Undo
+            {translate('components.undoModal.undo')}
           </Text>
         </TouchableOpacity>
       </View>
@@ -385,8 +390,8 @@ class MyMoneyScreen extends Component {
               backgroundColor: this.useTheme('#f5f5f5', '#161616')
             }}>
               <Text numberOfLines={1} style={{ color: this.useTheme('#303030', '#fbfbfb'), fontSize: 26, fontFamily: 'SourceSansPro-SemiBold' }}>
-                My Wallet
-            </Text>
+                {translate('main.moneyList.title')}
+              </Text>
             </View>
             {this.renderSortButton()}
           </View>
@@ -409,10 +414,11 @@ class MyMoneyScreen extends Component {
               value={this.state.searchWord}
               style={{
                 ...styles.input,
-                color: this.useTheme('#303030', '#fbfbfb')
+                color: this.useTheme('#303030', '#fbfbfb'),
+                textAlign: isRTL() ? 'right' : 'left'
               }}
               placeholderTextColor={this.useTheme('#999', 'rgba(255, 255, 255, 0.6)')}
-              placeholder='Search accounts'
+              placeholder={translate('main.moneyList.placeholder')}
               onChangeText={this.changeSearchWord}
             />
           </View>
@@ -458,6 +464,7 @@ const styles = StyleSheet.create({
   header: {
     height: 56,
     flexDirection: 'row',
+    justifyContent: 'space-between',
     marginVertical:
       Dimensions.get('window').width > 800 ? 20
         :
@@ -470,8 +477,8 @@ const styles = StyleSheet.create({
               2
   },
   titleContainer: {
-    flex: 1,
-    paddingLeft: 12,
+    width: 300,
+    paddingHorizontal: 12,
     justifyContent: 'center'
   },
   undoView: {

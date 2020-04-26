@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, StyleSheet, View, ScrollView, Linking, Keyboard, InteractionManager, ActivityIndicator, Modal, TouchableOpacity, Dimensions } from 'react-native'
+import { Text, StyleSheet, View, ScrollView, Linking, Keyboard, InteractionManager, ActivityIndicator, TouchableOpacity, Dimensions } from 'react-native'
 import { connect } from 'react-redux'
 import { updateEmployeeInfo, deleteEmployee } from '../actions'
 import { Navigation } from 'react-native-navigation'
@@ -8,11 +8,13 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import MyInput from '../components/MyInput'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+import { translate, isRTL } from '../utils/i18n'
+import getNumber from '../utils/getNumber'
 
 class EmployeeDetailsScreen extends Component {
   constructor(props) {
     super(props)
-    this.state = { canRender: false, modalVisible: false }
+    this.state = { canRender: false }
     InteractionManager.runAfterInteractions(() => {
       this.separator = () => <View style={{ marginVertical: 2 }}></View>
       this.uid = this.props.uid
@@ -33,83 +35,6 @@ class EmployeeDetailsScreen extends Component {
           ...styles.container,
           backgroundColor: this.useTheme('#f5f5f5', '#161616')
         }}>
-          <Modal
-            animationType="fade"
-            transparent={true}
-            visible={this.state.modalVisible}
-            onRequestClose={() => {
-              this.setState({ modalVisible: false })
-            }}>
-            <View style={{ flex: 1, justifyContent: 'center' }}>
-              <TouchableOpacity
-                activeOpacity={1}
-                onPress={() => this.setState({ modalVisible: false })}
-                style={[StyleSheet.absoluteFill, {
-                  backgroundColor: this.props.theme === 'light' ? 'rgba(0,0,0,0.1)' : 'rgba(0,0,0,0.5)',
-                  zIndex: 0
-                }]}></TouchableOpacity>
-              <View style={{
-                ...styles.modal,
-                backgroundColor: this.useTheme('#f5f5f5', '#222')
-              }}>
-                <View style={{
-                  ...styles.upperModal,
-                  backgroundColor: this.useTheme('#f5f5f5', '#222')
-                }}>
-                  <Text style={{
-                    marginBottom: 7,
-                    textAlign: 'center',
-                    color: this.useTheme('#303030', '#fbfbfb'),
-                    fontSize: 18,
-                    fontFamily: 'SourceSansPro-SemiBold'
-                  }}>
-                    Delete this employee?
-                  </Text>
-                  <Text style={{
-                    textAlign: 'center',
-                    color: this.useTheme('#444', '#fbfbfb'),
-                    fontSize: 16,
-                    fontFamily: 'SourceSansPro-SemiBold'
-                  }}>
-                    This action cannot be undo.
-                  </Text>
-                </View>
-                <View style={{ flexDirection: 'row' }}>
-                  <TouchableOpacity
-                    activeOpacity={0.8}
-                    onPress={() => this.setState({ modalVisible: false })}
-                    style={[
-                      styles.modalButton,
-                      {
-                        borderBottomLeftRadius: 4,
-                        backgroundColor: this.useTheme('#f5f5f5', '#222'),
-                        borderTopColor: this.useTheme('#eaeaea', '#363636')
-                      }]}>
-                    <Text style={{ color: this.useTheme('#303030', '#eef'), fontSize: 18, fontFamily: 'SourceSansPro-Regular' }}>
-                      Cancel
-                    </Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    activeOpacity={0.8}
-                    onPress={() => {
-                      this.setState({ modalVisible: false });
-                      this.props.deleteEmployee(this.props.componentId, { uid: this.uid }, this.employeeData)
-                    }}
-                    style={[
-                      styles.modalButton,
-                      {
-                        borderBottomRightRadius: 4,
-                        backgroundColor: this.useTheme('#f5f5f5', '#222'),
-                        borderTopColor: this.useTheme('#eaeaea', '#363636')
-                      }]}>
-                    <Text style={{ color: '#e65100', fontSize: 19, fontFamily: 'SourceSansPro-SemiBold' }}>
-                      Delete
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-            </View>
-          </Modal>
           <View style={{
             ...styles.header,
             backgroundColor: this.useTheme('#f5f5f5', '#161616')
@@ -123,16 +48,17 @@ class EmployeeDetailsScreen extends Component {
               }}
               onPress={() => Navigation.pop(this.props.componentId)}
             >
-              <Ionicons name="md-arrow-back" size={26} color={this.useTheme('#303030', '#fbfbfb')} />
+              <Ionicons name={isRTL() ? "md-arrow-forward" : "md-arrow-back"} size={26} color={this.useTheme('#303030', '#fbfbfb')} />
             </TouchableOpacity>
             <View style={{
               ...styles.titleContainer,
-              backgroundColor: this.useTheme('#f5f5f5', '#161616')
+              backgroundColor: this.useTheme('#f5f5f5', '#161616'),
+              alignItems: 'flex-start'
             }}>
               <ScrollView
                 horizontal
                 showsHorizontalScrollIndicator={false}
-                style={{ marginRight: 15 }}
+                style={{ marginHorizontal: 15 }}
                 contentContainerStyle={{ alignItems: 'center' }}
               >
                 <Text numberOfLines={1} style={{ color: this.useTheme('#303030', '#fbfbfb'), fontSize: 25, fontFamily: 'SourceSansPro-SemiBold', textAlign: 'left' }}>
@@ -143,7 +69,9 @@ class EmployeeDetailsScreen extends Component {
             <TouchableOpacity
               style={{ width: 40, height: 40, borderRadius: 20, alignItems: 'center', justifyContent: 'center' }}
               activeOpacity={0.2}
-              onPress={() => this.setState({ modalVisible: true })}
+              onPress={() => {
+                this.props.deleteEmployee(this.props.componentId, { uid: this.uid }, this.employeeData)
+              }}
             >
               <MaterialCommunityIcons name="trash-can-outline" color={this.useTheme('#303030', '#fbfbfb')} size={24} />
             </TouchableOpacity>
@@ -157,7 +85,7 @@ class EmployeeDetailsScreen extends Component {
               style={{ fontSize: 16, paddingRight: 15 }}
               isSecure={false}
               autoCapitalize="words"
-              placeHolder='Name'
+              placeHolder={translate('main.employeeDetails.name')}
               isAutoCorrect={false}
               onChangeText={value => this.setState({ name: value })}
             />
@@ -170,7 +98,7 @@ class EmployeeDetailsScreen extends Component {
               leftIcon='ios-briefcase'
               style={{ fontSize: 16, paddingRight: 15 }}
               isSecure={false}
-              placeHolder='Role'
+              placeHolder={translate('main.employeeDetails.role')}
               isAutoCorrect={false}
               onChangeText={value => this.setState({ role: value })}
             />
@@ -183,7 +111,7 @@ class EmployeeDetailsScreen extends Component {
               leftIcon='ios-cash'
               style={{ fontSize: 16, paddingRight: 15 }}
               isSecure={false}
-              placeHolder='Salary'
+              placeHolder={translate('main.employeeDetails.salary')}
               isAutoCorrect={false}
               onChangeText={value => this.setState({ salary: value })}
             />
@@ -194,7 +122,7 @@ class EmployeeDetailsScreen extends Component {
               value={this.state.phone}
               inputContainerStyle={{ marginVertical: 8 }}
               leftIcon='ios-call'
-              rightIcon='ios-arrow-forward'
+              rightIcon={isRTL() ? 'ios-arrow-back' : 'ios-arrow-forward'}
               rightIconStyle={{
                 color: this.state.phone ?
                   this.useTheme('#777', '#c8c8c8')
@@ -205,7 +133,7 @@ class EmployeeDetailsScreen extends Component {
               onRightIconPress={() => Linking.openURL(`tel:${this.state.phone}`)}
               style={{ fontSize: 16, paddingRight: 15 }}
               isSecure={false}
-              placeHolder='Phone'
+              placeHolder={translate('main.employeeDetails.phone')}
               isAutoCorrect={false}
               onChangeText={value => this.setState({ phone: value })}
             />
@@ -215,7 +143,7 @@ class EmployeeDetailsScreen extends Component {
               inputContainerStyle={{ marginVertical: 8 }}
               value={this.state.email}
               leftIcon='ios-mail'
-              rightIcon='ios-arrow-forward'
+              rightIcon={isRTL() ? 'ios-arrow-back' : 'ios-arrow-forward'}
               rightIconStyle={{
                 color: this.state.email ?
                   this.useTheme('#777', '#c8c8c8')
@@ -226,7 +154,7 @@ class EmployeeDetailsScreen extends Component {
               onRightIconPress={() => { Linking.openURL(`mailto:${this.state.email}`) }}
               style={{ fontSize: 16, paddingRight: 15 }}
               isSecure={false}
-              placeHolder='Email'
+              placeHolder={translate('main.employeeDetails.email')}
               isAutoCorrect={false}
               theme={this.props.theme}
               onChangeText={value => this.setState({ email: value })}
@@ -240,7 +168,12 @@ class EmployeeDetailsScreen extends Component {
                 this.setState({ showDatePicker: true })
               }}
               editable={false}
-              value={'Joined since :  ' + ("0" + new Date(this.state.joinDate).getDate()).slice(-2) + "-" + ("0" + (new Date(this.state.joinDate).getMonth() + 1)).slice(-2) + "-" + new Date(this.state.joinDate).getFullYear()}
+              value={
+                translate('main.employeeDetails.joinedSince')
+                + ' :  ' + getNumber(("0" + new Date(this.state.joinDate).getDate()).slice(-2)
+                  + " - " + ("0" + (new Date(this.state.joinDate).getMonth() + 1)).slice(-2)
+                  + " - " + new Date(this.state.joinDate).getFullYear())
+              }
               leftIcon='md-calendar'
               inputContainerStyle={{ marginVertical: 8 }}
               style={{ fontSize: 16, paddingRight: 15 }}
@@ -294,7 +227,7 @@ class EmployeeDetailsScreen extends Component {
                 color: '#008ee0',
                 fontSize: 16.5
               }}>
-                Update
+                {translate('main.employeeDetails.update')}
               </Text>
             </View>
           </TouchableOpacity>
@@ -340,32 +273,12 @@ const styles = StyleSheet.create({
   },
   titleContainer: {
     flex: 1,
-    paddingLeft: 10,
     justifyContent: 'center'
   },
   backIconContainer: {
     width: 42,
     justifyContent: 'center',
     alignItems: 'center'
-  },
-  modal: {
-    width: 250,
-    height: 135,
-    alignSelf: 'center',
-    borderRadius: 4
-  },
-  upperModal: {
-    height: 90,
-    borderTopLeftRadius: 4,
-    borderTopRightRadius: 4,
-    justifyContent: 'center'
-  },
-  modalButton: {
-    height: 45,
-    width: 125,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderTopWidth: 1.5
   }
 })
 

@@ -6,6 +6,7 @@ import { Navigation } from 'react-native-navigation'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
+import { translate, isRTL } from '../utils/i18n'
 
 class ToDoDetailsScreen extends Component {
   constructor(props) {
@@ -58,14 +59,14 @@ class ToDoDetailsScreen extends Component {
             }}
             onPress={() => Navigation.pop(this.props.componentId)}
           >
-            <Ionicons name="md-arrow-back" size={26} color={this.useTheme('#303030', '#fbfbfb')} />
+            <Ionicons name={isRTL() ? "md-arrow-forward" : "md-arrow-back"} size={26} color={this.useTheme('#303030', '#fbfbfb')} />
           </TouchableOpacity>
           <View style={{
             ...styles.titleContainer,
             backgroundColor: this.useTheme('#f5f5f5', '#161616')
           }}>
             <Text numberOfLines={1} style={{ color: this.useTheme('#303030', '#fbfbfb'), fontSize: 25, fontFamily: 'SourceSansPro-SemiBold' }}>
-              Task Details
+              {translate('main.todoDetails.title')}
             </Text>
           </View>
           <TouchableOpacity
@@ -88,7 +89,7 @@ class ToDoDetailsScreen extends Component {
                 color: this.useTheme('#303030', '#fbfbfb')
               }]}
               selectionColor='#008ee0'
-              placeholder="What would you like to do?"
+              placeholder={translate('main.todoDetails.placeholder1')}
               placeholderTextColor={this.useTheme('#999', 'rgba(255,255,255,0.28)')}
               onChangeText={task => this.taskTextChange(task)}
             />
@@ -102,7 +103,7 @@ class ToDoDetailsScreen extends Component {
                 textAlignVertical: "top", flex: 1
               }]}
               selectionColor='#008ee0'
-              placeholder="Description"
+              placeholder={translate('main.todoDetails.placeholder2')}
               placeholderTextColor={this.useTheme('#999', 'rgba(255,255,255,0.28)')}
               onChangeText={description => this.descriptionTextChange(description)}
             />
@@ -136,7 +137,7 @@ class ToDoDetailsScreen extends Component {
                   color: '#008ee0',
                   fontSize: 16
                 }}>
-                  Mark  complete
+                  {translate('main.todoDetails.markComplete')}
                 </Text>
               </View>
               :

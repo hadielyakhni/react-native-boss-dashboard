@@ -4,7 +4,7 @@ import { LoginManager } from 'react-native-fbsdk'
 import { GoogleSignin } from '@react-native-community/google-signin'
 import AsyncStorage from '@react-native-community/async-storage'
 import { Navigation } from 'react-native-navigation'
-import { goToAuth, goToMain } from '../navigation/navigation'
+import { goToAuth } from '../navigation/navigation'
 import { connect } from 'react-redux'
 import { incrementExitCount, resetExitCount, setTheme } from '../actions'
 import { Spinner } from 'native-base'
@@ -13,7 +13,8 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import Entypo from 'react-native-vector-icons/Entypo'
-import ThemeChoicesModal from '../components/ChoicesModal'
+import ChoicesModal from '../components/ChoicesModal'
+import { translate, getUsedLanguage, isRTL, isUsedLanguageSystem } from '../utils/i18n'
 
 const NativeSplashScreen = NativeModules.NativeSplashScreen
 
@@ -24,10 +25,12 @@ class SettingsScreen extends Component {
       modalVisible: false,
       loggingout: false,
       themeChoicesModalVisible: false,
+      languageChoicesModalVisible: false,
       providers: [],
       isChangePasswordButtonDisabled: false
     }
     this.themeChoices = [{ id: '1', prop: 'system' }, { id: "2", prop: 'light' }, { id: '3', prop: 'dark' }]
+    this.languageChoices = [{ id: '1', prop: 'system' }, { id: '2', prop: 'english' }, { id: '3', prop: 'french' }, { id: '4', prop: 'arabic' }]
     const storedData = ['uid', 'email', 'providers']
     AsyncStorage.multiGet(storedData).then(data => {
       this.setState({
@@ -42,9 +45,10 @@ class SettingsScreen extends Component {
       return null
     if (this.props.exitCount === 1) {
       return <View style={{
+        opacity: 0.9,
+        paddingHorizontal: 20,
         borderRadius: 16,
         height: 38,
-        width: 190,
         backgroundColor: '#555',
         position: 'absolute',
         zIndex: 1,
@@ -53,7 +57,7 @@ class SettingsScreen extends Component {
         justifyContent: 'center',
         alignSelf: 'center'
       }}>
-        <Text style={{ fontSize: 15, color: '#ffffff', fontFamily: 'SourceSansPro-Regular' }}>Press again to exit...</Text>
+        <Text style={{ fontSize: 15, color: '#ffffff', fontFamily: 'SourceSansPro-Regular' }}>{translate('components.confirmExitModal.message')}</Text>
       </View>
     }
     else if (this.props.exitCount === 2)
@@ -61,6 +65,9 @@ class SettingsScreen extends Component {
   }
   closeThemeChoicesModal = () => {
     this.setState({ themeChoicesModalVisible: false })
+  }
+  closeLanguageChoicesModal = () => {
+    this.setState({ languageChoicesModalVisible: false })
   }
   onSelectThemeChoice = async choice => {
     if (choice === 'system' && this.props.isSystemTheme) {
@@ -96,9 +103,6 @@ class SettingsScreen extends Component {
       root: {
         component: {
           name: 'first',
-          passProps: {
-            isFromSettings: true
-          },
           options: {
             animations: {
               setRoot: {
@@ -109,6 +113,39 @@ class SettingsScreen extends Component {
         }
       }
     })
+  }
+  onSelectLanguageChoice = async choice => {
+    if (choice === 'system') {
+      AsyncStorage.removeItem('language')
+      AsyncStorage.removeItem('isRTL')
+    }
+    else if (choice === 'english') {
+      await AsyncStorage.multiSet([['language', 'en'], ['isRTL', 'false']])
+    }
+    else if (choice === 'french') {
+      await AsyncStorage.multiSet([['language', 'fr'], ['isRTL', 'false']])
+    }
+    else if (choice === 'arabic') {
+      await AsyncStorage.multiSet([['language', 'ar'], ['isRTL', 'true']])
+    }
+    this.setState({ languageChoicesModalVisible: false })
+    if (choice !== getUsedLanguage()) {
+      NativeSplashScreen.show()
+      Navigation.setRoot({
+        root: {
+          component: {
+            name: 'first',
+            options: {
+              animations: {
+                setRoot: {
+                  waitForRender: true
+                }
+              }
+            }
+          }
+        }
+      })
+    }
   }
   useTheme(lightThemeColor, darkThemeColor) {
     if (this.props.theme === 'light')
@@ -121,7 +158,7 @@ class SettingsScreen extends Component {
         ...styles.container,
         backgroundColor: this.useTheme('#f5f5f5', '#161616')
       }}>
-        <ThemeChoicesModal
+        <ChoicesModal
           theme={this.props.theme}
           label="Theme"
           choices={this.themeChoices}
@@ -129,6 +166,15 @@ class SettingsScreen extends Component {
           selectedChoice={this.props.isSystemTheme ? 'system' : this.props.theme}
           onSelect={this.onSelectThemeChoice}
           onCancel={this.closeThemeChoicesModal}
+        />
+        <ChoicesModal
+          theme={this.props.theme}
+          label="Language"
+          choices={this.languageChoices}
+          visible={this.state.languageChoicesModalVisible}
+          selectedChoice={isUsedLanguageSystem() ? 'system' : getUsedLanguage()}
+          onSelect={this.onSelectLanguageChoice}
+          onCancel={this.closeLanguageChoicesModal}
         />
         {this.checkExit()}
         <Modal
@@ -157,8 +203,8 @@ class SettingsScreen extends Component {
                 backgroundColor: this.useTheme('#fbfbfb', '#222')
               }}>
                 <Text style={{ color: this.useTheme('#303030', '#fbfbfb'), fontSize: 18, fontFamily: 'SourceSansPro-Regular' }}>
-                  Log out of Boss Dashboard?
-              </Text>
+                  {translate('components.logOutModal.message')}
+                </Text>
               </View>
               <TouchableOpacity
                 onPress={() => {
@@ -182,7 +228,9 @@ class SettingsScreen extends Component {
                   borderColor: this.useTheme('#ddd', '#282828')
                 }}
               >
-                <Text style={{ color: '#008ee0', fontSize: 18, fontFamily: 'SourceSansPro-SemiBold' }}>Logout</Text>
+                <Text style={{ color: '#008ee0', fontSize: 18, fontFamily: 'SourceSansPro-SemiBold' }}>
+                  {translate('components.logOutModal.logout')}
+                </Text>
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => this.setState({ modalVisible: false })}
@@ -192,7 +240,9 @@ class SettingsScreen extends Component {
                   backgroundColor: this.useTheme('#fbfbfb', '#222')
                 }}
               >
-                <Text style={{ color: this.useTheme('#303030', '#fbfbfb'), fontSize: 18, fontFamily: 'SourceSansPro-Regular' }}>Cancel</Text>
+                <Text style={{ color: this.useTheme('#303030', '#fbfbfb'), fontSize: 18, fontFamily: 'SourceSansPro-Regular' }}>
+                  {translate('components.logOutModal.cancel')}
+                </Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -210,9 +260,9 @@ class SettingsScreen extends Component {
               ...styles.loadingModal,
               backgroundColor: this.useTheme('#fbfbfb', '#222')
             }}>
-              <Spinner color={this.useTheme('#303030', '#fbfbfb')} size={26} style={{ marginRight: 15 }} />
+              <Spinner color={this.useTheme('#303030', '#fbfbfb')} size={26} style={{ marginHorizontal: 15 }} />
               <Text style={{ color: this.useTheme('#303030', '#fbfbfb'), fontSize: 17, fontFamily: 'SourceSansPro-Regular' }}>
-                logging out...
+                {translate('components.loggingOutModal.message') + "   "}
               </Text>
             </View>
           </View>
@@ -226,7 +276,7 @@ class SettingsScreen extends Component {
             backgroundColor: this.useTheme('#f5f5f5', '#161616')
           }}>
             <Text numberOfLines={1} style={{ color: this.useTheme('#303030', '#fbfbfb'), fontSize: 26, fontFamily: 'SourceSansPro-SemiBold' }}>
-              Settings
+              {translate('main.settings.title')}
             </Text>
           </View>
         </View>
@@ -285,6 +335,7 @@ class SettingsScreen extends Component {
                   ellipsizeMode="middle"
                   style={{
                     width: Dimensions.get('window').width - 125,
+                    textAlign: 'left',
                     color: this.useTheme('#303030', '#fbfbfb'),
                     fontSize: 19,
                     fontFamily: 'SourceSansPro-SemiBold'
@@ -293,9 +344,10 @@ class SettingsScreen extends Component {
                   {this.state.email}
                 </Text>
               </View>
-              {this.state.providers.includes('password') &&
+              {
+                this.state.providers.includes('password') &&
                 <View style={{ marginRight: 15 }}>
-                  <MaterialIcons name="chevron-right" color={this.useTheme('#303030', '#fbfbfb')} size={30} />
+                  <MaterialIcons name={isRTL() ? "chevron-left" : "chevron-right"} color={this.useTheme('#303030', '#fbfbfb')} size={30} />
                 </View>
               }
             </View>
@@ -308,10 +360,11 @@ class SettingsScreen extends Component {
             fontSize: 16,
             fontFamily: 'SourceSansPro-Regular'
           }}>
-            Settings
+            {translate('main.settings.settings')}
           </Text>
           <TouchableOpacity
             activeOpacity={0.9}
+            onPress={() => this.setState({ languageChoicesModalVisible: true })}
           >
             <View style={{
               backgroundColor: this.useTheme('#f5f5f5', '#161616'),
@@ -322,13 +375,14 @@ class SettingsScreen extends Component {
               <View style={{ height: 56, flexDirection: 'row', paddingLeft: 15, alignItems: 'center' }}>
                 <Entypo name="language" color={this.useTheme('#303030', '#fbfbfb')} size={24.5} />
                 <Text style={{ marginLeft: 20, color: this.useTheme('#303030', '#fbfbfb'), fontSize: 19.5, fontFamily: 'SourceSansPro-SemiBold' }}>
-                  Language
-              </Text>
+                  {translate('main.settings.language')}
+                </Text>
               </View>
               <View style={{ flexDirection: 'row', alignItems: 'center', marginHorizontal: 7 }}>
                 <Text style={{ color: this.useTheme('#666', '#999'), fontSize: 17, fontFamily: 'SourceSansPro-Regular', marginRight: 10 }}>
-                  English
-              </Text>
+                  {isUsedLanguageSystem() ? translate('components.choicesModal.languagesModal.options.system') + ' - ' : null}
+                  {translate('components.choicesModal.languagesModal.options.' + getUsedLanguage())}
+                </Text>
               </View>
             </View>
           </TouchableOpacity>
@@ -345,16 +399,16 @@ class SettingsScreen extends Component {
               <View style={{ height: 56, flexDirection: 'row', paddingLeft: 15, alignItems: 'center' }}>
                 <MaterialCommunityIcons name="theme-light-dark" color={this.useTheme('#303030', '#fbfbfb')} size={24.5} />
                 <Text style={{ marginLeft: 20, color: this.useTheme('#303030', '#fbfbfb'), fontSize: 19.5, fontFamily: 'SourceSansPro-SemiBold' }}>
-                  Theme
-              </Text>
+                  {translate('main.settings.theme')}
+                </Text>
               </View>
               <View style={{ flexDirection: 'row', alignItems: 'center', marginHorizontal: 7 }}>
                 <Text style={{ color: this.useTheme('#666', '#999'), fontSize: 17, fontFamily: 'SourceSansPro-Regular', marginRight: 10 }}>
                   {
                     this.props.isSystemTheme ?
-                      "System - " + this.props.theme.charAt(0).toUpperCase() + this.props.theme.substring(1)
+                      translate('components.choicesModal.themesModal.options.system') + ' - ' + translate('components.choicesModal.themesModal.options.' + this.props.theme)
                       :
-                      this.props.theme.charAt(0).toUpperCase() + this.props.theme.substring(1)
+                      translate('components.choicesModal.themesModal.options.' + this.props.theme)
                   }
                 </Text>
               </View>
@@ -368,7 +422,7 @@ class SettingsScreen extends Component {
             fontSize: 16,
             fontFamily: 'SourceSansPro-Regular'
           }}>
-            Developer
+            {translate('main.settings.developer')}
           </Text>
           <TouchableOpacity
             activeOpacity={0.9}
@@ -383,12 +437,12 @@ class SettingsScreen extends Component {
               <View style={{ height: 56, flexDirection: 'row', paddingLeft: 15, alignItems: 'center' }}>
                 <MaterialCommunityIcons name="help-circle-outline" color={this.useTheme('#303030', '#fbfbfb')} size={25} />
                 <Text style={{ marginLeft: 20, color: this.useTheme('#303030', '#fbfbfb'), fontSize: 19.5, fontFamily: 'SourceSansPro-SemiBold' }}>
-                  Help Center
-              </Text>
+                  {translate('main.settings.helpCenter')}
+                </Text>
               </View>
               <View style={{ flexDirection: 'row', alignItems: 'center', marginHorizontal: 7 }}>
                 <View style={{ marginHorizontal: 7 }}>
-                  <MaterialIcons name="chevron-right" color={this.useTheme('#666', '#999')} size={30} />
+                  <MaterialIcons name={isRTL() ? "chevron-left" : "chevron-right"} color={this.useTheme('#666', '#999')} size={30} />
                 </View>
               </View>
             </View>
@@ -405,12 +459,12 @@ class SettingsScreen extends Component {
               <View style={{ height: 56, flexDirection: 'row', paddingLeft: 15, alignItems: 'center' }}>
                 <MaterialCommunityIcons name="message-text" color={this.useTheme('#303030', '#fbfbfb')} size={24.5} />
                 <Text style={{ marginLeft: 20, color: this.useTheme('#303030', '#fbfbfb'), fontSize: 19.5, fontFamily: 'SourceSansPro-SemiBold' }}>
-                  Feedback
-              </Text>
+                  {translate('main.settings.feedback')}
+                </Text>
               </View>
               <View style={{ flexDirection: 'row', alignItems: 'center', marginHorizontal: 7 }}>
                 <View style={{ marginHorizontal: 7 }}>
-                  <MaterialIcons name="chevron-right" color={this.useTheme('#666', '#999')} size={30} />
+                  <MaterialIcons name={isRTL() ? "chevron-left" : "chevron-right"} color={this.useTheme('#666', '#999')} size={30} />
                 </View>
               </View>
             </View>
@@ -427,12 +481,12 @@ class SettingsScreen extends Component {
               <View style={{ height: 56, flexDirection: 'row', paddingLeft: 15, alignItems: 'center' }}>
                 <MaterialCommunityIcons name="coffee-outline" color={this.useTheme('#303030', '#fbfbfb')} size={25} />
                 <Text style={{ marginLeft: 20, color: this.useTheme('#303030', '#fbfbfb'), fontSize: 19.5, fontFamily: 'SourceSansPro-SemiBold' }}>
-                  Buy Me A Coffee
-              </Text>
+                  {translate('main.settings.buyMeACoffee')}
+                </Text>
               </View>
               <View style={{ flexDirection: 'row', alignItems: 'center', marginHorizontal: 7 }}>
                 <View style={{ marginHorizontal: 7 }}>
-                  <MaterialIcons name="chevron-right" color={this.useTheme('#666', '#999')} size={30} />
+                  <MaterialIcons name={isRTL() ? "chevron-left" : "chevron-right"} color={this.useTheme('#666', '#999')} size={30} />
                 </View>
               </View>
             </View>
@@ -445,7 +499,7 @@ class SettingsScreen extends Component {
             fontSize: 16,
             fontFamily: 'SourceSansPro-Regular'
           }}>
-            Privacy
+            {translate('main.settings.privacy')}
           </Text>
           <TouchableOpacity
             activeOpacity={0.9}
@@ -459,12 +513,12 @@ class SettingsScreen extends Component {
               <View style={{ height: 56, flexDirection: 'row', paddingLeft: 15, alignItems: 'center' }}>
                 <MaterialCommunityIcons name="lock-outline" color={this.useTheme('#303030', '#fbfbfb')} size={25} />
                 <Text style={{ marginLeft: 20, color: this.useTheme('#303030', '#fbfbfb'), fontSize: 19.5, fontFamily: 'SourceSansPro-SemiBold' }}>
-                  Privacy Policy
-              </Text>
+                  {translate('main.settings.privacyPolicy')}
+                </Text>
               </View>
               <View style={{ flexDirection: 'row', alignItems: 'center', marginHorizontal: 7 }}>
                 <View style={{ marginHorizontal: 7 }}>
-                  <MaterialIcons name="chevron-right" color={this.useTheme('#666', '#999')} size={30} />
+                  <MaterialIcons name={isRTL() ? "chevron-left" : "chevron-right"} color={this.useTheme('#666', '#999')} size={30} />
                 </View>
               </View>
             </View>
@@ -481,12 +535,12 @@ class SettingsScreen extends Component {
               <View style={{ height: 56, flexDirection: 'row', paddingLeft: 15, alignItems: 'center' }}>
                 <Ionicons name="md-paper" color={this.useTheme('#303030', '#fbfbfb')} size={24} />
                 <Text style={{ marginLeft: 20, color: this.useTheme('#303030', '#fbfbfb'), fontSize: 19.5, fontFamily: 'SourceSansPro-SemiBold' }}>
-                  Terms Of Use
-              </Text>
+                  {translate('main.settings.termsOfUse')}
+                </Text>
               </View>
               <View style={{ flexDirection: 'row', alignItems: 'center', marginHorizontal: 7 }}>
                 <View style={{ marginHorizontal: 7 }}>
-                  <MaterialIcons name="chevron-right" color={this.useTheme('#666', '#999')} size={30} />
+                  <MaterialIcons name={isRTL() ? "chevron-left" : "chevron-right"} color={this.useTheme('#666', '#999')} size={30} />
                 </View>
               </View>
             </View>
@@ -501,8 +555,8 @@ class SettingsScreen extends Component {
             }}
           >
             <Text style={styles.logoutText}>
-              LOGOUT
-          </Text>
+              {translate('main.settings.logout')}
+            </Text>
           </TouchableOpacity>
         </ScrollView>
       </View >
@@ -599,7 +653,6 @@ const styles = StyleSheet.create({
   },
   loadingModal: {
     borderRadius: 6,
-    width: 170,
     height: 55,
     flexDirection: 'row',
     alignItems: 'center',

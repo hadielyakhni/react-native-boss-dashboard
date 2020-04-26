@@ -5,6 +5,7 @@ import { addTask } from '../actions'
 import { Navigation } from 'react-native-navigation'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import MaterialIcons from "react-native-vector-icons/MaterialIcons"
+import { translate, isRTL } from '../utils/i18n'
 
 class ToDoAddScreen extends Component {
   state = {
@@ -57,14 +58,14 @@ class ToDoAddScreen extends Component {
             }}
             onPress={() => Navigation.pop(this.props.componentId)}
           >
-            <Ionicons name="md-arrow-back" size={26} color={this.useTheme('#303030', '#fbfbfb')} />
+            <Ionicons name={isRTL() ? "md-arrow-forward" : "md-arrow-back"} size={26} color={this.useTheme('#303030', '#fbfbfb')} />
           </TouchableOpacity>
           <View style={{
             ...styles.titleContainer,
             backgroundColor: this.useTheme('#f5f5f5', '#161616')
           }}>
             <Text numberOfLines={1} style={{ color: this.useTheme('#303030', '#fbfbfb'), fontSize: 25, fontFamily: 'SourceSansPro-SemiBold' }}>
-              Add Task
+              {translate('main.todoAdd.title')}
             </Text>
           </View>
         </View>
@@ -76,10 +77,11 @@ class ToDoAddScreen extends Component {
                 borderTopWidth: 0.9,
                 borderColor: this.useTheme('#999', 'rgba(255,255,255,0.1)'),
                 borderBottomWidth: 0.9,
-                color: this.useTheme('#303030', '#fbfbfb')
+                color: this.useTheme('#303030', '#fbfbfb'),
+                textAlign: isRTL() ? 'right' : 'left'
               }]}
               selectionColor='#008ee0'
-              placeholder="What would you like to do?"
+              placeholder={translate('main.todoAdd.placeholder1')}
               placeholderTextColor={this.useTheme('#999', 'rgba(255,255,255,0.28)')}
               onChangeText={task => this.setState({ task })}
               onSubmitEditing={() => this.secondTextInput.focus()}
@@ -94,10 +96,11 @@ class ToDoAddScreen extends Component {
               style={[styles.input, {
                 color: this.useTheme('#303030', '#fbfbfb'),
                 textAlignVertical: "top",
-                flex: 1
+                flex: 1,
+                textAlign: isRTL() ? 'right' : 'left'
               }]}
               selectionColor='#008ee0'
-              placeholder="Description"
+              placeholder={translate('main.todoAdd.placeholder2')}
               placeholderTextColor={this.useTheme('#999', 'rgba(255,255,255,0.28)')}
               onChangeText={description => this.setState({ description })}
             />
@@ -134,7 +137,7 @@ class ToDoAddScreen extends Component {
                   color: this.isAddDisabled() ? this.useTheme('#afb8cb', '#777') : '#008ee0',
                   fontSize: 16.5
                 }}>
-                  Add
+                  {translate('main.todoAdd.add')}
                 </Text>
               </View>
             }

@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react'
 import { View, Text, StyleSheet, TouchableOpacity, Dimensions } from 'react-native'
 import Shimmer from 'react-native-shimmer'
+import { isRTL } from '../utils/i18n'
 
 export default class EmployeeCard extends PureComponent {
   render() {
@@ -10,7 +11,7 @@ export default class EmployeeCard extends PureComponent {
         ...styles.container,
         backgroundColor: theme === 'light' ? '#e6e6e6' : '#222'
       }} >
-        <Shimmer >
+        <Shimmer direction={!isRTL() ? 'right' : 'left'}>
           <View style={{
             ...styles.imageContainer,
             backgroundColor: theme === 'light' ? '#ccc' : '#333'
@@ -22,7 +23,7 @@ export default class EmployeeCard extends PureComponent {
           style={styles.infoContainer}
         >
           <View style={{ flex: 1, height: 56, flexDirection: 'column', alignItems: 'flex-start', paddingVertical: 3 }}>
-            <Shimmer style={{ marginBottom: 4, height: 23 }}>
+            <Shimmer direction={!isRTL() ? 'right' : 'left'} style={{ marginBottom: 4, height: 23 }}>
               <Text numberOfLines={1} style={{
                 ...styles.name,
                 borderColor: theme === 'light' ? '#ccc' : '#333',
@@ -31,7 +32,7 @@ export default class EmployeeCard extends PureComponent {
               </Text>
             </Shimmer>
             <View style={{ flexDirection: 'row', flex: 1 }}>
-              <Shimmer style={{ height: 23 }}>
+              <Shimmer direction={!isRTL() ? 'right' : 'left'} style={{ height: 23 }}>
                 <Text numberOfLines={1} style={{
                   ...styles.roleText,
                   borderColor: theme === 'light' ? '#ccc' : '#333',

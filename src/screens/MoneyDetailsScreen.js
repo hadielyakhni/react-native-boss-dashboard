@@ -11,8 +11,7 @@ import {
   FlatList,
   Linking,
   ScrollView,
-  UIManager,
-  LayoutAnimation
+  UIManager
 } from 'react-native'
 import { connect } from 'react-redux'
 import { addTransaction, deleteAccount } from '../actions'
@@ -24,7 +23,8 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import TransactionCard from '../components/TransactionCard'
-import { Transition, Transitioning } from 'react-native-reanimated'
+import { translate, isRTL, getUsedLanguage } from '../utils/i18n'
+import getNumber from '../utils/getNumber'
 
 const { height, width } = Dimensions.get("window")
 
@@ -34,12 +34,6 @@ UIManager.setLayoutAnimationEnabledExperimental &&
 class MoneyDetailsScreen extends Component {
   constructor(props) {
     super(props)
-    this.ref = React.createRef()
-    this.transition = (
-      <Transition.Together>
-        <Transition.Change />
-      </Transition.Together>
-    )
     InteractionManager.runAfterInteractions(() => {
       this.setState({ canRender: true })
     })
@@ -55,10 +49,9 @@ class MoneyDetailsScreen extends Component {
       transAmount: ''
     }
   }
-  componentDidUpdate() {
-    this.ref.current.animateNextTransition()
-  }
   getName() {
+    if (getUsedLanguage() === 'arabic')
+      return this.props.name
     let name = this.props.name.split(' ')[0]
     let newName = ''
     for (let i = 0; i < name.length; i++)
@@ -73,10 +66,11 @@ class MoneyDetailsScreen extends Component {
   render() {
     return (
       this.state.canRender ?
-        <Transitioning.View ref={this.ref} transition={this.transition} style={{
-          ...styles.container,
-          backgroundColor: this.useTheme('#f5f5f5', '#161616')
-        }} >
+        <View
+          style={{
+            ...styles.container,
+            backgroundColor: this.useTheme('#f5f5f5', '#161616')
+          }} >
           <View style={[StyleSheet.absoluteFill, {
             backgroundColor: this.state.transConfirmationModalVisible || this.state.modalVisible ? 'rgba(0,0,0,0.2)' : 'rgba(0,0,0,0)',
             zIndex: this.state.transConfirmationModalVisible || this.state.modalVisible ? 1 : 0
@@ -93,11 +87,12 @@ class MoneyDetailsScreen extends Component {
                 backgroundColor: this.useTheme('#f5f5f5', '#161616')
               }}
             >
-              <Ionicons name="md-arrow-back" size={26} color={this.useTheme('#303030', '#fbfbfb')} />
+              <Ionicons name={isRTL() ? "md-arrow-forward" : "md-arrow-back"} size={26} color={this.useTheme('#303030', '#fbfbfb')} />
             </TouchableOpacity>
             <View style={{
               ...styles.titleContainer,
-              backgroundColor: this.useTheme('#f5f5f5', '#161616')
+              backgroundColor: this.useTheme('#f5f5f5', '#161616'),
+              alignItems: 'flex-start'
             }}>
               <ScrollView
                 horizontal
@@ -177,9 +172,9 @@ class MoneyDetailsScreen extends Component {
                     }}>
                     {
                       this.props.amount < 0 ?
-                        `${'Y O U  S H O U L D  P A Y  T O  ' + this.getName()}`
+                        translate('main.moneyDetails.shouldPayToHim') + `${'  ' + this.getName()}`
                         :
-                        `${this.getName() + '  S H O U L D  P A Y  F O R  Y O U'}`
+                        `${this.getName() + '  '}` + translate('main.moneyDetails.shouldPayForMe')
                     }
                   </Text>
                 </View>
@@ -197,13 +192,14 @@ class MoneyDetailsScreen extends Component {
                     borderColor: this.useTheme('#f9f9f9', '#242424'),
                     color: this.useTheme('#303030', '#fbfbfb')
                   }}>
-                    {Math.abs(this.props.amount)}
+                    {getNumber(parseFloat(Math.abs(this.props.amount).toFixed(12)).toString())}
+                    <Text style={{ fontSize: 0 }}>fff</Text>
                   </Text>
                 </ScrollView>
               </View>
               <View style={styles.transNumberContainer}>
                 <Text style={{ fontSize: 10.5, fontFamily: 'SourceSansPro-SemiBold', color: this.useTheme('#84989a', '#9cafba') }}>
-                  T O T A L  T R A N S A C T I O N S :  {this.props.transactions.length}
+                  {translate('main.moneyDetails.totalTransactions') + ' :  ' + getNumber(this.props.transactions.length.toString())}
                 </Text>
               </View>
               <View style={{
@@ -217,7 +213,7 @@ class MoneyDetailsScreen extends Component {
               <TouchableOpacity
                 activeOpacity={0.8}
                 style={styles.trashButtonContainer}
-                onPress={() => this.setState({ modalVisible: true })}
+                onPress={() => this.props.deleteAccount(this.props.componentId, this.accountId, this.props.accountData)}
               >
                 <MaterialCommunityIcons name="trash-can-outline" size={24.5} color={this.useTheme('#84989a', 'rgba(156, 175, 186, 0.7)')} />
               </TouchableOpacity>
@@ -242,7 +238,7 @@ class MoneyDetailsScreen extends Component {
                   <FontAwesome name="arrow-up" color="#de3b5b" size={24} style={{ opacity: 0.75 }} />
                 </View>
                 <Text style={{ marginLeft: 8, fontFamily: 'SourceSansPro-Bold', color: this.useTheme('#303030', '#fbfbfb'), fontSize: 23 }}>
-                  Send
+                  {translate('main.moneyDetails.send')}
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
@@ -264,7 +260,7 @@ class MoneyDetailsScreen extends Component {
                   <FontAwesome name="arrow-down" color="#008ee0" size={24} style={{ opacity: 0.75 }} />
                 </View>
                 <Text style={{ marginLeft: 8, fontFamily: 'SourceSansPro-Bold', color: this.useTheme('#303030', '#fbfbfb'), fontSize: 23 }}>
-                  Receive
+                  {translate('main.moneyDetails.receive')}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -273,13 +269,11 @@ class MoneyDetailsScreen extends Component {
                 ...styles.transText,
                 color: this.useTheme('#84989a', '#9cafba')
               }}>
-                T R A N S A C T I O N S
+                {translate('main.moneyDetails.transactions')}
               </Text>
             </View>
             <View style={styles.transListContainer}>
               <FlatList
-                showsVerticalScrollIndicator={false}
-                maxToRenderPerBatch={15}
                 ref={ref => this.flatListRef = ref}
                 contentContainerStyle={{ paddingBottom: 6 }}
                 data={this.props.transactions}
@@ -288,80 +282,6 @@ class MoneyDetailsScreen extends Component {
                 getItemLayout={(data, index) => ({ length: 81, offset: 81 * index, index })}
               />
             </View>
-            <Modal
-              animationType="fade"
-              transparent={true}
-              visible={this.state.modalVisible}
-              onRequestClose={() => { this.setState({ modalVisible: false }) }}
-            >
-              <View style={{ flex: 1, justifyContent: 'center' }}>
-                <TouchableOpacity
-                  activeOpacity={1}
-                  onPress={() => this.setState({ modalVisible: false })}
-                  style={[StyleSheet.absoluteFill, {
-                    backgroundColor: this.props.theme === 'light' ? 'rgba(0,0,0,0.1)' : 'rgba(0,0,0,0.5)',
-                    zIndex: 0
-                  }]}></TouchableOpacity>
-                <View style={{
-                  ...styles.modal,
-                  backgroundColor: this.useTheme('#f5f5f5', '#222')
-                }}>
-                  <View style={{
-                    ...styles.upperModal,
-                    backgroundColor: this.useTheme('#f5f5f5', '#222')
-                  }}>
-                    <Text style={{
-                      fontFamily: 'SourceSansPro-SemiBold',
-                      marginBottom: 7,
-                      textAlign: 'center',
-                      fontSize: 18,
-                      color: this.useTheme('#303030', '#fbfbfb')
-                    }}>
-                      Delete this account?
-                    </Text>
-                    <Text style={{
-                      fontFamily: 'SourceSansPro-SemiBold',
-                      textAlign: 'center',
-                      color: this.useTheme('#444', '#fbfbfb'),
-                      fontSize: 16
-                    }}>
-                      This action cannot be undo.
-                    </Text>
-                  </View>
-                  <View style={{ flexDirection: 'row' }}>
-                    <TouchableOpacity
-                      activeOpacity={0.8}
-                      onPress={() => this.setState({ modalVisible: false })}
-                      style={[
-                        styles.modalButton,
-                        {
-                          borderBottomLeftRadius: 4,
-                          backgroundColor: this.useTheme('#f5f5f5', '#222'),
-                          borderTopColor: this.useTheme('#eaeaea', '#363636')
-                        }]}>
-                      <Text style={{ color: this.useTheme('#303030', '#eef'), fontSize: 18, fontFamily: 'SourceSansPro-Regular' }}>
-                        Cancel
-                      </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      activeOpacity={0.8}
-                      onPress={() => {
-                        this.setState({ modalVisible: false })
-                        this.props.deleteAccount(this.props.componentId, this.accountId, this.props.accountData)
-                      }}
-                      style={[
-                        styles.modalButton,
-                        {
-                          borderBottomRightRadius: 4,
-                          backgroundColor: this.useTheme('#f5f5f5', '#222'),
-                          borderTopColor: this.useTheme('#eaeaea', '#363636')
-                        }]}>
-                      <Text style={{ color: '#e65100', fontSize: 19, fontFamily: 'SourceSansPro-SemiBold' }}>Delete</Text>
-                    </TouchableOpacity>
-                  </View>
-                </View>
-              </View>
-            </Modal>
             <Modal
               animationType="slide"
               transparent={true}
@@ -382,8 +302,8 @@ class MoneyDetailsScreen extends Component {
                     <Text numberOfLines={1} style={{ color: this.useTheme('#303030', '#fbfbfb'), fontFamily: 'SourceSansPro-Bold', fontSize: 22, paddingRight: 7 }}>
                       {
                         this.state.transType === 'send' ?
-                          "Sending to " + this.props.name + "..." :
-                          "Receiving from " + this.props.name + "... "
+                          translate('main.moneyDetails.sendingTo') + " " + this.props.name + " .." :
+                          translate('main.moneyDetails.receivingFrom') + " " + this.props.name + " .. "
                       }
                     </Text>
                     <View>
@@ -394,7 +314,7 @@ class MoneyDetailsScreen extends Component {
                           ...styles.amountInput,
                           color: this.useTheme('#303030', '#fbfbfb')
                         }}
-                        placeholder="Specify the amount"
+                        placeholder={translate('main.moneyDetails.placeholder')}
                         placeholderTextColor={this.useTheme('#999', 'rgba(255, 255, 255, 0.6)')}
                         keyboardType="decimal-pad"
                         onChangeText={transAmount => this.setState({ transAmount })}
@@ -417,7 +337,7 @@ class MoneyDetailsScreen extends Component {
                       }}
                     >
                       <Text style={{ marginLeft: 8, fontFamily: 'SourceSansPro-Bold', color: this.useTheme('#303030', '#fbfbfb'), fontSize: 22 }}>
-                        Cancel
+                        {translate('main.moneyDetails.cancel')}
                       </Text>
                     </TouchableOpacity>
                     <TouchableOpacity
@@ -465,7 +385,7 @@ class MoneyDetailsScreen extends Component {
                         color: this.useTheme('#303030', '#fbfbfb'),
                         fontSize: 22
                       }}>
-                        {this.state.transType === 'send' ? "Send" : "Receive"}
+                        {this.state.transType === 'send' ? translate('main.moneyDetails.send') : translate('main.moneyDetails.receive')}
                       </Text>
                     </TouchableOpacity>
                   </View>
@@ -473,7 +393,7 @@ class MoneyDetailsScreen extends Component {
               </View>
             </Modal>
           </View>
-        </Transitioning.View>
+        </View>
         :
         <View style={{ flex: 1, backgroundColor: this.useTheme('#fbfbfb', '#303030'), alignItems: 'center', justifyContent: 'center' }}>
           <SpinnerSpinkit color="#008ee0" size={38} type="ThreeBounce" />
@@ -519,7 +439,6 @@ const styles = StyleSheet.create({
   },
   titleContainer: {
     flex: 1,
-    paddingLeft: 10,
     justifyContent: 'center',
   },
   editIconContainer: {
@@ -662,26 +581,6 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.5,
     paddingBottom: 3,
     borderBottomColor: '#888'
-  },
-  modal: {
-    width: 250,
-    height: 135,
-    alignSelf: 'center',
-    borderRadius: 4
-  },
-  upperModal: {
-    height: 90,
-    borderTopLeftRadius: 4,
-    borderTopRightRadius: 4,
-    justifyContent: 'center'
-  },
-  modalButton: {
-    height: 45,
-    width: 125,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderTopWidth: 1.5,
-    borderTopColor: '#282828'
   }
 })
 

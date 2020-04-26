@@ -17,6 +17,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import EmployeeCard from '../components/EmployeeCard'
 import EmployeeLoadingContainer from '../components/EmployeeLoadingContainer'
 import SortChoicesModal from '../components/ChoicesModal'
+import { translate, isRTL } from '../utils/i18n'
 
 class EmployeesListScreen extends Component {
   constructor(props) {
@@ -75,9 +76,9 @@ class EmployeesListScreen extends Component {
               opacity: this.hintOpacity,
               marginBottom: 140
             }}>
-              <Text style={{ color: this.useTheme('#303030', '#fbfbfb'), fontFamily: 'SourceSansPro-SemiBold', fontSize: 17, marginBottom: 2 }}>Easily check all</Text>
-              <Text style={{ color: this.useTheme('#303030', '#fbfbfb'), fontFamily: 'SourceSansPro-SemiBold', fontSize: 17, marginBottom: 5 }}>{''} your employees!</Text>
-              <Text style={{ color: this.useTheme('#303030', '#fbfbfb'), fontFamily: 'SourceSansPro-Regular', fontSize: 15 }}>Add them now.</Text>
+              <Text style={{ color: this.useTheme('#303030', '#fbfbfb'), fontFamily: 'SourceSansPro-SemiBold', fontSize: 17, marginBottom: 2 }}>{translate('main.employeesList.hint1')}</Text>
+              <Text style={{ color: this.useTheme('#303030', '#fbfbfb'), fontFamily: 'SourceSansPro-SemiBold', fontSize: 17, marginBottom: 5 }}>{''} {translate('main.employeesList.hint2')}</Text>
+              <Text style={{ color: this.useTheme('#303030', '#fbfbfb'), fontFamily: 'SourceSansPro-Regular', fontSize: 15 }}>{translate('main.employeesList.hint3')}</Text>
             </Animated.View>
           </View>
         )
@@ -133,9 +134,10 @@ class EmployeesListScreen extends Component {
       return null
     if (this.props.exitCount === 1) {
       return <View style={{
+        opacity: 0.9,
+        paddingHorizontal: 20,
         borderRadius: 16,
         height: 38,
-        width: 190,
         backgroundColor: '#555',
         position: 'absolute',
         zIndex: 1,
@@ -144,7 +146,7 @@ class EmployeesListScreen extends Component {
         justifyContent: 'center',
         alignSelf: 'center'
       }}>
-        <Text style={{ fontSize: 15, color: '#ffffff', fontFamily: 'SourceSansPro-Regular' }}>Press again to exit...</Text>
+        <Text style={{ fontSize: 15, color: '#ffffff', fontFamily: 'SourceSansPro-Regular' }}>{translate('components.confirmExitModal.message')}</Text>
       </View>
     }
   }
@@ -200,7 +202,7 @@ class EmployeesListScreen extends Component {
           <TouchableOpacity
             activeOpacity={0.8}
             disabled={this.hintOpacity === 1}
-            style={{ width: 40, paddingLeft: 6, justifyContent: 'center' }}
+            style={{ width: 40, paddingHorizontal: 6, justifyContent: 'center' }}
             onPress={() => this.setState({ sortChoicesModalVisible: true })}
           >
             <MaterialCommunityIcons name="sort" color={this.useTheme('#303030', '#fbfbfb')} size={28} />
@@ -216,7 +218,7 @@ class EmployeesListScreen extends Component {
         bottom: this.props.showUndoDelete ? 24.5 : -100,
         backgroundColor: this.useTheme('#303030', '#f5f5f5')
       }]}>
-        <Text style={{ fontSize: 15, color: this.useTheme('#fbfbfb', '#303030'), fontFamily: 'SourceSansPro-Regular' }}>1 deleted</Text>
+        <Text style={{ fontSize: 15, color: this.useTheme('#fbfbfb', '#303030'), fontFamily: 'SourceSansPro-Regular' }}>1 {translate('components.undoModal.deleted')}</Text>
         <TouchableOpacity
           activeOpacity={0.8}
           style={{ alignItems: 'center', justifyContent: 'center', padding: 6, borderRadius: 6 }}
@@ -225,7 +227,7 @@ class EmployeesListScreen extends Component {
           }}
         >
           <Text style={{ fontSize: 17, fontFamily: 'SourceSansPro-SemiBold', color: '#008ee0' }}>
-            Undo
+            {translate('components.undoModal.undo')}
           </Text>
         </TouchableOpacity>
       </View>
@@ -264,8 +266,8 @@ class EmployeesListScreen extends Component {
               backgroundColor: this.useTheme('#f5f5f5', '#161616')
             }}>
               <Text numberOfLines={1} style={{ color: this.useTheme('#303030', '#fbfbfb'), fontSize: 26, fontFamily: 'SourceSansPro-SemiBold' }}>
-                My Employees
-            </Text>
+                {translate('main.employeesList.title')}
+              </Text>
             </View>
             {this.renderSortButton()}
           </View>
@@ -288,10 +290,11 @@ class EmployeesListScreen extends Component {
               value={this.state.searchWord}
               style={{
                 ...styles.input,
-                color: this.useTheme('#303030', '#fbfbfb')
+                color: this.useTheme('#303030', '#fbfbfb'),
+                textAlign: isRTL() ? 'right' : 'left'
               }}
               placeholderTextColor={this.useTheme('#999', 'rgba(255, 255, 255, 0.6)')}
-              placeholder='Search employees'
+              placeholder={translate('main.employeesList.placeholder')}
               onChangeText={this.changeSearchWord}
             />
           </View>
@@ -340,6 +343,7 @@ const styles = StyleSheet.create({
   header: {
     height: 56,
     flexDirection: 'row',
+    justifyContent: 'space-between',
     marginVertical:
       Dimensions.get('window').width > 800 ? 20
         :
@@ -352,8 +356,8 @@ const styles = StyleSheet.create({
               2
   },
   titleContainer: {
-    flex: 1,
-    paddingLeft: 12,
+    width: 300,
+    paddingHorizontal: 12,
     justifyContent: 'center'
   },
   addButton: {
