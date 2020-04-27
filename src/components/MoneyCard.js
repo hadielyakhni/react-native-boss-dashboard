@@ -81,16 +81,18 @@ class AccountCard extends PureComponent {
               }}>
               {name}
             </Text>
-            <Text style={{
-              fontFamily: 'SourceSansPro-SemiBold',
-              color: amount >= 0 ? '#008ee0' : '#de3b5b',
-              fontSize: 18
-            }}>
-              {getNumber(parseFloat(Math.abs(amount).toFixed(12)).toString()) + ' '}
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Text style={{
+                fontFamily: 'SourceSansPro-SemiBold',
+                color: amount >= 0 ? '#008ee0' : '#de3b5b',
+                fontSize: 18
+              }}>
+                {getNumber(parseFloat(Math.abs(amount).toFixed(12)).toString()) + ' '}
+              </Text>
               <FontAwesome5 name="coins" color={amount >= 0 ? '#008ee0' : '#de3b5b'} size={11} />
-            </Text>
+            </View>
           </View>
-          <Icon name={isRTL() ? 'ios-arrow-back' : 'ios-arrow-forward'} style={{ fontSize: 28, color: '#c5c5c5' }} />
+          <Icon name={isRTL() ? 'ios-arrow-back' : 'ios-arrow-forward'} style={{ opacity: 0.6, fontSize: 28, color: '#c5c5c5' }} />
         </TouchableOpacity>
       </View>
     )

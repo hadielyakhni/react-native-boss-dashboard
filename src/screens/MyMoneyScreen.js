@@ -320,11 +320,10 @@ class MyMoneyScreen extends Component {
       return null
     if (this.props.exitCount === 1) {
       return <View style={{
-        opacity: 0.9,
         paddingHorizontal: 20,
         borderRadius: 16,
         height: 38,
-        backgroundColor: '#555',
+        backgroundColor: 'rgba(85, 85, 85, 0.85)',
         zIndex: 1,
         position: 'absolute',
         bottom: 16,

@@ -9,6 +9,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import com.reactnativenavigation.NavigationApplication;
 import com.reactnativenavigation.react.NavigationReactNativeHost;
+import com.wix.interactable.Interactable;
 
 public class MainApplication extends NavigationApplication {
 
@@ -26,6 +27,7 @@ public class MainApplication extends NavigationApplication {
       // example:
       // packages.add(new MyReactNativePackage());
       packages.add(new NativeSplashScreenPackage());
+      packages.add(new Interactable());
       return packages;
     }
 

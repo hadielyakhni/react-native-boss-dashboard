@@ -7,22 +7,30 @@ import {
   LayoutAnimation,
   Animated,
   UIManager,
-  Dimensions
+  Dimensions,
+  I18nManager,
+  TouchableHighlight
 } from 'react-native'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import { Navigation } from 'react-native-navigation'
 import { connect } from 'react-redux'
 import { deleteTask, updateTask } from '../actions'
-import Swipeable from 'react-native-gesture-handler/Swipeable'
 import { CheckBox } from 'react-native-elements'
 import { gestureHandlerRootHOC } from 'react-native-gesture-handler'
+import { isRTL } from '../utils/i18n'
+import Interactable from 'react-native-interactable'
 
 UIManager.setLayoutAnimationEnabledExperimental &&
   UIManager.setLayoutAnimationEnabledExperimental(true)
 
 class ToDoItem extends PureComponent {
-  state = { isDone: this.props.data.isDone }
+  constructor(props) {
+    super(props)
+    super(props);
+    this._deltaX = new Animated.Value(0);
+    this.state = { isDone: this.props.data.isDone, isMoving: false, position: 1 };
+  }
   componentDidMount() {
     LayoutAnimation.configureNext({
       update: {
@@ -50,128 +58,108 @@ class ToDoItem extends PureComponent {
   onDelete() {
     this.props.deleteTask(this.props.taskId, undefined, undefined, this.props.data)
   }
-  renderLeftActions(progress, dragX) {
-    const arrowTranslateX = dragX.interpolate({
-      inputRange: [0, 20, 200],
-      outputRange: [0, 0, 150],
-      extrapolate: 'clamp'
-    })
-    const backgroundColorOpacity = dragX.interpolate({
-      inputRange: [0, 200],
-      outputRange: [0.25, 1]
-    })
-    const arrowOpacity = dragX.interpolate({
-      inputRange: [0, 160, 200],
-      outputRange: [1, 0.75, 0],
-      extrapolate: 'clamp'
-    })
-    const doneTranslateX = dragX.interpolate({
-      inputRange: [0, 200],
-      outputRange: [10, 20],
-      extrapolate: 'clamp'
-    })
-    const doneOpacity = dragX.interpolate({
-      inputRange: [0, 185, 200],
-      outputRange: [0, 0, 1]
-    })
-    return (
-      !this.props.data.isDone ?
-        <Animated.View style={{ flexDirection: 'row', backgroundColor: '#008ee0', flex: 1, opacity: backgroundColorOpacity, height: 40, alignItems: 'center' }}>
-          <Animated.View style={{ position: 'absolute', opacity: arrowOpacity, transform: [{ translateX: arrowTranslateX }] }}>
-            <MaterialIcons name="chevron-right" color="#f9f9f9" size={25} />
-          </Animated.View>
-          <Animated.View style={{ opacity: doneOpacity, transform: [{ translateX: doneTranslateX }], flexDirection: 'row', alignItems: 'center' }}>
-            <Text style={{ fontFamily: 'SourceSansPro-SemiBold', color: '#f9f9f9', fontSize: 16, marginRight: 7 }}>Done</Text>
-            <MaterialIcons name="done" color="#f9f9f9" size={25} />
-          </Animated.View>
-        </Animated.View>
-        :
-        null
-    )
+  onSnap({ nativeEvent }) {
+    const { index } = nativeEvent;
+    this.setState({ position: index });
   }
-  renderRightActions() {
-    return (
-      <TouchableOpacity
-        activeOpacity={0.8}
-        onPress={this.onDelete.bind(this)}
-        style={{ borderRadius: 8, flexDirection: 'row', backgroundColor: '#ef2e2e', height: 40, alignItems: 'center', justifyContent: 'flex-end' }}
-      >
-        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', width: 50 }}>
-          <MaterialCommunityIcons name="trash-can-outline" color="#f9f9f9" size={24} />
-        </View>
-      </TouchableOpacity>
-    )
+  onDrag({ nativeEvent }) {
+    const { state } = nativeEvent;
+    if (state === 'start') {
+      this.setState({ isMoving: true });
+    }
+  }
+  onStopMoving() {
+    this.setState({ isMoving: false });
   }
   render() {
     const { task, description, isDone, date, customDate } = this.props.data
     return (
-      <Swipeable
-        useNativeAnimations={true}
-        containerStyle={{ marginVertical: 5, borderRadius: 8 }}
-        renderLeftActions={this.renderLeftActions.bind(this)}
-        leftThreshold={200}
-        onSwipeableLeftWillOpen={this.onBoxPress.bind(this)}
-        renderRightActions={this.renderRightActions.bind(this)}
-      >
-        <TouchableOpacity
-          disabled={this.props.activeScreenName === 'todoDetails'}
-          style={{
-            ...styles.container,
-            backgroundColor: this.props.theme === 'light' ? '#f9f9f9' : '#242424',
-            borderTopWidth: this.props.theme === 'light' ? 0.7 : 0,
-            borderLeftWidth: this.props.theme === 'light' ? 1.05 : 0,
-            borderWidth: this.props.theme === 'light' ? 1.05 : 0,
-            borderBottomWidth: this.props.theme === 'light' ? 1.4 : 0,
-            borderColor: this.props.theme === 'light' ? '#eee' : null
-          }}
-          activeOpacity={1}
-          onPress={() => {
-            Navigation.push(this.props.componentId, {
-              component: {
-                name: 'todoDetails',
-                passProps: {
-                  taskId: this.props.taskId,
-                  task,
-                  description,
-                  isDone,
-                  date,
-                  customDate
+      <View style={{
+        marginVertical: 5
+      }}>
+        {/* delete view */}
+        <View style={{
+          width: 50,
+          position: 'absolute',
+          borderRadius: 8,
+          right: 0,
+          height: 40,
+          justifyContent: 'center',
+          backgroundColor: 'red',
+          alignItems: 'center'
+        }}>
+          <TouchableOpacity activeOpacity={0.88} onPress={this.onDelete.bind(this)}>
+            <MaterialCommunityIcons name="trash-can-outline" size={24} color="#f9f9f9" />
+          </TouchableOpacity>
+        </View>
+        {/* main view */}
+        <Interactable.View
+          ref={el => this.interactableElem = el}
+          horizontalOnly={true}
+          snapPoints={[
+            { x: 0, damping: 0.55, tension: 400 },
+            { x: isRTL() ? 50 : -50, damping: 0.55, tension: 400 }
+          ]}
+          boundaries={{ [isRTL() ? 'left' : 'right']: 0 }}
+          onSnap={this.onSnap.bind(this)}
+          onDrag={this.onDrag.bind(this)}
+          onStop={this.onStopMoving.bind(this)}
+          dragToss={0.01}
+          animatedValueX={this._deltaX}>
+          <TouchableOpacity
+            activeOpacity={1}
+            onPress={() => {
+              Navigation.push(this.props.componentId, {
+                component: {
+                  name: 'todoDetails',
+                  passProps: {
+                    taskId: this.props.taskId,
+                    task,
+                    description,
+                    isDone,
+                    date,
+                    customDate
+                  }
                 }
-              }
-            })
-          }}
-        >
-          <View style={styles.firstContainer}>
-            <CheckBox
-              containerStyle={styles.CheckBoxContainer}
-              checked={this.state.isDone}
-              onPress={this.onBoxPress.bind(this)}
-              size={22}
-              uncheckedColor='#aaa'
-            />
-            <Text numberOfLines={1} style={{ ...styles.taskTitle, color: this.props.theme === 'light' ? '#303030' : '#fbfbfb' }}>
-              {this.props.data.task}
-            </Text>
-          </View>
-        </TouchableOpacity>
-      </Swipeable>
-    )
+              })
+            }}
+            disabled={this.props.activeScreenName === 'todoDetails'}
+          >
+            <View style={{
+              height: 40,
+              backgroundColor: 'blue',
+              backgroundColor: this.props.theme === 'light' ? '#f9f9f9' : '#242424',
+              borderRadius: 7,
+              borderTopWidth: this.props.theme === 'light' ? 0.7 : 0,
+              borderLeftWidth: this.props.theme === 'light' ? 1.05 : 0,
+              borderWidth: this.props.theme === 'light' ? 1.05 : 0,
+              borderBottomWidth: this.props.theme === 'light' ? 1.4 : 0,
+              borderColor: this.props.theme === 'light' ? '#eee' : null
+            }}>
+              <View style={styles.firstContainer}>
+                <CheckBox
+                  containerStyle={styles.CheckBoxContainer}
+                  checked={this.state.isDone}
+                  onPress={this.onBoxPress.bind(this)}
+                  size={22}
+                  uncheckedColor='#aaa'
+                />
+                <Text numberOfLines={1} style={{ ...styles.taskTitle, color: this.props.theme === 'light' ? '#303030' : '#fbfbfb' }}>
+                  {this.props.data.task}
+                </Text>
+              </View>
+            </View>
+          </TouchableOpacity>
+        </Interactable.View>
+      </View>
+    );
   }
 }
 
 const styles = StyleSheet.create({
-  container: {
-    paddingHorizontal: 0,
-    borderRadius: 8,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    height: 40
-  },
   firstContainer: {
     flexDirection: 'row',
-    elevation: 50,
-    alignContent: 'center'
+    alignItems: 'center'
   },
   CheckBoxContainer: {
     paddingHorizontal: 5,

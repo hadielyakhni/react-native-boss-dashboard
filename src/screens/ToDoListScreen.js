@@ -33,7 +33,14 @@ class ToDoListScreen extends Component {
         }, 1);
       }, 50)
     }
-    this.state = { task: '', sortChoicesModalVisible: false, clickCount: 0, isAddButtonDisabled: false, canRender: !!props.isFromAuth }
+    this.state = {
+      task: '',
+      sortChoicesModalVisible: false,
+      clickCount: 0,
+      isAddButtonDisabled: false,
+      canRender: !!props.isFromAuth,
+      isScrollEnabled: true
+    }
     this.activeScreenTabIndex = 0
     this.navigationListner1 = Navigation.events().registerComponentDidAppearListener(data => {
       this.props.setActiveScreenName(data.componentName)
@@ -192,11 +199,12 @@ class ToDoListScreen extends Component {
           this.undoneOpacity.setValue(0)
         if (!this.props.doneTasks.length && this.doneOpacityValue !== 0)
           this.doneOpacity.setValue(0)
+        console.log(this.state.isScrollEnabled)
         return (
-          <ScrollView>
+          <ScrollView scrollEnabled={this.state.isScrollEnabled}>
             {
               this.props.unDoneTasks.length ?
-                <Animated.View style={{ marginTop: 3, opacity: this.undoneOpacity }}>
+                <Animated.View style={{ marginTop: 3 }}>
                   <TouchableOpacity activeOpacity={1} onPress={this.handleUndoneOpacity.bind(this)}>
                     <View style={styles.separotorView}>
                       <View style={{ flexDirection: 'row' }}>
@@ -213,13 +221,13 @@ class ToDoListScreen extends Component {
                     </View>
                   </TouchableOpacity>
                   <Animated.View style={{
-                    opacity: this.undoneListOpacity,
                     height: this.undoneListOpacity.interpolate({
                       inputRange: [0, 1],
                       outputRange: [0, 50 * this.props.unDoneTasks.length + 10]
                     })
                   }}>
                     <FlatList
+                      scrollEnabled={this.state.isScrollEnabled}
                       showsVerticalScrollIndicator={false}
                       initialNumToRender={200}
                       style={{ marginBottom: 10 }}
@@ -235,7 +243,7 @@ class ToDoListScreen extends Component {
             }
             {
               this.props.doneTasks.length ?
-                <Animated.View style={{ marginTop: 3, opacity: this.doneOpacity }}>
+                <Animated.View style={{ marginTop: 3 }}>
                   <TouchableOpacity activeOpacity={1} onPress={this.handleDoneOpacity.bind(this)}>
                     <View style={styles.separotorView}>
                       <View style={{ flexDirection: 'row' }}>
@@ -252,7 +260,6 @@ class ToDoListScreen extends Component {
                     </View>
                   </TouchableOpacity>
                   <Animated.View style={{
-                    opacity: this.doneListOpacity,
                     height: this.doneListOpacity.interpolate({
                       inputRange: [0, 1],
                       outputRange: [0, 50 * this.props.doneTasks.length + 10]
@@ -369,11 +376,10 @@ class ToDoListScreen extends Component {
       return null
     if (this.props.exitCount === 1) {
       return <View style={{
-        opacity: 0.9,
         paddingHorizontal: 20,
         borderRadius: 16,
         height: 38,
-        backgroundColor: '#555',
+        backgroundColor: 'rgba(85, 85, 85, 0.85)',
         position: 'absolute',
         zIndex: 1,
         bottom: 16,
@@ -665,4 +671,4 @@ const mapStateToProps = (state) => {
   }
 }
 
-export default connect(mapStateToProps, mapActionsToProps)(gestureHandlerRootHOC(ToDoListScreen)) 
+export default connect(mapStateToProps, mapActionsToProps)(gestureHandlerRootHOC(ToDoListScreen))

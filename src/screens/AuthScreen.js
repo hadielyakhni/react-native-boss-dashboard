@@ -24,6 +24,7 @@ import { Icon } from 'native-base'
 import { Navigation } from 'react-native-navigation'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import SplashScreen from 'react-native-splash-screen'
+import SpinKit from 'react-native-spinkit'
 
 UIManager.setLayoutAnimationEnabledExperimental &&
   UIManager.setLayoutAnimationEnabledExperimental(true)
@@ -73,7 +74,7 @@ class AuthScreen extends Component {
       )
     return (
       <View style={styles.loadingContainer}>
-        <Spinner color='#fff' size={33} />
+        <SpinKit type="ThreeBounce" size={25} color="#f9f9f9" />
       </View>
     )
   }
@@ -81,6 +82,26 @@ class AuthScreen extends Component {
     if (this.props.theme === 'light')
       return lightThemeColor
     return darkThemeColor
+  }
+  renderGoogleBtnContent() {
+    if (!this.props.googleButtonDisabled)
+      return (
+        <>
+          <FontAwesome size={22} name="google" color="#fff" />
+          {""}   {translate('auth.auth.googleBtnText')}
+        </>
+      )
+    return <SpinKit type="ThreeBounce" size={25} color="#f9f9f9" />
+  }
+  renderFacebookBtnContent() {
+    if (!this.props.facebookButtonDisabled)
+      return (
+        <>
+          <FontAwesome size={22} name="facebook" color="#fff" />
+          {""}   {translate('auth.auth.facebookBtnText')}
+        </>
+      )
+    return <SpinKit type="ThreeBounce" size={25} color="#f9f9f9" />
   }
   render() {
     return (
@@ -204,8 +225,7 @@ class AuthScreen extends Component {
                 }}
                 color='#E53935'
               >
-                <FontAwesome size={22} name="google" color="#fff" />
-                {""}   {translate('auth.auth.googleBtnText')}
+                {this.renderGoogleBtnContent()}
               </MyButton>
               <MyButton
                 disabledColor='#355973'
@@ -216,8 +236,7 @@ class AuthScreen extends Component {
                 }}
                 color='#008ee0'
               >
-                <FontAwesome size={22} name="facebook-square" color="#fff" />
-                {""}   {translate('auth.auth.facebookBtnText')}
+                {this.renderFacebookBtnContent()}
               </MyButton>
             </View>
           </View>

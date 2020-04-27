@@ -40,7 +40,7 @@ export default class WalkThrough extends React.Component {
     ]
   }
   componentDidMount() {
-    // I18nManager.allowRTL(true)
+    I18nManager.allowRTL(true)
     setTimeout(() => {
       SplashScreen.hide()
     }, 125);
@@ -149,12 +149,12 @@ export default class WalkThrough extends React.Component {
         renderDoneButton={this.renderDoneButton}
         renderNextButton={this.renderNextButton}
         onDone={() => {
-          // I18nManager.allowRTL(false)
+          I18nManager.allowRTL(false)
           goToAuth()
           AsyncStorage.setItem('isOpenedBefore', "true")
         }}
         onSkip={() => {
-          // I18nManager.allowRTL(false)
+          I18nManager.allowRTL(false)
           goToAuth()
           AsyncStorage.setItem('isOpenedBefore', "true")
         }}

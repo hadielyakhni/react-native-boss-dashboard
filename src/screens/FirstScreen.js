@@ -16,7 +16,6 @@ GoogleSignin.configure({
 
 class FirstScreen extends Component {
   async componentDidMount() {
-    // I18nManager.allowRTL(false)
     Navigation.mergeOptions(this.props.componentId, {
       statusBar: {
         backgroundColor: '#008ee0',

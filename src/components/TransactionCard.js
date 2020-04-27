@@ -1,81 +1,110 @@
 import React, { useEffect } from 'react'
-import { StyleSheet, Text, View, Dimensions, LayoutAnimation, UIManager } from 'react-native'
+import { StyleSheet, Text, View, Dimensions, LayoutAnimation, UIManager, Animated } from 'react-native'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import { translate } from '../utils/i18n'
 import getNumber from '../utils/getNumber'
 
-const TransactionCard = ({ data, theme }) => {
-  const { transAmount, status, date } = data[1]
-  const getDateFormatted = date => {
+class TransactionCard extends React.Component {
+  constructor(props) {
+    super(props)
+    const { transAmount, status, date } = this.props.data[1]
+    this.transAmount = transAmount
+    this.status = status
+    this.date = date
+    this._animated = new Animated.Value(0)
+  }
+  componentDidMount() {
+    Animated.timing(this._animated, {
+      toValue: 1,
+      duration: 600,
+      useNativeDriver: true
+    }).start()
+  }
+  getDateFormatted = date => {
     const d = new Date(date)
     return ("0" + d.getDate()).slice(-2) + " - " + ("0" + (d.getMonth() + 1)).slice(-2) + " - " +
       d.getFullYear() + " " + ("0" + d.getHours()).slice(-2) + ":" + ("0" + d.getMinutes()).slice(-2);
   }
-  return (
-    <View style={{
-      ...styles.container,
-      backgroundColor: theme === 'light' ? '#f9f9f9' : '#242424',
-      borderTopWidth: theme === 'light' ? 0.7 : 0,
-      borderLeftWidth: theme === 'light' ? 1.05 : 0,
-      borderWidth: theme === 'light' ? 1.05 : 0,
-      borderBottomWidth: theme === 'light' ? 1.4 : 0,
-      borderColor: theme === 'light' ? '#eee' : null
-    }}>
-      <View style={[styles.arrowIconContainer, {
-        backgroundColor: status === 'Sent' ?
-          theme === 'light' ? '#f6f6f6' : '#34282d'
-          :
-          theme === 'light' ? '#f6f6f6' : '#2e3b47'
-      }]}>
-        <FontAwesome
-          name={status === 'Sent' ? 'arrow-up' : 'arrow-down'}
-          color={status === 'Sent' ? "#de3b5b" : "#008ee0"}
-          size={22}
-          style={{ opacity: 0.75 }}
-        />
-      </View>
-      <View style={styles.dataContainer}>
-        <View style={styles.upperDataContainer}>
-          <Text style={{
-            fontSize: 20,
-            color: theme === 'light' ? '#303030' : '#fbfbfb',
-            fontFamily: 'SourceSansPro-SemiBold'
-          }}>
-            {translate('components.transactionCard.' + status.toLowerCase())}
-          </Text>
-          <Text ellipsizeMode="middle" numberOfLines={1} style={{
-            flex: 1,
-            textAlign: 'right',
-            marginLeft: 24,
-            fontSize: 19.5,
-            fontFamily: 'SourceSansPro-Bold',
-            color: status === 'Sent' ? "#de3b5b" : "#008ee0"
-          }}>
-            {" " + getNumber(transAmount.toString()) + " "}
-          </Text>
-          <View style={{ justifyContent: 'flex-end', marginLeft: 2 }}>
-            <FontAwesome5 name="coins" color={status === 'Sent' ? "#de3b5b" : "#008ee0"} size={13} />
+  render() {
+    return (
+      <Animated.View style={{
+        ...styles.container,
+        transform: [
+          {
+            rotateX: this._animated.interpolate({
+              inputRange: [0, 0.5, 1],
+              outputRange: ['180deg', '36deg', '0deg'],
+              extrapolate: 'clamp',
+            })
+          }
+        ],
+        opacity: this._animated.interpolate({
+          inputRange: [0, 0.5, 1],
+          outputRange: [0, 0.4, 1]
+        }),
+        backgroundColor: this.props.theme === 'light' ? '#f9f9f9' : '#242424',
+        borderTopWidth: this.props.theme === 'light' ? 0.7 : 0,
+        borderLeftWidth: this.props.theme === 'light' ? 1.05 : 0,
+        borderWidth: this.props.theme === 'light' ? 1.05 : 0,
+        borderBottomWidth: this.props.theme === 'light' ? 1.4 : 0,
+        borderColor: this.props.theme === 'light' ? '#eee' : null,
+      }}>
+        <View style={[styles.arrowIconContainer, {
+          backgroundColor: this.status === 'Sent' ?
+            this.props.theme === 'light' ? '#f6f6f6' : '#34282d'
+            :
+            this.props.theme === 'light' ? '#f6f6f6' : '#2e3b47'
+        }]}>
+          <FontAwesome
+            name={this.status === 'Sent' ? 'arrow-up' : 'arrow-down'}
+            color={this.status === 'Sent' ? "#de3b5b" : "#008ee0"}
+            size={22}
+            style={{ opacity: 0.75 }}
+          />
+        </View>
+        <View style={styles.dataContainer}>
+          <View style={styles.upperDataContainer}>
+            <Text style={{
+              fontSize: 20,
+              color: this.props.theme === 'light' ? '#303030' : '#fbfbfb',
+              fontFamily: 'SourceSansPro-SemiBold'
+            }}>
+              {translate('components.transactionCard.' + this.status.toLowerCase())}
+            </Text>
+            <Text ellipsizeMode="middle" numberOfLines={1} style={{
+              flex: 1,
+              textAlign: 'right',
+              marginLeft: 24,
+              fontSize: 19.5,
+              fontFamily: 'SourceSansPro-Bold',
+              color: this.status === 'Sent' ? "#de3b5b" : "#008ee0"
+            }}>
+              {" " + getNumber(this.transAmount.toString()) + " "}
+            </Text>
+            <View style={{ justifyContent: 'flex-end', marginLeft: 2 }}>
+              <FontAwesome5 name="coins" color={this.status === 'Sent' ? "#de3b5b" : "#008ee0"} size={13} />
+            </View>
+          </View>
+          <View style={styles.lowerDataContainer}>
+            <Text style={{
+              ...styles.lowerDataContainerText,
+              color: this.props.theme === 'light' ? '#000' : '#aaa'
+            }}>
+              {this.props.data[0]}
+            </Text>
+            <Text style={{
+              ...styles.lowerDataContainerText,
+              color: this.props.theme === 'light' ? '#000' : '#aaa'
+            }}>
+              <Text style={{ fontSize: 0 }}>dsf</Text>
+              {getNumber(this.getDateFormatted(this.date))}
+            </Text>
           </View>
         </View>
-        <View style={styles.lowerDataContainer}>
-          <Text style={{
-            ...styles.lowerDataContainerText,
-            color: theme === 'light' ? '#000' : '#aaa'
-          }}>
-            {data[0]}
-          </Text>
-          <Text style={{
-            ...styles.lowerDataContainerText,
-            color: theme === 'light' ? '#000' : '#aaa'
-          }}>
-            <Text style={{ fontSize: 0 }}>dsf</Text>
-            {getNumber(getDateFormatted(date))}
-          </Text>
-        </View>
-      </View>
-    </View>
-  )
+      </Animated.View>
+    )
+  }
 }
 
 export default TransactionCard

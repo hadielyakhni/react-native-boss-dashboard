@@ -2,16 +2,14 @@ package com.hadistop;
 
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
-import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.ReactMethod;
-import com.facebook.react.uimanager.IllegalViewOperationException;
 
 import org.devio.rn.splashscreen.SplashScreen;
 
 public class NativeSplashScreenModule extends ReactContextBaseJavaModule {
 
     public NativeSplashScreenModule(ReactApplicationContext reactContext) {
-        super(reactContext); //required by React Native
+        super(reactContext);  //required by React Native
     }
 
     @Override

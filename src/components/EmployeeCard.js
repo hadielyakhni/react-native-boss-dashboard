@@ -90,7 +90,7 @@ class EmployeeCard extends Component {
               </Text>
             </View>
           </View>
-          <Icon name={isRTL() ? 'ios-arrow-back' : 'ios-arrow-forward'} style={{ fontSize: 28, color: this.props.theme === 'light' ? '#aaa' : '#c5c5c5', }} />
+          <Icon name={isRTL() ? 'ios-arrow-back' : 'ios-arrow-forward'} style={{ opacity: 0.6, fontSize: 28, color: this.props.theme === 'light' ? '#aaa' : '#c5c5c5', }} />
         </TouchableOpacity>
       </View>
     )
