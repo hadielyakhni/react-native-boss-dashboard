@@ -84,6 +84,8 @@ export default class WalkThrough extends React.Component {
                 Dimensions.get('window').width / 1.32
                 : item.key === "2" ? Dimensions.get('window').width / 1.3
                   : Dimensions.get('window').width / 1.1,
+              maxHeight: item.key === "0" ? 600 : 460,
+              maxWidth: item.key === "0" || item.key === "3" ? 500 : 400
             }}
           />
         </View>
@@ -96,7 +98,9 @@ export default class WalkThrough extends React.Component {
             ...styles.text,
             fontSize: 20,
             color: this.useTheme('#303030', '#fbfbfb'),
-            width: item.key !== "0" ? Dimensions.get('window').width / 1.5 : Dimensions.get('window').width / 1.2
+            width: item.key !== "0" ? Dimensions.get('window').width / 1.5 : Dimensions.get('window').width / 1.2,
+            maxWidth: 400,
+            paddingTop: Dimensions.get('window').height / Dimensions.get('window').width > 1.6 ? 0 : 80
           }}>
             {item.text}
           </Text>

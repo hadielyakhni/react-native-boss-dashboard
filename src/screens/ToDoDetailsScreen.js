@@ -82,11 +82,11 @@ class ToDoDetailsScreen extends Component {
             <TextInput
               value={this.state.task}
               style={[styles.input, {
-                borderTopWidth: 0.5,
-                borderTopColor: this.useTheme('#999', 'rgba(255,255,255,0.28)'),
-                borderBottomWidth: 0.5,
-                borderBottomColor: this.useTheme('#999', 'rgba(255,255,255,0.28)'),
-                color: this.useTheme('#303030', '#fbfbfb')
+                borderTopWidth: 0.9,
+                borderColor: this.useTheme('#999', 'rgba(255,255,255,0.1)'),
+                borderBottomWidth: 0.9,
+                color: this.useTheme('#303030', '#fbfbfb'),
+                textAlign: isRTL() ? 'right' : 'left'
               }]}
               selectionColor='#008ee0'
               placeholder={translate('main.todoDetails.placeholder1')}

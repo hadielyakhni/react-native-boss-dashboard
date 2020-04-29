@@ -137,7 +137,7 @@ class MyMoneyScreen extends Component {
           useNativeDriver: true
         }).start()
       return (
-        <ScrollView>
+        <ScrollView showsVerticalScrollIndicator={false}>
           <View style={{ paddingHorizontal: 5, paddingTop: 25 }}>
             {
               pAccounts.length ?
@@ -149,7 +149,7 @@ class MyMoneyScreen extends Component {
                       </Text>
                       <ScrollView
                         horizontal
-                        showsHorizontalScrollIndicator={false}
+                        showsVerticalScrollIndicator={false}
                         contentContainerStyle={{
                           flexGrow: 1,
                           paddingLeft: 10,
@@ -204,7 +204,7 @@ class MyMoneyScreen extends Component {
                       </Text>
                       <ScrollView
                         horizontal
-                        showsHorizontalScrollIndicator={false}
+                        showsVerticalScrollIndicator={false}
                         contentContainerStyle={{
                           flexGrow: 1,
                           paddingLeft: 10,
@@ -231,7 +231,7 @@ class MyMoneyScreen extends Component {
                     </View>
                   </View>
                   <FlatList
-                    showsHorizontalScrollIndicator={false}
+                    showsVerticalScrollIndicator={false}
                     contentContainerStyle={{ marginVertical: 5, borderRadius: 10 }}
                     data={nAccounts}
                     keyExtractor={account => account[0]}

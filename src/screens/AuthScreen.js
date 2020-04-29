@@ -33,9 +33,7 @@ class AuthScreen extends Component {
   constructor(props) {
     super(props)
     if (!this.props.isFromWalkThroughScreen)
-      setTimeout(() => {
-        SplashScreen.hide()
-      }, 50)
+      SplashScreen.hide()
     this.keyboardDidShowListner = Keyboard.addListener('keyboardDidShow', this._keyboardDidShow)
     this.keyboardDidHideListner = Keyboard.addListener('keyboardDidHide', this._keyboardDidHide)
     this.state = {
@@ -140,18 +138,39 @@ class AuthScreen extends Component {
               </Text>
           }
           <View style={{ paddingHorizontal: 33 }}>
-            <MyInput
-              leftIcon='ios-mail'
-              leftIconStyle={{ paddingLeft: 14, paddingRight: 11 }}
-              theme={this.props.theme}
-              keyboardType='email-address'
-              value={this.state.email}
-              style={{ paddingRight: 15 }}
-              isSecure={false}
-              placeHolder={translate('auth.auth.email')}
-              isAutoCorrect={true}
-              onChangeText={email => this.setState({ email })}
-            />
+            <View style={[styles.inputContainer, {
+              backgroundColor: this.useTheme('#f9f9f9', '#444'),
+              borderWidth: this.useTheme(0.8, 0),
+              borderColor: '#d8d8d8'
+            }
+            ]}>
+              <Icon
+                name="ios-mail"
+                style={{
+                  paddingLeft: 17,
+                  paddingRight: 13,
+                  fontSize: 24,
+                  color: '#008ee0'
+                }}
+              />
+              <TextInput
+                keyboardType="email-address"
+                autoCompleteType="email"
+                returnKeyType="next"
+                onSubmitEditing={() => this.passworfInputRef.focus()}
+                blurOnSubmit={false}
+                value={this.state.email}
+                style={{
+                  ...styles.InputStyle,
+                  color: this.useTheme('#303030', '#fbfbfb'),
+                  paddingRight: 15,
+                  textAlign: isRTL() ? 'right' : 'left'
+                }}
+                placeholder={translate('auth.auth.email')}
+                placeholderTextColor={this.useTheme('#999', 'rgba(255, 255, 255, 0.6)')}
+                onChangeText={email => this.setState({ email })}
+              />
+            </View>
             <View style={[styles.inputContainer, {
               backgroundColor: this.useTheme('#f9f9f9', '#444'),
               borderWidth: this.useTheme(0.8, 0),
@@ -168,8 +187,13 @@ class AuthScreen extends Component {
                 }}
               />
               <TextInput
+                ref={ref => this.passworfInputRef = ref}
                 value={this.state.password}
                 secureTextEntry={this.state.isPasswordSecure}
+                returnKeyType="done"
+                onSubmitEditing={() => {
+                  this.state.email && this.state.password ? this.onSign.bind(this)() : null
+                }}
                 style={{
                   ...styles.InputStyle,
                   color: this.useTheme('#303030', '#fbfbfb'),
@@ -204,15 +228,18 @@ class AuthScreen extends Component {
             {this.renderSignButton()}
             <View style={{ flexDirection: 'row', marginBottom: 16, marginTop: 6, alignItems: 'center' }}>
               <View style={{ height: 0, flex: 1, borderColor: this.useTheme('#303030', '#fbfbfb'), borderWidth: 0.3 }}></View>
-              <Text
+              <TouchableOpacity
+                hitSlop={{ right: 20, left: 20, top: 10, bottom: 10 }}
+                activeOpacity={1}
                 onPress={() => {
                   if (this.state.screen === 'login')
                     Navigation.push(this.props.componentId, { component: { name: 'forgetPassword' } })
                 }}
-                style={{ color: this.useTheme('#303030', '#fbfbfb'), fontSize: 13, fontFamily: 'SourceSansPro-SemiBold', marginHorizontal: 12 }}
               >
-                {this.state.screen === 'login' ? translate('auth.auth.forgotPassword') : translate('auth.auth.or')}
-              </Text>
+                <Text style={{ color: this.useTheme('#303030', '#fbfbfb'), fontSize: 13, fontFamily: 'SourceSansPro-SemiBold', marginHorizontal: 12 }}>
+                  {this.state.screen === 'login' ? translate('auth.auth.forgotPassword') : translate('auth.auth.or')}
+                </Text>
+              </TouchableOpacity>
               <View style={{ height: 0, flex: 1, borderColor: this.useTheme('#303030', '#fbfbfb'), borderWidth: 0.3 }}></View>
             </View>
             <View>

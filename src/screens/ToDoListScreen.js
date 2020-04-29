@@ -25,21 +25,14 @@ import getNumber from '../utils/getNumber'
 class ToDoListScreen extends Component {
   constructor(props) {
     super(props)
-    if (!this.props.isFromAuth) {
-      setTimeout(() => {
-        SplashScreen.hide()
-        setTimeout(() => {
-          this.setState({ canRender: true })
-        }, 1);
-      }, 50)
-    }
+    if (!this.props.isFromAuth)
+      SplashScreen.hide()
     this.state = {
       task: '',
       sortChoicesModalVisible: false,
       clickCount: 0,
       isAddButtonDisabled: false,
-      canRender: !!props.isFromAuth,
-      isScrollEnabled: true
+      canRender: true
     }
     this.activeScreenTabIndex = 0
     this.navigationListner1 = Navigation.events().registerComponentDidAppearListener(data => {
@@ -199,9 +192,8 @@ class ToDoListScreen extends Component {
           this.undoneOpacity.setValue(0)
         if (!this.props.doneTasks.length && this.doneOpacityValue !== 0)
           this.doneOpacity.setValue(0)
-        console.log(this.state.isScrollEnabled)
         return (
-          <ScrollView scrollEnabled={this.state.isScrollEnabled}>
+          <ScrollView showsVerticalScrollIndicator={false}>
             {
               this.props.unDoneTasks.length ?
                 <Animated.View style={{ marginTop: 3 }}>
@@ -227,7 +219,6 @@ class ToDoListScreen extends Component {
                     })
                   }}>
                     <FlatList
-                      scrollEnabled={this.state.isScrollEnabled}
                       showsVerticalScrollIndicator={false}
                       initialNumToRender={200}
                       style={{ marginBottom: 10 }}

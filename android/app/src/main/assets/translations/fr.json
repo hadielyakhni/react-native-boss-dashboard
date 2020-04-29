@@ -36,6 +36,7 @@
       "forgotPassword": "Mot De Passe Oublié?",
       "placeholder": "Entrez votre e-Mail",
       "sendEmail": "Envoyer un Email",
+      "sending": "Envoi...",
       "warning": "Ne pas réinitialiser votre mot de passe si vous vous êtes connecté à FACEBOOK. Si vous le faites, vous ne serez plus en mesure de se connecter avec FACEBOOK, et vous devez vous connecter avec votre ADRESSE EMAIL et un nouveau MOT de passe!"
     }
   },

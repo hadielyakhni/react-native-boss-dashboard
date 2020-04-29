@@ -66,7 +66,14 @@ class AccountCard extends PureComponent {
             Navigation.push(this.props.componentId, {
               component: {
                 name: 'moneyDetails',
-                passProps: { accountId: this.props.data[0] }
+                passProps: { accountId: this.props.data[0] },
+                options: {
+                  animations: {
+                    push: {
+                      waitForRender: true
+                    }
+                  }
+                }
               }
             })
           }}
@@ -85,9 +92,10 @@ class AccountCard extends PureComponent {
               <Text style={{
                 fontFamily: 'SourceSansPro-SemiBold',
                 color: amount >= 0 ? '#008ee0' : '#de3b5b',
-                fontSize: 18
+                fontSize: 18,
+                marginHorizontal: 4
               }}>
-                {getNumber(parseFloat(Math.abs(amount).toFixed(12)).toString()) + ' '}
+                {getNumber(parseFloat(Math.abs(amount).toFixed(12)).toString())}
               </Text>
               <FontAwesome5 name="coins" color={amount >= 0 ? '#008ee0' : '#de3b5b'} size={11} />
             </View>

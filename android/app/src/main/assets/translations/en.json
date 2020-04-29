@@ -36,6 +36,7 @@
       "forgotPassword": "Forgot Password?",
       "placeholder": "Enter your Email",
       "sendEmail": "Send Email",
+      "sending": "Sending...",
       "warning": "Don't reset your password if you signed in with FACEBOOK. If you do, you will no longer be able to login with FACEBOOK, and you should login with your EMAIL ADDRESS and the new PASSWORD!"
     }
   },

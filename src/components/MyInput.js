@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react'
-import { TextInput, View, StyleSheet, TouchableOpacity } from 'react-native'
+import { TextInput, View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import { Icon } from 'native-base'
 import { isRTL } from '../utils/i18n'
 

@@ -11,11 +11,11 @@ import {
   FlatList,
   Linking,
   ScrollView,
-  UIManager
+  UIManager,
+  Animated
 } from 'react-native'
 import { connect } from 'react-redux'
 import { addTransaction, deleteAccount } from '../actions'
-import SpinnerSpinkit from 'react-native-spinkit'
 import { Navigation } from 'react-native-navigation'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
@@ -25,6 +25,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import TransactionCard from '../components/TransactionCard'
 import { translate, isRTL, getUsedLanguage } from '../utils/i18n'
 import getNumber from '../utils/getNumber'
+import Shimmer from 'react-native-shimmer'
 
 const { height, width } = Dimensions.get("window")
 
@@ -35,8 +36,16 @@ class MoneyDetailsScreen extends Component {
   constructor(props) {
     super(props)
     InteractionManager.runAfterInteractions(() => {
-      this.setState({ canRender: true })
+      setTimeout(() => {
+        this.setState({ canRender: true })
+        Animated.timing(this.mainViewOpacity, {
+          toValue: 1,
+          duration: 250,
+          useNativeDriver: true
+        }).start()
+      }, 0);
     })
+    this.mainViewOpacity = new Animated.Value(0)
     const { name, phone, accountId } = this.props
     this.accountId = accountId
     this.state = {
@@ -65,339 +74,373 @@ class MoneyDetailsScreen extends Component {
   }
   render() {
     return (
-      this.state.canRender ?
-        <View
-          style={{
-            ...styles.container,
-            backgroundColor: this.useTheme('#f5f5f5', '#161616')
-          }} >
-          <View style={[StyleSheet.absoluteFill, {
-            backgroundColor: this.state.transConfirmationModalVisible || this.state.modalVisible ? 'rgba(0,0,0,0.2)' : 'rgba(0,0,0,0)',
-            zIndex: this.state.transConfirmationModalVisible || this.state.modalVisible ? 1 : 0
-          }]}></View>
+      <View
+        style={{
+          ...styles.container,
+          backgroundColor: this.useTheme('#f5f5f5', '#161616')
+        }} >
+        <View style={[StyleSheet.absoluteFill, {
+          backgroundColor: this.state.transConfirmationModalVisible || this.state.modalVisible ? 'rgba(0,0,0,0.2)' : 'rgba(0,0,0,0)',
+          zIndex: this.state.transConfirmationModalVisible || this.state.modalVisible ? 1 : 0
+        }]}></View>
+        <View style={{
+          ...styles.header,
+          backgroundColor: this.useTheme('#f5f5f5', '#161616')
+        }}>
+          <TouchableOpacity
+            activeOpacity={0.85}
+            onPress={() => Navigation.pop(this.props.componentId)}
+            style={{
+              ...styles.backIconContainer,
+              backgroundColor: this.useTheme('#f5f5f5', '#161616')
+            }}
+          >
+            <Ionicons name={isRTL() ? "md-arrow-forward" : "md-arrow-back"} size={26} color={this.useTheme('#303030', '#fbfbfb')} />
+          </TouchableOpacity>
           <View style={{
-            ...styles.header,
-            backgroundColor: this.useTheme('#f5f5f5', '#161616')
+            ...styles.titleContainer,
+            backgroundColor: this.useTheme('#f5f5f5', '#161616'),
+            alignItems: 'flex-start'
           }}>
-            <TouchableOpacity
-              activeOpacity={0.85}
-              onPress={() => Navigation.pop(this.props.componentId)}
-              style={{
-                ...styles.backIconContainer,
-                backgroundColor: this.useTheme('#f5f5f5', '#161616')
-              }}
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={{ alignItems: 'center', paddingRight: 7 }}
             >
-              <Ionicons name={isRTL() ? "md-arrow-forward" : "md-arrow-back"} size={26} color={this.useTheme('#303030', '#fbfbfb')} />
-            </TouchableOpacity>
-            <View style={{
-              ...styles.titleContainer,
-              backgroundColor: this.useTheme('#f5f5f5', '#161616'),
-              alignItems: 'flex-start'
-            }}>
-              <ScrollView
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                contentContainerStyle={{ alignItems: 'center', paddingRight: 7 }}
-              >
-                <Text numberOfLines={1} style={{ color: this.useTheme('#303030', '#fbfbfb'), fontSize: 25, fontFamily: 'SourceSansPro-SemiBold', textAlign: 'left' }}>
-                  {this.props.name}
-                </Text>
-              </ScrollView>
-            </View>
-            <TouchableOpacity
-              disabled={!this.props.phone}
-              activeOpacity={0.85}
-              onPress={() => Linking.openURL(`tel:${this.props.phone}`)}
-              style={styles.callIconContainer}
-            >
-              <MaterialIcons
-                name="perm-phone-msg"
-                size={24}
-                color={
-                  this.props.phone ?
-                    this.useTheme('#303030', '#fbfbfb')
-                    :
-                    this.useTheme('#888', '#888')
-                }
-              />
-            </TouchableOpacity>
-            <TouchableOpacity
-              activeOpacity={0.85}
-              style={{
-                ...styles.editIconContainer,
-                backgroundColor: this.useTheme('#f5f5f5', '#161616')
-              }}
-              onPress={() => {
-                Navigation.push(this.props.componentId, {
-                  component: {
-                    name: 'moneyEdit',
-                    passProps: {
-                      accountId: this.props.accountId,
-                      name: this.props.name,
-                      phone: this.props.phone
-                    }
-                  }
-                })
-              }}
-            >
-              <MaterialIcons name="mode-edit" size={24} color={this.useTheme('#303030', '#fbfbfb')} />
-            </TouchableOpacity>
-          </View>
-          <View style={{ flex: 1, paddingHorizontal: width / 32 }}>
-            <View style={{
-              ...styles.summaryContainer,
-              backgroundColor: this.props.theme === 'light' ? '#f9f9f9' : '#242424',
-              borderTopWidth: this.props.theme === 'light' ? 0.7 : 0,
-              borderLeftWidth: this.props.theme === 'light' ? 1.05 : 0,
-              borderWidth: this.props.theme === 'light' ? 1.05 : 0,
-              borderBottomWidth: this.props.theme === 'light' ? 1.4 : 0,
-              borderColor: this.props.theme === 'light' ? '#eee' : null
-            }}>
-              <View style={styles.firstInnerContainer}>
-                <View style={{
-                  ...styles.amountLabel,
-                  backgroundColor: this.useTheme('rgba(0,0,0,0.03)', 'rgba(255,255,255,0.1)')
-                }}>
-                  <Text
-                    ellipsizeMode={this.props.amount < 0 ? "tail" : "head"}
-                    numberOfLines={1}
-                    style={{
-                      textAlign: 'left',
-                      fontSize: 10,
-                      fontFamily: 'SourceSansPro-Bold',
-                      color: this.props.amount < 0 ?
-                        this.useTheme('#cda2b1', '#cdacaf')
-                        :
-                        this.useTheme('#84989a', '#9cafba')
-                    }}>
-                    {
-                      this.props.amount < 0 ?
-                        translate('main.moneyDetails.shouldPayToHim') + `${'  ' + this.getName()}`
-                        :
-                        `${this.getName() + '  '}` + translate('main.moneyDetails.shouldPayForMe')
-                    }
-                  </Text>
-                </View>
-              </View>
-              <View style={styles.amountContainer}>
-                <ScrollView
-                  horizontal
-                  showsHorizontalScrollIndicator={false}
-                  style={{ marginHorizontal: 18 }}
-                  contentContainerStyle={{ alignItems: 'center' }}
-                >
-                  <Text numberOfLines={1} style={{
-                    ...styles.amountText,
-                    borderWidth: 2,
-                    borderColor: this.useTheme('#f9f9f9', '#242424'),
-                    color: this.useTheme('#303030', '#fbfbfb')
-                  }}>
-                    {getNumber(parseFloat(Math.abs(this.props.amount).toFixed(12)).toString())}
-                    <Text style={{ fontSize: 0 }}>fff</Text>
-                  </Text>
-                </ScrollView>
-              </View>
-              <View style={styles.transNumberContainer}>
-                <Text style={{ fontSize: 10.5, fontFamily: 'SourceSansPro-SemiBold', color: this.useTheme('#84989a', '#9cafba') }}>
-                  {translate('main.moneyDetails.totalTransactions') + ' :  ' + getNumber(this.props.transactions.length.toString())}
-                </Text>
-              </View>
-              <View style={{
-                elevation: 1,
-                ...styles.currencyContainer,
-                backgroundColor: this.useTheme('#f9f9f9', '#242424'),
-                borderColor: this.useTheme('#f8f8f8', '#1e1e1e'),
-              }}>
-                <FontAwesome5 name="coins" color="#ffb13d" size={20} />
-              </View>
-              <TouchableOpacity
-                activeOpacity={0.8}
-                style={styles.trashButtonContainer}
-                onPress={() => this.props.deleteAccount(this.props.componentId, this.accountId, this.props.accountData)}
-              >
-                <MaterialCommunityIcons name="trash-can-outline" size={24.5} color={this.useTheme('#84989a', 'rgba(156, 175, 186, 0.7)')} />
-              </TouchableOpacity>
-            </View>
-            <View style={styles.transButtonsContainer}>
-              <TouchableOpacity
-                activeOpacity={0.85}
-                style={[styles.transButtons, {
-                  backgroundColor: this.props.theme === 'light' ? '#f9f9f9' : '#242424',
-                  borderTopWidth: this.props.theme === 'light' ? 0.7 : 0,
-                  borderLeftWidth: this.props.theme === 'light' ? 1.05 : 0,
-                  borderWidth: this.props.theme === 'light' ? 1.05 : 0,
-                  borderBottomWidth: this.props.theme === 'light' ? 1.4 : 0,
-                  borderColor: this.props.theme === 'light' ? '#eee' : null
-                }]}
-                onPress={() => {
-                  this.flatListRef.scrollToOffset({ animated: true, offset: 0 });
-                  this.setState({ transConfirmationModalVisible: true, transType: 'send' })
-                }}
-              >
-                <View style={[styles.arrowIconContainer, { backgroundColor: this.useTheme('#f6f6f6', '#363536') }]}>
-                  <FontAwesome name="arrow-up" color="#de3b5b" size={24} style={{ opacity: 0.75 }} />
-                </View>
-                <Text style={{ marginLeft: 8, fontFamily: 'SourceSansPro-Bold', color: this.useTheme('#303030', '#fbfbfb'), fontSize: 23 }}>
-                  {translate('main.moneyDetails.send')}
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                activeOpacity={0.85}
-                style={[styles.transButtons, {
-                  backgroundColor: this.props.theme === 'light' ? '#f9f9f9' : '#242424',
-                  borderTopWidth: this.props.theme === 'light' ? 0.7 : 0,
-                  borderLeftWidth: this.props.theme === 'light' ? 1.05 : 0,
-                  borderWidth: this.props.theme === 'light' ? 1.05 : 0,
-                  borderBottomWidth: this.props.theme === 'light' ? 1.4 : 0,
-                  borderColor: this.props.theme === 'light' ? '#eee' : null
-                }]}
-                onPress={() => {
-                  this.flatListRef.scrollToOffset({ animated: true, offset: 0 });
-                  this.setState({ transConfirmationModalVisible: true, transType: 'receive' })
-                }}
-              >
-                <View style={[styles.arrowIconContainer, { backgroundColor: this.useTheme('#f6f6f6', '#2e3b47') }]}>
-                  <FontAwesome name="arrow-down" color="#008ee0" size={24} style={{ opacity: 0.75 }} />
-                </View>
-                <Text style={{ marginLeft: 8, fontFamily: 'SourceSansPro-Bold', color: this.useTheme('#303030', '#fbfbfb'), fontSize: 23 }}>
-                  {translate('main.moneyDetails.receive')}
-                </Text>
-              </TouchableOpacity>
-            </View>
-            <View style={styles.transTextContainer}>
-              <Text style={{
-                ...styles.transText,
-                color: this.useTheme('#84989a', '#9cafba')
-              }}>
-                {translate('main.moneyDetails.transactions')}
+              <Text numberOfLines={1} style={{ color: this.useTheme('#303030', '#fbfbfb'), fontSize: 25, fontFamily: 'SourceSansPro-SemiBold', textAlign: 'left' }}>
+                {this.props.name}
               </Text>
-            </View>
-            <View style={styles.transListContainer}>
-              <FlatList
-                ref={ref => this.flatListRef = ref}
-                contentContainerStyle={{ paddingBottom: 6 }}
-                data={this.props.transactions}
-                keyExtractor={transaction => transaction[0]}
-                renderItem={({ item }) => <TransactionCard data={item} theme={this.props.theme} />}
-                getItemLayout={(data, index) => ({ length: 81, offset: 81 * index, index })}
-              />
-            </View>
-            <Modal
-              animationType="slide"
-              transparent={true}
-              visible={this.state.transConfirmationModalVisible}
-              onRequestClose={() => this.setState({ transConfirmationModalVisible: false })}
-            >
-              <View style={styles.transConfirmationModal}>
-                <TouchableOpacity
-                  activeOpacity={1}
-                  onPress={() => this.setState({ transConfirmationModalVisible: false, transAmount: '', transType: '' })}
-                  style={{ flex: 1 }}
-                ></TouchableOpacity>
-                <View style={{
-                  ...styles.innerTransConfirmationModal,
-                  backgroundColor: this.useTheme('#f5f5f5', '#1a1a1a')
-                }}>
-                  <View style={styles.transInputContainer}>
-                    <Text numberOfLines={1} style={{ color: this.useTheme('#303030', '#fbfbfb'), fontFamily: 'SourceSansPro-Bold', fontSize: 22, paddingRight: 7 }}>
+            </ScrollView>
+          </View>
+          <TouchableOpacity
+            disabled={!this.props.phone}
+            activeOpacity={0.85}
+            onPress={() => Linking.openURL(`tel:${this.props.phone}`)}
+            style={styles.callIconContainer}
+          >
+            <MaterialIcons
+              name="perm-phone-msg"
+              size={24}
+              color={
+                this.props.phone ?
+                  this.useTheme('#303030', '#fbfbfb')
+                  :
+                  this.useTheme('#888', '#888')
+              }
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            activeOpacity={0.85}
+            style={{
+              ...styles.editIconContainer,
+              backgroundColor: this.useTheme('#f5f5f5', '#161616')
+            }}
+            onPress={() => {
+              Navigation.push(this.props.componentId, {
+                component: {
+                  name: 'moneyEdit',
+                  passProps: {
+                    accountId: this.props.accountId,
+                    name: this.props.name,
+                    phone: this.props.phone
+                  }
+                }
+              })
+            }}
+          >
+            <MaterialIcons name="mode-edit" size={24} color={this.useTheme('#303030', '#fbfbfb')} />
+          </TouchableOpacity>
+        </View>
+        {
+          this.state.canRender ?
+            <Animated.View style={{ opacity: this.mainViewOpacity, flex: 1, paddingHorizontal: width / 32 }}>
+              <View style={{
+                ...styles.summaryContainer,
+                backgroundColor: this.props.theme === 'light' ? '#f9f9f9' : '#242424',
+                borderTopWidth: this.props.theme === 'light' ? 0.7 : 0,
+                borderLeftWidth: this.props.theme === 'light' ? 1.05 : 0,
+                borderWidth: this.props.theme === 'light' ? 1.05 : 0,
+                borderBottomWidth: this.props.theme === 'light' ? 1.4 : 0,
+                borderColor: this.props.theme === 'light' ? '#eee' : null
+              }}>
+                <View style={styles.firstInnerContainer}>
+                  <View style={{
+                    ...styles.amountLabel,
+                    backgroundColor: this.useTheme('rgba(0,0,0,0.03)', 'rgba(255,255,255,0.1)')
+                  }}>
+                    <Text
+                      ellipsizeMode={this.props.amount < 0 ? "tail" : "head"}
+                      numberOfLines={1}
+                      style={{
+                        textAlign: 'left',
+                        fontSize: 10,
+                        fontFamily: 'SourceSansPro-Bold',
+                        color: this.props.amount < 0 ?
+                          this.useTheme('#cda2b1', '#cdacaf')
+                          :
+                          this.useTheme('#84989a', '#9cafba')
+                      }}>
                       {
-                        this.state.transType === 'send' ?
-                          translate('main.moneyDetails.sendingTo') + " " + this.props.name + " .." :
-                          translate('main.moneyDetails.receivingFrom') + " " + this.props.name + " .. "
+                        this.props.amount < 0 ?
+                          translate('main.moneyDetails.shouldPayToHim') + `${'  ' + this.getName()}`
+                          :
+                          `${this.getName() + '  '}` + translate('main.moneyDetails.shouldPayForMe')
                       }
                     </Text>
-                    <View>
-                      <TextInput
-                        value={this.state.transAmount}
-                        ref={ref => this.transInputRef = ref}
-                        style={{
-                          ...styles.amountInput,
-                          color: this.useTheme('#303030', '#fbfbfb')
-                        }}
-                        placeholder={translate('main.moneyDetails.placeholder')}
-                        placeholderTextColor={this.useTheme('#999', 'rgba(255, 255, 255, 0.6)')}
-                        keyboardType="decimal-pad"
-                        onChangeText={transAmount => this.setState({ transAmount })}
-                      />
-                    </View>
-                  </View>
-                  <View style={styles.transConfirmationButtonsContainer}>
-                    <TouchableOpacity
-                      activeOpacity={0.85}
-                      style={[styles.transButtons, {
-                        backgroundColor: this.props.theme === 'light' ? '#f9f9f9' : '#242424',
-                        borderTopWidth: this.props.theme === 'light' ? 0.7 : 0,
-                        borderLeftWidth: this.props.theme === 'light' ? 1.05 : 0,
-                        borderWidth: this.props.theme === 'light' ? 1.05 : 0,
-                        borderBottomWidth: this.props.theme === 'light' ? 1.4 : 0,
-                        borderColor: this.props.theme === 'light' ? '#eee' : null
-                      }]}
-                      onPress={() => {
-                        this.setState({ transConfirmationModalVisible: false, transAmount: '', transType: '' })
-                      }}
-                    >
-                      <Text style={{ marginLeft: 8, fontFamily: 'SourceSansPro-Bold', color: this.useTheme('#303030', '#fbfbfb'), fontSize: 22 }}>
-                        {translate('main.moneyDetails.cancel')}
-                      </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      activeOpacity={0.85}
-                      style={[styles.transButtons, {
-                        backgroundColor: this.props.theme === 'light' ? '#f9f9f9' : '#242424',
-                        borderTopWidth: this.props.theme === 'light' ? 0.7 : 0,
-                        borderLeftWidth: this.props.theme === 'light' ? 1.05 : 0,
-                        borderWidth: this.props.theme === 'light' ? 1.05 : 0,
-                        borderBottomWidth: this.props.theme === 'light' ? 1.4 : 0,
-                        borderColor: this.props.theme === 'light' ? '#eee' : null
-                      }]}
-                      onPress={() => {
-                        if (!this.state.transAmount)
-                          this.transInputRef.focus()
-                        else {
-                          this.props.addTransaction(
-                            parseFloat(this.props.amount),
-                            parseFloat(this.state.transAmount),
-                            this.state.transType === 'send' ? 'Sent' : 'Received',
-                            this.props.accountId
-                          )
-                          this.setState({ transConfirmationModalVisible: false, transAmount: '', transType: '' })
-                        }
-                      }}
-                    >
-                      <View style={[styles.arrowIconContainer, {
-                        height: height / 24,
-                        width: height / 24,
-                        backgroundColor: this.state.transType === 'send' ?
-                          this.useTheme('#f6f6f6', '#363536')
-                          :
-                          this.useTheme('#f6f6f6', '#2e3b47')
-                      }]}>
-                        <FontAwesome
-                          name={this.state.transType === 'send' ? "arrow-up" : "arrow-down"}
-                          color={this.state.transType === 'send' ? "#de3b5b" : "#008ee0"}
-                          size={22}
-                          style={{ opacity: 0.75 }}
-                        />
-                      </View>
-                      <Text style={{
-                        marginLeft: 8,
-                        fontFamily: 'SourceSansPro-Bold',
-                        color: this.useTheme('#303030', '#fbfbfb'),
-                        fontSize: 22
-                      }}>
-                        {this.state.transType === 'send' ? translate('main.moneyDetails.send') : translate('main.moneyDetails.receive')}
-                      </Text>
-                    </TouchableOpacity>
                   </View>
                 </View>
+                <View style={styles.amountContainer}>
+                  <ScrollView
+                    horizontal
+                    showsHorizontalScrollIndicator={false}
+                    style={{ marginHorizontal: 18 }}
+                    contentContainerStyle={{ alignItems: 'center' }}
+                  >
+                    <Text numberOfLines={1} style={{
+                      ...styles.amountText,
+                      borderWidth: 2,
+                      borderColor: this.useTheme('#f9f9f9', '#242424'),
+                      color: this.useTheme('#303030', '#fbfbfb')
+                    }}>
+                      {getNumber(parseFloat(Math.abs(this.props.amount).toFixed(12)).toString())}
+                      <Text style={{ fontSize: 0 }}>fff</Text>
+                    </Text>
+                  </ScrollView>
+                </View>
+                <View style={styles.transNumberContainer}>
+                  <Text style={{ fontSize: 10.5, fontFamily: 'SourceSansPro-SemiBold', color: this.useTheme('#84989a', '#9cafba') }}>
+                    {translate('main.moneyDetails.totalTransactions') + ' :  ' + getNumber(this.props.transactions.length.toString())}
+                  </Text>
+                </View>
+                <View style={{
+                  ...styles.currencyContainer,
+                  backgroundColor: this.props.theme === 'light' ? '#f9f9f9' : '#242424',
+                  borderTopWidth: this.props.theme === 'light' ? 0.7 : 0,
+                  borderLeftWidth: this.props.theme === 'light' ? 1.05 : 0,
+                  borderWidth: this.props.theme === 'light' ? 1.05 : 0,
+                  borderBottomWidth: this.props.theme === 'light' ? 1.4 : 0,
+                  borderColor: this.props.theme === 'light' ? '#eee' : null
+                }}>
+                  <FontAwesome5 name="coins" color="#ffb13d" size={20} />
+                </View>
+                <TouchableOpacity
+                  activeOpacity={0.8}
+                  style={styles.trashButtonContainer}
+                  onPress={() => this.props.deleteAccount(this.props.componentId, this.accountId, this.props.accountData)}
+                >
+                  <MaterialCommunityIcons name="trash-can-outline" size={24.5} color={this.useTheme('#84989a', 'rgba(156, 175, 186, 0.7)')} />
+                </TouchableOpacity>
               </View>
-            </Modal>
-          </View>
-        </View>
-        :
-        <View style={{ flex: 1, backgroundColor: this.useTheme('#fbfbfb', '#303030'), alignItems: 'center', justifyContent: 'center' }}>
-          <SpinnerSpinkit color="#008ee0" size={38} type="ThreeBounce" />
-        </View>
+              <View style={styles.transButtonsContainer}>
+                <TouchableOpacity
+                  activeOpacity={0.85}
+                  style={[styles.transButtons, {
+                    backgroundColor: this.props.theme === 'light' ? '#f9f9f9' : '#242424',
+                    borderTopWidth: this.props.theme === 'light' ? 0.7 : 0,
+                    borderLeftWidth: this.props.theme === 'light' ? 1.05 : 0,
+                    borderWidth: this.props.theme === 'light' ? 1.05 : 0,
+                    borderBottomWidth: this.props.theme === 'light' ? 1.4 : 0,
+                    borderColor: this.props.theme === 'light' ? '#eee' : null
+                  }]}
+                  onPress={() => {
+                    this.flatListRef.scrollToOffset({ animated: true, offset: 0 });
+                    this.setState({ transConfirmationModalVisible: true, transType: 'send' })
+                  }}
+                >
+                  <View style={[styles.arrowIconContainer, { backgroundColor: this.useTheme('#f6f6f6', '#363536') }]}>
+                    <FontAwesome name="arrow-up" color="#de3b5b" size={24} style={{ opacity: 0.75 }} />
+                  </View>
+                  <Text style={{ marginLeft: 8, fontFamily: 'SourceSansPro-Bold', color: this.useTheme('#303030', '#fbfbfb'), fontSize: 23 }}>
+                    {translate('main.moneyDetails.send')}
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  activeOpacity={0.85}
+                  style={[styles.transButtons, {
+                    backgroundColor: this.props.theme === 'light' ? '#f9f9f9' : '#242424',
+                    borderTopWidth: this.props.theme === 'light' ? 0.7 : 0,
+                    borderLeftWidth: this.props.theme === 'light' ? 1.05 : 0,
+                    borderWidth: this.props.theme === 'light' ? 1.05 : 0,
+                    borderBottomWidth: this.props.theme === 'light' ? 1.4 : 0,
+                    borderColor: this.props.theme === 'light' ? '#eee' : null
+                  }]}
+                  onPress={() => {
+                    this.flatListRef.scrollToOffset({ animated: true, offset: 0 });
+                    this.setState({ transConfirmationModalVisible: true, transType: 'receive' })
+                  }}
+                >
+                  <View style={[styles.arrowIconContainer, { backgroundColor: this.useTheme('#f6f6f6', '#2e3b47') }]}>
+                    <FontAwesome name="arrow-down" color="#008ee0" size={24} style={{ opacity: 0.75 }} />
+                  </View>
+                  <Text style={{ marginLeft: 8, fontFamily: 'SourceSansPro-Bold', color: this.useTheme('#303030', '#fbfbfb'), fontSize: 23 }}>
+                    {translate('main.moneyDetails.receive')}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+              <View style={styles.transTextContainer}>
+                <Text style={{
+                  ...styles.transText,
+                  color: this.useTheme('#84989a', '#9cafba')
+                }}>
+                  {translate('main.moneyDetails.transactions')}
+                </Text>
+              </View>
+              <View style={styles.transListContainer}>
+                <FlatList
+                  initialNumToRender={25}
+                  ref={ref => this.flatListRef = ref}
+                  contentContainerStyle={{ paddingBottom: 6 }}
+                  data={this.props.transactions}
+                  keyExtractor={transaction => transaction[0]}
+                  renderItem={({ item }) => <TransactionCard data={item} theme={this.props.theme} />}
+                  getItemLayout={(data, index) => ({ length: 81, offset: 81 * index, index })}
+                />
+              </View>
+              <Modal
+                animationType="slide"
+                transparent={true}
+                visible={this.state.transConfirmationModalVisible}
+                onRequestClose={() => this.setState({ transConfirmationModalVisible: false })}
+              >
+                <View style={styles.transConfirmationModal}>
+                  <TouchableOpacity
+                    activeOpacity={1}
+                    onPress={() => this.setState({ transConfirmationModalVisible: false, transAmount: '', transType: '' })}
+                    style={{ flex: 1 }}
+                  ></TouchableOpacity>
+                  <View style={{
+                    ...styles.innerTransConfirmationModal,
+                    backgroundColor: this.useTheme('#f5f5f5', '#1a1a1a')
+                  }}>
+                    <View style={styles.transInputContainer}>
+                      <Text numberOfLines={1} style={{ color: this.useTheme('#303030', '#fbfbfb'), fontFamily: 'SourceSansPro-Bold', fontSize: 22, paddingRight: 7 }}>
+                        {
+                          this.state.transType === 'send' ?
+                            translate('main.moneyDetails.sendingTo') + " " + this.props.name + " .." :
+                            translate('main.moneyDetails.receivingFrom') + " " + this.props.name + " .. "
+                        }
+                      </Text>
+                      <View>
+                        <TextInput
+                          value={this.state.transAmount}
+                          ref={ref => this.transInputRef = ref}
+                          style={{
+                            ...styles.amountInput,
+                            color: this.useTheme('#303030', '#fbfbfb')
+                          }}
+                          placeholder={translate('main.moneyDetails.placeholder')}
+                          placeholderTextColor={this.useTheme('#999', 'rgba(255, 255, 255, 0.6)')}
+                          keyboardType="decimal-pad"
+                          onChangeText={transAmount => this.setState({ transAmount })}
+                        />
+                      </View>
+                    </View>
+                    <View style={styles.transConfirmationButtonsContainer}>
+                      <TouchableOpacity
+                        activeOpacity={0.85}
+                        style={[styles.transButtons, {
+                          backgroundColor: this.props.theme === 'light' ? '#f9f9f9' : '#242424',
+                          borderTopWidth: this.props.theme === 'light' ? 0.7 : 0,
+                          borderLeftWidth: this.props.theme === 'light' ? 1.05 : 0,
+                          borderWidth: this.props.theme === 'light' ? 1.05 : 0,
+                          borderBottomWidth: this.props.theme === 'light' ? 1.4 : 0,
+                          borderColor: this.props.theme === 'light' ? '#eee' : null
+                        }]}
+                        onPress={() => {
+                          this.setState({ transConfirmationModalVisible: false, transAmount: '', transType: '' })
+                        }}
+                      >
+                        <Text style={{ marginLeft: 8, fontFamily: 'SourceSansPro-Bold', color: this.useTheme('#303030', '#fbfbfb'), fontSize: 22 }}>
+                          {translate('main.moneyDetails.cancel')}
+                        </Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        activeOpacity={0.85}
+                        style={[styles.transButtons, {
+                          backgroundColor: this.props.theme === 'light' ? '#f9f9f9' : '#242424',
+                          borderTopWidth: this.props.theme === 'light' ? 0.7 : 0,
+                          borderLeftWidth: this.props.theme === 'light' ? 1.05 : 0,
+                          borderWidth: this.props.theme === 'light' ? 1.05 : 0,
+                          borderBottomWidth: this.props.theme === 'light' ? 1.4 : 0,
+                          borderColor: this.props.theme === 'light' ? '#eee' : null
+                        }]}
+                        onPress={() => {
+                          if (!this.state.transAmount)
+                            this.transInputRef.focus()
+                          else {
+                            this.props.addTransaction(
+                              parseFloat(this.props.amount),
+                              parseFloat(this.state.transAmount),
+                              this.state.transType === 'send' ? 'Sent' : 'Received',
+                              this.props.accountId
+                            )
+                            this.setState({ transConfirmationModalVisible: false, transAmount: '', transType: '' })
+                          }
+                        }}
+                      >
+                        <View style={[styles.arrowIconContainer, {
+                          height: height / 24,
+                          width: height / 24,
+                          backgroundColor: this.state.transType === 'send' ?
+                            this.useTheme('#f6f6f6', '#363536')
+                            :
+                            this.useTheme('#f6f6f6', '#2e3b47')
+                        }]}>
+                          <FontAwesome
+                            name={this.state.transType === 'send' ? "arrow-up" : "arrow-down"}
+                            color={this.state.transType === 'send' ? "#de3b5b" : "#008ee0"}
+                            size={22}
+                            style={{ opacity: 0.75 }}
+                          />
+                        </View>
+                        <Text style={{
+                          marginLeft: 8,
+                          fontFamily: 'SourceSansPro-Bold',
+                          color: this.useTheme('#303030', '#fbfbfb'),
+                          fontSize: 22
+                        }}>
+                          {this.state.transType === 'send' ? translate('main.moneyDetails.send') : translate('main.moneyDetails.receive')}
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                </View>
+              </Modal>
+            </Animated.View>
+            :
+            <View style={{ paddingHorizontal: 16, paddingTop: 25, flex: 1, backgroundColor: this.useTheme('#f5f5f5', '#161616'), }}>
+              <Shimmer direction={!isRTL() ? 'right' : 'left'} animationOpacity={0.85} style={{ marginVertical: 5, width: '50%' }}>
+                <Text numberOfLines={1} style={{
+                  ...styles.item,
+                  backgroundColor: this.props.theme === 'light' ? '#e6e6e6' : '#222'
+                }}>
+                </Text>
+              </Shimmer>
+              <Shimmer direction={!isRTL() ? 'right' : 'left'} animationOpacity={0.85} style={{ marginTop: 16 }}>
+                <Text numberOfLines={1} style={{
+                  ...styles.item,
+                  backgroundColor: this.props.theme === 'light' ? '#e6e6e6' : '#222'
+                }}>
+                </Text>
+              </Shimmer>
+              <Shimmer direction={!isRTL() ? 'right' : 'left'} animationOpacity={0.85} style={{ marginTop: 14 }}>
+                <Text numberOfLines={1} style={{
+                  ...styles.item,
+                  backgroundColor: this.props.theme === 'light' ? '#e6e6e6' : '#222'
+                }}>
+                </Text>
+              </Shimmer>
+              <Shimmer direction={!isRTL() ? 'right' : 'left'} animationOpacity={0.85} style={{ marginTop: 14 }}>
+                <Text numberOfLines={1} style={{
+                  ...styles.item,
+                  backgroundColor: this.props.theme === 'light' ? '#e6e6e6' : '#222'
+                }}>
+                </Text>
+              </Shimmer>
+            </View>
+        }
+      </View>
+
     )
   }
 }
@@ -510,8 +553,6 @@ const styles = StyleSheet.create({
     top: -21,
     height: 42,
     width: 42,
-
-    borderWidth: 0.5,
     borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center'
@@ -581,6 +622,12 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.5,
     paddingBottom: 3,
     borderBottomColor: '#888'
+  },
+  item: {
+    height: 26,
+    color: '#fff',
+    marginRight: Dimensions.get('window').width / 12,
+    borderRadius: 4
   }
 })
 

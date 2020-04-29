@@ -56,6 +56,7 @@ class EmployeeCard extends Component {
           onPress={() => {
             Navigation.push(componentId, {
               component: {
+                // options: { animations: { push: { waitForRender: true } } },
                 name: 'employeeDetails',
                 passProps: { data, uid }
               }

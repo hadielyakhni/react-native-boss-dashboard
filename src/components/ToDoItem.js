@@ -75,15 +75,15 @@ class ToDoItem extends PureComponent {
     const { task, description, isDone, date, customDate } = this.props.data
     return (
       <View style={{
-        marginVertical: 5
+        marginVertical: 5,
+        justifyContent: 'center'
       }}>
-        {/* delete view */}
         <View style={{
           width: 50,
           position: 'absolute',
           borderRadius: 8,
           right: 0,
-          height: 40,
+          height: 37,
           justifyContent: 'center',
           backgroundColor: 'red',
           alignItems: 'center'
@@ -92,7 +92,6 @@ class ToDoItem extends PureComponent {
             <MaterialCommunityIcons name="trash-can-outline" size={24} color="#f9f9f9" />
           </TouchableOpacity>
         </View>
-        {/* main view */}
         <Interactable.View
           ref={el => this.interactableElem = el}
           horizontalOnly={true}
@@ -162,17 +161,17 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   CheckBoxContainer: {
-    paddingHorizontal: 5,
+    paddingLeft: 4,
+    paddingRight: 0,
     alignItems: 'center',
     justifyContent: 'center'
   },
   taskTitle: {
-    paddingBottom: 2,
-    textAlignVertical: 'center',
+    paddingBottom: 5,
     fontSize: 18.5,
     width: Dimensions.get('window').width - 115,
-    textAlign: 'left',
-    fontFamily: 'SourceSansPro-Regular'
+    fontFamily: 'SourceSansPro-Regular',
+    textAlign: 'left'
   }
 })
 

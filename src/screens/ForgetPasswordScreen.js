@@ -52,7 +52,7 @@ class ForgetPasswordScreen extends Component {
           <TouchableOpacity activeOpacity={0.8} style={{ flexDirection: 'row', alignItems: 'center' }} onPress={() => Navigation.pop(this.props.componentId)}>
             <Ionicons name={isRTL() ? "ios-arrow-forward" : "ios-arrow-back"} color={this.useTheme('#303030', '#fbfbfb')} size={25} />
             <Text style={{
-              marginHorizontal: Dimensions.get('window').width > 600 ? 14 : 10, color: this.useTheme('#303030', '#fbfbfb'), fontSize: 25, fontFamily: 'SourceSansPro-SemiBold'
+              marginHorizontal: 14, color: this.useTheme('#303030', '#fbfbfb'), fontSize: 25, fontFamily: 'SourceSansPro-SemiBold'
             }}>{translate('auth.forgetPassword.back')}</Text>
           </TouchableOpacity>
         </View>
@@ -131,7 +131,7 @@ class ForgetPasswordScreen extends Component {
                   ),
                   fontSize: 22,
                   fontFamily: 'SourceSansPro-SemiBold'
-                }}>Sending...</Text>
+                }}>{translate('auth.forgetPassword.sending')}</Text>
                 :
                 <Text style={{
                   color: this.useTheme(

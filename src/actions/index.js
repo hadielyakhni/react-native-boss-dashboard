@@ -69,7 +69,7 @@ export const userSignin = (email, password) =>
   async dispatch => {
     try {
       dispatch({ type: 'auth_attempt_started' })
-      const user = await promiseTimeout(5000, firebase.auth().signInWithEmailAndPassword(email.trim(), password))
+      const user = await promiseTimeout(6000, firebase.auth().signInWithEmailAndPassword(email.trim(), password))
       saveUserDataToAsyncStorage(user)
       if (!TASKS_SORT_BY && !TASKS_SORT_ORDER)
         dispatch(getTasksSortData(user.user.uid))
@@ -97,7 +97,7 @@ export const userSignin = (email, password) =>
 export const userSignup = (email, password) =>
   dispatch => {
     dispatch({ type: 'auth_attempt_started' })
-    promiseTimeout(5000, firebase.auth().createUserWithEmailAndPassword(email.trim(), password))
+    promiseTimeout(6000, firebase.auth().createUserWithEmailAndPassword(email.trim(), password))
       .then(async user => {
         let uid = user.user.uid
         saveUserDataToAsyncStorage(user)
@@ -173,7 +173,7 @@ export const userAuthenticateWithGoogle = () =>
       dispatch({ type: 'disable_google_button' })
       const { idToken } = await GoogleSignin.signIn()
       const googleCredential = firebase.auth.GoogleAuthProvider.credential(idToken)
-      const user = await firebase.auth().signInWithCredential(googleCredential)
+      const user = await promiseTimeout(6000, firebase.auth().signInWithCredential(googleCredential))
       saveUserDataToAsyncStorage(user)
       if (user.additionalUserInfo.isNewUser) {
         let uid = user.user.uid
