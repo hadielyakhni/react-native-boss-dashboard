@@ -14,6 +14,7 @@ import { connect } from 'react-redux'
 import { fetchEmployees, restoreLastDeletedEmployee, changeEmployeesSortData } from '../actions'
 import { Icon } from 'native-base'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import EmployeeCard from '../components/EmployeeCard'
 import EmployeeLoadingContainer from '../components/EmployeeLoadingContainer'
 import SortChoicesModal from '../components/ChoicesModal'
@@ -35,6 +36,11 @@ class EmployeesListScreen extends Component {
     ]
     this.activeSortLabel = ''
     this.state = { searchWord: '', sortChoicesModalVisible: false, isAddButtonDisabled: false }
+    this.clearIconOpacity = new Animated.Value(0)
+    this.clearIconAngle = this.clearIconOpacity.interpolate({
+      inputRange: [0, 1],
+      outputRange: [1.57, 3.14]
+    })
     this.hintOpacityValue = 0
     this.hintOpacity = new Animated.Value(0)
     this.hintOpacity.addListener(({ value }) => this.hintOpacityValue = value)
@@ -54,7 +60,19 @@ class EmployeesListScreen extends Component {
     this.hintOpacity.removeAllListeners()
     this.listOpacity.removeAllListeners()
   }
-  changeSearchWord = (text) => {
+  changeSearchWord = text => {
+    if (text && !this.state.searchWord)
+      Animated.timing(this.clearIconOpacity, {
+        toValue: 1,
+        duration: 240,
+        useNativeDriver: true
+      }).start()
+    else if (!text && this.state.searchWord)
+      Animated.timing(this.clearIconOpacity, {
+        toValue: 0,
+        duration: 240,
+        useNativeDriver: true
+      }).start()
     this.setState({ searchWord: text })
   }
   renderScreen() {
@@ -296,6 +314,25 @@ class EmployeesListScreen extends Component {
               placeholder={translate('main.employeesList.placeholder')}
               onChangeText={this.changeSearchWord}
             />
+            <Animated.View style={{
+              opacity: this.clearIconOpacity,
+              transform: [{ rotate: this.clearIconAngle }],
+              position: 'absolute',
+              right: 12
+            }}>
+              <TouchableOpacity activeOpacity={1} onPress={() => this.changeSearchWord('')}>
+                <MaterialIcons
+                  name='clear'
+                  style={{
+                    color: this.props.fetchingEmployees || !this.props.allEmployees.length ?
+                      this.useTheme('#999', '#777')
+                      :
+                      this.useTheme('#606060', '#fbfbfb'),
+                    fontSize: 24
+                  }}
+                />
+              </TouchableOpacity>
+            </Animated.View>
           </View>
           {this.renderScreen()}
           <TouchableOpacity

@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import { Image, View, Text, StyleSheet, TouchableOpacity, Dimensions, LayoutAnimation, UIManager } from 'react-native'
 import { Icon } from 'native-base'
 import { Navigation } from 'react-native-navigation'
@@ -9,7 +9,7 @@ import getNumber from '../utils/getNumber'
 UIManager.setLayoutAnimationEnabledExperimental &&
   UIManager.setLayoutAnimationEnabledExperimental(true)
 
-class EmployeeCard extends Component {
+class EmployeeCard extends PureComponent {
   componentDidMount() {
     LayoutAnimation.configureNext({
       update: {
@@ -56,7 +56,6 @@ class EmployeeCard extends Component {
           onPress={() => {
             Navigation.push(componentId, {
               component: {
-                // options: { animations: { push: { waitForRender: true } } },
                 name: 'employeeDetails',
                 passProps: { data, uid }
               }

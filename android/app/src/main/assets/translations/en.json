@@ -6,15 +6,15 @@
     },
     "todoList": {
       "title": "Todo List",
-      "text": "Simple Todo list and note taker to help you achieve more."
+      "text": "Simple Todo list and notebook to help you achieve more."
     },
     "employees": {
       "title": "Employees",
-      "text": "Easily manage all your employees and contact them from one place."
+      "text": "Easily manage all your employees and contact them from one place!"
     },
     "money": {
       "title": "Transactions",
-      "text": "Quickly reach and manage all people you have money with them and vise versa."
+      "text": "Quickly reach and manage all people you owe them money and vise versa."
     },
     "skip": "Skip"
   },
@@ -44,7 +44,7 @@
     "todoList": {
       "title": "My tasks",
       "placeholder": "Quick Task",
-      "hint1": "Start organizing your life!",
+      "hint1": "Start organizing your business!",
       "hint2": "Anything to do?",
       "incompleted": "INCOMPLETED",
       "completed": "COMPLETED"
@@ -65,7 +65,7 @@
       "title": "My Employees",
       "placeholder": "Search employees",
       "hint1": "Easily check all",
-      "hint2": "your employees!",
+      "hint2": "Your employees!",
       "hint3": "Add them now."
     },
     "employeeAdd": {
@@ -97,7 +97,7 @@
       "for": "for",
       "people": "people",
       "person": "person",
-      "hint1": "Do you have money with others",
+      "hint1": "Do you owe others money?",
       "hint2": "and/or visversa?",
       "hint3": "Add accounts easily and",
       "hint4": "manage all your transactions."
@@ -162,9 +162,9 @@
       "err3": "Password should at least be 6 characters!",
       "err4": "Invalid email or password! Try again or click on Forgot Password link to reset your password.",
       "err5": "No user found with this email address.",
-      "err6": "An account with the same email address already exists but with another signin method!",
+      "err6": "An account with the same email address already exists!",
       "err7": "The email address is already in use by another account! You can click on the Forgot Password link to reset your password.",
-      "err8": "We have blocked all requests from this device due to unusual activity. Try again later.",
+      "err8": "We have blocked all requests from this device due to unusual activity! Try again later.",
       "err9": "Time out error! Check your internet connection and try again later.",
       "err10": "Error occured!"
     },

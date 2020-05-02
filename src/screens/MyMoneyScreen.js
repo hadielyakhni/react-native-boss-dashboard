@@ -15,6 +15,7 @@ import { connect } from 'react-redux'
 import { fetchAccounts, restoreLastDeletedAccount, changeAccountsSortData } from '../actions'
 import { Icon } from 'native-base'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import MoneyCard from '../components/MoneyCard'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import SortChoicesModal from '../components/ChoicesModal'
@@ -35,6 +36,11 @@ class MyMoneyScreen extends Component {
       { id: "6", prop: "last transaction - Oldest to Newest" },
       { id: "7", prop: "last transaction - Newest to Oldest" }
     ]
+    this.clearIconOpacity = new Animated.Value(0)
+    this.clearIconAngle = this.clearIconOpacity.interpolate({
+      inputRange: [0, 1],
+      outputRange: [1.57, 3.14]
+    })
     this.activeSortLabel = ''
     this.state = { searchWord: '', sortChoicesModalVisible: false, isAddButtonDisabled: false, sortRequestedNow: false }
     this.hintOpacityValue = 0
@@ -61,6 +67,18 @@ class MyMoneyScreen extends Component {
     this.pAccountsOpacity.removeAllListeners()
   }
   changeSearchWord = (text) => {
+    if (text && !this.state.searchWord)
+      Animated.timing(this.clearIconOpacity, {
+        toValue: 1,
+        duration: 240,
+        useNativeDriver: true
+      }).start()
+    else if (!text && this.state.searchWord)
+      Animated.timing(this.clearIconOpacity, {
+        toValue: 0,
+        duration: 240,
+        useNativeDriver: true
+      }).start()
     this.setState({ searchWord: text })
   }
   renderScreen() {
@@ -420,6 +438,25 @@ class MyMoneyScreen extends Component {
               placeholder={translate('main.moneyList.placeholder')}
               onChangeText={this.changeSearchWord}
             />
+            <Animated.View style={{
+              opacity: this.clearIconOpacity,
+              transform: [{ rotate: this.clearIconAngle }],
+              position: 'absolute',
+              right: 12
+            }}>
+              <TouchableOpacity activeOpacity={1} onPress={() => this.changeSearchWord('')}>
+                <MaterialIcons
+                  name='clear'
+                  style={{
+                    color: this.props.fetchingAccounts || !this.props.allAccounts.length ?
+                      this.useTheme('#999', '#777')
+                      :
+                      this.useTheme('#606060', '#fbfbfb'),
+                    fontSize: 24
+                  }}
+                />
+              </TouchableOpacity>
+            </Animated.View>
           </View>
           {this.renderScreen()}
           <TouchableOpacity

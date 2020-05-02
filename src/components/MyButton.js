@@ -7,11 +7,11 @@ export default class MyButton extends PureComponent {
     return (
       <TouchableOpacity
         onPress={onPress}
-        style={[styles.button, style, { backgroundColor: disabled ? disabledColor : color }]}
+        style={[styles.button, style, { backgroundColor: color }]}
         activeOpacity={activeOpacity || 0.75}
         disabled={disabled}
       >
-        <Text style={[styles.text, textStyle]}>
+        <Text style={[styles.text, textStyle, { color: disabled ? '#e3e3e3' : '#f9f9f9' }]}>
           {children}
         </Text>
       </TouchableOpacity>
@@ -30,7 +30,6 @@ const styles = StyleSheet.create({
   },
   text: {
     marginHorizontal: 5,
-    color: '#f9f9f9',
     fontSize: 17.8,
     fontFamily: 'SourceSansPro-SemiBold'
   }

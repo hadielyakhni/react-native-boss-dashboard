@@ -14,8 +14,6 @@ import {
   TextInput
 } from 'react-native'
 import { translate, isRTL } from '../utils/i18n'
-import { Spinner } from 'native-base'
-import MyInput from '../components/MyInput'
 import MyButton from '../components/MyButton'
 import { userSignin, userSignup, userAuthenticateWithFacebook, userAuthenticateWithGoogle, dsimissAuthError } from '../actions'
 import getAuthError from '../utils/getAuthError'
@@ -85,7 +83,7 @@ class AuthScreen extends Component {
     if (!this.props.googleButtonDisabled)
       return (
         <>
-          <FontAwesome size={22} name="google" color="#fff" />
+          <FontAwesome size={22} name="google" color={this.props.loading || this.props.facebookButtonDisabled ? '#e3e3e3' : '#f9f9f9'} />
           {""}   {translate('auth.auth.googleBtnText')}
         </>
       )
@@ -95,7 +93,7 @@ class AuthScreen extends Component {
     if (!this.props.facebookButtonDisabled)
       return (
         <>
-          <FontAwesome size={22} name="facebook" color="#fff" />
+          <FontAwesome size={22} name="facebook" color={this.props.loading || this.props.googleButtonDisabled ? '#e3e3e3' : '#f9f9f9'} />
           {""}   {translate('auth.auth.facebookBtnText')}
         </>
       )
@@ -155,6 +153,7 @@ class AuthScreen extends Component {
               />
               <TextInput
                 keyboardType="email-address"
+                ref={ref => this.emailInputRef = ref}
                 autoCompleteType="email"
                 returnKeyType="next"
                 onSubmitEditing={() => this.passworfInputRef.focus()}

@@ -5,7 +5,7 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import { translate } from '../utils/i18n'
 import getNumber from '../utils/getNumber'
 
-class TransactionCard extends React.Component {
+class TransactionCard extends React.PureComponent {
   constructor(props) {
     super(props)
     const { transAmount, status, date } = this.props.data[1]

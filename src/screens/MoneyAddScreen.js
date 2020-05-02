@@ -135,7 +135,7 @@ class MoneyAddScreen extends Component {
                   checked={status === 'ME'}
                   onPress={() => { this.setState({ status: 'ME' }) }}
                 />
-                <Text style={{ fontSize: 17, fontFamily: 'SourceSansPro-Bold', color: this.useTheme('#555', '#f9f9f9') }}>
+                <Text style={{ fontSize: 17, fontFamily: 'SourceSansPro-Bold', color: this.useTheme('#303030', '#f9f9f9') }}>
                   {translate('main.moneyAdd.forMe')}
                 </Text>
               </TouchableOpacity>
