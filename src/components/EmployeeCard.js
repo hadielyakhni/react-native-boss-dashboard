@@ -23,14 +23,21 @@ class EmployeeCard extends PureComponent {
     LayoutAnimation.configureNext({
       update: {
         duration: 80,
-        delay: 120,
         type: LayoutAnimation.Types.linear,
         property: LayoutAnimation.Properties.opacity
       }
     })
   }
+  onPress = () => {
+    Navigation.push(this.props.componentId, {
+      component: {
+        name: 'employeeDetails',
+        passProps: { data: this.props.data, uid: this.props.uid }
+      }
+    })
+  }
   render() {
-    const { componentId, uid, data } = this.props
+    const { data } = this.props
     const d = new Date(data.joinDate)
     return (
       <View style={{
@@ -53,14 +60,7 @@ class EmployeeCard extends PureComponent {
           disabled={this.props.activeScreenName === 'employeeDetails'}
           activeOpacity={1}
           style={{ ...styles.infoContainer }}
-          onPress={() => {
-            Navigation.push(componentId, {
-              component: {
-                name: 'employeeDetails',
-                passProps: { data, uid }
-              }
-            })
-          }}
+          onPress={this.onPress}
         >
           <View style={{ flex: 1, height: 56, justifyContent: 'space-between', alignItems: 'flex-start' }}>
             <Text

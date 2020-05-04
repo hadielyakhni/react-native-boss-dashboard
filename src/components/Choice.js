@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, TouchableOpacity } from 'react-native'
+import { Text, TouchableOpacity } from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { translate } from '../utils/i18n'
 
@@ -47,10 +47,11 @@ const Choice = ({ isSelected, text, onSelect, theme }) => {
         return translate('components.choicesModal.themesModal.options.dark')
     }
   }
+  onPress = () => onSelect(text)
   return (
     <TouchableOpacity
       activeOpacity={0.5}
-      onPress={() => onSelect(text)}
+      onPress={onPress}
       style={{
         height: 44,
         backgroundColor: theme === 'light' ? '#f5f5f5' : '#303030',

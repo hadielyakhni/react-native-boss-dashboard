@@ -528,12 +528,7 @@ class ToDoListScreen extends Component {
                     animations: {
                       push: {
                         content: {
-                          waitForRender: true,
-                          translationY: {
-                            from: Dimensions.get('window').height,
-                            to: 0,
-                            duration: 200
-                          }
+                          waitForRender: true
                         }
                       }
                     }

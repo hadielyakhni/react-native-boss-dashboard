@@ -3,7 +3,7 @@ import { TouchableOpacity, StyleSheet, Text } from 'react-native'
 
 export default class MyButton extends PureComponent {
   render() {
-    const { onPress, style, color, disabledColor, disabled, textStyle, children, activeOpacity } = this.props
+    const { onPress, style, color, disabled, textStyle, children, activeOpacity } = this.props
     return (
       <TouchableOpacity
         onPress={onPress}

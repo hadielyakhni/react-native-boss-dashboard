@@ -33,11 +33,25 @@ class AccountCard extends PureComponent {
       LayoutAnimation.configureNext({
         update: {
           duration: 140,
-          delay: 120,
           type: LayoutAnimation.Types.linear,
           property: LayoutAnimation.Properties.opacity
         }
       })
+  }
+  onPress = () => {
+    Navigation.push(this.props.componentId, {
+      component: {
+        name: 'moneyDetails',
+        passProps: { accountId: this.props.data[0] },
+        options: {
+          animations: {
+            push: {
+              waitForRender: true
+            }
+          }
+        }
+      }
+    })
   }
   render() {
     const { name, amount } = this.props.data[1]
@@ -62,21 +76,7 @@ class AccountCard extends PureComponent {
           disabled={this.props.activeScreenName === 'moneyDetails'}
           activeOpacity={1}
           style={styles.infoContainer}
-          onPress={() => {
-            Navigation.push(this.props.componentId, {
-              component: {
-                name: 'moneyDetails',
-                passProps: { accountId: this.props.data[0] },
-                options: {
-                  animations: {
-                    push: {
-                      waitForRender: true
-                    }
-                  }
-                }
-              }
-            })
-          }}
+          onPress={this.onPress}
         >
           <View style={{ flex: 1, height: 56, justifyContent: 'space-between', alignItems: 'flex-start' }}>
             <Text

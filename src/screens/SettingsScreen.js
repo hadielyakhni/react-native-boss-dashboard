@@ -151,6 +151,43 @@ class SettingsScreen extends Component {
       return lightThemeColor
     return darkThemeColor
   }
+  onPress1 = () => this.setState({ modalVisible: false })
+  onPress2 = () => {
+    this.setState({ modalVisible: false, loggingout: true })
+    LoginManager.logOut()
+    GoogleSignin.signOut()
+    AsyncStorage.removeItem('uid')
+    AsyncStorage.removeItem('email')
+    AsyncStorage.removeItem('providers')
+    this.props.resetTasks()
+    this.props.resetEmployees()
+    this.props.resetAccounts()
+    setTimeout(() => {
+      goToAuth()
+    }, 750);
+  }
+  onPress3 = () => this.setState({ modalVisible: false })
+  onPress4 = () => {
+    this.setState({ isChangePasswordButtonDisabled: true })
+    setTimeout(() => {
+      this.setState({ isChangePasswordButtonDisabled: false })
+    }, 180);
+    if (this.state.providers.includes('password'))
+      Navigation.push(this.props.componentId, {
+        component: {
+          name: 'forgetPassword',
+          passProps: {
+            email: this.state.email
+          }
+        }
+      })
+  }
+  onPress5 = () => this.setState({ languageChoicesModalVisible: true })
+  onPress6 = () => this.setState({ themeChoicesModalVisible: true })
+  onPress7 = () => Linking.openURL(`mailto:boss.dashboard@gmail.com`)
+  onPress8 = () => Linking.openURL('https://boss-dashboard.netlify.app/privacypolicy.html')
+  onPress9 = () => Linking.openURL('https://boss-dashboard.netlify.app/termsofuse.html')
+  onPress10 = () => this.setState({ modalVisible: true })
   render() {
     return (
       <View style={{
@@ -186,9 +223,7 @@ class SettingsScreen extends Component {
           <View style={{ flex: 1, justifyContent: 'center' }}>
             <TouchableOpacity
               activeOpacity={1}
-              onPress={() => {
-                this.setState({ modalVisible: false })
-              }}
+              onPress={this.onPress1}
               style={[StyleSheet.absoluteFill, {
                 backgroundColor: this.props.theme === 'light' ? 'rgba(0,0,0,0.1)' : 'rgba(0,0,0,0.5)',
                 zIndex: 0
@@ -206,20 +241,7 @@ class SettingsScreen extends Component {
                 </Text>
               </View>
               <TouchableOpacity
-                onPress={() => {
-                  this.setState({ modalVisible: false, loggingout: true })
-                  LoginManager.logOut()
-                  GoogleSignin.signOut()
-                  AsyncStorage.removeItem('uid')
-                  AsyncStorage.removeItem('email')
-                  AsyncStorage.removeItem('providers')
-                  this.props.resetTasks()
-                  this.props.resetEmployees()
-                  this.props.resetAccounts()
-                  setTimeout(() => {
-                    goToAuth()
-                  }, 750);
-                }}
+                onPress={this.onPress2}
                 activeOpacity={0.6}
                 style={{
                   ...styles.centerModal,
@@ -232,7 +254,7 @@ class SettingsScreen extends Component {
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
-                onPress={() => this.setState({ modalVisible: false })}
+                onPress={this.onPress3}
                 activeOpacity={0.6}
                 style={{
                   ...styles.lowerModal,
@@ -283,21 +305,7 @@ class SettingsScreen extends Component {
           <TouchableOpacity
             disabled={this.state.isChangePasswordButtonDisabled}
             activeOpacity={(this.state.providers.includes('password')) ? 0.9 : 1}
-            onPress={() => {
-              this.setState({ isChangePasswordButtonDisabled: true })
-              setTimeout(() => {
-                this.setState({ isChangePasswordButtonDisabled: false })
-              }, 180);
-              if (this.state.providers.includes('password'))
-                Navigation.push(this.props.componentId, {
-                  component: {
-                    name: 'forgetPassword',
-                    passProps: {
-                      email: this.state.email
-                    }
-                  }
-                })
-            }}
+            onPress={this.onPress4}
           >
             <View style={{
               backgroundColor: this.useTheme('#f5f5f5', '#161616'),
@@ -363,7 +371,7 @@ class SettingsScreen extends Component {
           </Text>
           <TouchableOpacity
             activeOpacity={0.9}
-            onPress={() => this.setState({ languageChoicesModalVisible: true })}
+            onPress={this.onPress5}
           >
             <View style={{
               backgroundColor: this.useTheme('#f5f5f5', '#161616'),
@@ -387,7 +395,7 @@ class SettingsScreen extends Component {
           </TouchableOpacity>
           <TouchableOpacity
             activeOpacity={0.9}
-            onPress={() => this.setState({ themeChoicesModalVisible: true })}
+            onPress={this.onPress6}
           >
             <View style={{
               backgroundColor: this.useTheme('#f5f5f5', '#161616'),
@@ -425,7 +433,7 @@ class SettingsScreen extends Component {
           </Text>
           <TouchableOpacity
             activeOpacity={0.9}
-            onPress={() => Linking.openURL(`mailto:boss.dashboard@gmail.com`)}
+            onPress={this.onPress7}
           >
             <View style={{
               backgroundColor: this.useTheme('#f5f5f5', '#161616'),
@@ -502,6 +510,7 @@ class SettingsScreen extends Component {
           </Text>
           <TouchableOpacity
             activeOpacity={0.9}
+            onPress={this.onPress8}
           >
             <View style={{
               backgroundColor: this.useTheme('#f5f5f5', '#161616'),
@@ -524,6 +533,7 @@ class SettingsScreen extends Component {
           </TouchableOpacity>
           <TouchableOpacity
             activeOpacity={0.9}
+            onPress={this.onPress9}
           >
             <View style={{
               backgroundColor: this.useTheme('#f5f5f5', '#161616'),
@@ -549,9 +559,7 @@ class SettingsScreen extends Component {
               ...styles.logoutButton,
               backgroundColor: this.useTheme('#f5f5f5', '#161616')
             }}
-            onPress={() => {
-              this.setState({ modalVisible: true })
-            }}
+            onPress={this.onPress10}
           >
             <Text style={styles.logoutText}>
               {translate('main.settings.logout')}

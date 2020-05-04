@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { StyleSheet, View, I18nManager } from 'react-native'
+import { StyleSheet, View, TouchableOpacity, Text } from 'react-native'
 import AsyncStorage from '@react-native-community/async-storage'
 import { goToAuth, goToMain, goToWalkThrough } from '../navigation/navigation'
 import { connect } from 'react-redux'
@@ -9,6 +9,8 @@ import { Appearance } from 'react-native-appearance'
 import { Navigation } from 'react-native-navigation'
 import Keys from '../keys/google'
 import { setI18nConfig } from '../utils/i18n'
+import SplashScreen from 'react-native-splash-screen'
+import database from '@react-native-firebase/database'
 
 GoogleSignin.configure({
   webClientId: Keys.webClientId
@@ -16,6 +18,7 @@ GoogleSignin.configure({
 
 class FirstScreen extends Component {
   async componentDidMount() {
+    SplashScreen.hide()
     Navigation.mergeOptions(this.props.componentId, {
       statusBar: {
         backgroundColor: '#008ee0',
@@ -101,6 +104,18 @@ class FirstScreen extends Component {
   render() {
     return (
       <View style={styles.container}>
+        {/* <TouchableOpacity onPress={() => {
+          database().ref('users').push({ test: 'test' })
+        }} style={{
+          backgroundColor: 'white',
+          height: 100,
+          width: 100,
+          borderRadius: 50,
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}>
+          <Text style={{ fontSize: 14, fontFamily: 'SourceSansPro-SemiBold' }}>Add Record</Text>
+        </TouchableOpacity> */}
       </View>
     )
   }

@@ -7,11 +7,8 @@ import {
   LayoutAnimation,
   Animated,
   UIManager,
-  Dimensions,
-  I18nManager,
-  TouchableHighlight
+  Dimensions
 } from 'react-native'
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import { Navigation } from 'react-native-navigation'
 import { connect } from 'react-redux'
@@ -71,8 +68,30 @@ class ToDoItem extends PureComponent {
   onStopMoving() {
     this.setState({ isMoving: false });
   }
-  render() {
+  onPress = () => {
     const { task, description, isDone, date, customDate } = this.props.data
+    Navigation.push(this.props.componentId, {
+      component: {
+        name: 'todoDetails',
+        passProps: {
+          taskId: this.props.taskId,
+          task,
+          description,
+          isDone,
+          date,
+          customDate
+        },
+        options: {
+          animations: {
+            push: {
+              waitForRender: true
+            }
+          }
+        }
+      }
+    })
+  }
+  render() {
     return (
       <View style={{
         marginVertical: 5,
@@ -107,21 +126,7 @@ class ToDoItem extends PureComponent {
           animatedValueX={this._deltaX}>
           <TouchableOpacity
             activeOpacity={1}
-            onPress={() => {
-              Navigation.push(this.props.componentId, {
-                component: {
-                  name: 'todoDetails',
-                  passProps: {
-                    taskId: this.props.taskId,
-                    task,
-                    description,
-                    isDone,
-                    date,
-                    customDate
-                  }
-                }
-              })
-            }}
+            onPress={this.onPress}
             disabled={this.props.activeScreenName === 'todoDetails'}
           >
             <View style={{

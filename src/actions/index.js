@@ -173,7 +173,7 @@ export const userAuthenticateWithGoogle = () =>
       dispatch({ type: 'disable_google_button' })
       const { idToken } = await GoogleSignin.signIn()
       const googleCredential = firebase.auth.GoogleAuthProvider.credential(idToken)
-      const user = await promiseTimeout(6000, firebase.auth().signInWithCredential(googleCredential))
+      const user = await firebase.auth().signInWithCredential(googleCredential)
       saveUserDataToAsyncStorage(user)
       if (user.additionalUserInfo.isNewUser) {
         let uid = user.user.uid
