@@ -1,44 +1,46 @@
 import React from 'react'
-import { Text, View, StyleSheet, Image, Dimensions, I18nManager } from 'react-native'
+import { Text, View, StyleSheet, Image, Dimensions, I18nManager, Linking } from 'react-native'
 import Icon from 'react-native-vector-icons/Ionicons';
 import AppIntroSlider from 'react-native-app-intro-slider'
 import { goToAuth } from '../navigation/navigation'
 import { Navigation } from 'react-native-navigation'
 import AsyncStorage from '@react-native-community/async-storage'
 import SplashScreen from 'react-native-splash-screen'
-import { translate, isRTL } from '../utils/i18n'
+import { translate, isRTL, getUsedLanguage } from '../utils/i18n'
 import i18n from 'i18n-js'
 
 export default class WalkThrough extends React.Component {
-  constructor() {
-    super()
-    this.SLIDES = [
-      {
-        key: '0',
-        title: translate('walkthrough.intro.title'),
-        text: translate('walkthrough.intro.text'),
-        imageURI: "welcome_min"
-      },
-      {
-        key: '1',
-        title: i18n.t('walkthrough.todoList.title'),
-        text: i18n.t('walkthrough.todoList.text'),
-        imageURI: "todo_min"
-      },
-      {
-        key: '2',
-        title: i18n.t('walkthrough.employees.title'),
-        text: i18n.t('walkthrough.employees.text'),
-        imageURI: "employees_min"
-      },
-      {
-        key: '3',
-        title: i18n.t('walkthrough.money.title'),
-        text: i18n.t('walkthrough.money.text'),
-        imageURI: "money_min"
-      }
-    ]
-  }
+  SLIDES = [
+    {
+      key: '0',
+      title: translate('walkthrough.intro.title'),
+      text: translate('walkthrough.intro.text'),
+      imageURI: "welcome_min"
+    },
+    {
+      key: '1',
+      title: i18n.t('walkthrough.todoList.title'),
+      text: i18n.t('walkthrough.todoList.text'),
+      imageURI: "todo_min"
+    },
+    {
+      key: '2',
+      title: i18n.t('walkthrough.employees.title'),
+      text: i18n.t('walkthrough.employees.text'),
+      imageURI: "employees_min"
+    },
+    {
+      key: '3',
+      title: i18n.t('walkthrough.money.title'),
+      text: i18n.t('walkthrough.money.text'),
+      imageURI: "money_min"
+    },
+    {
+      title: translate('walkthrough.policies.title'),
+      key: '4',
+      imageURI: "pp_tou_min"
+    }
+  ]
   componentDidMount() {
     I18nManager.allowRTL(true)
     setTimeout(() => {
@@ -56,6 +58,27 @@ export default class WalkThrough extends React.Component {
     if (this.props.systemTheme === 'dark')
       return darkColor
     return lightColor
+  }
+  getText() {
+    const text = translate('walkthrough.policies.text')
+    const privacyPolicy = translate('walkthrough.policies.privacyPolicy')
+    const termsOfUse = translate('walkthrough.policies.termsOfUse')
+    const our = translate('walkthrough.policies.our')
+    const and = translate('walkthrough.policies.and')
+    return (
+      <Text style={{ lineHeight: 30 }}>
+        {text + ' '}
+        {getUsedLanguage() === 'arabic' ? null : our + ' '}
+        <Text onPress={() => Linking.openURL('https://boss-dashboard.netlify.app/privacypolicy')} style={{ color: '#008ee0' }}>
+          {privacyPolicy + ' '}
+        </Text>
+        {and + ' '}
+        <Text onPress={() => Linking.openURL('https://boss-dashboard.netlify.app/termsofuse')} style={{ color: '#008ee0' }}>
+          {termsOfUse + ' '}
+        </Text>
+        {getUsedLanguage() === 'arabic' ? our : null}
+      </Text>
+    )
   }
   renderItem = ({ item }) => {
     return (
@@ -79,7 +102,8 @@ export default class WalkThrough extends React.Component {
               height: item.key === "1" ?
                 Dimensions.get('window').width / 1.32
                 : item.key === "2" ? Dimensions.get('window').width / 1.3
-                  : Dimensions.get('window').width / 1.5,
+                  : item.key === "4" ? Dimensions.get('window').width / 1.6
+                    : Dimensions.get('window').width / 1.5,
               width: item.key === "1" ?
                 Dimensions.get('window').width / 1.32
                 : item.key === "2" ? Dimensions.get('window').width / 1.3
@@ -96,13 +120,10 @@ export default class WalkThrough extends React.Component {
         }}>
           <Text style={{
             ...styles.text,
-            fontSize: 20,
             color: this.useTheme('#303030', '#fbfbfb'),
-            width: item.key !== "0" ? Dimensions.get('window').width / 1.5 : Dimensions.get('window').width / 1.2,
-            maxWidth: 400,
-            paddingTop: Dimensions.get('window').height / Dimensions.get('window').width > 1.6 ? 0 : 80
+            width: item.key !== "0" ? Dimensions.get('window').width / 1.5 : Dimensions.get('window').width / 1.3
           }}>
-            {item.text}
+            {item.text || this.getText()}
           </Text>
         </View>
       </View >
@@ -148,6 +169,7 @@ export default class WalkThrough extends React.Component {
   render() {
     return (
       <AppIntroSlider
+        ref={ref => this.listRef = ref}
         data={this.SLIDES}
         renderItem={this.renderItem}
         renderDoneButton={this.renderDoneButton}
@@ -158,9 +180,7 @@ export default class WalkThrough extends React.Component {
           AsyncStorage.setItem('isOpenedBefore', "true")
         }}
         onSkip={() => {
-          I18nManager.allowRTL(false)
-          goToAuth()
-          AsyncStorage.setItem('isOpenedBefore', "true")
+          this.listRef.goToSlide(4)
         }}
         showSkipButton
         renderSkipButton={this.renderSkipButton}
@@ -187,9 +207,14 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: 'SourceSansPro-Bold',
     fontSize: 32,
+    maxWidth: 200,
+    textAlign: 'center'
   },
   text: {
     fontFamily: 'SourceSansPro-SemiBold',
-    textAlign: 'center'
+    textAlign: 'center',
+    maxWidth: 400,
+    paddingTop: Dimensions.get('window').height / Dimensions.get('window').width > 1.6 ? 0 : 80,
+    fontSize: 20,
   }
 })

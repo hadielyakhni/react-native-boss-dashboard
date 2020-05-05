@@ -16,6 +16,14 @@
       "title": "Les Transactions",
       "text": "Atteindre rapidement et de gérer tous les gens que vous avez de l'argent avec eux et vice versa."
     },
+    "policies": {
+      "title": "Politiques et Conditions",
+      "text": "En poursuivant, vous acceptez",
+      "privacyPolicy": "politique de confidentialité",
+      "termsOfUse": "conditions d'utilisation",
+      "our": "notre",
+      "and": "et"
+    },
     "skip": "Sauter"
   },
   "auth": {

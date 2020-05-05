@@ -31,7 +31,9 @@ class AuthScreen extends Component {
   constructor(props) {
     super(props)
     if (!this.props.isFromWalkThroughScreen)
-      SplashScreen.hide()
+      setTimeout(() => {
+        SplashScreen.hide()
+      }, 100);
     this.keyboardDidShowListner = Keyboard.addListener('keyboardDidShow', this._keyboardDidShow)
     this.keyboardDidHideListner = Keyboard.addListener('keyboardDidHide', this._keyboardDidHide)
     this.state = {

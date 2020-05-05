@@ -16,7 +16,6 @@ let
 const DEFAULT_TASKS = [
   { task: 'Click me to view details', description: 'I am the description, feel free to edit me!', isDone: false, date: Date.now() },
   { task: 'Swipe left to delete', description: '', isDone: false, date: Date.now() + 10 },
-  { task: 'Swipe right to mark complete', description: '', isDone: false, date: Date.now() + 20 },
   { task: 'I am a completed task!', description: '', isDone: true, date: Date.now() + 30 }
 ]
 

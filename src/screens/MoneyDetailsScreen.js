@@ -43,7 +43,7 @@ class MoneyDetailsScreen extends Component {
           duration: 250,
           useNativeDriver: true
         }).start()
-      }, 0);
+      }, 10);
     })
     this.mainViewOpacity = new Animated.Value(0)
     const { name, phone, accountId } = this.props

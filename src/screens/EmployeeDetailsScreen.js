@@ -24,7 +24,7 @@ class EmployeeDetailsScreen extends Component {
           duration: 250,
           useNativeDriver: true
         }).start()
-      }, 0);
+      }, 10)
       this.mainViewOpacity = new Animated.Value(0)
       this.separator = () => <View style={{ marginVertical: 2 }}></View>
       this.uid = this.props.uid

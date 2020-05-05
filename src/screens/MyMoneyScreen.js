@@ -470,7 +470,14 @@ class MyMoneyScreen extends Component {
               }, 180);
               Navigation.push(this.props.componentId, {
                 component: {
-                  name: 'moneyAdd'
+                  name: 'moneyAdd',
+                  options: {
+                    animations: {
+                      push: {
+                        waitForRender: true
+                      }
+                    }
+                  }
                 }
               })
             }}

@@ -16,6 +16,14 @@
       "title": "Transactions",
       "text": "Quickly reach and manage all people you owe them money and vise versa."
     },
+    "policies": {
+      "title": "Privacy policy and Terms",
+      "text": "By proceeding, you are accepting",
+      "privacyPolicy": "privacy policy",
+      "termsOfUse": "terms of use",
+      "our": "our",
+      "and": "and"
+    },
     "skip": "Skip"
   },
   "auth": {

@@ -348,7 +348,11 @@ class EmployeesListScreen extends Component {
                 component: {
                   name: 'employeeAdd',
                   options: {
-                    topBar: { title: { text: 'Add Employee' } }
+                    animations: {
+                      push: {
+                        waitForRender: true
+                      }
+                    }
                   }
                 }
               })

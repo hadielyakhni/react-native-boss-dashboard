@@ -26,7 +26,9 @@ class ToDoListScreen extends Component {
   constructor(props) {
     super(props)
     if (!this.props.isFromAuth)
-      SplashScreen.hide()
+      setTimeout(() => {
+        SplashScreen.hide()
+      }, 100);
     this.state = {
       task: '',
       sortChoicesModalVisible: false,
@@ -527,9 +529,7 @@ class ToDoListScreen extends Component {
                   options: {
                     animations: {
                       push: {
-                        content: {
-                          waitForRender: true
-                        }
+                        waitForRender: true
                       }
                     }
                   }
