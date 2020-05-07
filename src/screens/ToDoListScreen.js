@@ -28,7 +28,7 @@ class ToDoListScreen extends Component {
     if (!this.props.isFromAuth)
       setTimeout(() => {
         SplashScreen.hide()
-      }, 100);
+      }, 30);
     this.state = {
       task: '',
       sortChoicesModalVisible: false,
@@ -69,10 +69,6 @@ class ToDoListScreen extends Component {
     this.hintOpacityValue = 0
     this.hintOpacity = new Animated.Value(0)
     this.hintOpacity.addListener(({ value }) => this.hintOpacityValue = value)
-    this.hintTranslateY = this.hintOpacity.interpolate({
-      inputRange: [0, 1],
-      outputRange: [90, 0]
-    })
     this.undoneOpacityValue = 0
     this.undoneOpacity = new Animated.Value(0)
     this.undoneOpacity.addListener(({ value }) => this.undoneOpacityValue = value)
@@ -101,69 +97,6 @@ class ToDoListScreen extends Component {
     })
   }
   componentDidMount() {
-    this.activeScreenTabIndex = 0
-    this.navigationListner1 = Navigation.events().registerComponentDidAppearListener(data => {
-      this.props.setActiveScreenName(data.componentName)
-      this.activeScreenName = data.componentName
-      this.activeScreenId = data.componentId
-    })
-    this.navigationListner2 = Navigation.events().registerBottomTabPressedListener(e => {
-      if (e.tabIndex !== this.activeScreenTabIndex)
-        Navigation.mergeOptions(this.props.componentId, { bottomTabs: { currentTabIndex: e.tabIndex } })
-      else if (
-        this.activeScreenName !== 'todo'
-        &&
-        this.activeScreenName !== 'employees'
-        &&
-        this.activeScreenName !== 'money'
-        &&
-        this.activeScreenName !== 'settings'
-      ) {
-        Navigation.popToRoot(this.activeScreenId)
-        const screenName = this.activeScreenTabIndex === 0 ?
-          'todo' : this.activeScreenTabIndex === 1 ?
-            'employees' : this.activeScreenTabIndex === 2 ?
-              'money' : 'settings'
-        this.props.setActiveScreenName(screenName)
-      }
-      this.activeScreenTabIndex = e.tabIndex
-    })
-    this.props.fetchTasks()
-    this.dataAppearsAtLeastOnce = false
-    this.sortChoices = [{ id: '1', prop: 'time' }, { id: "2", prop: 'title' }]
-    this.hintOpacityValue = 0
-    this.hintOpacity = new Animated.Value(0)
-    this.hintOpacity.addListener(({ value }) => this.hintOpacityValue = value)
-    this.hintTranslateY = this.hintOpacity.interpolate({
-      inputRange: [0, 1],
-      outputRange: [90, 0]
-    })
-    this.undoneOpacityValue = 0
-    this.undoneOpacity = new Animated.Value(0)
-    this.undoneOpacity.addListener(({ value }) => this.undoneOpacityValue = value)
-    this.doneOpacityValue = 0
-    this.doneOpacity = new Animated.Value(0)
-    this.doneOpacity.addListener(({ value }) => this.doneOpacityValue = value)
-    this.undoneListOpacityValue = 1
-    this.undoneListOpacity = new Animated.Value(1)
-    this.undoneListOpacity.addListener(({ value }) => this.undoneListOpacityValue = value)
-    this.lastUndoneListArrowDiewction = 'up'
-    this.undoneArrowRotationAngle = this.undoneListOpacity.interpolate({
-      inputRange: [0, 1],
-      outputRange: [0, 3.14]
-    })
-    this.doneListOpacityValue = this.props.unDoneTasks.length ? 0 : 1
-    this.doneListOpacity = new Animated.Value(this.props.unDoneTasks.length ? 0 : 1)
-    this.doneListOpacity.addListener(({ value }) => this.doneListOpacityValue = value)
-    this.lastDoneListArrowDirection = 'down'
-    this.doneArrowRotationAngle = this.doneListOpacity.interpolate({
-      inputRange: [0, 1],
-      outputRange: [0, 3.14]
-    })
-    this.sortOpacity = this.hintOpacity.interpolate({
-      inputRange: [0, 1],
-      outputRange: [1, 0]
-    })
     this.backButtonListner = BackHandler.addEventListener("hardwareBackPress", () => {
       const screen = this.activeScreenName
       if (screen === 'todo' || screen === 'employees' || screen === 'money' || screen === 'settings') {
@@ -348,14 +281,13 @@ class ToDoListScreen extends Component {
         if (this.hintOpacityValue !== 1)
           Animated.timing(this.hintOpacity, {
             toValue: 1,
-            duration: 375,
+            duration: 250,
             useNativeDriver: true
           }).start()
         return (
           <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }} >
             <Animated.View style={{
               opacity: this.hintOpacity, alignItems: 'center',
-              transform: [{ translateY: this.hintTranslateY }],
               marginBottom: 140
             }}>
               <Text style={{ color: this.useTheme('#303030', '#fbfbfb'), fontFamily: 'SourceSansPro-SemiBold', fontSize: 17, marginBottom: 5 }}>
@@ -597,7 +529,9 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 17,
     fontFamily: 'SourceSansPro-Regular',
-    alignItems: 'center'
+    alignItems: 'center',
+    paddingTop: 0,
+    paddingBottom: 0
   },
   addIcon: {
     fontSize: 30

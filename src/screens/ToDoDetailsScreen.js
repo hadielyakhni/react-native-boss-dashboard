@@ -100,7 +100,8 @@ class ToDoDetailsScreen extends Component {
               value={this.state.description}
               style={[styles.input, {
                 color: this.useTheme('#303030', '#fbfbfb'),
-                textAlignVertical: "top", flex: 1
+                textAlignVertical: "top", flex: 1,
+                paddingTop: 10
               }]}
               selectionColor='#008ee0'
               placeholder={translate('main.todoDetails.placeholder2')}
@@ -199,7 +200,10 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     paddingRight: 10,
     fontSize: 17.8,
-    fontFamily: 'SourceSansPro-Regular'
+    fontFamily: 'SourceSansPro-Regular',
+    paddingTop: 0,
+    paddingBottom: 0,
+    height: 45
   }
 })
 

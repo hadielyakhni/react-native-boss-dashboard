@@ -84,8 +84,9 @@ class FirstScreen extends Component {
   }
   tryAutomaticSignIn = async () => {
     const isOpenedBefore = await AsyncStorage.getItem('isOpenedBefore')
-    if (!isOpenedBefore)
+    if (!isOpenedBefore) {
       goToWalkThrough(Appearance.getColorScheme())
+    }
     else {
       const uid = await AsyncStorage.getItem('uid')
       if (uid) {
@@ -94,25 +95,14 @@ class FirstScreen extends Component {
         this.props.getAccountsSortData(uid)
         goToMain()
       }
-      else
+      else {
         goToAuth()
+      }
     }
   }
   render() {
     return (
       <View style={styles.container}>
-        {/* <TouchableOpacity onPress={() => {
-          database().ref('users').push({ test: 'test' })
-        }} style={{
-          backgroundColor: 'white',
-          height: 100,
-          width: 100,
-          borderRadius: 50,
-          alignItems: 'center',
-          justifyContent: 'center'
-        }}>
-          <Text style={{ fontSize: 14, fontFamily: 'SourceSansPro-SemiBold' }}>Add Record</Text>
-        </TouchableOpacity> */}
       </View>
     )
   }

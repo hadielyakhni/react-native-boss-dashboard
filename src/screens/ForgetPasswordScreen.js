@@ -100,7 +100,9 @@ class ForgetPasswordScreen extends Component {
                 color: this.useTheme('#303030', '#fbfbfb'),
                 fontSize: 18,
                 paddingLeft: 12,
-                fontFamily: 'SourceSansPro-Regular'
+                fontFamily: 'SourceSansPro-Regular',
+                paddingTop: 0,
+                paddingBottom: 0
               }}
             />
           </View>
@@ -146,7 +148,7 @@ class ForgetPasswordScreen extends Component {
             }
           </TouchableOpacity>
         </View>
-        {
+        {/* {
           !this.props.email ?
             <View style={{
               padding: 15,
@@ -169,7 +171,7 @@ class ForgetPasswordScreen extends Component {
             </View>
             :
             null
-        }
+        } */}
         <Modal
           onRequestClose={this.props.dsimissAuthError}
           animationType="fade"

@@ -250,7 +250,7 @@ const styles = StyleSheet.create({
     marginLeft: 0,
     marginBottom: 0,
     marginTop: 0,
-    padding: 8,
+    padding: 6,
     paddingLeft: 0
   },
   addButtonView: {

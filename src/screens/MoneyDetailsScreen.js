@@ -43,7 +43,7 @@ class MoneyDetailsScreen extends Component {
           duration: 250,
           useNativeDriver: true
         }).start()
-      }, 10);
+      }, 75)
     })
     this.mainViewOpacity = new Animated.Value(0)
     const { name, phone, accountId } = this.props
@@ -143,6 +143,13 @@ class MoneyDetailsScreen extends Component {
                     accountId: this.props.accountId,
                     name: this.props.name,
                     phone: this.props.phone
+                  },
+                  options: {
+                    animations: {
+                      push: {
+                        waitForRender: true
+                      }
+                    }
                   }
                 }
               })
@@ -588,7 +595,7 @@ const styles = StyleSheet.create({
     flex: 1
   },
   innerTransConfirmationModal: {
-    maxHeight: 300,
+    minHeight: 225,
     height: height / 4,
     marginHorizontal: width > 800 ? 72
       :

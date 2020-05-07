@@ -24,9 +24,9 @@ class EmployeeDetailsScreen extends Component {
           duration: 250,
           useNativeDriver: true
         }).start()
-      }, 10)
+      }, 75)
       this.mainViewOpacity = new Animated.Value(0)
-      this.separator = () => <View style={{ marginVertical: 2 }}></View>
+      this.separator = () => <View style={{ marginVertical: 0 }}></View>
       this.uid = this.props.uid
       const { data: { name, role, salary, phone, email, joinDate } } = this.props
       this.setState({ name, role, salary, phone, email, joinDate, showDatePicker: false })

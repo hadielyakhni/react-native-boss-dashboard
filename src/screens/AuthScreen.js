@@ -129,9 +129,7 @@ class AuthScreen extends Component {
         >
           {
             this.state.isKeyboardOpened ?
-              <Text style={{ fontSize: 26, color: this.useTheme('#303030', '#fbfbfb'), fontFamily: 'SourceSansPro-SemiBold', marginVertical: 12, alignSelf: 'center' }}>
-                B.D
-              </Text>
+              null
               :
               <Text numberOfLines={1} style={{ ...styles.title, color: this.useTheme('#303030', '#fbfbfb') }}>
                 Boss Dashboard
@@ -255,7 +253,7 @@ class AuthScreen extends Component {
               >
                 {this.renderGoogleBtnContent()}
               </MyButton>
-              <MyButton
+              {/* <MyButton
                 disabledColor='#355973'
                 disabled={this.props.facebookButtonDisabled || this.props.googleButtonDisabled || this.props.loading}
                 onPress={() => {
@@ -265,7 +263,7 @@ class AuthScreen extends Component {
                 color='#008ee0'
               >
                 {this.renderFacebookBtnContent()}
-              </MyButton>
+              </MyButton> */}
             </View>
           </View>
           <View style={[styles.switchMethodeOption, {
@@ -435,9 +433,12 @@ const styles = StyleSheet.create({
   InputStyle: {
     flex: 1,
     height: 45,
+    textAlignVertical: 'center',
     borderRadius: 5,
     fontSize: 16.5,
-    fontFamily: 'SourceSansPro-Regular'
+    fontFamily: 'SourceSansPro-Regular',
+    paddingTop: 0,
+    paddingBottom: 0
   },
   rightIconContainer: {
     height: 45,

@@ -124,9 +124,9 @@
       "shouldPayToHim": "I  S H O U L D  P A Y  F O R",
       "totalTransactions": "T O T A L  T R A N S A C T I O N S",
       "transactions": "T R A N S A C T I O N S",
-      "send": "Send",
+      "send": "Give",
       "receive": "Receive",
-      "sendingTo": "Sending to",
+      "sendingTo": "Give to",
       "receivingFrom": "Receiving from",
       "placeholder": "Specify the amount",
       "cancel": "Cancel"

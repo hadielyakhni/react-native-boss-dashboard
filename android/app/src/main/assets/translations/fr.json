@@ -124,9 +124,9 @@
       "shouldPayToHim": "J E  D E V R A I S  P A Y E R  P O U R",
       "totalTransactions": "T O T A L  D E S  T R A N S A C T I O N S",
       "transactions": "T R A N S A C T I O N S",
-      "send": "Envoyer",
+      "send": "Donner",
       "receive": "Recevoir",
-      "sendingTo": "Envoi à",
+      "sendingTo": "Donner à",
       "receivingFrom": "Recevoir de",
       "placeholder": "Préciser le montant",
       "cancel": "Annuler"

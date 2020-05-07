@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, Text, View, Modal, TouchableOpacity, FlatList } from 'react-native'
+import { StyleSheet, Text, View, Modal, TouchableOpacity, FlatList, Dimensions } from 'react-native'
 import Choice from './Choice'
 import { translate } from '../utils/i18n'
 
@@ -26,7 +26,7 @@ const ChoicesModal = ({ visible, label, choices, selectedChoice, onSelect, onCan
           justifyContent: 'center'
         }}>
         <View style={{
-          width: 365,
+          width: Dimensions.get('window').width - 50,
           backgroundColor: theme === 'light' ? '#f5f5f5' : '#303030',
           borderRadius: 8,
           padding: 24

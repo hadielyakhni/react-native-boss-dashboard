@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react'
-import { TextInput, View, Text, StyleSheet, TouchableOpacity } from 'react-native'
+import { TextInput, View, Text, StyleSheet, TouchableOpacity, Dimensions } from 'react-native'
 import { Icon } from 'native-base'
 import { isRTL } from '../utils/i18n'
 
@@ -61,7 +61,6 @@ export default class MyInput extends PureComponent {
 const styles = StyleSheet.create({
   inputContainer: {
     borderRadius: 5,
-    marginVertical: 10,
     flexDirection: 'row',
     alignItems: 'center'
   },
@@ -71,7 +70,9 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     fontSize: 16.5,
     paddingRight: 10,
-    fontFamily: 'SourceSansPro-Regular'
+    fontFamily: 'SourceSansPro-Regular',
+    paddingTop: 0,
+    paddingBottom: 0
   },
   iconLeft: {
     paddingHorizontal: 14,

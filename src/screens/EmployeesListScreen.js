@@ -444,7 +444,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     fontSize: 17,
     fontFamily: 'SourceSansPro-Regular',
-    marginLeft: 8
+    marginLeft: 8,
+    paddingTop: 0,
+    paddingBottom: 0
   }
 })
 

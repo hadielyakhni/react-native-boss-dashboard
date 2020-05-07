@@ -97,7 +97,8 @@ class ToDoAddScreen extends Component {
                 color: this.useTheme('#303030', '#fbfbfb'),
                 textAlignVertical: "top",
                 flex: 1,
-                textAlign: isRTL() ? 'right' : 'left'
+                textAlign: isRTL() ? 'right' : 'left',
+                paddingTop: 10
               }]}
               selectionColor='#008ee0'
               placeholder={translate('main.todoAdd.placeholder2')}
@@ -195,7 +196,10 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     paddingRight: 10,
     fontSize: 17.8,
-    fontFamily: 'SourceSansPro-Regular'
+    fontFamily: 'SourceSansPro-Regular',
+    paddingTop: 0,
+    paddingBottom: 0,
+    height: 45
   },
   addButtonView: {
     height: 125,

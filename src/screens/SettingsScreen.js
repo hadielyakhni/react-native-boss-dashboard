@@ -185,8 +185,8 @@ class SettingsScreen extends Component {
   onPress5 = () => this.setState({ languageChoicesModalVisible: true })
   onPress6 = () => this.setState({ themeChoicesModalVisible: true })
   onPress7 = () => Linking.openURL(`mailto:boss.dashboard@gmail.com`)
-  onPress8 = () => Linking.openURL('https://boss-dashboard.netlify.app/privacypolicy.html')
-  onPress9 = () => Linking.openURL('https://boss-dashboard.netlify.app/termsofuse.html')
+  onPress8 = () => Linking.openURL('https://boss-dashboard.netlify.app/privacypolicy')
+  onPress9 = () => Linking.openURL('https://boss-dashboard.netlify.app/termsofuse')
   onPress10 = () => this.setState({ modalVisible: true })
   render() {
     return (
@@ -341,7 +341,7 @@ class SettingsScreen extends Component {
                   numberOfLines={1}
                   ellipsizeMode="middle"
                   style={{
-                    width: Dimensions.get('window').width - 125,
+                    width: Dimensions.get('window').width - 100,
                     textAlign: 'left',
                     color: this.useTheme('#303030', '#fbfbfb'),
                     fontSize: 19,
