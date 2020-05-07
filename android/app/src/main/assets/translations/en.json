@@ -204,8 +204,8 @@
           "joinDateNewestToOldest": "Join Date - Newest to Oldest",
           "amountLowToHigh": "Amount - Low to High",
           "amountHighToLow": "Amount - High to Low",
-          "lastTransactionOldestToNewest": "Last Transaction - Oldest to Newest",
-          "lastTransactionNewestToOldest": "Last Transaction - Newest to Oldest"
+          "lastTransactionOldestToNewest": "Oldest Transaction",
+          "lastTransactionNewestToOldest": "Last Transaction"
         }
       },
       "themesModal": {

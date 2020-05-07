@@ -204,8 +204,8 @@
           "joinDateNewestToOldest": "تاريخ الانضمام - الأحدث إلى الأقدم",
           "amountLowToHigh": "الكمية - الأدنى إلى الأعلى",
           "amountHighToLow": "الكمية - الأعلى إلى الأدنى",
-          "lastTransactionOldestToNewest": "الصفقة الأخيرة - الأقدم إلى الأحدث ، ",
-          "lastTransactionNewestToOldest": "آخر الصفقة - الأحدث إلى الأقدم"
+          "lastTransactionOldestToNewest": "أقدم تحويلة",
+          "lastTransactionNewestToOldest": "أحدث تحويلة"
         }
       },
       "themesModal": {

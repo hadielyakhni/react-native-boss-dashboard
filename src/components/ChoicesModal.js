@@ -27,6 +27,7 @@ const ChoicesModal = ({ visible, label, choices, selectedChoice, onSelect, onCan
         }}>
         <View style={{
           width: Dimensions.get('window').width - 50,
+          maxWidth: 400,
           backgroundColor: theme === 'light' ? '#f5f5f5' : '#303030',
           borderRadius: 8,
           padding: 24
