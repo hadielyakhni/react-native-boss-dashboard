@@ -1,9 +1,10 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Text, TouchableOpacity } from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { translate } from '../utils/i18n'
 
 const Choice = ({ isSelected, text, onSelect, theme }) => {
+  const [linesLenght, setLinesLength] = useState(1)
   const choice = text.charAt(0).toUpperCase() + text.substring(1)
   const getChoice = () => {
     switch (choice) {
@@ -47,6 +48,7 @@ const Choice = ({ isSelected, text, onSelect, theme }) => {
         return translate('components.choicesModal.themesModal.options.dark')
     }
   }
+  const onTextLayout = e => setLinesLength(e.nativeEvent.lines.length)
   onPress = () => onSelect(text)
   return (
     <TouchableOpacity
@@ -56,7 +58,8 @@ const Choice = ({ isSelected, text, onSelect, theme }) => {
         height: 44,
         backgroundColor: theme === 'light' ? '#f5f5f5' : '#303030',
         flexDirection: 'row',
-        alignItems: 'center'
+        alignItems: 'center',
+        marginVertical: linesLenght > 1 ? 10 : 0
       }}
     >
       <Ionicons
@@ -65,10 +68,11 @@ const Choice = ({ isSelected, text, onSelect, theme }) => {
         color={isSelected ? "#008ee0" : theme === 'light' ? '#5a5a5a' : '#ccc'}
         size={26}
       />
-      <Text style={{
+      <Text onTextLayout={onTextLayout} style={{
         fontSize: 18,
         fontFamily: 'SourceSansPro-Regular',
-        color: theme === 'light' ? '#303030' : '#fbfbfb'
+        color: theme === 'light' ? '#303030' : '#fbfbfb',
+        maxWidth: 275
       }}>
         {getChoice()}
       </Text>
