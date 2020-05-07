@@ -9,6 +9,7 @@ import { Appearance } from 'react-native-appearance'
 import { Navigation } from 'react-native-navigation'
 import Keys from '../keys/google'
 import { setI18nConfig } from '../utils/i18n'
+import Splash from 'react-native-splash-screen'
 
 GoogleSignin.configure({
   webClientId: Keys.webClientId
@@ -16,6 +17,7 @@ GoogleSignin.configure({
 
 class FirstScreen extends Component {
   async componentDidMount() {
+    Splash.hide()
     Navigation.mergeOptions(this.props.componentId, {
       statusBar: {
         backgroundColor: '#008ee0',

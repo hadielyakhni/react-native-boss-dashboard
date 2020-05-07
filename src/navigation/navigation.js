@@ -17,6 +17,9 @@ export const goToWalkThrough = systemTheme => Navigation.setRoot({
         }
       ],
       options: {
+        layout: {
+          orientation: ["portrait"]
+        },
         topBar: {
           visible: false
         }
@@ -51,6 +54,9 @@ export const goToAuth = () => Navigation.setRoot({
         },
         topBar: {
           visible: false
+        },
+        layout: {
+          orientation: ["portrait"]
         }
       }
     }
@@ -72,7 +78,12 @@ export const goToMain = () => {
               children: [
                 {
                   component: {
-                    name: 'todo'
+                    name: 'todo',
+                    options: {
+                      layout: {
+                        orientation: ['portrait']
+                      }
+                    }
                   }
                 }
               ],
@@ -93,11 +104,19 @@ export const goToMain = () => {
               children: [
                 {
                   component: {
-                    name: 'employees'
+                    name: 'employees',
+                    options: {
+                      layout: {
+                        orientation: ['portrait']
+                      }
+                    }
                   }
                 }
               ],
               options: {
+                layout: {
+                  orientation: ['portrait']
+                },
                 bottomTab: {
                   icon: workIcon,
                   text: 'Employees',
@@ -114,11 +133,19 @@ export const goToMain = () => {
               children: [
                 {
                   component: {
-                    name: 'money'
+                    name: 'money',
+                    options: {
+                      layout: {
+                        orientation: ['portrait']
+                      }
+                    }
                   }
                 }
               ],
               options: {
+                layout: {
+                  orientation: ['portrait']
+                },
                 bottomTab: {
                   icon: moneyIcon,
                   text: 'Wallet',
@@ -135,11 +162,19 @@ export const goToMain = () => {
               children: [
                 {
                   component: {
-                    name: 'settings'
+                    name: 'settings',
+                    options: {
+                      layout: {
+                        orientation: ['portrait']
+                      }
+                    }
                   }
                 }
               ],
               options: {
+                layout: {
+                  orientation: ['portrait']
+                },
                 bottomTab: {
                   icon: personIcon,
                   text: 'Settings',
@@ -153,7 +188,8 @@ export const goToMain = () => {
         ],
         options: {
           layout: {
-            direction: isRTL() ? 'rtl' : 'ltr'
+            direction: isRTL() ? 'rtl' : 'ltr',
+            orientation: ["portrait"]
           },
           animations: {
             setRoot: {

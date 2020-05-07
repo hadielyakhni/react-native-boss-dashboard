@@ -2,6 +2,8 @@ package com.hadistop;
 
 import com.reactnativenavigation.NavigationActivity;
 import org.devio.rn.splashscreen.SplashScreen;
+
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 
 public class MainActivity extends NavigationActivity {
@@ -10,8 +12,8 @@ public class MainActivity extends NavigationActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        SplashScreen.show(this, R.style.SplashScreenTheme);
         super.onCreate(savedInstanceState);
+        SplashScreen.show(this, R.style.SplashScreenTheme);
         instance = this;
     }
 
