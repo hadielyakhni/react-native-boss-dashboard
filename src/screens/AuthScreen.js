@@ -131,9 +131,14 @@ class AuthScreen extends Component {
             this.state.isKeyboardOpened ?
               null
               :
-              <Text numberOfLines={1} style={{ ...styles.title, color: this.useTheme('#303030', '#fbfbfb') }}>
-                Boss Dashboard
-              </Text>
+              <>
+                <Text style={{ ...styles.title, color: this.useTheme('#303030', '#fbfbfb') }}>
+                  Boss
+                </Text>
+                <Text style={{ ...styles.title, color: this.useTheme('#303030', '#fbfbfb'), marginBottom: 25 }}>
+                  Dashboard
+                </Text>
+              </>
           }
           <View style={{ paddingHorizontal: 33 }}>
             <View style={[styles.inputContainer, {
@@ -362,12 +367,10 @@ class AuthScreen extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    // paddingTop: 66
+    justifyContent: 'center'
   },
   title: {
     textAlign: 'center',
-    marginBottom: 25,
     fontSize: 44,
     alignSelf: 'center',
     fontFamily: 'SourceSansPro-SemiBold'

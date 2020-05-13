@@ -4,7 +4,7 @@ import {
   StyleSheet,
   View,
   InteractionManager,
-  ActivityIndicator,
+  Animated,
   TouchableOpacity,
   Dimensions,
   KeyboardAvoidingView,
@@ -18,14 +18,23 @@ import { Navigation } from 'react-native-navigation'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import { translate, isRTL } from '../utils/i18n'
+import Shimmer from 'react-native-shimmer'
 
 class MoneyAddScreen extends Component {
   constructor(props) {
     super(props)
     this.state = { canRender: false }
     InteractionManager.runAfterInteractions(() => {
+      setTimeout(() => {
+        this.setState({ canRender: true })
+        Animated.timing(this.mainViewOpacity, {
+          toValue: 1,
+          duration: 250,
+          useNativeDriver: true
+        }).start()
+      }, 75)
+      this.mainViewOpacity = new Animated.Value(0)
       this.setState({
-        canRender: true,
         name: '',
         phone: '',
         amount: '',
@@ -63,141 +72,170 @@ class MoneyAddScreen extends Component {
   render() {
     const { name, phone, amount, status } = this.state
     return (
-      this.state.canRender ?
-        <KeyboardAvoidingView behavior="padding" style={{
-          ...styles.container,
+      <KeyboardAvoidingView behavior="padding" style={{
+        ...styles.container,
+        backgroundColor: this.useTheme('#f5f5f5', '#161616')
+      }}>
+        <View style={{
+          ...styles.header,
           backgroundColor: this.useTheme('#f5f5f5', '#161616')
         }}>
+          <TouchableOpacity
+            activeOpacity={0.8}
+            hitSlop={{ bottom: 10, top: 10, left: 10, right: 10 }}
+            style={{
+              ...styles.backIconContainer,
+              backgroundColor: this.useTheme('#f5f5f5', '#161616')
+            }}
+            onPress={() => Navigation.pop(this.props.componentId)}
+          >
+            <Ionicons name={isRTL() ? "md-arrow-forward" : "md-arrow-back"} size={26} color={this.useTheme('#303030', '#fbfbfb')} />
+          </TouchableOpacity>
           <View style={{
-            ...styles.header,
+            ...styles.titleContainer,
             backgroundColor: this.useTheme('#f5f5f5', '#161616')
           }}>
-            <TouchableOpacity
-              activeOpacity={0.8}
-              hitSlop={{ bottom: 10, top: 10, left: 10, right: 10 }}
-              style={{
-                ...styles.backIconContainer,
-                backgroundColor: this.useTheme('#f5f5f5', '#161616')
-              }}
-              onPress={() => Navigation.pop(this.props.componentId)}
-            >
-              <Ionicons name={isRTL() ? "md-arrow-forward" : "md-arrow-back"} size={26} color={this.useTheme('#303030', '#fbfbfb')} />
-            </TouchableOpacity>
-            <View style={{
-              ...styles.titleContainer,
-              backgroundColor: this.useTheme('#f5f5f5', '#161616')
-            }}>
-              <Text numberOfLines={1} style={{ color: this.useTheme('#303030', '#fbfbfb'), fontSize: 25, fontFamily: 'SourceSansPro-SemiBold' }}>
-                {translate('main.moneyAdd.title')}
-              </Text>
-            </View>
+            <Text numberOfLines={1} style={{ color: this.useTheme('#303030', '#fbfbfb'), fontSize: 25, fontFamily: 'SourceSansPro-SemiBold' }}>
+              {translate('main.moneyAdd.title')}
+            </Text>
           </View>
-          <View style={{ flex: 1, paddingHorizontal: 12 }}>
-            <View style={styles.formContainer}>
-              <MyInput
-                theme={this.props.theme}
-                placeHolder={translate('main.moneyAdd.field1')}
-                leftIcon='ios-person'
-                style={{ fontSize: 17, paddingRight: 15 }}
-                inputContainerStyle={{ marginTop: 15 }}
-                value={name}
-                autoCapitalize="words"
-                onChangeText={name => this.setState({ name })}
-              />
-              <MyInput
-                theme={this.props.theme}
-                placeHolder={translate('main.moneyAdd.field2')}
-                leftIcon='ios-cash'
-                inputContainerStyle={{ marginTop: 10 }}
-                style={{ fontSize: 17, paddingRight: 15 }}
-                value={amount}
-                keyboardType="decimal-pad"
-                onChangeText={amount => this.setState({ amount })}
-              />
-              <MyInput
-                theme={this.props.theme}
-                keyboardType="number-pad"
-                placeHolder={translate('main.moneyAdd.field3')}
-                inputContainerStyle={{ marginTop: 10 }}
-                leftIcon='ios-call'
-                style={{ fontSize: 17, paddingRight: 15 }}
-                value={phone}
-                onChangeText={phone => this.setState({ phone })}
-              />
-              <TouchableOpacity
-                activeOpacity={1}
-                onPress={() => this.setState({ status: 'ME' })}
-                style={{ flexDirection: 'row', alignItems: 'center', marginTop: 15, alignSelf: 'flex-start' }}>
-                <CheckBox
-                  containerStyle={styles.checkBoxContainer}
-                  uncheckedColor={this.useTheme('#999', '#ccc')}
-                  checkedColor="#008ee0"
-                  checked={status === 'ME'}
-                  onPress={() => { this.setState({ status: 'ME' }) }}
-                />
-                <Text style={{ fontSize: 17, fontFamily: 'SourceSansPro-Bold', color: this.useTheme('#303030', '#f9f9f9') }}>
-                  {translate('main.moneyAdd.forMe')}
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                activeOpacity={1}
-                onPress={() => this.setState({ status: 'HIM' })}
-                style={{ flexDirection: 'row', alignItems: 'center', alignSelf: 'flex-start' }}
-              >
-                <CheckBox
-                  containerStyle={styles.checkBoxContainer}
-                  uncheckedColor={this.useTheme('#999', '#ccc')}
-                  checkedColor='#de3b5b'
-                  checked={status === 'HIM'}
-                  onPress={() => { this.setState({ status: 'HIM' }) }}
-                />
-                <Text style={{ fontSize: 17, fontFamily: 'SourceSansPro-Bold', color: this.useTheme('#303030', '#fbfbfb') }}>
-                  {translate('main.moneyAdd.forHim')}
-                </Text>
-              </TouchableOpacity>
-            </View>
-            <TouchableOpacity
-              activeOpacity={0.92}
-              disabled={this.isAddDisabled()}
-              style={{
-                elevation: this.isAddDisabled() ? 2 : 4,
-                backgroundColor: this.useTheme('#f5f5f5', '#222'),
-                height: 52,
-                marginBottom: this.state.isKeyboardOpened ? 44 : 24,
-                alignSelf: 'flex-end',
-                borderRadius: 26,
-                alignItems: 'center',
-                marginRight: 4,
-                justifyContent: 'center'
-              }}
-              onPress={() => {
-                this.setState({ isAddButtonDisabled: true })
-                setTimeout(() => {
-                  this.setState({ isAddButtonDisabled: false })
-                }, 300);
-                return this.props.addMoneyAccount(this.props.componentId, { name, phone, status, amount: amount || 0 })
-              }}
-            >
-              {
-                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around', paddingHorizontal: 16 }}>
-                  <MaterialIcons name="done" color={this.isAddDisabled() ? this.useTheme('#afb8cb', '#777') : '#008ee0'} size={25} />
-                  <Text style={{
-                    marginLeft: 5,
-                    fontFamily: 'SourceSansPro-SemiBold',
-                    color: this.isAddDisabled() ? this.useTheme('#afb8cb', '#777') : '#008ee0',
-                    fontSize: 16.5
-                  }}>
-                    {translate('main.moneyAdd.add')}
-                  </Text>
-                </View>
-              }
-            </TouchableOpacity>
-          </View>
-        </KeyboardAvoidingView>
-        :
-        <View style={{ flex: 1, backgroundColor: this.useTheme('#f5f5f5', '#161616'), alignItems: 'center', justifyContent: 'center' }}>
-          <ActivityIndicator color="#008ee0" size={38} />
         </View>
+        {
+          this.state.canRender ?
+            <Animated.View style={{ flex: 1, paddingHorizontal: 12, opacity: this.mainViewOpacity }}>
+              <View style={styles.formContainer}>
+                <MyInput
+                  theme={this.props.theme}
+                  placeHolder={translate('main.moneyAdd.field1')}
+                  leftIcon='ios-person'
+                  style={{ fontSize: 17, paddingRight: 15 }}
+                  inputContainerStyle={{ marginTop: 15 }}
+                  value={name}
+                  autoCapitalize="words"
+                  onChangeText={name => this.setState({ name })}
+                />
+                <MyInput
+                  theme={this.props.theme}
+                  placeHolder={translate('main.moneyAdd.field2')}
+                  leftIcon='ios-cash'
+                  inputContainerStyle={{ marginTop: 15 }}
+                  style={{ fontSize: 17, paddingRight: 15 }}
+                  value={amount}
+                  keyboardType="decimal-pad"
+                  onChangeText={amount => this.setState({ amount })}
+                />
+                <MyInput
+                  theme={this.props.theme}
+                  keyboardType="number-pad"
+                  placeHolder={translate('main.moneyAdd.field3')}
+                  inputContainerStyle={{ marginTop: 15 }}
+                  leftIcon='ios-call'
+                  style={{ fontSize: 17, paddingRight: 15 }}
+                  value={phone}
+                  onChangeText={phone => this.setState({ phone })}
+                />
+                <TouchableOpacity
+                  activeOpacity={1}
+                  onPress={() => this.setState({ status: 'ME' })}
+                  style={{ flexDirection: 'row', alignItems: 'center', marginTop: 15, alignSelf: 'flex-start' }}>
+                  <CheckBox
+                    containerStyle={styles.checkBoxContainer}
+                    uncheckedColor={this.useTheme('#999', '#ccc')}
+                    checkedColor="#008ee0"
+                    checked={status === 'ME'}
+                    onPress={() => { this.setState({ status: 'ME' }) }}
+                  />
+                  <Text style={{ fontSize: 17, fontFamily: 'SourceSansPro-Bold', color: this.useTheme('#303030', '#f9f9f9') }}>
+                    {translate('main.moneyAdd.forMe')}
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  activeOpacity={1}
+                  onPress={() => this.setState({ status: 'HIM' })}
+                  style={{ flexDirection: 'row', alignItems: 'center', alignSelf: 'flex-start' }}
+                >
+                  <CheckBox
+                    containerStyle={styles.checkBoxContainer}
+                    uncheckedColor={this.useTheme('#999', '#ccc')}
+                    checkedColor='#de3b5b'
+                    checked={status === 'HIM'}
+                    onPress={() => { this.setState({ status: 'HIM' }) }}
+                  />
+                  <Text style={{ fontSize: 17, fontFamily: 'SourceSansPro-Bold', color: this.useTheme('#303030', '#fbfbfb') }}>
+                    {translate('main.moneyAdd.forHim')}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+              <TouchableOpacity
+                activeOpacity={0.92}
+                disabled={this.isAddDisabled()}
+                style={{
+                  elevation: this.isAddDisabled() ? 2 : 4,
+                  backgroundColor: this.useTheme('#f5f5f5', '#222'),
+                  height: 52,
+                  marginBottom: this.state.isKeyboardOpened ? 44 : 24,
+                  alignSelf: 'flex-end',
+                  borderRadius: 26,
+                  alignItems: 'center',
+                  marginRight: 4,
+                  justifyContent: 'center'
+                }}
+                onPress={() => {
+                  this.setState({ isAddButtonDisabled: true })
+                  setTimeout(() => {
+                    this.setState({ isAddButtonDisabled: false })
+                  }, 300);
+                  return this.props.addMoneyAccount(this.props.componentId, { name, phone, status, amount: amount || 0 })
+                }}
+              >
+                {
+                  <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around', paddingHorizontal: 16 }}>
+                    <MaterialIcons name="done" color={this.isAddDisabled() ? this.useTheme('#afb8cb', '#777') : '#008ee0'} size={25} />
+                    <Text style={{
+                      marginLeft: 5,
+                      fontFamily: 'SourceSansPro-SemiBold',
+                      color: this.isAddDisabled() ? this.useTheme('#afb8cb', '#777') : '#008ee0',
+                      fontSize: 16.5
+                    }}>
+                      {translate('main.moneyAdd.add')}
+                    </Text>
+                  </View>
+                }
+              </TouchableOpacity>
+            </Animated.View>
+            :
+            <View style={{ paddingHorizontal: 16, paddingTop: 25, flex: 1, backgroundColor: this.useTheme('#f5f5f5', '#161616'), }}>
+              <Shimmer direction={!isRTL() ? 'right' : 'left'} animationOpacity={0.85} style={{ marginVertical: 5, width: '50%' }}>
+                <Text numberOfLines={1} style={{
+                  ...styles.item,
+                  backgroundColor: this.props.theme === 'light' ? '#e6e6e6' : '#222'
+                }}>
+                </Text>
+              </Shimmer>
+              <Shimmer direction={!isRTL() ? 'right' : 'left'} animationOpacity={0.85} style={{ marginTop: 16 }}>
+                <Text numberOfLines={1} style={{
+                  ...styles.item,
+                  backgroundColor: this.props.theme === 'light' ? '#e6e6e6' : '#222'
+                }}>
+                </Text>
+              </Shimmer>
+              <Shimmer direction={!isRTL() ? 'right' : 'left'} animationOpacity={0.85} style={{ marginTop: 14 }}>
+                <Text numberOfLines={1} style={{
+                  ...styles.item,
+                  backgroundColor: this.props.theme === 'light' ? '#e6e6e6' : '#222'
+                }}>
+                </Text>
+              </Shimmer>
+              <Shimmer direction={!isRTL() ? 'right' : 'left'} animationOpacity={0.85} style={{ marginTop: 14 }}>
+                <Text numberOfLines={1} style={{
+                  ...styles.item,
+                  backgroundColor: this.props.theme === 'light' ? '#e6e6e6' : '#222'
+                }}>
+                </Text>
+              </Shimmer>
+            </View>
+        }
+      </KeyboardAvoidingView>
     )
   }
 }

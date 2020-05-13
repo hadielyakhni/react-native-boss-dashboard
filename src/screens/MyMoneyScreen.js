@@ -46,10 +46,6 @@ class MyMoneyScreen extends Component {
     this.hintOpacityValue = 0
     this.hintOpacity = new Animated.Value(0)
     this.hintOpacity.addListener(({ value }) => this.hintOpacityValue = value)
-    this.hintTranslateY = this.hintOpacity.interpolate({
-      inputRange: [0, 1],
-      outputRange: [90, 0]
-    })
     this.pAccountsOpacityValue = 0
     this.pAccountsOpacity = new Animated.Value(0)
     this.pAccountsOpacity.addListener(({ value }) => this.pAccountsOpacityValue = value)
@@ -98,7 +94,6 @@ class MyMoneyScreen extends Component {
           <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
             <Animated.View style={{
               alignItems: 'center',
-              transform: [{ translateY: this.hintTranslateY }],
               opacity: this.hintOpacity,
               marginBottom: 140
             }}>
@@ -473,9 +468,9 @@ class MyMoneyScreen extends Component {
                   name: 'moneyAdd',
                   options: {
                     animations: {
-                      push: {
-                        waitForRender: true
-                      }
+                      // push: {
+                      //   waitForRender: true
+                      // }
                     }
                   }
                 }

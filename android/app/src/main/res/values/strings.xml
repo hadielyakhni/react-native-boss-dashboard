@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">HadisTop</string>
+    <string name="app_name">Boss Dashboard</string>
     <string name="facebook_app_id">1073093563022643</string>
     <string name="fb_login_protocol_scheme">fb1073093563022643</string>
 </resources>

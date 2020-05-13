@@ -44,10 +44,6 @@ class EmployeesListScreen extends Component {
     this.hintOpacityValue = 0
     this.hintOpacity = new Animated.Value(0)
     this.hintOpacity.addListener(({ value }) => this.hintOpacityValue = value)
-    this.hintTranslateY = this.hintOpacity.interpolate({
-      inputRange: [0, 1],
-      outputRange: [90, 0]
-    })
     this.listOpacityValue = 0
     this.listOpacity = new Animated.Value(0)
     this.listOpacity.addListener(({ value }) => this.listOpacityValue = value)
@@ -90,7 +86,6 @@ class EmployeesListScreen extends Component {
           <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
             <Animated.View style={{
               alignItems: 'center',
-              transform: [{ translateY: this.hintTranslateY }],
               opacity: this.hintOpacity,
               marginBottom: 140
             }}>
@@ -349,9 +344,9 @@ class EmployeesListScreen extends Component {
                   name: 'employeeAdd',
                   options: {
                     animations: {
-                      push: {
-                        waitForRender: true
-                      }
+                      // push: {
+                      //   waitForRender: true
+                      // }
                     }
                   }
                 }

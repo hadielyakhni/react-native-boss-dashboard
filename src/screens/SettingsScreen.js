@@ -13,6 +13,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import Entypo from 'react-native-vector-icons/Entypo'
+import AntDesign from 'react-native-vector-icons/AntDesign'
 import ChoicesModal from '../components/ChoicesModal'
 import { translate, getUsedLanguage, isRTL, isUsedLanguageSystem } from '../utils/i18n'
 
@@ -187,7 +188,8 @@ class SettingsScreen extends Component {
   onPress7 = () => Linking.openURL(`mailto:boss.dashboard@gmail.com`)
   onPress8 = () => Linking.openURL('https://boss-dashboard.netlify.app/privacypolicy')
   onPress9 = () => Linking.openURL('https://boss-dashboard.netlify.app/termsofuse')
-  onPress10 = () => this.setState({ modalVisible: true })
+  onPress10 = () => Linking.openURL('https://boss-dashboard.netlify.app/privacypolicy.html#assets')
+  onPress11 = () => this.setState({ modalVisible: true })
   render() {
     return (
       <View style={{
@@ -476,28 +478,6 @@ class SettingsScreen extends Component {
               </View>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity
-            activeOpacity={0.9}
-          >
-            <View style={{
-              backgroundColor: this.useTheme('#f5f5f5', '#161616'),
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between'
-            }}>
-              <View style={{ height: 56, flexDirection: 'row', paddingLeft: 15, alignItems: 'center' }}>
-                <MaterialCommunityIcons name="coffee-outline" color={this.useTheme('#303030', '#fbfbfb')} size={25} />
-                <Text style={{ marginLeft: 20, color: this.useTheme('#303030', '#fbfbfb'), fontSize: 19.5, fontFamily: 'SourceSansPro-SemiBold' }}>
-                  {translate('main.settings.buyMeACoffee')}
-                </Text>
-              </View>
-              <View style={{ flexDirection: 'row', alignItems: 'center', marginHorizontal: 7 }}>
-                <View style={{ marginHorizontal: 7 }}>
-                  <MaterialIcons name={isRTL() ? "chevron-left" : "chevron-right"} color={this.useTheme('#666', '#999')} size={30} />
-                </View>
-              </View>
-            </View>
-          </TouchableOpacity>
           <Text style={{
             marginLeft: 10,
             marginBottom: 6,
@@ -555,11 +535,34 @@ class SettingsScreen extends Component {
             </View>
           </TouchableOpacity>
           <TouchableOpacity
+            activeOpacity={0.9}
+            onPress={this.onPress10}
+          >
+            <View style={{
+              backgroundColor: this.useTheme('#f5f5f5', '#161616'),
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between'
+            }}>
+              <View style={{ height: 56, flexDirection: 'row', paddingLeft: 15, alignItems: 'center' }}>
+                <AntDesign name="picture" color={this.useTheme('#303030', '#fbfbfb')} size={24} />
+                <Text style={{ marginLeft: 20, color: this.useTheme('#303030', '#fbfbfb'), fontSize: 19.5, fontFamily: 'SourceSansPro-SemiBold' }}>
+                  {translate('main.settings.picturesSource')}
+                </Text>
+              </View>
+              <View style={{ flexDirection: 'row', alignItems: 'center', marginHorizontal: 7 }}>
+                <View style={{ marginHorizontal: 7 }}>
+                  <MaterialIcons name={isRTL() ? "chevron-left" : "chevron-right"} color={this.useTheme('#666', '#999')} size={30} />
+                </View>
+              </View>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity
             style={{
               ...styles.logoutButton,
               backgroundColor: this.useTheme('#f5f5f5', '#161616')
             }}
-            onPress={this.onPress10}
+            onPress={this.onPress11}
           >
             <Text style={styles.logoutText}>
               {translate('main.settings.logout')}
