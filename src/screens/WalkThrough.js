@@ -206,7 +206,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontFamily: 'SourceSansPro-Bold',
-    fontSize: 32,
+    fontSize: 30,
     maxWidth: 200,
     textAlign: 'center'
   },
@@ -215,19 +215,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     maxWidth: 400,
     paddingTop: Dimensions.get('window').height / Dimensions.get('window').width > 1.6 ? 0 : 80,
-    fontSize: 20,
+    fontSize: 19,
   }
 })
-
-
-// import React, { Component } from 'react'
-// import { Text, View } from 'react-native'
-
-// export default class WalkThrough extends Component {
-//   render() {
-//     return (
-//       <View style={{ flex: 1, backgroundColor: 'red' }}>
-//       </View>
-//     )
-//   }
-// }
