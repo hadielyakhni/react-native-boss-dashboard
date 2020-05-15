@@ -13,12 +13,6 @@ let
   TASKS_SORT_BY, TASKS_SORT_ORDER, EMPLOYEES_SORT_BY, EMPLOYEES_SORT_ORDER, ACCOUNTS_SORT_BY, ACCOUNTS_SORT_ORDER,
   LAST_DELETED_TASK, LAST_TASK_DELETE_DATE, LAST_DELETED_EMPLOYEE, LAST_EMPLOYEE_DELETE_DATE, LAST_DELETED_ACCOUNT, LAST_ACCOUNT_DELETE_DATE
 
-const DEFAULT_TASKS = [
-  { task: 'Click me to view details', description: 'I am the description, feel free to edit me!', isDone: false, date: Date.now() },
-  { task: 'Swipe left to delete', description: '', isDone: false, date: Date.now() + 10 },
-  { task: 'I am a completed task!', description: '', isDone: true, date: Date.now() + 30 }
-]
-
 //Helper functions
 //Auth Helpers
 async function saveUserDataToAsyncStorage(user) {
@@ -52,14 +46,6 @@ const addDefaultDataForNewUser = uid => {
     firebase.database().ref(`users/${uid}/tasks/sortData`).set({ sortBy: 'time', sortOrder: 'desc' }),
     firebase.database().ref(`users/${uid}/employees/sortData`).set({ sortBy: 'default', sortOrder: 'asc' }),
     firebase.database().ref(`users/${uid}/money/sortData`).set({ sortBy: 'default', sortOrder: 'asc' }),
-    ...DEFAULT_TASKS.map(task =>
-      firebase.database().ref(`users/${uid}/tasks/tasks`).push({
-        task: task.task,
-        description: task.description,
-        isDone: task.isDone,
-        date: task.date
-      })
-    )
   ])
 }
 

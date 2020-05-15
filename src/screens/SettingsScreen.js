@@ -190,6 +190,8 @@ class SettingsScreen extends Component {
   onPress9 = () => Linking.openURL('https://boss-dashboard.netlify.app/termsofuse')
   onPress10 = () => Linking.openURL('https://boss-dashboard.netlify.app/privacypolicy.html#assets')
   onPress11 = () => this.setState({ modalVisible: true })
+  onPress12 = () => Linking.openURL('https://play.google.com/store/apps/details?id=com.hadistop')
+  onPress13 = () => Linking.openURL('https://boss-dashboard.netlify.app')
   render() {
     return (
       <View style={{
@@ -458,6 +460,7 @@ class SettingsScreen extends Component {
           </TouchableOpacity>
           <TouchableOpacity
             activeOpacity={0.9}
+            onPress={this.onPress12}
           >
             <View style={{
               backgroundColor: this.useTheme('#f5f5f5', '#161616'),
@@ -469,6 +472,29 @@ class SettingsScreen extends Component {
                 <MaterialCommunityIcons name="message-text" color={this.useTheme('#303030', '#fbfbfb')} size={24.5} />
                 <Text style={{ marginLeft: 20, color: this.useTheme('#303030', '#fbfbfb'), fontSize: 19.5, fontFamily: 'SourceSansPro-SemiBold' }}>
                   {translate('main.settings.feedback')}
+                </Text>
+              </View>
+              <View style={{ flexDirection: 'row', alignItems: 'center', marginHorizontal: 7 }}>
+                <View style={{ marginHorizontal: 7 }}>
+                  <MaterialIcons name={isRTL() ? "chevron-left" : "chevron-right"} color={this.useTheme('#666', '#999')} size={30} />
+                </View>
+              </View>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity
+            activeOpacity={0.9}
+            onPress={this.onPress13}
+          >
+            <View style={{
+              backgroundColor: this.useTheme('#f5f5f5', '#161616'),
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between'
+            }}>
+              <View style={{ height: 56, flexDirection: 'row', paddingLeft: 15, alignItems: 'center' }}>
+                <AntDesign name="earth" color={this.useTheme('#303030', '#fbfbfb')} size={24} />
+                <Text style={{ marginLeft: 20, color: this.useTheme('#303030', '#fbfbfb'), fontSize: 19.5, fontFamily: 'SourceSansPro-SemiBold' }}>
+                  {translate('main.settings.websiteLinkText')}
                 </Text>
               </View>
               <View style={{ flexDirection: 'row', alignItems: 'center', marginHorizontal: 7 }}>
@@ -558,6 +584,7 @@ class SettingsScreen extends Component {
             </View>
           </TouchableOpacity>
           <TouchableOpacity
+            activeOpacity={0.75}
             style={{
               ...styles.logoutButton,
               backgroundColor: this.useTheme('#f5f5f5', '#161616')
@@ -568,6 +595,10 @@ class SettingsScreen extends Component {
               {translate('main.settings.logout')}
             </Text>
           </TouchableOpacity>
+          <View style={{ alignItems: 'center', marginBottom: 24 }}>
+            <Text style={{ color: this.useTheme('#303030', '#fbfbfb'), fontSize: 20, fontFamily: 'SourceSansPro-SemiBold' }} >Boss Dashboard</Text>
+            <Text style={{ color: this.useTheme('#303030', '#ddd'), fontSize: 16, fontFamily: 'SourceSansPro-Regular' }}>Version 1.0.1</Text>
+          </View>
         </ScrollView>
       </View >
     )
@@ -620,8 +651,8 @@ const styles = StyleSheet.create({
   logoutButton: {
     height: 56,
     alignItems: 'center',
-    marginTop: 36,
-    marginBottom: 24,
+    marginTop: 32,
+    marginBottom: 32,
     justifyContent: 'center'
   },
   logoutText: {
