@@ -486,14 +486,6 @@ export const changeAccountsSortData = (sortBy, sortOrder) =>
 
 
 //App actions
-export const incrementExitCount = () =>
-  dispatch => {
-    dispatch({ type: 'increment_exit_count' })
-    setTimeout(() => {
-      dispatch({ type: 'reset_exit_count' })
-    }, 2000);
-  }
-
 export const resetExitCount = () => ({
   type: 'reset_exit_count'
 })

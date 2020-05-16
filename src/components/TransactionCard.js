@@ -34,7 +34,7 @@ class TransactionCard extends React.PureComponent {
           {
             rotateX: this._animated.interpolate({
               inputRange: [0, 0.5, 1],
-              outputRange: ['180deg', '36deg', '0deg'],
+              outputRange: ['120deg', '36deg', '0deg'],
               extrapolate: 'clamp',
             })
           }
@@ -52,7 +52,7 @@ class TransactionCard extends React.PureComponent {
       }}>
         <View style={[styles.arrowIconContainer, {
           backgroundColor: this.status === 'Sent' ?
-            this.props.theme === 'light' ? '#f6f6f6' : '#34282d'
+            this.props.theme === 'light' ? '#f6f6f6' : '#363536'
             :
             this.props.theme === 'light' ? '#f6f6f6' : '#2e3b47'
         }]}>

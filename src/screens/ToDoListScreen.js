@@ -7,7 +7,6 @@ import {
   fetchTasks,
   changeTasksSortData,
   restoreLastDeletedTask,
-  incrementExitCount,
   resetExitCount,
   setActiveScreenName
 } from '../actions'
@@ -96,15 +95,6 @@ class ToDoListScreen extends Component {
       outputRange: [1, 0]
     })
   }
-  componentDidMount() {
-    this.backButtonListner = BackHandler.addEventListener("hardwareBackPress", () => {
-      const screen = this.activeScreenName
-      if (screen === 'todo' || screen === 'employees' || screen === 'money' || screen === 'settings') {
-        this.props.incrementExitCount()
-        return true
-      }
-    })
-  }
   componentWillUnmount() {
     this.navigationListner1.remove()
     this.navigationListner2.remove()
@@ -113,7 +103,6 @@ class ToDoListScreen extends Component {
     this.doneOpacity.removeAllListeners()
     this.undoneListOpacity.removeAllListeners()
     this.doneListOpacity.removeAllListeners()
-    this.backButtonListner.remove()
   }
   onAdd() {
     if (this.state.task !== '') {
@@ -610,7 +599,6 @@ const mapActionsToProps = dispatch => ({
   fetchTasks: () => dispatch(fetchTasks()),
   changeTasksSortData: (sortBy, sortOrder) => dispatch(changeTasksSortData(sortBy, sortOrder)),
   restoreLastDeletedTask: () => dispatch(restoreLastDeletedTask()),
-  incrementExitCount: () => dispatch(incrementExitCount()),
   resetExitCount: () => dispatch(resetExitCount()),
   setActiveScreenName: screenName => dispatch(setActiveScreenName(screenName))
 })
@@ -650,7 +638,6 @@ const mapStateToProps = (state) => {
     sortOrder,
     fetchingTasks: state.todo.fetchingTasks,
     showUndoDelete: state.todo.showUndoDelete,
-    exitCount: state.app.exitCount,
     theme: state.app.theme
   }
 }

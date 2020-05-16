@@ -145,7 +145,7 @@
       "language": "Language",
       "theme": "Theme",
       "helpCenter": "Help Center",
-      "feedback": "Feedback",
+      "feedback": "Review",
       "buyMeACoffee": "Buy me a coffee",
       "privacyPolicy": "Privacy Policy",
       "termsOfUse": "Terms Of Use",
@@ -161,7 +161,7 @@
     },
     "moneyCard": {},
     "transactionCard": {
-      "sent": "Sent",
+      "sent": "Given",
       "received": "Received"
     },
     "errorModal": {
