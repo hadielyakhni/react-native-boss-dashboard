@@ -173,7 +173,7 @@
       "err4": "Invalid email or password! Try again or click on Forgot Password link to reset your password.",
       "err5": "No user found with this email address.",
       "err6": "An account with the same email address already exists!",
-      "err7": "The email address is already in use by another account! You can click on the Forgot Password link to reset your password.",
+      "err7": "The email address is already in use by another account!",
       "err8": "We have blocked all requests from this device due to unusual activity! Try again later.",
       "err9": "Time out error! Check your internet connection and try again later.",
       "err10": "Error occured!"

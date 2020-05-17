@@ -52,7 +52,7 @@
     "todoList": {
       "title": "Mes tâches",
       "placeholder": "Ajouter une tâche",
-      "hint1": "Organisation votre vie!",
+      "hint1": "Organiser votre entreprise!",
       "hint2": "Quelques choses a faire?",
       "incompleted": "INCOMPLÈTES",
       "completed": "COMPLÈTES"
@@ -145,11 +145,11 @@
       "language": "Langue",
       "theme": "Thème",
       "helpCenter": "Centre D'Aide",
-      "feedback": "La revue",
-      "buyMeACoffee": "M'acheter un café",
+      "feedback": "La Revue",
+      "buyMeACoffee": "M'Acheter Un Café",
       "privacyPolicy": "Politique De Confidentialité",
       "termsOfUse": "Conditions D'Utilisation",
-      "picturesSource": "Source des photos",
+      "picturesSource": "Source Des Photos",
       "websiteLinkText": "Plus Sur L'Application",
       "logout": "SE DÉCONNECTER"
     }
@@ -173,7 +173,7 @@
       "err4": "E-mailou le mot de passe non valide! Essayez à nouveau ou cliquez sur le lien Mot de passe Oublié pour réinitialiser votre mot de passe.",
       "err5": "Aucun utilisateur trouvé avec cette adresse email.",
       "err6": "Un compte avec la même adresse email existe déjà, mais avec une autre signin méthode!",
-      "err7": "L'adresse email est déjà utilisé par un autre compte! Vous pouvez cliquer sur le lien Mot de passe Oublié réinitialiser votre mot de passe.",
+      "err7": "L'adresse email est déjà utilisé par un autre compte!",
       "err8": "Nous avons bloqué toutes les demandes de ce dispositif en raison d'une activité inhabituelle. Essayez de nouveau plus tard.",
       "err9": "Erreur de temporisation! Vérifiez votre connexion internet et réessayer plus tard.",
       "err10": "Erreur s'est produite!"
@@ -189,7 +189,7 @@
       "cancel": "Annuler"
     },
     "loggingOutModal": {
-      "message": "Daéconnexion..."
+      "message": "Déconnexion..."
     },
     "choicesModal": {
       "sortModal": {

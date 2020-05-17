@@ -37,7 +37,7 @@ class AuthScreen extends Component {
     this.keyboardDidShowListner = Keyboard.addListener('keyboardDidShow', this._keyboardDidShow)
     this.keyboardDidHideListner = Keyboard.addListener('keyboardDidHide', this._keyboardDidHide)
     this.state = {
-      screen: 'login',
+      screen: 'signup',
       email: '',
       password: '',
       isPasswordSecure: true,
