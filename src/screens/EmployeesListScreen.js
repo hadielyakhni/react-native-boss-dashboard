@@ -39,7 +39,7 @@ class EmployeesListScreen extends Component {
     this.clearIconOpacity = new Animated.Value(0)
     this.clearIconAngle = this.clearIconOpacity.interpolate({
       inputRange: [0, 1],
-      outputRange: [1.57, 3.14]
+      outputRange: ["90deg", "180deg"]
     })
     this.hintOpacityValue = 0
     this.hintOpacity = new Animated.Value(0)

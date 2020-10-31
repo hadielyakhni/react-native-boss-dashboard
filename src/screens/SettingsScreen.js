@@ -597,7 +597,7 @@ class SettingsScreen extends Component {
           </TouchableOpacity>
           <View style={{ alignItems: 'center', marginBottom: 24 }}>
             <Text style={{ color: this.useTheme('#303030', '#fbfbfb'), fontSize: 20, fontFamily: 'SourceSansPro-SemiBold' }} >Boss Dashboard</Text>
-            <Text style={{ color: this.useTheme('#303030', '#ddd'), fontSize: 16, fontFamily: 'SourceSansPro-Regular' }}>Version 1.0.2</Text>
+            <Text style={{ color: this.useTheme('#303030', '#ddd'), fontSize: 16, fontFamily: 'SourceSansPro-Regular' }}>Version 1.0.3</Text>
           </View>
         </ScrollView>
       </View >

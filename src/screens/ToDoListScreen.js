@@ -80,7 +80,7 @@ class ToDoListScreen extends Component {
     this.lastUndoneListArrowDiewction = 'up'
     this.undoneArrowRotationAngle = this.undoneListOpacity.interpolate({
       inputRange: [0, 1],
-      outputRange: [0, 3.14]
+      outputRange: ["0deg", "180deg"]
     })
     this.doneListOpacityValue = this.props.unDoneTasks.length ? 0 : 1
     this.doneListOpacity = new Animated.Value(this.props.unDoneTasks.length ? 0 : 1)
@@ -88,7 +88,7 @@ class ToDoListScreen extends Component {
     this.lastDoneListArrowDirection = 'down'
     this.doneArrowRotationAngle = this.doneListOpacity.interpolate({
       inputRange: [0, 1],
-      outputRange: [0, 3.14]
+      outputRange: ["0deg", "180deg"]
     })
     this.sortOpacity = this.hintOpacity.interpolate({
       inputRange: [0, 1],

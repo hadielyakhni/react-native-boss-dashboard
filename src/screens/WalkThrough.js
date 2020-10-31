@@ -136,7 +136,7 @@ export default class WalkThrough extends React.Component {
         backgroundColor: this.useTheme('rgba(0, 0, 0, .2)', 'rgba(255,255,255,.1)')
       }}>
         <Icon
-          name={!isRTL() ? "md-arrow-round-forward" : "md-arrow-round-back"}
+          name={!isRTL() ? "md-arrow-forward" : "md-arrow-back"}
           color="#fbfbfb"
           size={24}
         />

@@ -182,7 +182,7 @@ class AuthScreen extends Component {
             }
             ]}>
               <Icon
-                name="ios-lock"
+                name="lock-closed"
                 style={{
                   paddingLeft: 17,
                   paddingRight: 13,

@@ -1,14 +1,14 @@
-Boss Dashborad
+Boss Dashboard
 
-A simple app for business holders to manage their tasks, employees and money transactions.
+A simple app for business holders to manage their tasks, employees, and money transactions.
 
-Boss Dashboard will help you as business holder to save lot of your time.
+Boss Dashboard will help you as a business holder to save a lot of your time.
 Now you can add tasks to manage your day.
-You can add your employees and view them sorted by name, role, salary or join date.
+You can add your employees and view them sorted by name, role, salary, or join date.
 Also, you can add all the persons you owe them money and vise versa, you will be able to track all the transactions
-between you and these people, and sort the data by name, amount andf last transaction date.
+between you and these people, and sort the data by name, amount, and transaction date.
 
-This application provides these features without advertisments, and can be used offline after creating your account.
+This application provides these features without advertisements and can be used offline after creating your account.
 
 The App is developed by Hadi El-Yakhni, an engineering student.
 

@@ -8,6 +8,9 @@ import { goToMain } from '../navigation/navigation'
 import { Keyboard } from 'react-native'
 import AsyncStorage from '@react-native-community/async-storage'
 
+const dbCollection = __DEV__ ? "users_dev" : "users"
+
+
 let
   UID,
   TASKS_SORT_BY, TASKS_SORT_ORDER, EMPLOYEES_SORT_BY, EMPLOYEES_SORT_ORDER, ACCOUNTS_SORT_BY, ACCOUNTS_SORT_ORDER,
